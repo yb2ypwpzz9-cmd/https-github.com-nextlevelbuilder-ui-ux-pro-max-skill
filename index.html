@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Vornix.Digital — Marketing Digital & Estrategia de Redes Sociales</title>
-<meta name="description" content="Consultoría de redes sociales, marketing digital, SEO y landing pages que convierten. Resultados medibles para tu negocio.">
+<meta name="description" content="Consultoría de redes sociales, marketing digital, SEO y landing pages que convierten. Resultados medibles para tu negocio en República Dominicana.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
@@ -12,63 +12,59 @@
 :root{
   --bg:#ffffff;
   --bg2:#f8faff;
-  --bg3:#f1f5fe;
+  --dark:#060d1a;
+  --dark2:#0d1a2e;
   --blue:#2563eb;
-  --blue-dark:#1d4ed8;
+  --blue-lt:#3b82f6;
   --violet:#7c3aed;
+  --violet-lt:#8b5cf6;
   --teal:#0ea5e9;
   --green:#10b981;
-  --dark:#0f172a;
   --text:#1e293b;
   --muted:#64748b;
-  --light:#94a3b8;
   --border:#e2e8f0;
-  --border2:#dbeafe;
-  --card:#ffffff;
   --grad:linear-gradient(135deg,#2563eb,#7c3aed);
-  --grad-soft:linear-gradient(135deg,#eff6ff,#f5f3ff);
+  --grad-light:linear-gradient(135deg,#3b82f6,#8b5cf6);
 }
 html{scroll-behavior:smooth}
-body{font-family:"Inter",sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
+body{font-family:"Inter",sans-serif;background:#fff;color:var(--text);overflow-x:hidden}
 
 /* ── NAV ── */
 .nav{
-  position:fixed;top:16px;left:50%;transform:translateX(-50%);
-  width:calc(100% - 48px);max-width:1100px;
+  position:fixed;top:0;left:0;right:0;z-index:1000;
   display:flex;justify-content:space-between;align-items:center;
-  padding:14px 24px;
-  background:rgba(255,255,255,0.9);
-  border:1px solid var(--border);
-  border-radius:16px;
+  padding:18px 40px;
+  background:rgba(6,13,26,.85);
   backdrop-filter:blur(20px);
-  box-shadow:0 4px 24px rgba(15,23,42,.06);
-  z-index:1000;
+  border-bottom:1px solid rgba(255,255,255,.07);
+  transition:padding .3s
 }
-.nav-logo{font-size:17px;font-weight:800;letter-spacing:-.5px;text-decoration:none;color:var(--dark)}
-.nav-logo span{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.nav-links{display:flex;gap:28px}
-.nav-links a{font-size:13px;color:var(--muted);text-decoration:none;transition:color .2s;cursor:pointer;font-weight:500}
-.nav-links a:hover{color:var(--dark)}
+.nav-logo{font-size:18px;font-weight:800;letter-spacing:-.5px;text-decoration:none;color:#fff}
+.nav-logo span{background:var(--grad-light);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-links{display:flex;gap:32px}
+.nav-links a{font-size:13px;color:rgba(255,255,255,.55);text-decoration:none;transition:color .2s;cursor:pointer;font-weight:500;letter-spacing:.1px}
+.nav-links a:hover{color:#fff}
 .nav-cta{
   display:inline-flex;align-items:center;gap:8px;
-  background:var(--dark);color:#fff;font-size:13px;font-weight:600;
-  padding:10px 20px;border-radius:10px;text-decoration:none;
-  transition:background .2s,transform .2s;cursor:pointer;border:none
+  background:var(--grad);color:#fff;font-size:13px;font-weight:700;
+  padding:10px 22px;border-radius:8px;text-decoration:none;
+  transition:opacity .2s,transform .2s;cursor:pointer;border:none;
+  box-shadow:0 4px 16px rgba(37,99,235,.35)
 }
-.nav-cta:hover{background:#1e293b;transform:translateY(-1px)}
-.nav-mobile-btn{display:none;background:none;border:none;color:var(--dark);cursor:pointer;padding:4px}
+.nav-cta:hover{opacity:.9;transform:translateY(-1px)}
+.nav-mobile-btn{display:none;background:none;border:none;color:#fff;cursor:pointer;padding:4px}
 
 /* ── MOBILE MENU ── */
 .mobile-menu{
   display:none;position:fixed;inset:0;z-index:999;
-  background:rgba(255,255,255,.98);backdrop-filter:blur(20px);
-  flex-direction:column;align-items:center;justify-content:center;gap:32px;
+  background:rgba(6,13,26,.97);backdrop-filter:blur(20px);
+  flex-direction:column;align-items:center;justify-content:center;gap:36px;
 }
 .mobile-menu.open{display:flex}
-.mobile-menu a{font-size:22px;font-weight:700;color:var(--dark);text-decoration:none;cursor:pointer}
+.mobile-menu a{font-size:24px;font-weight:700;color:#fff;text-decoration:none;cursor:pointer}
 .mobile-menu-close{
   position:absolute;top:24px;right:24px;
-  background:none;border:1px solid var(--border);color:var(--dark);
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:#fff;
   width:40px;height:40px;border-radius:10px;cursor:pointer;font-size:20px;
   display:flex;align-items:center;justify-content:center
 }
@@ -76,700 +72,710 @@ body{font-family:"Inter",sans-serif;background:var(--bg);color:var(--text);overf
 /* ── HERO ── */
 .hero{
   min-height:100vh;display:flex;align-items:center;
-  padding:120px 24px 80px;
-  background:linear-gradient(160deg,#ffffff 0%,#f0f6ff 50%,#f5f0ff 100%);
-  position:relative;overflow:hidden
+  background:var(--dark);
+  position:relative;overflow:hidden;
+  padding:120px 40px 80px;
 }
-.hero::before{
-  content:"";position:absolute;top:-200px;right:-200px;
-  width:700px;height:700px;border-radius:50%;
-  background:radial-gradient(circle,rgba(37,99,235,.08),transparent 70%);
-  pointer-events:none
+/* animated mesh gradient */
+.hero-mesh{
+  position:absolute;inset:0;z-index:0;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 50%,rgba(37,99,235,.18),transparent),
+    radial-gradient(ellipse 60% 80% at 80% 20%,rgba(124,58,237,.2),transparent),
+    radial-gradient(ellipse 50% 50% at 60% 80%,rgba(14,165,233,.1),transparent);
 }
-.hero::after{
-  content:"";position:absolute;bottom:-200px;left:-100px;
-  width:500px;height:500px;border-radius:50%;
-  background:radial-gradient(circle,rgba(124,58,237,.07),transparent 70%);
-  pointer-events:none
+/* grid pattern overlay */
+.hero-grid{
+  position:absolute;inset:0;z-index:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);
+  background-size:60px 60px;
 }
+/* noise texture */
+.hero-noise{
+  position:absolute;inset:0;z-index:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");
+  opacity:.4
+}
+/* floating blobs */
+.blob{position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none;z-index:0}
+.blob-1{width:500px;height:500px;top:-150px;right:-100px;background:rgba(124,58,237,.12);animation:float 8s ease-in-out infinite}
+.blob-2{width:350px;height:350px;bottom:-80px;left:-80px;background:rgba(37,99,235,.1);animation:float 10s ease-in-out infinite reverse}
+.blob-3{width:250px;height:250px;top:40%;right:30%;background:rgba(14,165,233,.07);animation:float 12s ease-in-out infinite 2s}
+@keyframes float{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-30px) scale(1.05)}}
+
 .hero-inner{
-  display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;
-  width:100%;max-width:1100px;margin:0 auto;position:relative;z-index:1
+  display:grid;grid-template-columns:1.1fr 1fr;gap:80px;align-items:center;
+  width:100%;max-width:1200px;margin:0 auto;position:relative;z-index:1
 }
 .hero-badge{
   display:inline-flex;align-items:center;gap:8px;
-  background:#eff6ff;border:1px solid #bfdbfe;
-  color:var(--blue);font-size:12px;font-weight:600;
-  padding:6px 14px;border-radius:20px;margin-bottom:24px
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);
+  color:rgba(255,255,255,.7);font-size:12px;font-weight:600;letter-spacing:.3px;
+  padding:7px 16px;border-radius:20px;margin-bottom:28px
 }
-.hero-badge-dot{width:6px;height:6px;background:var(--blue);border-radius:50%;animation:pulse2 2s infinite}
-@keyframes pulse2{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.6)}}
+.hero-badge-dot{width:7px;height:7px;border-radius:50%;background:#10b981;box-shadow:0 0 8px #10b981;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 .hero h1{
-  font-size:56px;font-weight:900;line-height:1.05;letter-spacing:-2.5px;
-  margin-bottom:24px;color:var(--dark)
+  font-size:clamp(48px,5.5vw,80px);font-weight:900;
+  letter-spacing:-3px;line-height:.95;
+  color:#fff;margin-bottom:24px
 }
-.hero h1 .grad{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.hero p{font-size:16px;color:var(--muted);line-height:1.75;max-width:440px;margin-bottom:36px}
-.hero-btns{display:flex;gap:12px;flex-wrap:wrap}
+.hero h1 .grad{
+  background:var(--grad-light);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  display:block
+}
+.hero-sub{
+  font-size:17px;color:rgba(255,255,255,.55);
+  line-height:1.75;max-width:480px;margin-bottom:40px;
+  font-weight:400
+}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:48px}
 .btn-primary{
-  display:inline-flex;align-items:center;gap:8px;
-  background:var(--dark);color:#fff;font-size:14px;font-weight:600;
-  padding:14px 28px;border-radius:12px;text-decoration:none;
-  transition:background .2s,transform .2s,box-shadow .2s;cursor:pointer;border:none
+  display:inline-flex;align-items:center;gap:9px;
+  background:var(--grad);color:#fff;font-size:14px;font-weight:700;
+  padding:14px 28px;border-radius:10px;text-decoration:none;
+  transition:opacity .2s,transform .2s,box-shadow .2s;
+  box-shadow:0 8px 24px rgba(37,99,235,.4)
 }
-.btn-primary:hover{background:#1e293b;transform:translateY(-2px);box-shadow:0 12px 32px rgba(15,23,42,.2)}
-.btn-primary-blue{
-  display:inline-flex;align-items:center;gap:8px;
-  background:var(--grad);color:#fff;font-size:14px;font-weight:600;
-  padding:14px 28px;border-radius:12px;text-decoration:none;
-  transition:opacity .2s,transform .2s,box-shadow .2s;cursor:pointer;border:none
-}
-.btn-primary-blue:hover{opacity:.9;transform:translateY(-2px);box-shadow:0 12px 32px rgba(37,99,235,.35)}
+.btn-primary:hover{opacity:.9;transform:translateY(-2px);box-shadow:0 12px 32px rgba(37,99,235,.5)}
 .btn-ghost{
   display:inline-flex;align-items:center;gap:8px;
-  background:transparent;color:var(--dark);font-size:14px;font-weight:500;
-  padding:14px 28px;border-radius:12px;text-decoration:none;
-  border:1.5px solid var(--border);transition:border-color .2s,background .2s
+  background:rgba(255,255,255,.07);color:rgba(255,255,255,.8);
+  border:1px solid rgba(255,255,255,.15);
+  font-size:14px;font-weight:600;
+  padding:14px 28px;border-radius:10px;text-decoration:none;
+  transition:background .2s,color .2s,border-color .2s
 }
-.btn-ghost:hover{border-color:#94a3b8;background:#f8fafc}
-.hero-trust{display:flex;align-items:center;gap:14px;margin-top:32px}
-.hero-trust-text{font-size:12px;color:var(--muted);font-weight:500}
-.hero-trust-avatars{display:flex}
-.hero-trust-avatars span{
-  width:30px;height:30px;border-radius:50%;border:2px solid #fff;
-  background:var(--grad);display:flex;align-items:center;justify-content:center;
-  font-size:11px;font-weight:700;color:#fff;
-}
-.hero-trust-avatars span+span{margin-left:-8px}
+.btn-ghost:hover{background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.25)}
+.hero-stats{display:flex;gap:40px;flex-wrap:wrap}
+.hero-stat-val{font-size:28px;font-weight:900;color:#fff;letter-spacing:-1px;margin-bottom:2px}
+.hero-stat-lbl{font-size:12px;color:rgba(255,255,255,.4);font-weight:500}
+.hero-stat-sep{width:1px;background:rgba(255,255,255,.1)}
 
-/* ── DASHBOARD ── */
-.hero-right{position:relative}
-.dashboard{
-  background:#ffffff;
-  border:1.5px solid var(--border);
-  border-radius:24px;
-  padding:24px;
-  box-shadow:0 24px 64px rgba(15,23,42,.1),0 4px 16px rgba(15,23,42,.04);
-  position:relative;overflow:hidden
+/* hero right — photo + floating cards */
+.hero-right{position:relative;display:flex;justify-content:center}
+.hero-photo-wrap{
+  width:380px;height:460px;border-radius:28px;overflow:hidden;
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow:0 40px 80px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.06);
+  position:relative;background:linear-gradient(145deg,#0d1a2e,#1a0a3e);
+  flex-shrink:0
 }
-.dashboard::before{
-  content:"";position:absolute;top:0;left:0;right:0;height:3px;
-  background:var(--grad)
+.hero-photo-wrap::before{
+  content:"";position:absolute;inset:0;z-index:1;
+  background:linear-gradient(to top,rgba(6,13,26,.7) 0%,transparent 50%);
 }
-.dash-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
-.dash-title{font-size:11px;font-weight:700;color:var(--light);letter-spacing:2px;text-transform:uppercase}
-.dash-live{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--green);font-weight:600}
-.dash-live-dot{width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse2 1.8s infinite}
-.dash-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
-.dash-kpi{
-  background:var(--bg2);border:1.5px solid var(--border);
-  border-radius:12px;padding:14px
+.hero-photo-wrap img,.hero-photo-placeholder{
+  width:100%;height:100%;object-fit:cover;object-position:center top;display:block
 }
-.dash-kpi-val{font-size:22px;font-weight:800;letter-spacing:-1px;color:var(--dark)}
-.dash-kpi-val.green{color:var(--green)}
-.dash-kpi-val.blue{color:var(--blue)}
-.dash-kpi-lbl{font-size:10px;color:var(--light);margin-top:4px}
-.dash-kpi-delta{font-size:10px;color:var(--green);margin-top:4px;font-weight:600}
-.dash-kpi-delta.down{color:#ef4444}
-.dash-chart{
-  background:var(--bg2);border:1.5px solid var(--border);
-  border-radius:12px;padding:14px;margin-bottom:12px
+.hero-photo-placeholder{
+  display:flex;align-items:center;justify-content:center;
+  font-size:100px;color:rgba(255,255,255,.06);font-weight:900
 }
-.dash-chart-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-.dash-chart-lbl{font-size:11px;color:var(--muted);font-weight:500}
-.dash-svg{width:100%;height:80px}
-.dash-channels{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.dash-channel{
-  background:var(--bg2);border:1.5px solid var(--border);
-  border-radius:10px;padding:10px 8px;text-align:center
+/* floating metric cards */
+.float-card{
+  position:absolute;z-index:2;
+  background:rgba(255,255,255,.08);backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,.14);border-radius:16px;
+  padding:14px 18px;
 }
-.dash-channel-name{font-size:9px;color:var(--light);font-weight:600;text-transform:uppercase;margin-bottom:4px}
-.dash-channel-val{font-size:13px;font-weight:800;color:var(--dark)}
-.dash-channel-bar{height:3px;background:var(--border);border-radius:2px;margin-top:6px;overflow:hidden}
-.dash-channel-fill{height:100%;border-radius:2px}
+.fc-top{top:32px;right:-60px;animation:floatCard 6s ease-in-out infinite}
+.fc-mid{bottom:120px;left:-70px;animation:floatCard 8s ease-in-out infinite reverse 1s}
+.fc-bot{bottom:32px;right:-50px;animation:floatCard 7s ease-in-out infinite 2s}
+@keyframes floatCard{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.fc-val{font-size:22px;font-weight:900;color:#fff;letter-spacing:-1px}
+.fc-lbl{font-size:11px;color:rgba(255,255,255,.5);margin-top:2px;white-space:nowrap}
+.fc-delta{font-size:11px;font-weight:700;color:#10b981;margin-top:4px}
+.fc-icon{
+  width:32px;height:32px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:8px
+}
 
 /* ── MARQUEE ── */
 .marquee-section{
-  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
-  padding:18px 0;overflow:hidden;background:var(--bg2)
+  background:var(--dark2);border-top:1px solid rgba(255,255,255,.06);
+  border-bottom:1px solid rgba(255,255,255,.06);
+  padding:18px 0;overflow:hidden;position:relative
 }
 .marquee-track{
-  display:flex;gap:60px;align-items:center;
-  animation:marquee 25s linear infinite;white-space:nowrap
+  display:flex;gap:0;white-space:nowrap;
+  animation:marquee 30s linear infinite
 }
-.marquee-section:hover .marquee-track{animation-play-state:paused}
-@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-.marquee-item{font-size:12px;font-weight:600;color:var(--light);letter-spacing:1.5px;text-transform:uppercase;flex-shrink:0}
+@keyframes marquee{to{transform:translateX(-50%)}}
+.marquee-item{
+  display:inline-flex;align-items:center;gap:0;
+  font-size:13px;font-weight:700;color:rgba(255,255,255,.35);
+  letter-spacing:.5px;text-transform:uppercase;padding:0 28px
+}
+.marquee-item.hi{color:rgba(255,255,255,.65)}
+.marquee-dot{width:4px;height:4px;border-radius:50%;background:rgba(37,99,235,.7);margin:0 4px}
 
-/* ── STATS ── */
-.stats-section{
-  padding:80px 24px;max-width:1100px;margin:0 auto;
-  display:grid;grid-template-columns:repeat(4,1fr);gap:20px
+/* ── STATS BAR ── */
+.stats-bar{
+  background:#fff;padding:60px 40px;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:0;
+  max-width:1200px;margin:0 auto;
+  border-bottom:1px solid var(--border)
 }
-.stat-card{
-  background:var(--bg2);border:1.5px solid var(--border);
-  border-radius:20px;padding:28px 24px;text-align:center;
-  transition:border-color .25s,transform .25s,box-shadow .25s;cursor:default
+.stat-item{
+  text-align:center;padding:0 20px;
+  position:relative
 }
-.stat-card:hover{border-color:#bfdbfe;transform:translateY(-4px);box-shadow:0 16px 40px rgba(37,99,235,.08)}
-.stat-n{
-  font-size:44px;font-weight:900;letter-spacing:-2px;
-  background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  display:block
+.stat-item+.stat-item::before{
+  content:"";position:absolute;left:0;top:50%;transform:translateY(-50%);
+  width:1px;height:48px;background:var(--border)
 }
-.stat-l{font-size:13px;color:var(--muted);margin-top:6px;font-weight:500}
+.stat-val{font-size:42px;font-weight:900;letter-spacing:-2px;line-height:1;margin-bottom:6px}
+.stat-val .grad{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.stat-lbl{font-size:13px;color:var(--muted);font-weight:500}
 
-/* ── SECTIONS ── */
-.section{padding:80px 24px;max-width:1100px;margin:0 auto}
-.section-alt{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
-.section-alt-inner{padding:80px 24px;max-width:1100px;margin:0 auto}
-.tag{
-  display:inline-flex;align-items:center;gap:6px;
-  font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
-  color:var(--blue);background:#eff6ff;border:1px solid #bfdbfe;
-  padding:5px 14px;border-radius:20px;margin-bottom:16px
-}
-.section-title{font-size:42px;font-weight:900;letter-spacing:-1.5px;line-height:1.1;margin-bottom:16px;color:var(--dark)}
-.section-title .grad{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.section-sub{font-size:16px;color:var(--muted);line-height:1.75;max-width:520px;margin-bottom:48px}
-.center{text-align:center}
-.center .section-sub{margin:0 auto 48px}
-.center .tag{display:inline-flex}
-
-/* ── SERVICES ── */
-.services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.svc-card{
-  background:#fff;border:1.5px solid var(--border);border-radius:20px;
-  padding:28px;transition:all .25s;cursor:default;position:relative;overflow:hidden
-}
-.svc-card::after{
-  content:"";position:absolute;bottom:0;left:0;right:0;height:3px;
-  background:var(--grad);opacity:0;transition:opacity .25s
-}
-.svc-card:hover{border-color:#bfdbfe;transform:translateY(-6px);box-shadow:0 20px 48px rgba(37,99,235,.1)}
-.svc-card:hover::after{opacity:1}
-.svc-icon{
-  width:48px;height:48px;border-radius:14px;
-  background:#eff6ff;border:1.5px solid #bfdbfe;
-  display:flex;align-items:center;justify-content:center;margin-bottom:20px
-}
-.svc-icon svg{width:22px;height:22px;stroke:var(--blue);fill:none;stroke-width:1.8}
-.svc-card h3{font-size:16px;font-weight:700;margin-bottom:10px;color:var(--dark)}
-.svc-card p{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:16px}
-.svc-tags{display:flex;flex-wrap:wrap;gap:6px}
-.svc-tag{
-  font-size:11px;font-weight:500;color:var(--blue);
+/* ── SECTION COMMON ── */
+.section-tag{
+  display:inline-flex;align-items:center;gap:8px;
   background:#eff6ff;border:1px solid #bfdbfe;
+  color:var(--blue);font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
+  padding:6px 14px;border-radius:20px;margin-bottom:20px
+}
+.section-tag svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2.5}
+.section-tag-dark{
+  background:rgba(37,99,235,.12);border-color:rgba(37,99,235,.2);
+  color:#93c5fd
+}
+
+/* ── SERVICIOS (dark) ── */
+.services-section{
+  background:var(--dark);padding:100px 40px;position:relative;overflow:hidden
+}
+.services-section::before{
+  content:"";position:absolute;inset:0;
+  background:radial-gradient(ellipse 70% 50% at 10% 50%,rgba(37,99,235,.08),transparent),
+             radial-gradient(ellipse 50% 60% at 90% 50%,rgba(124,58,237,.08),transparent);
+  pointer-events:none
+}
+.services-grid-inner{max-width:1200px;margin:0 auto;position:relative;z-index:1}
+.services-header{margin-bottom:64px}
+.section-title-dark{
+  font-size:clamp(36px,4vw,56px);font-weight:900;
+  letter-spacing:-2px;line-height:1.05;color:#fff;margin-bottom:16px
+}
+.section-title-dark .grad{background:var(--grad-light);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.section-sub-dark{font-size:16px;color:rgba(255,255,255,.45);line-height:1.75;max-width:500px}
+.svc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:rgba(255,255,255,.06);border-radius:20px;overflow:hidden}
+.svc-card{
+  background:var(--dark);padding:36px 32px;
+  transition:background .25s;cursor:default;position:relative;overflow:hidden
+}
+.svc-card::before{
+  content:"";position:absolute;inset:0;
+  background:var(--grad-light);opacity:0;
+  transition:opacity .3s
+}
+.svc-card:hover{background:rgba(255,255,255,.03)}
+.svc-card:hover::before{opacity:.04}
+.svc-num{
+  font-size:11px;font-weight:800;color:rgba(255,255,255,.2);
+  letter-spacing:1px;margin-bottom:20px;display:block
+}
+.svc-icon-wrap{
+  width:48px;height:48px;border-radius:12px;
+  background:rgba(37,99,235,.12);border:1px solid rgba(37,99,235,.2);
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:20px
+}
+.svc-icon-wrap svg{width:22px;height:22px;stroke:#60a5fa;fill:none;stroke-width:1.8}
+.svc-card h3{font-size:17px;font-weight:700;color:#fff;margin-bottom:10px;line-height:1.3}
+.svc-card p{font-size:13px;color:rgba(255,255,255,.4);line-height:1.7}
+.svc-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:18px}
+.svc-tag{
+  font-size:11px;font-weight:600;
+  color:rgba(255,255,255,.35);
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.09);
   padding:3px 10px;border-radius:20px
 }
 
-/* ── PROCESS ── */
-.process-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
-.process-step{
-  background:#fff;border:1.5px solid var(--border);border-radius:20px;
-  padding:24px;transition:all .25s;cursor:default;position:relative
+/* ── PROCESO (light) ── */
+.process-section{
+  background:#fff;padding:100px 40px;
 }
-.process-step:hover{border-color:#c4b5fd;transform:translateY(-4px);box-shadow:0 12px 32px rgba(124,58,237,.1)}
-.step-num{
-  font-size:11px;font-weight:700;letter-spacing:2px;
-  background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  margin-bottom:16px;display:block
+.process-inner{max-width:1200px;margin:0 auto}
+.section-title-light{
+  font-size:clamp(36px,4vw,52px);font-weight:900;
+  letter-spacing:-2px;line-height:1.05;color:var(--dark);margin-bottom:16px
 }
-.process-step h4{font-size:14px;font-weight:700;margin-bottom:8px;color:var(--dark)}
-.process-step p{font-size:12px;color:var(--muted);line-height:1.65}
+.section-title-light .grad{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.section-sub-light{font-size:16px;color:var(--muted);line-height:1.75;max-width:500px}
+.process-steps{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:0;
+  margin-top:64px;position:relative
+}
+.process-steps::before{
+  content:"";position:absolute;top:28px;left:calc(25% - 0px);right:calc(25% - 0px);
+  height:1px;background:linear-gradient(90deg,var(--blue),var(--violet));
+  opacity:.3;z-index:0
+}
+.process-step{padding:0 24px;position:relative;z-index:1}
+.step-circle{
+  width:56px;height:56px;border-radius:50%;
+  background:var(--grad);
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;font-weight:900;color:#fff;
+  box-shadow:0 8px 24px rgba(37,99,235,.3);
+  margin-bottom:24px
+}
+.process-step h4{font-size:16px;font-weight:700;color:var(--dark);margin-bottom:10px}
+.process-step p{font-size:13px;color:var(--muted);line-height:1.7}
+.step-label{font-size:10px;font-weight:800;letter-spacing:1px;color:var(--blue);text-transform:uppercase;margin-bottom:8px;display:block}
 
-/* ── PLANS ── */
-.plans-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px}
+/* ── PLANES (dark) ── */
+.plans-section{
+  background:var(--dark2);padding:100px 40px;position:relative;overflow:hidden
+}
+.plans-section::after{
+  content:"";position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(37,99,235,.3),transparent)
+}
+.plans-inner{max-width:1200px;margin:0 auto;position:relative;z-index:1}
+.plans-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:60px}
 .plan{
-  background:#fff;border:1.5px solid var(--border);border-radius:22px;
-  padding:28px;transition:all .25s;cursor:default;position:relative;overflow:hidden
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+  border-radius:20px;padding:36px 32px;position:relative;transition:border-color .25s,transform .25s
 }
-.plan:hover{transform:translateY(-6px);box-shadow:0 24px 56px rgba(15,23,42,.1)}
-.plan.hot{border-color:var(--blue);box-shadow:0 4px 24px rgba(37,99,235,.12)}
-.plan.hot:hover{box-shadow:0 24px 56px rgba(37,99,235,.2)}
-.plan.hot::before{
-  content:"";position:absolute;top:0;left:0;right:0;height:3px;
-  background:var(--grad)
+.plan:hover{border-color:rgba(255,255,255,.15);transform:translateY(-4px)}
+.plan.hot{
+  background:rgba(37,99,235,.08);border-color:rgba(37,99,235,.3);
 }
-.plan-popular{
-  display:inline-block;
-  background:var(--grad);color:#fff;
-  font-size:10px;font-weight:700;padding:4px 12px;border-radius:20px;
-  margin-bottom:16px;letter-spacing:.5px
+.plan.hot:hover{border-color:rgba(37,99,235,.5)}
+.plan-badge{
+  position:absolute;top:-13px;left:50%;transform:translateX(-50%);
+  background:var(--grad);color:#fff;font-size:11px;font-weight:700;
+  padding:5px 16px;border-radius:20px;white-space:nowrap;
+  box-shadow:0 4px 12px rgba(37,99,235,.4)
 }
-.plan h3{font-size:20px;font-weight:800;letter-spacing:-.5px;margin-bottom:6px;color:var(--dark)}
-.plan-desc{font-size:12px;color:var(--muted);margin-bottom:20px;font-weight:500}
-.plan-price{margin-bottom:24px}
-.plan-price .price-main{
-  font-size:32px;font-weight:900;letter-spacing:-1.5px;
-  color:var(--dark);display:block;line-height:1.1
-}
-.plan.hot .plan-price .price-main{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.plan-price .price-sub{font-size:12px;color:var(--muted);margin-top:6px;display:block}
-.plan ul{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:24px}
-.plan ul li{font-size:13px;color:var(--muted);display:flex;gap:10px;align-items:flex-start}
-.plan ul li svg{width:16px;height:16px;stroke:var(--green);fill:none;stroke-width:2.5;flex-shrink:0;margin-top:1px}
+.plan h3{font-size:13px;font-weight:700;color:rgba(255,255,255,.4);letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px}
+.plan-desc{font-size:14px;color:rgba(255,255,255,.6);margin-bottom:20px}
+.plan-price{margin-bottom:28px;padding-bottom:28px;border-bottom:1px solid rgba(255,255,255,.08)}
+.price-main{font-size:36px;font-weight:900;color:#fff;letter-spacing:-1.5px;display:block;margin-bottom:4px}
+.price-sub{font-size:12px;color:rgba(255,255,255,.35)}
+.plan ul{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:32px}
+.plan li{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:rgba(255,255,255,.55);line-height:1.5}
+.plan li svg{width:14px;height:14px;stroke:#10b981;fill:none;stroke-width:2.5;flex-shrink:0;margin-top:2px}
 .plan-btn{
-  width:100%;padding:12px;border-radius:12px;font-size:13px;font-weight:700;
-  cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;
-  text-decoration:none;border:none
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  width:100%;padding:13px;border-radius:10px;
+  font-size:13px;font-weight:700;text-decoration:none;
+  transition:opacity .2s,transform .2s
 }
-.plan-btn-ghost{background:var(--bg2);color:var(--dark);border:1.5px solid var(--border)}
-.plan-btn-ghost:hover{background:var(--bg3);border-color:#94a3b8}
-.plan-btn-primary{background:var(--dark);color:#fff;border:none}
-.plan-btn-primary:hover{background:#1e293b;box-shadow:0 8px 24px rgba(15,23,42,.2)}
-
-/* ── LANDING ADDON ── */
-.landing-addon{
-  background:#eff6ff;border:2px dashed #93c5fd;
-  border-radius:20px;padding:24px 28px;
-  display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center;
-  transition:all .25s
-}
-.landing-addon:hover{border-color:var(--blue);background:#dbeafe;transform:translateY(-2px)}
-.addon-left{display:flex;gap:16px;align-items:flex-start}
-.addon-icon{
-  width:48px;height:48px;border-radius:14px;
-  background:#fff;border:1.5px solid #bfdbfe;
-  display:flex;align-items:center;justify-content:center;flex-shrink:0
-}
-.addon-icon svg{width:22px;height:22px;stroke:var(--blue);fill:none;stroke-width:1.8}
-.addon-left h4{font-size:15px;font-weight:700;margin-bottom:6px;color:var(--dark)}
-.addon-left p{font-size:13px;color:var(--muted);line-height:1.6}
-.addon-feats{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
-.addon-feat{
-  font-size:11px;font-weight:600;color:var(--blue);
-  background:#fff;border:1px solid #bfdbfe;
-  padding:3px 10px;border-radius:20px
-}
-.addon-right{text-align:right;flex-shrink:0}
-.addon-price-main{font-size:30px;font-weight:900;letter-spacing:-1px;color:var(--dark);display:block}
-.addon-price-sub{font-size:11px;color:var(--muted);display:block;margin-bottom:12px}
+.plan-btn:hover{opacity:.9;transform:translateY(-1px)}
+.plan-btn-ghost{background:rgba(255,255,255,.07);color:#fff;border:1px solid rgba(255,255,255,.12)}
+.plan-btn-primary{background:var(--grad);color:#fff;box-shadow:0 4px 16px rgba(37,99,235,.4)}
 
 /* ── LANDING SHOWCASE ── */
 .lp-showcase{
-  position:relative;overflow:hidden;
-  background:var(--dark);
-  padding:100px 24px;
+  background:#fff;padding:100px 40px;position:relative;overflow:hidden
 }
-.lp-showcase::before{
-  content:"";position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(37,99,235,.25) 0%,rgba(124,58,237,.2) 50%,transparent 100%);
-  pointer-events:none
+.lp-showcase-bg{
+  position:absolute;top:0;right:0;bottom:0;width:55%;
+  background:linear-gradient(135deg,var(--dark) 0%,#1a0a3e 100%);
+  clip-path:polygon(8% 0,100% 0,100% 100%,0% 100%)
 }
-.lp-showcase::after{
-  content:"";position:absolute;top:-300px;right:-200px;
-  width:700px;height:700px;border-radius:50%;
-  background:radial-gradient(circle,rgba(124,58,237,.15),transparent 65%);
-  pointer-events:none
-}
-.lp-showcase-inner{
-  max-width:1100px;margin:0 auto;
-  display:grid;grid-template-columns:1fr 1fr;gap:80px;
-  align-items:center;position:relative;z-index:1
-}
+.lp-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;position:relative;z-index:1}
 .lp-eyebrow{
   display:inline-flex;align-items:center;gap:8px;
-  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
-  color:rgba(255,255,255,.7);font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;
-  padding:6px 14px;border-radius:20px;margin-bottom:20px
+  background:#eff6ff;border:1px solid #bfdbfe;
+  color:var(--blue);font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
+  padding:6px 14px;border-radius:20px;margin-bottom:24px
 }
-.lp-eyebrow-dot{
-  width:7px;height:7px;border-radius:50%;
-  background:linear-gradient(135deg,#60a5fa,#a78bfa);display:inline-block
+.lp-title{
+  font-size:clamp(36px,4vw,52px);font-weight:900;
+  letter-spacing:-2px;line-height:1.05;color:var(--dark);margin-bottom:20px
 }
-.lp-showcase h2{
-  font-size:clamp(36px,4.5vw,58px);font-weight:900;
-  letter-spacing:-2px;line-height:1.05;color:#fff;
-  margin-bottom:20px
-}
-.lp-showcase h2 em{
+.lp-title em{
   font-style:normal;
-  background:linear-gradient(135deg,#60a5fa,#a78bfa);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent
+  background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent
 }
-.lp-showcase-sub{
-  font-size:16px;color:rgba(255,255,255,.6);line-height:1.75;
-  margin-bottom:36px;max-width:480px
+.lp-sub{font-size:15px;color:var(--muted);line-height:1.8;max-width:440px;margin-bottom:36px}
+.lp-feats{display:flex;flex-direction:column;gap:12px;margin-bottom:40px}
+.lp-feat{display:flex;align-items:flex-start;gap:12px;padding:14px 0;border-bottom:1px solid var(--border)}
+.lp-feat:last-child{border-bottom:none}
+.lp-feat-ico{
+  width:36px;height:36px;border-radius:10px;
+  background:linear-gradient(135deg,#eff6ff,#f5f3ff);border:1px solid #bfdbfe;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0
 }
-.lp-feats{display:flex;flex-direction:column;gap:14px;margin-bottom:40px}
-.lp-feat{
-  display:flex;align-items:flex-start;gap:14px;
-  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
-  border-radius:14px;padding:16px 18px;
-  transition:background .25s,border-color .25s
+.lp-feat-ico svg{width:16px;height:16px;stroke:var(--blue);fill:none;stroke-width:2}
+.lp-feat h4{font-size:14px;font-weight:700;color:var(--dark);margin-bottom:2px}
+.lp-feat p{font-size:13px;color:var(--muted);line-height:1.5}
+.lp-price-box{
+  background:var(--dark);border-radius:16px;padding:24px 28px;
+  display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-bottom:20px
 }
-.lp-feat:hover{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.15)}
-.lp-feat-num{
-  font-size:11px;font-weight:800;letter-spacing:.5px;
-  color:rgba(124,58,237,.8);background:rgba(124,58,237,.12);
-  border:1px solid rgba(124,58,237,.25);
-  padding:3px 9px;border-radius:6px;flex-shrink:0;margin-top:2px;white-space:nowrap
-}
-.lp-feat h4{font-size:14px;font-weight:700;color:#fff;margin-bottom:3px}
-.lp-feat p{font-size:13px;color:rgba(255,255,255,.5);line-height:1.6;margin:0}
-.lp-price-row{
-  display:flex;align-items:center;gap:20px;flex-wrap:wrap;
-  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
-  border-radius:16px;padding:20px 24px;margin-bottom:20px
-}
-.lp-price-main{font-size:36px;font-weight:900;letter-spacing:-1.5px;color:#fff}
-.lp-price-details{display:flex;flex-direction:column;gap:4px}
-.lp-price-sub{font-size:12px;color:rgba(255,255,255,.45)}
+.lp-price-main{font-size:38px;font-weight:900;letter-spacing:-1.5px;color:#fff}
+.lp-price-detail{display:flex;flex-direction:column;gap:4px}
 .lp-price-badge{
-  font-size:11px;font-weight:700;
-  background:linear-gradient(135deg,#2563eb,#7c3aed);
-  color:#fff;padding:3px 10px;border-radius:20px;width:fit-content
+  font-size:11px;font-weight:700;width:fit-content;
+  background:var(--grad);color:#fff;padding:3px 10px;border-radius:20px
 }
+.lp-price-sub{font-size:12px;color:rgba(255,255,255,.4)}
 .lp-cta{
   display:inline-flex;align-items:center;gap:10px;
-  background:linear-gradient(135deg,#2563eb,#7c3aed);
-  color:#fff;font-size:15px;font-weight:700;
-  padding:16px 28px;border-radius:14px;text-decoration:none;
-  transition:opacity .2s,transform .2s;box-shadow:0 8px 32px rgba(37,99,235,.4)
+  background:var(--grad);color:#fff;font-size:15px;font-weight:700;
+  padding:16px 32px;border-radius:12px;text-decoration:none;
+  transition:opacity .2s,transform .2s;
+  box-shadow:0 8px 28px rgba(37,99,235,.4)
 }
 .lp-cta:hover{opacity:.9;transform:translateY(-2px)}
-.lp-trust-row{display:flex;gap:20px;flex-wrap:wrap;margin-top:16px}
-.lp-trust-item{
-  display:flex;align-items:center;gap:6px;
-  font-size:12px;color:rgba(255,255,255,.4)
+/* dark side visual */
+.lp-visual-wrap{position:relative;padding:20px 0}
+.lp-browser{
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
+  border-radius:16px;overflow:hidden;box-shadow:0 40px 80px rgba(0,0,0,.6)
 }
-.lp-trust-item svg{width:14px;height:14px;stroke:rgba(124,58,237,.6);fill:none;stroke-width:2;flex-shrink:0}
-/* Browser mockup */
-.lp-mockup{
-  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);
-  border-radius:16px;overflow:hidden;
-  box-shadow:0 40px 80px rgba(0,0,0,.5)
-}
-.lp-mockup-bar{
+.lp-bar{
   display:flex;align-items:center;gap:6px;
-  background:rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.07);
+  background:rgba(255,255,255,.05);border-bottom:1px solid rgba(255,255,255,.07);
   padding:10px 14px
 }
-.lp-mockup-dot{width:9px;height:9px;border-radius:50%}
-.lp-mockup-url{
-  flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);
-  border-radius:6px;padding:4px 10px;
-  font-size:11px;color:rgba(255,255,255,.3);font-family:monospace;margin:0 8px
+.lp-dot{width:9px;height:9px;border-radius:50%}
+.lp-url-bar{
+  flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);
+  border-radius:5px;padding:4px 10px;
+  font-size:11px;color:rgba(255,255,255,.25);font-family:monospace;margin:0 8px
 }
-.lp-page-hero{
-  height:130px;
-  background:linear-gradient(135deg,#1e3a8a 0%,#4c1d95 100%);
-  display:flex;align-items:center;padding:24px;position:relative;overflow:hidden
+.lp-page-hero{height:120px;background:linear-gradient(135deg,#1e3a8a,#4c1d95);display:flex;align-items:center;padding:20px;position:relative;overflow:hidden}
+.lp-page-hero::after{content:"";position:absolute;top:-50px;right:-50px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.06),transparent)}
+.lp-hl{width:50%;height:9px;background:rgba(255,255,255,.85);border-radius:3px;margin-bottom:8px}
+.lp-sub2{width:70%;height:6px;background:rgba(255,255,255,.4);border-radius:3px;margin-bottom:14px}
+.lp-btn-mock{width:100px;height:26px;background:linear-gradient(90deg,#60a5fa,#a78bfa);border-radius:6px}
+.lp-page-body{padding:16px;background:rgba(255,255,255,.02)}
+.lp-row{display:flex;gap:8px;margin-bottom:12px}
+.lp-card-mock{flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:10px}
+.lp-card-ico-mock{width:20px;height:20px;border-radius:4px;background:linear-gradient(135deg,#2563eb,#7c3aed);margin-bottom:7px}
+.lp-l1{height:5px;background:rgba(255,255,255,.45);border-radius:3px;width:60%;margin-bottom:5px}
+.lp-l2{height:4px;background:rgba(255,255,255,.2);border-radius:3px;width:80%}
+.lp-form-mock{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:12px;margin-top:12px}
+.lp-form-field{height:22px;background:rgba(255,255,255,.06);border-radius:5px;margin-bottom:7px}
+.lp-form-submit{height:28px;background:linear-gradient(90deg,#2563eb,#7c3aed);border-radius:5px}
+/* floating badge on visual */
+.lp-float-badge{
+  position:absolute;bottom:40px;left:-30px;
+  background:rgba(255,255,255,.9);backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,.8);border-radius:14px;
+  padding:12px 16px;
+  box-shadow:0 20px 40px rgba(0,0,0,.3);
+  animation:floatCard 6s ease-in-out infinite
 }
-.lp-page-hero::after{
-  content:"";position:absolute;top:-40px;right:-40px;
-  width:160px;height:160px;border-radius:50%;
-  background:radial-gradient(circle,rgba(255,255,255,.07),transparent 70%)
+.lp-fb-val{font-size:20px;font-weight:900;color:var(--dark);letter-spacing:-.5px}
+.lp-fb-lbl{font-size:11px;color:var(--muted)}
+.lp-float-badge2{
+  position:absolute;top:20px;right:-20px;
+  background:rgba(16,185,129,.9);border-radius:12px;
+  padding:10px 14px;
+  box-shadow:0 12px 24px rgba(16,185,129,.4);
+  animation:floatCard 8s ease-in-out infinite 1s
 }
-.lp-page-copy{flex:1;position:relative;z-index:1}
-.lp-page-hl{width:55%;height:9px;background:rgba(255,255,255,.85);border-radius:3px;margin-bottom:8px}
-.lp-page-sub{width:75%;height:6px;background:rgba(255,255,255,.4);border-radius:3px;margin-bottom:14px}
-.lp-page-btn{width:110px;height:26px;background:linear-gradient(90deg,#60a5fa,#a78bfa);border-radius:6px}
-.lp-page-body{padding:18px;background:rgba(255,255,255,.02)}
-.lp-section-row{display:flex;gap:10px;margin-bottom:14px}
-.lp-section-card{
-  flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);
-  border-radius:8px;padding:12px
-}
-.lp-card-icon{width:22px;height:22px;border-radius:5px;background:linear-gradient(135deg,#2563eb,#7c3aed);margin-bottom:8px}
-.lp-card-line1{height:5px;background:rgba(255,255,255,.5);border-radius:3px;width:65%;margin-bottom:5px}
-.lp-card-line2{height:4px;background:rgba(255,255,255,.2);border-radius:3px;width:85%}
-.lp-page-form{
-  margin-top:14px;background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:10px;padding:12px
-}
-.lp-form-row{height:24px;background:rgba(255,255,255,.06);border-radius:6px;margin-bottom:7px}
-.lp-form-btn{height:28px;background:linear-gradient(90deg,#2563eb,#7c3aed);border-radius:6px;width:100%}
-.lp-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
-.lp-tag{
-  font-size:11px;font-weight:600;
-  background:rgba(37,99,235,.15);border:1px solid rgba(37,99,235,.3);
-  color:#93c5fd;padding:4px 12px;border-radius:20px
-}
-@media(max-width:768px){
-  .lp-showcase-inner{grid-template-columns:1fr}
-  .lp-mockup{display:none}
-  .lp-showcase{padding:72px 24px}
-}
+.lp-fb2-txt{font-size:12px;font-weight:700;color:#fff}
+.lp-fb2-sub{font-size:10px;color:rgba(255,255,255,.7);margin-top:2px}
 
-/* ── ABOUT ── */
-.about-grid{display:grid;grid-template-columns:1fr 1.3fr;gap:80px;align-items:center}
+/* ── SOBRE MÍ (dark) ── */
+.about-section{
+  background:var(--dark);padding:100px 40px;position:relative;overflow:hidden
+}
+.about-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1.2fr;gap:80px;align-items:center;position:relative;z-index:1}
+.about-photo-side{display:flex;flex-direction:column;align-items:center;gap:24px}
 .about-photo-ring{
-  width:300px;height:300px;border-radius:50%;
-  border:2px dashed #bfdbfe;
+  width:320px;height:320px;border-radius:50%;
+  border:2px dashed rgba(37,99,235,.3);
   display:flex;align-items:center;justify-content:center;
-  animation:spin 22s linear infinite;margin:0 auto 24px
+  animation:spin 22s linear infinite
 }
 @keyframes spin{to{transform:rotate(360deg)}}
 .about-photo-inner{
-  width:270px;height:270px;border-radius:50%;
-  background:var(--grad-soft);border:3px solid #fff;
-  box-shadow:0 16px 48px rgba(37,99,235,.15);
-  display:flex;align-items:center;justify-content:center;
-  font-size:80px;font-weight:900;color:rgba(37,99,235,.15);
-  animation:spin 22s linear infinite reverse;
-  overflow:hidden
+  width:288px;height:288px;border-radius:50%;overflow:hidden;
+  border:3px solid rgba(255,255,255,.1);
+  box-shadow:0 16px 48px rgba(37,99,235,.2);
+  animation:spin 22s linear infinite reverse
 }
 .about-photo-inner img{width:100%;height:100%;object-fit:cover;object-position:center 10%}
-.about-cards{display:flex;flex-direction:column;gap:10px;max-width:300px;margin:0 auto}
+.about-cards{display:flex;flex-direction:column;gap:10px;width:100%}
 .about-card{
   display:flex;align-items:center;gap:14px;
-  background:#fff;border:1.5px solid var(--border);border-radius:14px;
-  padding:14px 18px;box-shadow:0 2px 8px rgba(15,23,42,.04)
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+  border-radius:14px;padding:14px 18px
 }
 .about-card-ico{
   width:38px;height:38px;border-radius:10px;
-  background:#eff6ff;border:1.5px solid #bfdbfe;
+  background:rgba(37,99,235,.12);border:1px solid rgba(37,99,235,.2);
   display:flex;align-items:center;justify-content:center;flex-shrink:0
 }
-.about-card-ico svg{width:18px;height:18px;stroke:var(--blue);fill:none;stroke-width:1.8}
-.about-card-t{font-size:13px;font-weight:700;color:var(--dark)}
-.about-card-s{font-size:11px;color:var(--muted);margin-top:2px}
-.about-text h2{font-size:38px;font-weight:900;letter-spacing:-1.5px;line-height:1.15;margin-bottom:20px;color:var(--dark)}
-.about-text p{font-size:14px;color:var(--muted);line-height:1.8;margin-bottom:14px}
+.about-card-ico svg{width:18px;height:18px;stroke:#60a5fa;fill:none;stroke-width:1.8}
+.about-card-t{font-size:13px;font-weight:700;color:#fff}
+.about-card-s{font-size:11px;color:rgba(255,255,255,.35);margin-top:2px}
+.about-text h2{
+  font-size:clamp(34px,3.5vw,48px);font-weight:900;
+  letter-spacing:-1.5px;line-height:1.1;color:#fff;margin-bottom:20px
+}
+.about-text h2 .grad{background:var(--grad-light);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.about-text p{font-size:14px;color:rgba(255,255,255,.45);line-height:1.85;margin-bottom:12px}
 .skills-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
 .skill-tag{
   font-size:12px;font-weight:600;
-  background:#eff6ff;border:1px solid #bfdbfe;
-  color:var(--blue);padding:5px 14px;border-radius:20px
+  background:rgba(37,99,235,.1);border:1px solid rgba(37,99,235,.2);
+  color:#93c5fd;padding:5px 14px;border-radius:20px
 }
 
 /* ── CTA ── */
 .cta-section{
-  margin:0 24px 80px;border-radius:28px;overflow:hidden;
-  position:relative;padding:80px 24px;text-align:center;
-  background:var(--dark);
+  background:#fff;padding:100px 40px;text-align:center;
+  position:relative;overflow:hidden
 }
 .cta-section::before{
-  content:"";position:absolute;top:0;left:0;right:0;bottom:0;
-  background:linear-gradient(135deg,rgba(37,99,235,.3),rgba(124,58,237,.3));
+  content:"";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:800px;height:400px;border-radius:50%;
+  background:radial-gradient(circle,rgba(37,99,235,.06),transparent 70%);
   pointer-events:none
 }
-.cta-section h2{font-size:44px;font-weight:900;letter-spacing:-2px;margin-bottom:16px;color:#fff;position:relative}
-.cta-section h2 .grad{background:linear-gradient(135deg,#60a5fa,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.cta-section p{font-size:16px;color:rgba(255,255,255,.65);margin-bottom:36px;position:relative}
-.cta-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;position:relative}
+.cta-inner{max-width:700px;margin:0 auto;position:relative;z-index:1}
+.cta-section h2{
+  font-size:clamp(38px,5vw,62px);font-weight:900;
+  letter-spacing:-2.5px;color:var(--dark);margin-bottom:16px;line-height:1
+}
+.cta-section h2 .grad{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.cta-section p{font-size:16px;color:var(--muted);margin-bottom:40px;line-height:1.75}
+.cta-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.btn-primary-dark{
+  display:inline-flex;align-items:center;gap:9px;
+  background:var(--dark);color:#fff;font-size:14px;font-weight:700;
+  padding:16px 32px;border-radius:12px;text-decoration:none;
+  transition:background .2s,transform .2s;
+  box-shadow:0 8px 24px rgba(15,23,42,.2)
+}
+.btn-primary-dark:hover{background:#1e293b;transform:translateY(-2px)}
+.btn-grad{
+  display:inline-flex;align-items:center;gap:9px;
+  background:var(--grad);color:#fff;font-size:14px;font-weight:700;
+  padding:16px 32px;border-radius:12px;text-decoration:none;
+  box-shadow:0 8px 24px rgba(37,99,235,.35);
+  transition:opacity .2s,transform .2s
+}
+.btn-grad:hover{opacity:.9;transform:translateY(-2px)}
 .cta-contact-row{
-  display:flex;justify-content:center;gap:16px;flex-wrap:wrap;
-  margin-top:28px;position:relative
+  display:flex;justify-content:center;gap:16px;flex-wrap:wrap;margin-top:32px
 }
 .contact-item{
-  display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(255,255,255,.6);
-  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
+  display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);
+  background:var(--bg2);border:1px solid var(--border);
   padding:10px 18px;border-radius:10px;text-decoration:none;
-  transition:border-color .2s,color .2s,background .2s
+  transition:border-color .2s,color .2s
 }
-.contact-item:hover{border-color:rgba(255,255,255,.3);color:#fff;background:rgba(255,255,255,.12)}
+.contact-item:hover{border-color:#94a3b8;color:var(--dark)}
 .contact-item svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;flex-shrink:0}
 
 /* ── FORM ── */
-.form-section{padding:0 24px 80px;max-width:740px;margin:0 auto}
-.form-wrap{
-  background:#fff;border:1.5px solid var(--border);
-  border-radius:24px;padding:40px;
-  box-shadow:0 8px 32px rgba(15,23,42,.06)
+.form-section{
+  background:var(--dark2);padding:0 40px 100px
 }
+.form-wrap{
+  max-width:740px;margin:0 auto;
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+  border-radius:24px;padding:48px;
+  box-shadow:0 8px 32px rgba(0,0,0,.3)
+}
+.form-wrap h3{font-size:22px;font-weight:800;color:#fff;margin-bottom:6px;letter-spacing:-.5px}
+.form-wrap .form-desc{font-size:14px;color:rgba(255,255,255,.4);margin-bottom:32px}
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .form-group{display:flex;flex-direction:column;gap:8px}
 .form-group.full{grid-column:1/-1}
-.form-group label{font-size:12px;font-weight:700;color:var(--dark);letter-spacing:.3px}
+.form-group label{font-size:12px;font-weight:700;color:rgba(255,255,255,.55);letter-spacing:.3px}
 .form-group input,.form-group select,.form-group textarea{
-  padding:12px 16px;border:1.5px solid var(--border);border-radius:12px;
+  padding:12px 16px;border:1.5px solid rgba(255,255,255,.1);border-radius:12px;
   font-size:14px;font-family:"Inter",sans-serif;
-  color:var(--dark);background:#fff;
+  color:#fff;background:rgba(255,255,255,.06);
   outline:none;transition:border-color .2s,box-shadow .2s;width:100%
 }
 .form-group input:focus,.form-group select:focus,.form-group textarea:focus{
-  border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.1)
+  border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.15)
 }
+.form-group select option{background:var(--dark2);color:#fff}
 .form-group textarea{resize:vertical;min-height:120px}
-.form-group input::placeholder,.form-group textarea::placeholder{color:var(--light)}
+.form-group input::placeholder,.form-group textarea::placeholder{color:rgba(255,255,255,.25)}
 .form-submit{
   width:100%;margin-top:20px;padding:14px;
-  background:var(--dark);color:#fff;font-size:14px;font-weight:700;
+  background:var(--grad);color:#fff;font-size:14px;font-weight:700;
   border:none;border-radius:12px;cursor:pointer;
   display:flex;align-items:center;justify-content:center;gap:8px;
-  transition:background .2s,transform .2s
+  transition:opacity .2s,transform .2s;
+  box-shadow:0 4px 16px rgba(37,99,235,.4)
 }
-.form-submit:hover{background:#1e293b;transform:translateY(-1px)}
-.form-note{font-size:12px;color:var(--light);text-align:center;margin-top:12px;display:flex;align-items:center;justify-content:center;gap:6px}
+.form-submit:hover{opacity:.9;transform:translateY(-1px)}
+.form-note{font-size:12px;color:rgba(255,255,255,.25);text-align:center;margin-top:12px;display:flex;align-items:center;justify-content:center;gap:6px}
 .form-note svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2}
 .form-success{display:none;text-align:center;padding:40px}
-.form-success svg{width:56px;height:56px;stroke:var(--green);fill:none;stroke-width:1.5;margin:0 auto 16px;display:block}
-.form-success h3{font-size:22px;font-weight:700;margin-bottom:10px;color:var(--dark)}
-.form-success p{font-size:14px;color:var(--muted);line-height:1.7}
+.form-success svg{width:56px;height:56px;stroke:#10b981;fill:none;stroke-width:1.5;margin:0 auto 16px;display:block}
+.form-success h3{font-size:22px;font-weight:700;margin-bottom:10px;color:#fff}
+.form-success p{font-size:14px;color:rgba(255,255,255,.4);line-height:1.7}
 
 /* ── FOOTER ── */
 .footer{
-  border-top:1px solid var(--border);padding:32px 24px;
-  text-align:center;background:var(--bg2)
+  background:var(--dark);border-top:1px solid rgba(255,255,255,.06);
+  padding:36px 40px;text-align:center
 }
-.footer-logo{font-size:18px;font-weight:800;letter-spacing:-.5px;margin-bottom:8px;color:var(--dark)}
-.footer-logo span{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.footer p{font-size:12px;color:var(--light)}
+.footer-logo{font-size:18px;font-weight:800;letter-spacing:-.5px;margin-bottom:8px;color:#fff}
+.footer-logo span{background:var(--grad-light);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.footer p{font-size:12px;color:rgba(255,255,255,.25)}
 
 /* ── AOS ── */
-.aos{opacity:0;transform:translateY(28px);transition:opacity .6s ease,transform .6s ease}
+.aos{opacity:0;transform:translateY(32px);transition:opacity .65s ease,transform .65s ease}
 .aos.visible{opacity:1;transform:none}
 
-/* ── WA ICON ── */
+/* ── WA SVG ── */
 .wa-ico{width:18px;height:18px;fill:#25d366;flex-shrink:0}
 
 /* ── RESPONSIVE ── */
 @media(max-width:1024px){
-  .hero h1{font-size:46px}
-  .services-grid{grid-template-columns:1fr 1fr}
-  .process-grid{grid-template-columns:repeat(2,1fr)}
-  .stats-section{grid-template-columns:repeat(2,1fr)}
+  .hero-inner{grid-template-columns:1fr;gap:60px}
+  .hero-right{display:none}
+  .hero h1{font-size:56px}
+  .svc-grid{grid-template-columns:1fr 1fr}
+  .process-steps{grid-template-columns:repeat(2,1fr);gap:40px}
+  .process-steps::before{display:none}
+  .plans-grid{grid-template-columns:1fr}
+  .lp-inner{grid-template-columns:1fr}
+  .lp-showcase-bg{display:none}
+  .about-inner{grid-template-columns:1fr;gap:48px}
+  .stats-bar{grid-template-columns:repeat(2,1fr)}
 }
 @media(max-width:768px){
+  .nav{padding:16px 20px}
   .nav-links,.nav-cta{display:none}
   .nav-mobile-btn{display:block}
-  .hero-inner{grid-template-columns:1fr}
-  .hero-right{display:none}
-  .hero h1{font-size:36px;letter-spacing:-1.5px}
-  .services-grid{grid-template-columns:1fr}
-  .process-grid{grid-template-columns:1fr}
-  .plans-grid{grid-template-columns:1fr}
-  .about-grid{grid-template-columns:1fr}
-  .about-text{order:-1}
-  .section-title{font-size:30px}
-  .cta-section h2{font-size:30px}
-  .landing-addon{grid-template-columns:1fr}
-  .addon-right{text-align:left}
+  .hero{padding:100px 20px 60px}
+  .hero h1{font-size:42px;letter-spacing:-2px}
+  .hero-stats{gap:24px}
+  .svc-grid{grid-template-columns:1fr}
+  .services-section,.process-section,.plans-section,.lp-showcase,.about-section,.cta-section{padding:72px 20px}
+  .form-section{padding:0 20px 72px}
+  .stats-bar{padding:40px 20px;grid-template-columns:1fr 1fr}
   .form-grid{grid-template-columns:1fr}
-  .form-group.full{grid-column:1}
-  .hero{padding:100px 24px 60px}
-  .hero::after,.hero::before{display:none}
-}
-@media(prefers-reduced-motion:reduce){
-  *{animation:none!important;transition:none!important}
+  .form-wrap{padding:28px 20px}
+  .section-title-dark,.section-title-light{font-size:32px}
+  .about-photo-ring{width:260px;height:260px}
+  .about-photo-inner{width:234px;height:234px}
+  .hero-btns{flex-direction:column}
+  .btn-primary,.btn-ghost{justify-content:center}
+  .nav{left:0;right:0;top:0;width:100%;border-radius:0;border-left:none;border-right:none;border-top:none}
 }
 </style>
 </head>
 <body>
 
 <!-- NAV -->
-<nav class="nav">
+<nav class="nav" id="mainNav">
   <a href="#" class="nav-logo">Vornix<span>.Digital</span></a>
   <div class="nav-links">
     <a href="#servicios">Servicios</a>
     <a href="#landing-pages">Landing Pages</a>
     <a href="#planes">Planes</a>
     <a href="#sobre-mi">Sobre mí</a>
-    <a href="https://vornixdigital.hashnode.dev" target="_blank" rel="noopener">Blog</a>
     <a href="#contacto">Contacto</a>
   </div>
-  <a href="#contacto" class="nav-cta">Llamada gratuita →</a>
-  <button class="nav-mobile-btn" onclick="document.getElementById('mobileMenu').classList.add('open')" aria-label="Abrir menú">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  <a href="https://wa.me/TUNUMERO?text=Hola%20Rafael%2C%20me%20gustar%C3%ADa%20agendar%20una%20llamada%20gratuita%20con%20Vornix%20Digital." target="_blank" rel="noopener" class="nav-cta">
+    Hablemos →
+  </a>
+  <button class="nav-mobile-btn" onclick="document.getElementById('mobileMenu').classList.add('open')" aria-label="Menú">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
   </button>
 </nav>
 
 <!-- MOBILE MENU -->
 <div class="mobile-menu" id="mobileMenu">
-  <button class="mobile-menu-close" onclick="document.getElementById('mobileMenu').classList.remove('open')" aria-label="Cerrar menú">✕</button>
+  <button class="mobile-menu-close" onclick="document.getElementById('mobileMenu').classList.remove('open')">✕</button>
   <a href="#servicios" onclick="document.getElementById('mobileMenu').classList.remove('open')">Servicios</a>
+  <a href="#landing-pages" onclick="document.getElementById('mobileMenu').classList.remove('open')">Landing Pages</a>
   <a href="#planes" onclick="document.getElementById('mobileMenu').classList.remove('open')">Planes</a>
   <a href="#sobre-mi" onclick="document.getElementById('mobileMenu').classList.remove('open')">Sobre mí</a>
   <a href="#contacto" onclick="document.getElementById('mobileMenu').classList.remove('open')">Contacto</a>
-  <a href="#contacto" class="btn-primary" onclick="document.getElementById('mobileMenu').classList.remove('open')">Llamada gratuita →</a>
+  <a href="https://wa.me/TUNUMERO?text=Hola%20Rafael%2C%20me%20gustar%C3%ADa%20agendar%20una%20llamada%20gratuita%20con%20Vornix%20Digital." target="_blank" rel="noopener" style="background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;padding:14px 32px;border-radius:12px;font-size:16px">Agenda tu llamada →</a>
 </div>
 
 <!-- HERO -->
 <section class="hero">
+  <div class="hero-mesh"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-noise"></div>
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
   <div class="hero-inner">
     <div>
       <div class="hero-badge">
         <span class="hero-badge-dot"></span>
         Consultor disponible · República Dominicana
       </div>
-      <h1>La diferencia entre<br><span class="grad">crecer online</span><br>o quedarte<br>invisible.</h1>
-      <p>Estrategia de redes, SEO y landing pages que no solo se ven bonitas — convierte visitantes en clientes reales. Sin humo. Solo resultados.</p>
+      <h1>
+        La diferencia entre
+        <span class="grad">crecer online</span>
+        o quedarte invisible.
+      </h1>
+      <p class="hero-sub">Estrategia de redes, SEO y landing pages que no solo se ven bonitas — convierten visitantes en clientes reales. Sin humo. Solo resultados.</p>
       <div class="hero-btns">
         <a href="#contacto" class="btn-primary">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
           Agenda tu llamada gratis
         </a>
-        <a href="#planes" class="btn-ghost">Ver servicios →</a>
+        <a href="#planes" class="btn-ghost">Ver planes →</a>
       </div>
-      <div class="hero-trust">
-        <div class="hero-trust-avatars">
-          <span style="background:linear-gradient(135deg,#2563eb,#7c3aed)">R</span>
-          <span style="background:linear-gradient(135deg,#0ea5e9,#10b981)">M</span>
-          <span style="background:linear-gradient(135deg,#f59e0b,#ef4444)">C</span>
+      <div class="hero-stats">
+        <div>
+          <div class="hero-stat-val">+50</div>
+          <div class="hero-stat-lbl">Marcas creciendo</div>
         </div>
-        <span class="hero-trust-text">+50 marcas ya confían en Vornix.Digital</span>
+        <div class="hero-stat-sep"></div>
+        <div>
+          <div class="hero-stat-val">+5</div>
+          <div class="hero-stat-lbl">Años de experiencia</div>
+        </div>
+        <div class="hero-stat-sep"></div>
+        <div>
+          <div class="hero-stat-val">8.4%</div>
+          <div class="hero-stat-lbl">Conv. media de clientes</div>
+        </div>
       </div>
     </div>
     <div class="hero-right">
-      <div class="dashboard">
-        <div class="dash-header">
-          <span class="dash-title">Performance Dashboard</span>
-          <span class="dash-live"><span class="dash-live-dot"></span>En vivo</span>
+      <div class="hero-photo-wrap">
+        <div class="hero-photo-placeholder" style="font-size:80px;color:rgba(255,255,255,.08);align-items:flex-end;padding-bottom:0;overflow:hidden;height:100%;display:flex;justify-content:center">
+          <!-- Pon aquí una foto tuya en entorno de trabajo -->
+          📊
         </div>
-        <div class="dash-kpis">
-          <div class="dash-kpi">
-            <div class="dash-kpi-val green">+312%</div>
-            <div class="dash-kpi-lbl">Alcance orgánico</div>
-            <div class="dash-kpi-delta">▲ vs mes anterior</div>
-          </div>
-          <div class="dash-kpi">
-            <div class="dash-kpi-val blue">8.4%</div>
-            <div class="dash-kpi-lbl">Tasa conversión</div>
-            <div class="dash-kpi-delta">▲ +2.1pp</div>
-          </div>
-          <div class="dash-kpi">
-            <div class="dash-kpi-val">4.2x</div>
-            <div class="dash-kpi-lbl">ROAS promedio</div>
-            <div class="dash-kpi-delta">▲ +0.8x</div>
-          </div>
+      </div>
+      <!-- Floating metric cards -->
+      <div class="float-card fc-top">
+        <div class="fc-icon" style="background:rgba(16,185,129,.15)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
         </div>
-        <div class="dash-chart">
-          <div class="dash-chart-hdr">
-            <span class="dash-chart-lbl">Tráfico orgánico · últimas 8 semanas</span>
-          </div>
-          <svg class="dash-svg" viewBox="0 0 400 80" preserveAspectRatio="none">
-            <defs>
-              <linearGradient id="gr1" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#2563eb" stop-opacity=".2"/>
-                <stop offset="100%" stop-color="#2563eb" stop-opacity="0"/>
-              </linearGradient>
-              <linearGradient id="gr2" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#7c3aed" stop-opacity=".15"/>
-                <stop offset="100%" stop-color="#7c3aed" stop-opacity="0"/>
-              </linearGradient>
-            </defs>
-            <path d="M0,65 C30,60 60,45 100,38 C140,31 170,50 210,30 C250,10 280,22 320,15 C360,8 380,12 400,8 L400,80 L0,80 Z" fill="url(#gr1)"/>
-            <path d="M0,65 C30,60 60,45 100,38 C140,31 170,50 210,30 C250,10 280,22 320,15 C360,8 380,12 400,8" fill="none" stroke="#2563eb" stroke-width="2.5"/>
-            <path d="M0,70 C40,68 80,60 120,52 C160,44 190,58 230,48 C270,38 300,42 340,35 C370,29 390,30 400,28 L400,80 L0,80 Z" fill="url(#gr2)"/>
-            <path d="M0,70 C40,68 80,60 120,52 C160,44 190,58 230,48 C270,38 300,42 340,35 C370,29 390,30 400,28" fill="none" stroke="#7c3aed" stroke-width="2"/>
-          </svg>
+        <div class="fc-val">+312%</div>
+        <div class="fc-lbl">Alcance orgánico</div>
+        <div class="fc-delta">▲ último trimestre</div>
+      </div>
+      <div class="float-card fc-mid">
+        <div class="fc-icon" style="background:rgba(37,99,235,.15)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
         </div>
-        <div class="dash-channels">
-          <div class="dash-channel">
-            <div class="dash-channel-name">Instagram</div>
-            <div class="dash-channel-val">18.4k</div>
-            <div class="dash-channel-bar"><div class="dash-channel-fill" style="width:85%;background:linear-gradient(90deg,#e1306c,#f77737)"></div></div>
-          </div>
-          <div class="dash-channel">
-            <div class="dash-channel-name">TikTok</div>
-            <div class="dash-channel-val">32.1k</div>
-            <div class="dash-channel-bar"><div class="dash-channel-fill" style="width:95%;background:#000"></div></div>
-          </div>
-          <div class="dash-channel">
-            <div class="dash-channel-name">YouTube</div>
-            <div class="dash-channel-val">5.2k</div>
-            <div class="dash-channel-bar"><div class="dash-channel-fill" style="width:45%;background:#ff0000"></div></div>
-          </div>
-          <div class="dash-channel">
-            <div class="dash-channel-name">SEO</div>
-            <div class="dash-channel-val">+124%</div>
-            <div class="dash-channel-bar"><div class="dash-channel-fill" style="width:70%;background:linear-gradient(90deg,#2563eb,#7c3aed)"></div></div>
-          </div>
+        <div class="fc-val">8.4%</div>
+        <div class="fc-lbl">Tasa conversión</div>
+        <div class="fc-delta">▲ +2.1pp</div>
+      </div>
+      <div class="float-card fc-bot">
+        <div class="fc-icon" style="background:rgba(124,58,237,.15)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
         </div>
+        <div class="fc-val">7 días</div>
+        <div class="fc-lbl">Entrega landing page</div>
+        <div class="fc-delta">✓ Garantizado</div>
       </div>
     </div>
   </div>
@@ -778,139 +784,154 @@ body{font-family:"Inter",sans-serif;background:var(--bg);color:var(--text);overf
 <!-- MARQUEE -->
 <div class="marquee-section">
   <div class="marquee-track">
-    <span class="marquee-item">Marketing Digital</span><span class="marquee-item">·</span>
-    <span class="marquee-item">Estrategia SEO</span><span class="marquee-item">·</span>
-    <span class="marquee-item">Redes Sociales</span><span class="marquee-item">·</span>
-    <span class="marquee-item">Landing Pages</span><span class="marquee-item">·</span>
-    <span class="marquee-item">Growth Marketing</span><span class="marquee-item">·</span>
-    <span class="marquee-item">Analítica Web</span><span class="marquee-item">·</span>
-    <span class="marquee-item">Contenido Visual</span><span class="marquee-item">·</span>
-    <span class="marquee-item">Marketing Digital</span><span class="marquee-item">·</span>
-    <span class="marquee-item">Estrategia SEO</span><span class="marquee-item">·</span>
-    <span class="marquee-item">Redes Sociales</span><span class="marquee-item">·</span>
-    <span class="marquee-item">Landing Pages</span><span class="marquee-item">·</span>
-    <span class="marquee-item">Growth Marketing</span><span class="marquee-item">·</span>
-    <span class="marquee-item">Analítica Web</span><span class="marquee-item">·</span>
-    <span class="marquee-item">Contenido Visual</span><span class="marquee-item">·</span>
+    <span class="marquee-item hi">Marketing Digital</span><span class="marquee-item"><span class="marquee-dot"></span></span>
+    <span class="marquee-item">SEO & Posicionamiento</span><span class="marquee-item"><span class="marquee-dot"></span></span>
+    <span class="marquee-item hi">Redes Sociales</span><span class="marquee-item"><span class="marquee-dot"></span></span>
+    <span class="marquee-item">Landing Pages</span><span class="marquee-item"><span class="marquee-dot"></span></span>
+    <span class="marquee-item hi">Estrategia Digital</span><span class="marquee-item"><span class="marquee-dot"></span></span>
+    <span class="marquee-item">Analytics & Datos</span><span class="marquee-item"><span class="marquee-dot"></span></span>
+    <span class="marquee-item hi">Copywriting</span><span class="marquee-item"><span class="marquee-dot"></span></span>
+    <span class="marquee-item">Conversión</span><span class="marquee-item"><span class="marquee-dot"></span></span>
+    <!-- repeat -->
+    <span class="marquee-item hi">Marketing Digital</span><span class="marquee-item"><span class="marquee-dot"></span></span>
+    <span class="marquee-item">SEO & Posicionamiento</span><span class="marquee-item"><span class="marquee-dot"></span></span>
+    <span class="marquee-item hi">Redes Sociales</span><span class="marquee-item"><span class="marquee-dot"></span></span>
+    <span class="marquee-item">Landing Pages</span><span class="marquee-item"><span class="marquee-dot"></span></span>
+    <span class="marquee-item hi">Estrategia Digital</span><span class="marquee-item"><span class="marquee-dot"></span></span>
+    <span class="marquee-item">Analytics & Datos</span><span class="marquee-item"><span class="marquee-dot"></span></span>
+    <span class="marquee-item hi">Copywriting</span><span class="marquee-item"><span class="marquee-dot"></span></span>
+    <span class="marquee-item">Conversión</span><span class="marquee-item"><span class="marquee-dot"></span></span>
   </div>
 </div>
 
 <!-- STATS -->
-<div class="stats-section">
-  <div class="stat-card aos">
-    <span class="stat-n" data-target="50">0</span>
-    <span class="stat-l">Marcas acompañadas</span>
+<div class="stats-bar">
+  <div class="stat-item aos">
+    <div class="stat-val"><span class="grad" data-target="50">0</span>+</div>
+    <div class="stat-lbl">Marcas acompañadas</div>
   </div>
-  <div class="stat-card aos" style="transition-delay:.1s">
-    <span class="stat-n" data-target="312" data-suffix="%">0%</span>
-    <span class="stat-l">Incremento promedio en alcance</span>
+  <div class="stat-item aos" style="transition-delay:.1s">
+    <div class="stat-val"><span class="grad" data-target="5">0</span>+</div>
+    <div class="stat-lbl">Años de experiencia</div>
   </div>
-  <div class="stat-card aos" style="transition-delay:.2s">
-    <span class="stat-n" data-target="8" data-suffix="x">0x</span>
-    <span class="stat-l">ROI promedio de clientes</span>
+  <div class="stat-item aos" style="transition-delay:.2s">
+    <div class="stat-val"><span class="grad" data-target="312">0</span>%</div>
+    <div class="stat-lbl">Aumento alcance orgánico</div>
   </div>
-  <div class="stat-card aos" style="transition-delay:.3s">
-    <span class="stat-n" data-target="4">0</span>
-    <span class="stat-l">Años liderando estrategia digital</span>
+  <div class="stat-item aos" style="transition-delay:.3s">
+    <div class="stat-val"><span class="grad" data-target="4">0</span>.2x</div>
+    <div class="stat-lbl">ROAS promedio clientes</div>
   </div>
 </div>
 
 <!-- SERVICIOS -->
-<div class="section-alt">
-  <div class="section-alt-inner" id="servicios">
-    <div class="aos">
-      <div class="tag">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+<section class="services-section" id="servicios">
+  <div class="services-grid-inner">
+    <div class="services-header aos">
+      <div class="section-tag section-tag-dark">
+        <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
         Servicios
       </div>
-      <h2 class="section-title">No gestionamos redes.<br><span class="grad">Construimos marcas.</span></h2>
-      <p class="section-sub">Estrategia real, ejecución sin excusas y datos que hablan solos. Para marcas que no quieren pasar desapercibidas.</p>
+      <h2 class="section-title-dark">No gestionamos redes.<br><span class="grad">Construimos marcas.</span></h2>
+      <p class="section-sub-dark">Estrategia real, ejecución sin excusas y datos que hablan solos. Para negocios que no quieren pasar desapercibidos.</p>
     </div>
-    <div class="services-grid">
+    <div class="svc-grid">
       <div class="svc-card aos">
-        <div class="svc-icon"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+        <span class="svc-num">01</span>
+        <div class="svc-icon-wrap"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
         <h3>Marketing Digital & SEO</h3>
         <p>Posicionamiento orgánico en buscadores, campañas de contenido y estrategia digital completa para atraer tráfico que convierte.</p>
         <div class="svc-tags"><span class="svc-tag">SEO On-Page</span><span class="svc-tag">Link Building</span><span class="svc-tag">Contenido</span><span class="svc-tag">Analytics</span></div>
       </div>
-      <div class="svc-card aos" style="transition-delay:.1s">
-        <div class="svc-icon"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></div>
+      <div class="svc-card aos" style="transition-delay:.08s">
+        <span class="svc-num">02</span>
+        <div class="svc-icon-wrap"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></div>
         <h3>Consultoría de Redes Sociales</h3>
         <p>Estrategia editorial, gestión de comunidad y creación de contenido para Instagram, TikTok y LinkedIn orientada a conversión real.</p>
         <div class="svc-tags"><span class="svc-tag">Instagram</span><span class="svc-tag">TikTok</span><span class="svc-tag">LinkedIn</span><span class="svc-tag">Reels</span></div>
       </div>
-      <div class="svc-card aos" style="transition-delay:.2s">
-        <div class="svc-icon"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
+      <div class="svc-card aos" style="transition-delay:.16s">
+        <span class="svc-num">03</span>
+        <div class="svc-icon-wrap"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
         <h3>Landing Pages que Convierten</h3>
         <p>Diseño y desarrollo de páginas de aterrizaje optimizadas para una sola acción. Sin distracciones. Adaptadas a tu marca y dispositivo.</p>
         <div class="svc-tags"><span class="svc-tag">CRO</span><span class="svc-tag">Mobile-first</span><span class="svc-tag">Copywriting</span></div>
       </div>
-      <div class="svc-card aos" style="transition-delay:.05s">
-        <div class="svc-icon"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
+      <div class="svc-card aos" style="transition-delay:.06s">
+        <span class="svc-num">04</span>
+        <div class="svc-icon-wrap"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
         <h3>Auditoría & Diagnóstico Digital</h3>
-        <p>Análisis completo de tu presencia en redes y web. Identifica qué falla, qué funciona y un plan de acción a 90 días con prioridades claras.</p>
+        <p>Análisis completo de tu presencia en redes y web. Identifica qué falla, qué funciona y un plan de acción a 90 días.</p>
         <div class="svc-tags"><span class="svc-tag">Auditoría RRSS</span><span class="svc-tag">SEO Técnico</span><span class="svc-tag">Plan 90 días</span></div>
       </div>
-      <div class="svc-card aos" style="transition-delay:.15s">
-        <div class="svc-icon"><svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
+      <div class="svc-card aos" style="transition-delay:.14s">
+        <span class="svc-num">05</span>
+        <div class="svc-icon-wrap"><svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
         <h3>Analítica & Reporting</h3>
         <p>Dashboards claros con métricas que importan. Datos convertidos en decisiones accionables para escalar lo que funciona.</p>
         <div class="svc-tags"><span class="svc-tag">GA4</span><span class="svc-tag">Dashboards</span><span class="svc-tag">KPIs</span></div>
       </div>
-      <div class="svc-card aos" style="transition-delay:.25s">
-        <div class="svc-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+      <div class="svc-card aos" style="transition-delay:.22s">
+        <span class="svc-num">06</span>
+        <div class="svc-icon-wrap"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
         <h3>Formación de Equipos</h3>
         <p>Capacitación para que tu equipo domine las redes sociales y ejecute estrategias digitales con impacto real en ventas.</p>
         <div class="svc-tags"><span class="svc-tag">Workshops</span><span class="svc-tag">Online</span><span class="svc-tag">Metodología</span></div>
       </div>
     </div>
   </div>
-</div>
+</section>
 
 <!-- PROCESO -->
-<div class="section">
-  <div class="center aos">
-    <div class="tag">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-      Proceso
+<section class="process-section">
+  <div class="process-inner">
+    <div class="aos">
+      <div class="section-tag">
+        <svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        Proceso
+      </div>
+      <h2 class="section-title-light">Cómo trabajo <span class="grad">contigo</span></h2>
+      <p class="section-sub-light">Un proceso claro en 4 pasos diseñado para que veas resultados desde el primer mes.</p>
     </div>
-    <h2 class="section-title">Cómo trabajo contigo</h2>
-    <p class="section-sub">Un proceso claro en 4 pasos diseñado para que veas resultados desde el primer mes.</p>
+    <div class="process-steps">
+      <div class="process-step aos">
+        <div class="step-circle">01</div>
+        <span class="step-label">Diagnóstico</span>
+        <h4>Auditoría completa</h4>
+        <p>Analizo tu presencia digital: redes, web, SEO y competencia. Identifico oportunidades reales y puntos de fuga.</p>
+      </div>
+      <div class="process-step aos" style="transition-delay:.1s">
+        <div class="step-circle">02</div>
+        <span class="step-label">Estrategia</span>
+        <h4>Plan personalizado</h4>
+        <p>Diseño una estrategia a medida con objetivos claros, KPIs definidos y acciones prioritarias según tu presupuesto.</p>
+      </div>
+      <div class="process-step aos" style="transition-delay:.2s">
+        <div class="step-circle">03</div>
+        <span class="step-label">Ejecución</span>
+        <h4>Implementación y contenido</h4>
+        <p>Pongo en marcha la estrategia: contenido, calendarios editoriales, optimizaciones SEO y landing pages que convierten.</p>
+      </div>
+      <div class="process-step aos" style="transition-delay:.3s">
+        <div class="step-circle">04</div>
+        <span class="step-label">Optimización</span>
+        <h4>Medición y escala</h4>
+        <p>Reviso resultados cada mes con dashboards claros. Escalo lo que funciona y corrijo en tiempo real.</p>
+      </div>
+    </div>
   </div>
-  <div class="process-grid">
-    <div class="process-step aos">
-      <span class="step-num">01 · DIAGNÓSTICO</span>
-      <h4>Auditoría completa</h4>
-      <p>Analizo tu presencia digital actual: redes, web, SEO y competencia. Identifico oportunidades reales y puntos de fuga.</p>
-    </div>
-    <div class="process-step aos" style="transition-delay:.1s">
-      <span class="step-num">02 · ESTRATEGIA</span>
-      <h4>Plan personalizado</h4>
-      <p>Diseño una estrategia a medida con objetivos claros, KPIs definidos y acciones prioritarias según tu presupuesto.</p>
-    </div>
-    <div class="process-step aos" style="transition-delay:.2s">
-      <span class="step-num">03 · EJECUCIÓN</span>
-      <h4>Implementación y contenido</h4>
-      <p>Pongo en marcha la estrategia: contenido, calendarios editoriales, optimizaciones SEO y landing pages que convierten.</p>
-    </div>
-    <div class="process-step aos" style="transition-delay:.3s">
-      <span class="step-num">04 · OPTIMIZACIÓN</span>
-      <h4>Medición y escala</h4>
-      <p>Reviso resultados cada mes con dashboards claros. Escalo lo que funciona y corrijo en tiempo real.</p>
-    </div>
-  </div>
-</div>
+</section>
 
 <!-- PLANES -->
-<div class="section-alt">
-  <div class="section-alt-inner" id="planes">
+<section class="plans-section" id="planes">
+  <div class="plans-inner">
     <div class="center aos">
-      <div class="tag">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      <div class="section-tag section-tag-dark">
+        <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
         Planes
       </div>
-      <h2 class="section-title">Invierte en resultados,<br>no en <span class="grad">promesas</span></h2>
-      <p class="section-sub">Tres planes para distintos momentos de crecimiento. Sin letras pequeñas, sin sorpresas.</p>
+      <h2 class="section-title-dark">Invierte en resultados,<br><span class="grad">no en promesas.</span></h2>
+      <p class="section-sub-dark" style="max-width:480px">Tres planes para distintos momentos de crecimiento. Sin letras pequeñas, sin sorpresas.</p>
     </div>
     <div class="plans-grid">
       <div class="plan aos">
@@ -921,19 +942,18 @@ body{font-family:"Inter",sans-serif;background:var(--bg);color:var(--text);overf
           <span class="price-sub">≈ US$ 348 · pago único por proyecto</span>
         </div>
         <ul>
-          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Auditoría de redes sociales y web</li>
-          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Informe detallado con hallazgos clave</li>
-          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Plan de acción a 90 días</li>
-          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Sesión de presentación y Q&A</li>
-          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Análisis de competencia</li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Auditoría de redes sociales y web</li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Informe detallado con hallazgos clave</li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Plan de acción a 90 días</li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Sesión de presentación y Q&A</li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Análisis de competencia</li>
         </ul>
         <a href="https://wa.me/TUNUMERO?text=Hola%20Rafael%2C%20me%20interesa%20el%20Plan%20B%C3%A1sico%20de%20Vornix%20Digital%20(RD%24%2020.500).%20%C2%BFPodr%C3%ADamos%20hablar%3F" target="_blank" rel="noopener" class="plan-btn plan-btn-ghost">
-          <svg class="wa-ico" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
-          Solicitar por WhatsApp
+          <svg width="18" height="18" viewBox="0 0 24 24" style="fill:#25d366;flex-shrink:0"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg> Solicitar por WhatsApp
         </a>
       </div>
       <div class="plan hot aos" style="transition-delay:.1s">
-        <div class="plan-popular">⭐ Más solicitado</div>
+        <div class="plan-badge">⭐ Más solicitado</div>
         <h3>Estratégico</h3>
         <p class="plan-desc">Acompañamiento mensual completo</p>
         <div class="plan-price">
@@ -941,20 +961,19 @@ body{font-family:"Inter",sans-serif;background:var(--bg);color:var(--text);overf
           <span class="price-sub">≈ US$ 712 · retainer mensual</span>
         </div>
         <ul>
-          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Estrategia de redes y presencia web</li>
-          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Calendario editorial y creación de contenido</li>
-          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Analítica mensual con dashboard propio</li>
-          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>2 sesiones de trabajo al mes</li>
-          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Soporte prioritario por WhatsApp</li>
-          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Informe de resultados mensual</li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Estrategia de redes y presencia web</li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Calendario editorial y creación de contenido</li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Analítica mensual con dashboard propio</li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>2 sesiones de trabajo al mes</li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Soporte prioritario por WhatsApp</li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Informe de resultados mensual</li>
         </ul>
         <a href="https://wa.me/TUNUMERO?text=Hola%20Rafael%2C%20me%20interesa%20el%20Plan%20Estrat%C3%A9gico%20de%20Vornix%20Digital%20(RD%24%2042.000%2Fmes).%20%C2%BFPodr%C3%ADamos%20hablar%3F" target="_blank" rel="noopener" class="plan-btn plan-btn-primary">
-          <svg class="wa-ico" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
-          Solicitar por WhatsApp
+          <svg width="18" height="18" viewBox="0 0 24 24" style="fill:#25d366;flex-shrink:0"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg> Solicitar por WhatsApp
         </a>
       </div>
       <div class="plan aos" style="transition-delay:.2s">
-        <div class="plan-popular" style="background:linear-gradient(135deg,#7c3aed,#2563eb)">Dedicación exclusiva</div>
+        <div class="plan-badge" style="background:linear-gradient(135deg,#7c3aed,#2563eb)">Dedicación exclusiva</div>
         <h3>Premium</h3>
         <p class="plan-desc">Todo incluido · mínimo 3 meses</p>
         <div class="plan-price">
@@ -962,129 +981,111 @@ body{font-family:"Inter",sans-serif;background:var(--bg);color:var(--text);overf
           <span class="price-sub">≈ US$ 2,000 · mínimo 3 meses</span>
         </div>
         <ul>
-          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Todo lo del plan Estratégico</li>
-          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Gestión completa de redes y web</li>
-          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><strong style="color:var(--dark)">3 contenidos semanales</strong> — copy, diseño y publicación</li>
-          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Reels y vídeo corto incluido</li>
-          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Optimización SEO de web</li>
-          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Gestión de reputación digital</li>
-          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Reuniones semanales de seguimiento</li>
-          <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Soporte prioritario 24/5</li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Todo lo del plan Estratégico</li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Gestión completa de redes y web</li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><strong style="color:#fff">3 contenidos semanales</strong> — copy, diseño y publicación</li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Reels y vídeo corto incluido</li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Optimización SEO de web</li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Gestión de reputación digital</li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Reuniones semanales de seguimiento</li>
+          <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Soporte prioritario 24/5</li>
         </ul>
         <a href="https://wa.me/TUNUMERO?text=Hola%20Rafael%2C%20me%20interesa%20el%20Plan%20Premium%20de%20Vornix%20Digital%20(RD%24%20118.000%2Fmes).%20%C2%BFPodr%C3%ADamos%20hablar%3F" target="_blank" rel="noopener" class="plan-btn plan-btn-ghost">
-          <svg class="wa-ico" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
-          Solicitar por WhatsApp
+          <svg width="18" height="18" viewBox="0 0 24 24" style="fill:#25d366;flex-shrink:0"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg> Solicitar por WhatsApp
         </a>
       </div>
     </div>
   </div>
-</div>
+</section>
 
 <!-- LANDING PAGE SHOWCASE -->
 <section class="lp-showcase" id="landing-pages">
-  <div class="lp-showcase-inner">
-    <!-- LEFT: copy -->
+  <div class="lp-showcase-bg"></div>
+  <div class="lp-inner">
     <div class="aos">
-      <div class="lp-eyebrow"><span class="lp-eyebrow-dot"></span>Servicio estrella</div>
-      <h2>Tu web no<br>convierte.<br><em>La nuestra sí.</em></h2>
-      <p class="lp-showcase-sub">No es un template. No es WordPress genérico. Es una landing page diseñada desde cero — con identidad visual propia, copy que persuade y un único objetivo: convertir visitantes en clientes reales.</p>
+      <div class="lp-eyebrow">Servicio estrella</div>
+      <h2 class="lp-title">Tu web no convierte.<br><em>La nuestra sí.</em></h2>
+      <p class="lp-sub">No es un template. No es WordPress genérico. Es una landing page diseñada desde cero — con identidad visual propia, copy que persuade y un único objetivo: convertir visitantes en clientes.</p>
       <div class="lp-feats">
         <div class="lp-feat">
-          <span class="lp-feat-num">01</span>
+          <div class="lp-feat-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg></div>
           <div>
             <h4>Identidad visual exclusiva</h4>
             <p>Diseño único que refleja tu marca. Tipografía, colores, personalidad. Nada genérico, todo a medida.</p>
           </div>
         </div>
         <div class="lp-feat">
-          <span class="lp-feat-num">02</span>
+          <div class="lp-feat-ico"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
           <div>
             <h4>Copy que persuade, no que informa</h4>
-            <p>Cada headline, cada párrafo y cada CTA escrito para mover al visitante hacia la acción. Sin relleno.</p>
+            <p>Cada headline y cada CTA escrito para mover al visitante hacia la acción. Sin relleno.</p>
           </div>
         </div>
         <div class="lp-feat">
-          <span class="lp-feat-num">03</span>
+          <div class="lp-feat-ico"><svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></div>
           <div>
             <h4>Velocidad · Mobile · SEO</h4>
             <p>Carga ultra-rápida, perfecta en cualquier dispositivo. Google la indexa, tus clientes la disfrutan.</p>
           </div>
         </div>
         <div class="lp-feat">
-          <span class="lp-feat-num">04</span>
+          <div class="lp-feat-ico"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
           <div>
-            <h4>Entrega en 7 días</h4>
-            <p>Briefing a producción en una semana. Proceso ágil, sin fricciones, con revisiones incluidas.</p>
+            <h4>Entrega garantizada en 7 días</h4>
+            <p>De briefing a producción en una semana. Con revisiones incluidas hasta que quede perfecto.</p>
           </div>
         </div>
       </div>
-      <div class="lp-tags">
-        <span class="lp-tag">Diseño premium</span>
-        <span class="lp-tag">CRO</span>
-        <span class="lp-tag">Mobile-first</span>
-        <span class="lp-tag">Copywriting</span>
-        <span class="lp-tag">Integración formulario</span>
-        <span class="lp-tag">Analytics</span>
-      </div>
-      <div style="margin-top:36px">
-        <div class="lp-price-row">
-          <span class="lp-price-main">RD$ 8,835</span>
-          <div class="lp-price-details">
-            <span class="lp-price-badge">Proyecto único · sin mensualidad</span>
-            <span class="lp-price-sub">≈ US$ 150 · todo incluido</span>
-          </div>
-        </div>
-        <a href="https://wa.me/TUNUMERO?text=Hola%20Rafael%2C%20quiero%20una%20Landing%20Page%20que%20convierta%20(RD%24%208.835).%20%C2%BFPodr%C3%ADamos%20hablar%3F" target="_blank" rel="noopener" class="lp-cta">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
-          Quiero mi Landing Page →
-        </a>
-        <div class="lp-trust-row">
-          <span class="lp-trust-item">
-            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-            Revisiones incluidas
-          </span>
-          <span class="lp-trust-item">
-            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-            Sin sorpresas en el precio
-          </span>
-          <span class="lp-trust-item">
-            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-            Resultados en 7 días
-          </span>
+      <div class="lp-price-box">
+        <span class="lp-price-main">RD$ 8,835</span>
+        <div class="lp-price-detail">
+          <span class="lp-price-badge">Proyecto único · sin mensualidad</span>
+          <span class="lp-price-sub">≈ US$ 150 · todo incluido</span>
         </div>
       </div>
+      <a href="https://wa.me/TUNUMERO?text=Hola%20Rafael%2C%20quiero%20una%20Landing%20Page%20que%20convierta%20(RD%24%208.835).%20%C2%BFPodr%C3%ADamos%20hablar%3F" target="_blank" rel="noopener" class="lp-cta">
+        <svg width="18" height="18" viewBox="0 0 24 24" style="fill:#25d366;flex-shrink:0"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+        Quiero mi Landing Page →
+      </a>
     </div>
-    <!-- RIGHT: browser mockup visual -->
-    <div class="lp-mockup aos" style="transition-delay:.15s">
-      <div class="lp-mockup-bar">
-        <div class="lp-mockup-dot" style="background:#ff5f57"></div>
-        <div class="lp-mockup-dot" style="background:#febc2e"></div>
-        <div class="lp-mockup-dot" style="background:#28c840"></div>
-        <div class="lp-mockup-url">vornix.digital/tu-marca</div>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      </div>
-      <div class="lp-page-hero">
-        <div class="lp-page-copy">
-          <div class="lp-page-hl"></div>
-          <div class="lp-page-sub"></div>
-          <div class="lp-page-btn"></div>
+    <!-- visual dark side -->
+    <div class="aos" style="transition-delay:.15s">
+      <div style="position:relative">
+        <div class="lp-browser">
+          <div class="lp-bar">
+            <div class="lp-dot" style="background:#ff5f57"></div>
+            <div class="lp-dot" style="background:#febc2e"></div>
+            <div class="lp-dot" style="background:#28c840"></div>
+            <div class="lp-url-bar">vornix.digital/tu-marca</div>
+          </div>
+          <div class="lp-page-hero">
+            <div style="flex:1;position:relative;z-index:1">
+              <div class="lp-hl"></div>
+              <div class="lp-sub2"></div>
+              <div class="lp-btn-mock"></div>
+            </div>
+          </div>
+          <div class="lp-page-body">
+            <div class="lp-row">
+              <div class="lp-card-mock"><div class="lp-card-ico-mock"></div><div class="lp-l1"></div><div class="lp-l2"></div></div>
+              <div class="lp-card-mock"><div class="lp-card-ico-mock"></div><div class="lp-l1"></div><div class="lp-l2"></div></div>
+              <div class="lp-card-mock"><div class="lp-card-ico-mock"></div><div class="lp-l1"></div><div class="lp-l2"></div></div>
+            </div>
+            <div class="lp-form-mock">
+              <div class="lp-form-field"></div>
+              <div class="lp-form-field"></div>
+              <div class="lp-form-submit"></div>
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="lp-page-body">
-        <div class="lp-section-row">
-          <div class="lp-section-card"><div class="lp-card-icon"></div><div class="lp-card-line1"></div><div class="lp-card-line2"></div></div>
-          <div class="lp-section-card"><div class="lp-card-icon"></div><div class="lp-card-line1"></div><div class="lp-card-line2"></div></div>
-          <div class="lp-section-card"><div class="lp-card-icon"></div><div class="lp-card-line1"></div><div class="lp-card-line2"></div></div>
+        <!-- floating badges -->
+        <div class="lp-float-badge">
+          <div class="lp-fb-val">+247%</div>
+          <div class="lp-fb-lbl">Leads generados</div>
         </div>
-        <div class="lp-page-form">
-          <div class="lp-form-row"></div>
-          <div class="lp-form-row"></div>
-          <div class="lp-form-btn"></div>
-        </div>
-        <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
-          <div style="height:18px;width:80px;background:rgba(255,255,255,.06);border-radius:20px;border:1px solid rgba(255,255,255,.1)"></div>
-          <div style="height:18px;width:64px;background:rgba(255,255,255,.06);border-radius:20px;border:1px solid rgba(255,255,255,.1)"></div>
-          <div style="height:18px;width:90px;background:rgba(255,255,255,.06);border-radius:20px;border:1px solid rgba(255,255,255,.1)"></div>
+        <div class="lp-float-badge2">
+          <div class="lp-fb2-txt">✓ Entregado en 7 días</div>
+          <div class="lp-fb2-sub">Cliente satisfecho</div>
         </div>
       </div>
     </div>
@@ -1092,43 +1093,53 @@ body{font-family:"Inter",sans-serif;background:var(--bg);color:var(--text);overf
 </section>
 
 <!-- SOBRE MÍ -->
-<section id="sobre-mi" class="section">
-  <div class="about-grid">
-    <div>
+<section id="sobre-mi" class="about-section">
+  <div class="about-inner">
+    <div class="aos">
       <div class="about-photo-ring">
         <div class="about-photo-inner">
           <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQIBAQICAgICAgICAwUDAwMDAwYEBAMFBwYHBwcGBwcICQsJCAgKCAcHCg0KCgsMDAwMBwkODw0MDgsMDAz/2wBDAQICAgMDAwYDAwYMCAcIDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAz/wAARCAJYAlgDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD90KKKK9g4wooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAopssqwRl5GVEHVmOAK8L/br/a80P9mn4M312dVtU1e7TZaRJIDISe4FTKSirlRi2z3YDPSmiVGfaHUse2ea/GvV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" alt="Rafael — Vornix.Digital" style="width:100%;height:100%;object-fit:cover;object-position:center 10%;border-radius:50%">
         </div>
       </div>
-      <div class="about-cards">
+      <div class="about-cards" style="margin-top:28px">
         <div class="about-card">
-          <div class="about-card-ico"><svg viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></div>
-          <div><div class="about-card-t">Máster Growth Marketing</div><div class="about-card-s">ISDI · España & LATAM</div></div>
+          <div class="about-card-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+          <div>
+            <div class="about-card-t">+5 años de experiencia</div>
+            <div class="about-card-s">Marketing digital en mercados hispanohablantes</div>
+          </div>
         </div>
         <div class="about-card">
-          <div class="about-card-ico"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div>
-          <div><div class="about-card-t">4 años en Grupo Santalucía</div><div class="about-card-s">Liderando estrategia digital</div></div>
+          <div class="about-card-ico"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+          <div>
+            <div class="about-card-t">+50 marcas acompañadas</div>
+            <div class="about-card-s">En RD y mercado internacional</div>
+          </div>
         </div>
         <div class="about-card">
-          <div class="about-card-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg></div>
-          <div><div class="about-card-t">The Power MBA</div><div class="about-card-s">Administración y Gestión Empresarial</div></div>
+          <div class="about-card-ico"><svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg></div>
+          <div>
+            <div class="about-card-t">Resultados medibles</div>
+            <div class="about-card-s">ROI real, no solo métricas de vanidad</div>
+          </div>
         </div>
       </div>
     </div>
-    <div class="about-text aos">
-      <div class="tag">Sobre mí</div>
-      <h2>Hola, soy <span class="grad">Rafael</span> — el estratega detrás de Vornix.Digital</h2>
-      <p>Llevo más de 5 años liderando estrategia digital en una de las principales corporaciones de España (Grupo Santalucía), donde aprendí que los resultados no se improvisan — se construyen con datos, creatividad y ejecución consistente.</p>
-      <p>Hoy aplico ese mismo nivel de exigencia a cada cliente de Vornix.Digital. No me interesa el vanity marketing: me importa que tus ventas crezcan, que tu marca sea reconocida y que cada peso invertido genere retorno medible.</p>
-      <p>Con formación en Growth Marketing (ISDI) y MBA, combino la visión estratégica con la ejecución táctica que tu negocio necesita para competir online en serio.</p>
+    <div class="about-text aos" style="transition-delay:.15s">
+      <div class="section-tag section-tag-dark" style="margin-bottom:20px">Sobre mí</div>
+      <h2>Hola, soy Rafael.<br><span class="grad">Hago que tu negocio crezca online.</span></h2>
+      <p>Llevo más de 5 años ayudando a marcas y negocios en República Dominicana y el mercado latino a construir una presencia digital que genera resultados reales: más clientes, más ventas, más visibilidad.</p>
+      <p>No soy una agencia de 50 personas donde eres un ticket más. Trabajo directamente contigo, entiendo tu negocio y diseño estrategias que se adaptan a tus objetivos y presupuesto.</p>
+      <p>La diferencia está en los datos: no publico por publicar, no gestiono por gestionar. Cada acción tiene un propósito y un KPI. Así es como funciona el marketing digital real.</p>
       <div class="skills-tags">
-        <span class="skill-tag">Growth Marketing</span>
-        <span class="skill-tag">SEO & SEM</span>
-        <span class="skill-tag">Social Media</span>
-        <span class="skill-tag">CRO</span>
-        <span class="skill-tag">Analytics</span>
+        <span class="skill-tag">Meta Ads</span>
+        <span class="skill-tag">Google Analytics</span>
+        <span class="skill-tag">SEO</span>
+        <span class="skill-tag">Instagram</span>
+        <span class="skill-tag">TikTok</span>
         <span class="skill-tag">Copywriting</span>
-        <span class="skill-tag">Paid Ads</span>
+        <span class="skill-tag">CRO</span>
+        <span class="skill-tag">Email Marketing</span>
       </div>
     </div>
   </div>
@@ -1136,134 +1147,138 @@ body{font-family:"Inter",sans-serif;background:var(--bg);color:var(--text);overf
 
 <!-- CTA -->
 <div id="contacto" class="cta-section">
-  <h2>¿Listo para hacer crecer<br>tu negocio <span class="grad">online?</span></h2>
-  <p>30 minutos de consulta gratuita. Sin compromiso. Solo resultados.</p>
-  <div class="cta-btns">
-    <a href="https://wa.me/TUNUMERO?text=Hola%20Rafael%2C%20me%20gustar%C3%ADa%20agendar%20una%20llamada%20gratuita%20con%20Vornix%20Digital." target="_blank" rel="noopener" class="btn-primary-blue" style="font-size:15px;padding:16px 32px">
-      <svg class="wa-ico" style="width:20px;height:20px" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
-      Escríbeme por WhatsApp
-    </a>
-  </div>
-  <div class="cta-contact-row">
-    <a href="mailto:hola@vornixdigital.com" class="contact-item">
-      <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-      hola@vornixdigital.com
-    </a>
-    <a href="https://vornixdigital.hashnode.dev" target="_blank" rel="noopener" class="contact-item">
-      <svg viewBox="0 0 24 24"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><circle cx="11" cy="11" r="2"/></svg>
-      Blog · vornixdigital.hashnode.dev
-    </a>
+  <div class="cta-inner">
+    <div class="aos">
+      <div class="section-tag" style="margin:0 auto 20px;width:fit-content">¿Listo para crecer?</div>
+      <h2>Hablemos de tu<br><span class="grad">próximo proyecto.</span></h2>
+      <p>Sin compromisos. Solo una llamada de 30 minutos para entender tu situación y ver cómo puedo ayudarte a crecer.</p>
+      <div class="cta-btns">
+        <a href="https://wa.me/TUNUMERO?text=Hola%20Rafael%2C%20me%20gustar%C3%ADa%20agendar%20una%20llamada%20gratuita%20con%20Vornix%20Digital." target="_blank" rel="noopener" class="btn-grad">
+          <svg width="18" height="18" viewBox="0 0 24 24" style="fill:#25d366;flex-shrink:0"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg> Agenda tu llamada gratis
+        </a>
+        <a href="mailto:hola@vornix.digital" class="btn-primary-dark">
+          Enviar email →
+        </a>
+      </div>
+      <div class="cta-contact-row">
+        <a href="mailto:hola@vornix.digital" class="contact-item">
+          <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          hola@vornix.digital
+        </a>
+        <a href="https://wa.me/TUNUMERO?text=Hola%20Rafael%2C%20me%20gustar%C3%ADa%20agendar%20una%20llamada%20gratuita%20con%20Vornix%20Digital." target="_blank" rel="noopener" class="contact-item">
+          <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967c-.273-.099-.471-.148-.67.15c-.197.297-.767.966-.94 1.164c-.173.199-.347.223-.644.075c-.297-.15-1.255-.463-2.39-1.475c-.883-.788-1.48-1.761-1.653-2.059c-.173-.297-.018-.458.13-.606c.134-.133.298-.347.446-.52c.149-.174.198-.298.298-.497c.099-.198.05-.371-.025-.52c-.075-.149-.669-1.612-.916-2.207c-.242-.579-.487-.5-.669-.51c-.173-.008-.371-.01-.57-.01c-.198 0-.52.074-.792.372c-.272.297-1.04 1.016-1.04 2.479c0 1.462 1.065 2.875 1.213 3.074c.149.198 2.096 3.2 5.077 4.487c.709.306 1.262.489 1.694.625c.712.227 1.36.195 1.871.118c.571-.085 1.758-.719 2.006-1.413c.248-.694.248-1.289.173-1.413c-.074-.124-.272-.198-.57-.347z"/></svg>
+          WhatsApp directo
+        </a>
+        <span class="contact-item">
+          <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          República Dominicana
+        </span>
+      </div>
+    </div>
   </div>
 </div>
 
-<!-- FORMULARIO -->
+<!-- FORM -->
 <div class="form-section">
-  <div style="text-align:center;margin-bottom:32px" class="aos">
-    <div class="tag" style="display:inline-flex">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-      Contacto
-    </div>
-    <h2 class="section-title" style="font-size:32px;margin-top:12px">¿Prefieres que te <span class="grad">contactemos</span> nosotros?</h2>
-    <p style="font-size:14px;color:var(--muted);margin-top:12px">Déjanos tus datos y Rafael te escribe en menos de 24h.</p>
-  </div>
   <div class="form-wrap aos">
-    <form name="contacto-vornix" method="POST" netlify data-netlify="true" data-netlify-honeypot="bot-field" id="vornix-form" action="/success">
-      <input type="hidden" name="form-name" value="contacto-vornix">
-      <input type="hidden" name="bot-field" style="display:none">
-      <div class="form-grid">
-        <div class="form-group">
-          <label for="nombre">Nombre *</label>
-          <input type="text" id="nombre" name="nombre" placeholder="Tu nombre" required>
+    <h3>Cuéntame sobre tu proyecto</h3>
+    <p class="form-desc">Respondo en menos de 24 horas. Sin spam, sin presiones.</p>
+    <form name="contacto" method="POST" data-netlify="true" netlify id="contactForm">
+      <div id="formContent">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="nombre">Nombre</label>
+            <input type="text" id="nombre" name="nombre" placeholder="Tu nombre" required>
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="tu@email.com" required>
+          </div>
+          <div class="form-group">
+            <label for="empresa">Empresa / Marca</label>
+            <input type="text" id="empresa" name="empresa" placeholder="Nombre de tu negocio">
+          </div>
+          <div class="form-group">
+            <label for="servicio">¿Qué servicio te interesa?</label>
+            <select id="servicio" name="servicio">
+              <option value="">Selecciona un servicio</option>
+              <option>Marketing Digital & SEO</option>
+              <option>Consultoría de Redes Sociales</option>
+              <option>Landing Page que convierte</option>
+              <option>Auditoría Digital</option>
+              <option>Plan Estratégico mensual</option>
+              <option>Plan Premium</option>
+              <option>Otro</option>
+            </select>
+          </div>
+          <div class="form-group full">
+            <label for="mensaje">¿Cuéntame qué necesitas?</label>
+            <textarea id="mensaje" name="mensaje" placeholder="Describe brevemente tu negocio y qué resultados buscas..." required></textarea>
+          </div>
         </div>
-        <div class="form-group">
-          <label for="empresa">Empresa / Marca</label>
-          <input type="text" id="empresa" name="empresa" placeholder="Nombre de tu negocio">
-        </div>
-        <div class="form-group">
-          <label for="email">Email *</label>
-          <input type="email" id="email" name="email" placeholder="correo@ejemplo.com" required>
-        </div>
-        <div class="form-group">
-          <label for="telefono">WhatsApp / Teléfono</label>
-          <input type="tel" id="telefono" name="telefono" placeholder="+1 809 000 0000">
-        </div>
-        <div class="form-group full">
-          <label for="servicio">¿Qué servicio te interesa? *</label>
-          <select id="servicio" name="servicio" required>
-            <option value="" disabled selected>Selecciona una opción</option>
-            <option value="basico">Plan Básico — RD$ 20,500</option>
-            <option value="estrategico">Plan Estratégico — RD$ 42,000/mes</option>
-            <option value="premium">Plan Premium — RD$ 118,000/mes</option>
-            <option value="landing">Landing Page — RD$ 8,835</option>
-            <option value="otro">Otro / Tengo una pregunta</option>
-          </select>
-        </div>
-        <div class="form-group full">
-          <label for="mensaje">Cuéntame tu proyecto</label>
-          <textarea id="mensaje" name="mensaje" placeholder="¿Qué quieres conseguir? ¿Cuál es tu mayor reto digital ahora mismo?"></textarea>
-        </div>
+        <button type="submit" class="form-submit">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          Enviar mensaje
+        </button>
+        <p class="form-note">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Tus datos están seguros. Sin spam.
+        </p>
       </div>
-      <button type="submit" class="form-submit">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-        Enviar mensaje
-      </button>
-      <p class="form-note">
-        <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        Tus datos están seguros. Sin spam, sin cesión a terceros.
-      </p>
+      <div class="form-success" id="formSuccess">
+        <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        <h3>¡Mensaje recibido!</h3>
+        <p>Gracias por contactarme. Te respondo en menos de 24 horas para hablar sobre cómo puedo ayudarte a crecer.</p>
+      </div>
     </form>
-    <div class="form-success" id="form-success">
-      <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-      <h3>¡Mensaje recibido!</h3>
-      <p>Rafael te contactará en menos de 24 horas.<br>Mientras tanto, puedes escribirle directamente por WhatsApp.</p>
-    </div>
   </div>
 </div>
 
 <!-- FOOTER -->
 <footer class="footer">
   <div class="footer-logo">Vornix<span>.Digital</span></div>
-  <p>© 2026 Vornix Digital · República Dominicana &nbsp;·&nbsp; Precios en RD$ · Tipo de cambio referencial: 1 USD ≈ RD$ 58.90</p>
+  <p>© 2025 Vornix.Digital · Rafael · República Dominicana · Marketing que convierte</p>
 </footer>
 
 <script>
-const observer = new IntersectionObserver((entries) => {
+// AOS
+const observer = new IntersectionObserver(entries => {
   entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible') })
-}, {threshold:0.12})
-document.querySelectorAll('.aos').forEach(el => observer.observe(el))
+}, {threshold:.12});
+document.querySelectorAll('.aos').forEach(el => observer.observe(el));
 
-function animateCount(el) {
-  const target = +el.dataset.target
-  const suffix = el.dataset.suffix || ''
-  const duration = 1800
-  const start = performance.now()
-  const update = (now) => {
-    const progress = Math.min((now - start) / duration, 1)
-    const ease = 1 - Math.pow(1 - progress, 3)
-    el.textContent = Math.round(ease * target) + suffix
-    if(progress < 1) requestAnimationFrame(update)
-  }
-  requestAnimationFrame(update)
-}
-const counterObs = new IntersectionObserver((entries) => {
+// Counter animation
+const counterEls = document.querySelectorAll('[data-target]');
+const counterObs = new IntersectionObserver(entries => {
   entries.forEach(e => {
-    if(e.isIntersecting) { animateCount(e.target); counterObs.unobserve(e.target) }
+    if(!e.isIntersecting) return;
+    const el = e.target;
+    const target = +el.dataset.target;
+    const duration = 1800;
+    const step = target / (duration / 16);
+    let current = 0;
+    const timer = setInterval(() => {
+      current = Math.min(current + step, target);
+      el.textContent = Math.floor(current);
+      if(current >= target) clearInterval(timer);
+    }, 16);
+    counterObs.unobserve(el);
   })
-}, {threshold:0.5})
-document.querySelectorAll('.stat-n[data-target]').forEach(el => counterObs.observe(el))
+}, {threshold:.5});
+counterEls.forEach(el => counterObs.observe(el));
 
-const form = document.getElementById('vornix-form')
-if(form) {
-  form.addEventListener('submit', async function(e) {
-    e.preventDefault()
-    const data = new FormData(form)
-    try {
-      await fetch('/', {method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body: new URLSearchParams(data).toString()})
-      form.style.display = 'none'
-      document.getElementById('form-success').style.display = 'block'
-    } catch(err) { form.submit() }
-  })
-}
+// Mobile menu nav scroll
+document.querySelectorAll('.mobile-menu a[href^="#"]').forEach(a => {
+  a.addEventListener('click', () => document.getElementById('mobileMenu').classList.remove('open'));
+});
+
+// Form success
+const form = document.getElementById('contactForm');
+if(form) form.addEventListener('submit', e => {
+  e.preventDefault();
+  document.getElementById('formContent').style.display = 'none';
+  document.getElementById('formSuccess').style.display = 'block';
+});
 </script>
 </body>
 </html>
