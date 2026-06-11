@@ -346,6 +346,154 @@ body{font-family:"Inter",sans-serif;background:var(--bg);color:var(--text);overf
 .addon-price-main{font-size:30px;font-weight:900;letter-spacing:-1px;color:var(--dark);display:block}
 .addon-price-sub{font-size:11px;color:var(--muted);display:block;margin-bottom:12px}
 
+/* ── LANDING SHOWCASE ── */
+.lp-showcase{
+  position:relative;overflow:hidden;
+  background:var(--dark);
+  padding:100px 24px;
+}
+.lp-showcase::before{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(37,99,235,.25) 0%,rgba(124,58,237,.2) 50%,transparent 100%);
+  pointer-events:none
+}
+.lp-showcase::after{
+  content:"";position:absolute;top:-300px;right:-200px;
+  width:700px;height:700px;border-radius:50%;
+  background:radial-gradient(circle,rgba(124,58,237,.15),transparent 65%);
+  pointer-events:none
+}
+.lp-showcase-inner{
+  max-width:1100px;margin:0 auto;
+  display:grid;grid-template-columns:1fr 1fr;gap:80px;
+  align-items:center;position:relative;z-index:1
+}
+.lp-eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
+  color:rgba(255,255,255,.7);font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;
+  padding:6px 14px;border-radius:20px;margin-bottom:20px
+}
+.lp-eyebrow-dot{
+  width:7px;height:7px;border-radius:50%;
+  background:linear-gradient(135deg,#60a5fa,#a78bfa);display:inline-block
+}
+.lp-showcase h2{
+  font-size:clamp(36px,4.5vw,58px);font-weight:900;
+  letter-spacing:-2px;line-height:1.05;color:#fff;
+  margin-bottom:20px
+}
+.lp-showcase h2 em{
+  font-style:normal;
+  background:linear-gradient(135deg,#60a5fa,#a78bfa);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent
+}
+.lp-showcase-sub{
+  font-size:16px;color:rgba(255,255,255,.6);line-height:1.75;
+  margin-bottom:36px;max-width:480px
+}
+.lp-feats{display:flex;flex-direction:column;gap:14px;margin-bottom:40px}
+.lp-feat{
+  display:flex;align-items:flex-start;gap:14px;
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+  border-radius:14px;padding:16px 18px;
+  transition:background .25s,border-color .25s
+}
+.lp-feat:hover{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.15)}
+.lp-feat-num{
+  font-size:11px;font-weight:800;letter-spacing:.5px;
+  color:rgba(124,58,237,.8);background:rgba(124,58,237,.12);
+  border:1px solid rgba(124,58,237,.25);
+  padding:3px 9px;border-radius:6px;flex-shrink:0;margin-top:2px;white-space:nowrap
+}
+.lp-feat h4{font-size:14px;font-weight:700;color:#fff;margin-bottom:3px}
+.lp-feat p{font-size:13px;color:rgba(255,255,255,.5);line-height:1.6;margin:0}
+.lp-price-row{
+  display:flex;align-items:center;gap:20px;flex-wrap:wrap;
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
+  border-radius:16px;padding:20px 24px;margin-bottom:20px
+}
+.lp-price-main{font-size:36px;font-weight:900;letter-spacing:-1.5px;color:#fff}
+.lp-price-details{display:flex;flex-direction:column;gap:4px}
+.lp-price-sub{font-size:12px;color:rgba(255,255,255,.45)}
+.lp-price-badge{
+  font-size:11px;font-weight:700;
+  background:linear-gradient(135deg,#2563eb,#7c3aed);
+  color:#fff;padding:3px 10px;border-radius:20px;width:fit-content
+}
+.lp-cta{
+  display:inline-flex;align-items:center;gap:10px;
+  background:linear-gradient(135deg,#2563eb,#7c3aed);
+  color:#fff;font-size:15px;font-weight:700;
+  padding:16px 28px;border-radius:14px;text-decoration:none;
+  transition:opacity .2s,transform .2s;box-shadow:0 8px 32px rgba(37,99,235,.4)
+}
+.lp-cta:hover{opacity:.9;transform:translateY(-2px)}
+.lp-trust-row{display:flex;gap:20px;flex-wrap:wrap;margin-top:16px}
+.lp-trust-item{
+  display:flex;align-items:center;gap:6px;
+  font-size:12px;color:rgba(255,255,255,.4)
+}
+.lp-trust-item svg{width:14px;height:14px;stroke:rgba(124,58,237,.6);fill:none;stroke-width:2;flex-shrink:0}
+/* Browser mockup */
+.lp-mockup{
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);
+  border-radius:16px;overflow:hidden;
+  box-shadow:0 40px 80px rgba(0,0,0,.5)
+}
+.lp-mockup-bar{
+  display:flex;align-items:center;gap:6px;
+  background:rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.07);
+  padding:10px 14px
+}
+.lp-mockup-dot{width:9px;height:9px;border-radius:50%}
+.lp-mockup-url{
+  flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);
+  border-radius:6px;padding:4px 10px;
+  font-size:11px;color:rgba(255,255,255,.3);font-family:monospace;margin:0 8px
+}
+.lp-page-hero{
+  height:130px;
+  background:linear-gradient(135deg,#1e3a8a 0%,#4c1d95 100%);
+  display:flex;align-items:center;padding:24px;position:relative;overflow:hidden
+}
+.lp-page-hero::after{
+  content:"";position:absolute;top:-40px;right:-40px;
+  width:160px;height:160px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.07),transparent 70%)
+}
+.lp-page-copy{flex:1;position:relative;z-index:1}
+.lp-page-hl{width:55%;height:9px;background:rgba(255,255,255,.85);border-radius:3px;margin-bottom:8px}
+.lp-page-sub{width:75%;height:6px;background:rgba(255,255,255,.4);border-radius:3px;margin-bottom:14px}
+.lp-page-btn{width:110px;height:26px;background:linear-gradient(90deg,#60a5fa,#a78bfa);border-radius:6px}
+.lp-page-body{padding:18px;background:rgba(255,255,255,.02)}
+.lp-section-row{display:flex;gap:10px;margin-bottom:14px}
+.lp-section-card{
+  flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);
+  border-radius:8px;padding:12px
+}
+.lp-card-icon{width:22px;height:22px;border-radius:5px;background:linear-gradient(135deg,#2563eb,#7c3aed);margin-bottom:8px}
+.lp-card-line1{height:5px;background:rgba(255,255,255,.5);border-radius:3px;width:65%;margin-bottom:5px}
+.lp-card-line2{height:4px;background:rgba(255,255,255,.2);border-radius:3px;width:85%}
+.lp-page-form{
+  margin-top:14px;background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:10px;padding:12px
+}
+.lp-form-row{height:24px;background:rgba(255,255,255,.06);border-radius:6px;margin-bottom:7px}
+.lp-form-btn{height:28px;background:linear-gradient(90deg,#2563eb,#7c3aed);border-radius:6px;width:100%}
+.lp-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.lp-tag{
+  font-size:11px;font-weight:600;
+  background:rgba(37,99,235,.15);border:1px solid rgba(37,99,235,.3);
+  color:#93c5fd;padding:4px 12px;border-radius:20px
+}
+@media(max-width:768px){
+  .lp-showcase-inner{grid-template-columns:1fr}
+  .lp-mockup{display:none}
+  .lp-showcase{padding:72px 24px}
+}
+
 /* ── ABOUT ── */
 .about-grid{display:grid;grid-template-columns:1fr 1.3fr;gap:80px;align-items:center}
 .about-photo-ring{
@@ -508,6 +656,7 @@ body{font-family:"Inter",sans-serif;background:var(--bg);color:var(--text);overf
   <a href="#" class="nav-logo">Vornix<span>.Digital</span></a>
   <div class="nav-links">
     <a href="#servicios">Servicios</a>
+    <a href="#landing-pages">Landing Pages</a>
     <a href="#planes">Planes</a>
     <a href="#sobre-mi">Sobre mí</a>
     <a href="https://vornixdigital.hashnode.dev" target="_blank" rel="noopener">Blog</a>
@@ -537,8 +686,8 @@ body{font-family:"Inter",sans-serif;background:var(--bg);color:var(--text);overf
         <span class="hero-badge-dot"></span>
         Consultor disponible · República Dominicana
       </div>
-      <h1>Tu negocio<br>merece una<br><span class="grad">presencia digital</span><br>que vende.</h1>
-      <p>Estrategia de redes sociales, SEO y landing pages diseñadas para convertir visitantes en clientes. Resultados medibles, no solo seguidores.</p>
+      <h1>La diferencia entre<br><span class="grad">crecer online</span><br>o quedarte<br>invisible.</h1>
+      <p>Estrategia de redes, SEO y landing pages que no solo se ven bonitas — convierte visitantes en clientes reales. Sin humo. Solo resultados.</p>
       <div class="hero-btns">
         <a href="#contacto" class="btn-primary">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
@@ -674,8 +823,8 @@ body{font-family:"Inter",sans-serif;background:var(--bg);color:var(--text);overf
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
         Servicios
       </div>
-      <h2 class="section-title">Todo lo que necesitas<br>para <span class="grad">dominar online</span></h2>
-      <p class="section-sub">Desde la estrategia hasta la ejecución. Cada servicio está diseñado para generar resultados medibles en ventas y posicionamiento.</p>
+      <h2 class="section-title">No gestionamos redes.<br><span class="grad">Construimos marcas.</span></h2>
+      <p class="section-sub">Estrategia real, ejecución sin excusas y datos que hablan solos. Para marcas que no quieren pasar desapercibidas.</p>
     </div>
     <div class="services-grid">
       <div class="svc-card aos">
@@ -828,35 +977,119 @@ body{font-family:"Inter",sans-serif;background:var(--bg);color:var(--text);overf
         </a>
       </div>
     </div>
-    <!-- LANDING ADD-ON -->
-    <div class="landing-addon aos">
-      <div class="addon-left">
-        <div class="addon-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+  </div>
+</div>
+
+<!-- LANDING PAGE SHOWCASE -->
+<section class="lp-showcase" id="landing-pages">
+  <div class="lp-showcase-inner">
+    <!-- LEFT: copy -->
+    <div class="aos">
+      <div class="lp-eyebrow"><span class="lp-eyebrow-dot"></span>Servicio estrella</div>
+      <h2>Tu web no<br>convierte.<br><em>La nuestra sí.</em></h2>
+      <p class="lp-showcase-sub">No es un template. No es WordPress genérico. Es una landing page diseñada desde cero — con identidad visual propia, copy que persuade y un único objetivo: convertir visitantes en clientes reales.</p>
+      <div class="lp-feats">
+        <div class="lp-feat">
+          <span class="lp-feat-num">01</span>
+          <div>
+            <h4>Identidad visual exclusiva</h4>
+            <p>Diseño único que refleja tu marca. Tipografía, colores, personalidad. Nada genérico, todo a medida.</p>
+          </div>
         </div>
-        <div>
-          <h4>Landing Page que convierte <span style="background:#eff6ff;border:1px solid #bfdbfe;color:var(--blue);font-size:10px;padding:2px 8px;border-radius:20px;font-weight:600;vertical-align:middle;margin-left:8px">Servicio individual</span></h4>
-          <p>Página de aterrizaje diseñada para convertir visitantes en clientes. Sin distracciones, una sola acción, 100% adaptada a tu marca.</p>
-          <div class="addon-feats">
-            <span class="addon-feat">Diseño premium</span>
-            <span class="addon-feat">Mobile-first</span>
-            <span class="addon-feat">CTA optimizada</span>
-            <span class="addon-feat">Integración formulario</span>
-            <span class="addon-feat">Entrega en 7 días</span>
+        <div class="lp-feat">
+          <span class="lp-feat-num">02</span>
+          <div>
+            <h4>Copy que persuade, no que informa</h4>
+            <p>Cada headline, cada párrafo y cada CTA escrito para mover al visitante hacia la acción. Sin relleno.</p>
+          </div>
+        </div>
+        <div class="lp-feat">
+          <span class="lp-feat-num">03</span>
+          <div>
+            <h4>Velocidad · Mobile · SEO</h4>
+            <p>Carga ultra-rápida, perfecta en cualquier dispositivo. Google la indexa, tus clientes la disfrutan.</p>
+          </div>
+        </div>
+        <div class="lp-feat">
+          <span class="lp-feat-num">04</span>
+          <div>
+            <h4>Entrega en 7 días</h4>
+            <p>Briefing a producción en una semana. Proceso ágil, sin fricciones, con revisiones incluidas.</p>
           </div>
         </div>
       </div>
-      <div class="addon-right">
-        <span class="addon-price-main">RD$ 8,835</span>
-        <span class="addon-price-sub">≈ US$ 150 · proyecto único</span>
-        <a href="https://wa.me/TUNUMERO?text=Hola%20Rafael%2C%20me%20interesa%20contratar%20una%20Landing%20Page%20con%20Vornix%20Digital%20(RD%24%208.835).%20%C2%BFPodr%C3%ADamos%20hablar%3F" target="_blank" rel="noopener" class="btn-primary-blue" style="font-size:13px;padding:11px 20px">
-          <svg class="wa-ico" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
-          Solicitar
+      <div class="lp-tags">
+        <span class="lp-tag">Diseño premium</span>
+        <span class="lp-tag">CRO</span>
+        <span class="lp-tag">Mobile-first</span>
+        <span class="lp-tag">Copywriting</span>
+        <span class="lp-tag">Integración formulario</span>
+        <span class="lp-tag">Analytics</span>
+      </div>
+      <div style="margin-top:36px">
+        <div class="lp-price-row">
+          <span class="lp-price-main">RD$ 8,835</span>
+          <div class="lp-price-details">
+            <span class="lp-price-badge">Proyecto único · sin mensualidad</span>
+            <span class="lp-price-sub">≈ US$ 150 · todo incluido</span>
+          </div>
+        </div>
+        <a href="https://wa.me/TUNUMERO?text=Hola%20Rafael%2C%20quiero%20una%20Landing%20Page%20que%20convierta%20(RD%24%208.835).%20%C2%BFPodr%C3%ADamos%20hablar%3F" target="_blank" rel="noopener" class="lp-cta">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+          Quiero mi Landing Page →
         </a>
+        <div class="lp-trust-row">
+          <span class="lp-trust-item">
+            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            Revisiones incluidas
+          </span>
+          <span class="lp-trust-item">
+            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            Sin sorpresas en el precio
+          </span>
+          <span class="lp-trust-item">
+            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            Resultados en 7 días
+          </span>
+        </div>
+      </div>
+    </div>
+    <!-- RIGHT: browser mockup visual -->
+    <div class="lp-mockup aos" style="transition-delay:.15s">
+      <div class="lp-mockup-bar">
+        <div class="lp-mockup-dot" style="background:#ff5f57"></div>
+        <div class="lp-mockup-dot" style="background:#febc2e"></div>
+        <div class="lp-mockup-dot" style="background:#28c840"></div>
+        <div class="lp-mockup-url">vornix.digital/tu-marca</div>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </div>
+      <div class="lp-page-hero">
+        <div class="lp-page-copy">
+          <div class="lp-page-hl"></div>
+          <div class="lp-page-sub"></div>
+          <div class="lp-page-btn"></div>
+        </div>
+      </div>
+      <div class="lp-page-body">
+        <div class="lp-section-row">
+          <div class="lp-section-card"><div class="lp-card-icon"></div><div class="lp-card-line1"></div><div class="lp-card-line2"></div></div>
+          <div class="lp-section-card"><div class="lp-card-icon"></div><div class="lp-card-line1"></div><div class="lp-card-line2"></div></div>
+          <div class="lp-section-card"><div class="lp-card-icon"></div><div class="lp-card-line1"></div><div class="lp-card-line2"></div></div>
+        </div>
+        <div class="lp-page-form">
+          <div class="lp-form-row"></div>
+          <div class="lp-form-row"></div>
+          <div class="lp-form-btn"></div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
+          <div style="height:18px;width:80px;background:rgba(255,255,255,.06);border-radius:20px;border:1px solid rgba(255,255,255,.1)"></div>
+          <div style="height:18px;width:64px;background:rgba(255,255,255,.06);border-radius:20px;border:1px solid rgba(255,255,255,.1)"></div>
+          <div style="height:18px;width:90px;background:rgba(255,255,255,.06);border-radius:20px;border:1px solid rgba(255,255,255,.1)"></div>
+        </div>
       </div>
     </div>
   </div>
-</div>
+</section>
 
 <!-- SOBRE MÍ -->
 <section id="sobre-mi" class="section">
