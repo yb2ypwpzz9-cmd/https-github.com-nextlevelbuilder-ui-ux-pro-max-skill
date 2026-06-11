@@ -39,7 +39,7 @@ body{font-family:"Inter",sans-serif;background:#fff;color:var(--text);overflow-x
   border-bottom:1px solid rgba(255,255,255,.07);
   transition:padding .3s
 }
-.nav-logo{font-size:18px;font-weight:800;letter-spacing:-.5px;text-decoration:none;color:#fff}
+.nav-logo{font-size:18px;font-weight:800;letter-spacing:-.5px;text-decoration:none;color:#fff;display:flex;align-items:center;gap:9px}
 .nav-logo span{background:var(--grad-light);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .nav-links{display:flex;gap:32px}
 .nav-links a{font-size:13px;color:rgba(255,255,255,.55);text-decoration:none;transition:color .2s;cursor:pointer;font-weight:500;letter-spacing:.1px}
@@ -618,6 +618,68 @@ body{font-family:"Inter",sans-serif;background:#fff;color:var(--text);overflow-x
 .form-success h3{font-size:22px;font-weight:700;margin-bottom:10px;color:#fff}
 .form-success p{font-size:14px;color:rgba(255,255,255,.4);line-height:1.7}
 
+/* ── PORTFOLIO ── */
+.portfolio-section{background:#f8faff;padding:100px 40px;border-top:1px solid var(--border)}
+.portfolio-inner{max-width:1200px;margin:0 auto}
+.portfolio-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:28px;margin-top:60px}
+.portfolio-card{
+  background:#fff;border:1.5px solid var(--border);border-radius:20px;
+  overflow:hidden;text-decoration:none;color:inherit;
+  transition:border-color .25s,box-shadow .25s,transform .25s;display:block
+}
+.portfolio-card:not(.portfolio-placeholder):hover{
+  border-color:#93c5fd;
+  box-shadow:0 16px 48px rgba(37,99,235,.1);
+  transform:translateY(-4px)
+}
+.portfolio-placeholder{cursor:default}
+/* browser chrome */
+.portfolio-browser{background:var(--dark);overflow:hidden}
+.pb-bar{
+  display:flex;align-items:center;gap:5px;
+  background:rgba(255,255,255,.05);border-bottom:1px solid rgba(255,255,255,.07);
+  padding:9px 12px
+}
+.pb-dot{width:8px;height:8px;border-radius:50%}
+.pb-url{
+  flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);
+  border-radius:5px;padding:3px 9px;
+  font-size:10px;color:rgba(255,255,255,.28);font-family:monospace;margin:0 7px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis
+}
+/* Sheruns preview */
+.pb-preview{background:var(--dark)}
+.pb-hero-sheruns{
+  height:140px;position:relative;overflow:hidden;
+  background:linear-gradient(135deg,#1a4a3a 0%,#0d2d20 50%,#1a3a2a 100%);
+}
+.pb-hero-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to right,rgba(0,0,0,.5),rgba(0,0,0,.2)),
+             radial-gradient(ellipse at 70% 50%,rgba(245,158,11,.08),transparent);
+}
+.pb-hero-content{position:absolute;inset:0;padding:18px 20px;display:flex;flex-direction:column;justify-content:center;gap:4px}
+.pb-badge-mock{font-size:9px;font-weight:700;color:rgba(245,158,11,.9);background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.2);border-radius:20px;padding:3px 8px;width:fit-content;margin-bottom:4px}
+.pb-title-mock{font-size:26px;font-weight:900;color:#fff;letter-spacing:-1px;line-height:1}
+.pb-sub-mock{font-size:10px;color:rgba(255,255,255,.5);letter-spacing:.5px;text-transform:uppercase}
+.pb-cta-mock{margin-top:8px;background:linear-gradient(90deg,#f59e0b,#d97706);color:#fff;font-size:10px;font-weight:700;padding:5px 12px;border-radius:6px;width:fit-content}
+.pb-body-mock{padding:12px}
+.pb-card-s{flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:6px;overflow:hidden}
+.pb-card-s-img{height:36px}
+.pb-card-s-line1{height:5px;background:rgba(255,255,255,.3);border-radius:2px;width:60%;margin:8px 8px 4px}
+.pb-card-s-line2{height:4px;background:rgba(255,255,255,.15);border-radius:2px;width:80%;margin:0 8px 8px}
+/* card meta */
+.portfolio-meta{padding:20px 24px 24px}
+.portfolio-client{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.portfolio-tag{font-size:11px;font-weight:600;color:var(--blue);background:#eff6ff;border:1px solid #bfdbfe;padding:3px 10px;border-radius:20px}
+.portfolio-title{font-size:18px;font-weight:800;color:var(--dark);letter-spacing:-.4px;margin-bottom:8px}
+.portfolio-desc{font-size:13px;color:var(--muted);line-height:1.65;margin-bottom:16px}
+.portfolio-link{font-size:13px;font-weight:700;color:var(--blue);display:inline-flex;align-items:center;gap:4px}
+@media(max-width:768px){
+  .portfolio-grid{grid-template-columns:1fr}
+  .portfolio-section{padding:72px 20px}
+}
+
 /* ── FOOTER ── */
 .footer{
   background:var(--dark);border-top:1px solid rgba(255,255,255,.06);
@@ -674,11 +736,26 @@ body{font-family:"Inter",sans-serif;background:#fff;color:var(--text);overflow-x
 
 <!-- NAV -->
 <nav class="nav" id="mainNav">
-  <a href="#" class="nav-logo">Vornix<span>.Digital</span></a>
+  <a href="#" class="nav-logo">
+    <svg width="26" height="26" viewBox="0 0 100 100" fill="none" style="flex-shrink:0">
+      <line x1="50" y1="16" x2="16" y2="76" stroke="white" stroke-width="4" stroke-linecap="round"/>
+      <line x1="50" y1="16" x2="74" y2="60" stroke="white" stroke-width="4" stroke-linecap="round"/>
+      <line x1="50" y1="16" x2="60" y2="80" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity=".7"/>
+      <line x1="16" y1="76" x2="74" y2="60" stroke="white" stroke-width="4" stroke-linecap="round"/>
+      <line x1="16" y1="76" x2="60" y2="80" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity=".7"/>
+      <line x1="74" y1="60" x2="60" y2="80" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity=".7"/>
+      <circle cx="50" cy="16" r="11" fill="white"/>
+      <circle cx="16" cy="76" r="7.5" fill="white"/>
+      <circle cx="74" cy="60" r="7.5" fill="white"/>
+      <circle cx="60" cy="80" r="5" fill="white" opacity=".85"/>
+    </svg>
+    Vornix<span>.Digital</span>
+  </a>
   <div class="nav-links">
     <a href="#servicios">Servicios</a>
     <a href="#landing-pages">Landing Pages</a>
     <a href="#planes">Planes</a>
+    <a href="#portfolio">Portfolio</a>
     <a href="#sobre-mi">Sobre mí</a>
     <a href="#contacto">Contacto</a>
   </div>
@@ -1151,6 +1228,94 @@ body{font-family:"Inter",sans-serif;background:#fff;color:var(--text);overflow-x
   </div>
 </section>
 
+<!-- PORTFOLIO -->
+<section class="portfolio-section" id="portfolio">
+  <div class="portfolio-inner">
+    <div class="aos center" style="text-align:center">
+      <div class="section-tag" style="margin:0 auto 20px;width:fit-content">
+        <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        Trabajo real
+      </div>
+      <h2 class="section-title-light">Así quedan las <span class="grad">landing pages</span> que construimos</h2>
+      <p class="section-sub-light" style="margin:0 auto">Resultados reales para clientes reales. Cada proyecto, diseñado desde cero con identidad propia.</p>
+    </div>
+    <div class="portfolio-grid">
+      <!-- CASE: Sheruns -->
+      <a href="https://sheruns-terrenas.netlify.app/" target="_blank" rel="noopener" class="portfolio-card aos">
+        <div class="portfolio-browser">
+          <div class="pb-bar">
+            <div class="pb-dot" style="background:#ff5f57"></div>
+            <div class="pb-dot" style="background:#febc2e"></div>
+            <div class="pb-dot" style="background:#28c840"></div>
+            <div class="pb-url">sheruns-terrenas.netlify.app</div>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </div>
+          <!-- Sheruns visual mockup — beach/luxury -->
+          <div class="pb-preview">
+            <div class="pb-hero-sheruns">
+              <div class="pb-hero-overlay"></div>
+              <div class="pb-hero-content">
+                <div class="pb-badge-mock">🍹 Las Terrenas · RD</div>
+                <div class="pb-title-mock">Sherun's</div>
+                <div class="pb-sub-mock">Beach Club & Restaurant</div>
+                <div class="pb-cta-mock">Reservar mesa</div>
+              </div>
+            </div>
+            <div class="pb-body-mock">
+              <div style="display:flex;gap:8px;margin-bottom:8px">
+                <div class="pb-card-s"><div class="pb-card-s-img" style="background:linear-gradient(135deg,#f59e0b,#ef4444)"></div><div class="pb-card-s-line1"></div><div class="pb-card-s-line2"></div></div>
+                <div class="pb-card-s"><div class="pb-card-s-img" style="background:linear-gradient(135deg,#10b981,#0ea5e9)"></div><div class="pb-card-s-line1"></div><div class="pb-card-s-line2"></div></div>
+                <div class="pb-card-s"><div class="pb-card-s-img" style="background:linear-gradient(135deg,#8b5cf6,#ec4899)"></div><div class="pb-card-s-line1"></div><div class="pb-card-s-line2"></div></div>
+              </div>
+              <div style="height:32px;background:linear-gradient(90deg,#f59e0b,#ef4444);border-radius:6px;display:flex;align-items:center;justify-content:center">
+                <div style="height:5px;width:80px;background:rgba(255,255,255,.5);border-radius:3px"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="portfolio-meta">
+          <div class="portfolio-client">
+            <span class="portfolio-tag">Restaurante · Beach Club</span>
+            <span class="portfolio-tag">Las Terrenas, RD</span>
+          </div>
+          <h3 class="portfolio-title">Sherun's Terrenas</h3>
+          <p class="portfolio-desc">Landing page de alta conversión para restaurante y beach club en Las Terrenas. Diseño visual de lujo tropical, reservas online y presencia digital de marca.</p>
+          <span class="portfolio-link">Ver proyecto en vivo →</span>
+        </div>
+      </a>
+
+      <!-- Placeholder for next project -->
+      <div class="portfolio-card portfolio-placeholder aos" style="transition-delay:.15s">
+        <div class="portfolio-browser" style="opacity:.4">
+          <div class="pb-bar">
+            <div class="pb-dot" style="background:#ff5f57"></div>
+            <div class="pb-dot" style="background:#febc2e"></div>
+            <div class="pb-dot" style="background:#28c840"></div>
+            <div class="pb-url">tu-marca.com</div>
+          </div>
+          <div class="pb-preview">
+            <div style="height:120px;background:linear-gradient(135deg,var(--dark),#1a1a2e);display:flex;align-items:center;justify-content:center">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.15)" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            </div>
+            <div style="padding:12px;background:rgba(255,255,255,.02)">
+              <div style="height:8px;background:rgba(255,255,255,.06);border-radius:3px;width:60%;margin-bottom:6px"></div>
+              <div style="height:6px;background:rgba(255,255,255,.04);border-radius:3px;width:80%"></div>
+            </div>
+          </div>
+        </div>
+        <div class="portfolio-meta" style="text-align:center;padding:24px 16px">
+          <div style="width:48px;height:48px;border-radius:50%;border:2px dashed rgba(37,99,235,.3);display:flex;align-items:center;justify-content:center;margin:0 auto 16px">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(37,99,235,.4)" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </div>
+          <h3 style="font-size:15px;font-weight:700;color:var(--muted);margin-bottom:8px">Tu proyecto aquí</h3>
+          <p style="font-size:13px;color:var(--light);line-height:1.6;margin-bottom:16px">¿Listo para tener una landing que convierte de verdad?</p>
+          <a href="#contacto" style="font-size:13px;font-weight:700;color:var(--blue);text-decoration:none">Hablemos →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- SOBRE MÍ -->
 <section id="sobre-mi" class="about-section">
   <div class="about-inner">
@@ -1295,7 +1460,21 @@ body{font-family:"Inter",sans-serif;background:#fff;color:var(--text);overflow-x
 
 <!-- FOOTER -->
 <footer class="footer">
-  <div class="footer-logo">Vornix<span>.Digital</span></div>
+  <div class="footer-logo" style="display:flex;align-items:center;justify-content:center;gap:10px">
+    <svg width="28" height="28" viewBox="0 0 100 100" fill="none">
+      <line x1="50" y1="16" x2="16" y2="76" stroke="white" stroke-width="4" stroke-linecap="round"/>
+      <line x1="50" y1="16" x2="74" y2="60" stroke="white" stroke-width="4" stroke-linecap="round"/>
+      <line x1="50" y1="16" x2="60" y2="80" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity=".7"/>
+      <line x1="16" y1="76" x2="74" y2="60" stroke="white" stroke-width="4" stroke-linecap="round"/>
+      <line x1="16" y1="76" x2="60" y2="80" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity=".7"/>
+      <line x1="74" y1="60" x2="60" y2="80" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity=".7"/>
+      <circle cx="50" cy="16" r="11" fill="white"/>
+      <circle cx="16" cy="76" r="7.5" fill="white"/>
+      <circle cx="74" cy="60" r="7.5" fill="white"/>
+      <circle cx="60" cy="80" r="5" fill="white" opacity=".85"/>
+    </svg>
+    Vornix<span>.Digital</span>
+  </div>
   <p>© 2025 Vornix.Digital · Rafael · República Dominicana · Marketing que convierte</p>
 </footer>
 
