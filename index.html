@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vornix.Digital — Marketing Digital & Estrategia de Redes Sociales</title>
+<meta name="description" content="Consultoría de redes sociales, marketing digital, SEO y landing pages que convierten. Resultados medibles para tu negocio.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#06060e;
+  --bg2:#0c0c1a;
+  --bg3:#11112a;
+  --blue:#2563eb;
+  --violet:#7c3aed;
+  --teal:#0ea5e9;
+  --green:#10b981;
+  --text:#ffffff;
+  --muted:rgba(255,255,255,0.55);
+  --border:rgba(255,255,255,0.08);
+  --card:rgba(255,255,255,0.04);
+  --grad:linear-gradient(135deg,#2563eb,#7c3aed);
+}
+html{scroll-behavior:smooth}
+body{font-family:"Inter",sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
+
+/* ── BACKGROUND GRID ── */
+body::before{
+  content:"";position:fixed;inset:0;z-index:0;
+  background-image:linear-gradient(rgba(37,99,235,0.04) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(37,99,235,0.04) 1px,transparent 1px);
+  background-size:60px 60px;pointer-events:none
+}
+
+/* ── NAV ── */
+.nav{
+  position:fixed;top:16px;left:50%;transform:translateX(-50%);
+  width:calc(100% - 48px);max-width:1100px;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:14px 24px;
+  background:rgba(6,6,14,0.8);
+  border:1px solid var(--border);
+  border-radius:16px;
+  backdrop-filter:blur(20px);
+  z-index:1000;
+}
+.nav-logo{font-size:17px;font-weight:800;letter-spacing:-0.5px;text-decoration:none;color:#fff}
+.nav-logo span{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-links{display:flex;gap:28px}
+.nav-links a{font-size:13px;color:var(--muted);text-decoration:none;transition:color .2s;cursor:pointer}
+.nav-links a:hover{color:#fff}
+.nav-cta{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--grad);color:#fff;font-size:13px;font-weight:600;
+  padding:10px 20px;border-radius:10px;text-decoration:none;
+  transition:opacity .2s,transform .2s;cursor:pointer;border:none
+}
+.nav-cta:hover{opacity:.9;transform:translateY(-1px)}
+.nav-mobile-btn{display:none;background:none;border:none;color:#fff;cursor:pointer;padding:4px}
+
+/* ── HERO ── */
+.hero{
+  min-height:100vh;display:flex;align-items:center;
+  padding:120px 24px 80px;
+  position:relative;z-index:1;
+  max-width:1200px;margin:0 auto;
+}
+.hero-inner{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;width:100%}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(37,99,235,0.15);border:1px solid rgba(37,99,235,0.3);
+  color:#93c5fd;font-size:12px;font-weight:500;
+  padding:6px 14px;border-radius:20px;margin-bottom:24px;
+}
+.hero-badge-dot{width:6px;height:6px;background:#60a5fa;border-radius:50%;animation:pulse2 2s infinite}
+@keyframes pulse2{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.5)}}
+.hero h1{
+  font-size:58px;font-weight:900;line-height:1.05;letter-spacing:-2.5px;
+  margin-bottom:24px;color:#fff
+}
+.hero h1 .grad{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{font-size:16px;color:var(--muted);line-height:1.75;max-width:440px;margin-bottom:36px}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap}
+.btn-primary{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--grad);color:#fff;font-size:14px;font-weight:600;
+  padding:14px 28px;border-radius:12px;text-decoration:none;
+  transition:transform .2s,box-shadow .2s;cursor:pointer;border:none
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 16px 40px rgba(37,99,235,.4)}
+.btn-ghost{
+  display:inline-flex;align-items:center;gap:8px;
+  background:transparent;color:#fff;font-size:14px;font-weight:500;
+  padding:14px 28px;border-radius:12px;text-decoration:none;
+  border:1px solid var(--border);transition:border-color .2s,background .2s
+}
+.btn-ghost:hover{border-color:rgba(255,255,255,.25);background:rgba(255,255,255,.05)}
+.hero-trust{display:flex;align-items:center;gap:16px;margin-top:32px}
+.hero-trust-text{font-size:12px;color:var(--muted)}
+.hero-trust-avatars{display:flex}
+.hero-trust-avatars span{
+  width:30px;height:30px;border-radius:50%;border:2px solid var(--bg);
+  background:var(--grad);display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;margin-left:-8px;first:margin-left:0
+}
+
+/* ── DASHBOARD WIDGET ── */
+.hero-right{position:relative}
+.dashboard{
+  background:rgba(12,12,26,0.9);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:24px;
+  padding:24px;
+  backdrop-filter:blur(20px);
+  box-shadow:0 32px 80px rgba(0,0,0,.6),0 0 0 1px rgba(37,99,235,.15);
+  position:relative;overflow:hidden;
+}
+.dashboard::before{
+  content:"";position:absolute;top:-50px;right:-50px;
+  width:200px;height:200px;
+  background:radial-gradient(circle,rgba(124,58,237,.25),transparent 70%);
+  pointer-events:none
+}
+.dashboard::after{
+  content:"";position:absolute;bottom:-30px;left:-30px;
+  width:160px;height:160px;
+  background:radial-gradient(circle,rgba(37,99,235,.2),transparent 70%);
+  pointer-events:none
+}
+.dash-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.dash-title{font-size:11px;font-weight:600;color:rgba(255,255,255,.4);letter-spacing:2px;text-transform:uppercase}
+.dash-live{display:flex;align-items:center;gap:6px;font-size:11px;color:#10b981;font-weight:500}
+.dash-live-dot{width:6px;height:6px;background:#10b981;border-radius:50%;animation:pulse2 1.8s infinite}
+.dash-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.dash-kpi{
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);
+  border-radius:12px;padding:14px;
+}
+.dash-kpi-val{font-size:22px;font-weight:800;letter-spacing:-1px;color:#fff}
+.dash-kpi-val.green{color:#10b981}
+.dash-kpi-val.blue{color:#60a5fa}
+.dash-kpi-lbl{font-size:10px;color:rgba(255,255,255,.4);margin-top:4px}
+.dash-kpi-delta{font-size:10px;color:#10b981;margin-top:4px;display:flex;align-items:center;gap:3px}
+.dash-kpi-delta.down{color:#f87171}
+.dash-chart{
+  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);
+  border-radius:12px;padding:14px;margin-bottom:12px
+}
+.dash-chart-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.dash-chart-lbl{font-size:11px;color:rgba(255,255,255,.5);font-weight:500}
+.dash-svg{width:100%;height:80px}
+.dash-channels{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.dash-channel{
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);
+  border-radius:10px;padding:10px 8px;text-align:center
+}
+.dash-channel-ico{font-size:15px;margin-bottom:4px}
+.dash-channel-name{font-size:9px;color:rgba(255,255,255,.35)}
+.dash-channel-val{font-size:12px;font-weight:700;color:#fff;margin-top:2px}
+.dash-channel-bar{height:2px;background:rgba(255,255,255,.1);border-radius:2px;margin-top:6px;overflow:hidden}
+.dash-channel-fill{height:100%;border-radius:2px}
+
+/* ── MARQUEE / LOGOS ── */
+.marquee-section{
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  padding:20px 0;overflow:hidden;position:relative;z-index:1;
+  background:rgba(255,255,255,.015)
+}
+.marquee-track{
+  display:flex;gap:64px;align-items:center;
+  animation:marquee 25s linear infinite;white-space:nowrap
+}
+.marquee-section:hover .marquee-track{animation-play-state:paused}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.marquee-item{
+  font-size:13px;font-weight:600;color:rgba(255,255,255,.25);
+  letter-spacing:1px;text-transform:uppercase;flex-shrink:0
+}
+
+/* ── STATS ── */
+.stats-section{
+  padding:80px 24px;max-width:1100px;margin:0 auto;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:24px;
+  position:relative;z-index:1
+}
+.stat-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:20px;padding:28px 24px;text-align:center;
+  transition:border-color .25s,transform .25s;cursor:default
+}
+.stat-card:hover{border-color:rgba(37,99,235,.4);transform:translateY(-4px)}
+.stat-n{
+  font-size:44px;font-weight:900;letter-spacing:-2px;
+  background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  display:block
+}
+.stat-l{font-size:13px;color:var(--muted);margin-top:6px}
+
+/* ── SECTION HEADER ── */
+.section{padding:80px 24px;max-width:1100px;margin:0 auto;position:relative;z-index:1}
+.section-full{padding:80px 0;position:relative;z-index:1;background:rgba(255,255,255,.015);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.section-full-inner{max-width:1100px;margin:0 auto;padding:0 24px}
+.tag{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;
+  color:#93c5fd;background:rgba(37,99,235,.12);border:1px solid rgba(37,99,235,.25);
+  padding:5px 14px;border-radius:20px;margin-bottom:16px
+}
+.section-title{font-size:42px;font-weight:900;letter-spacing:-1.5px;line-height:1.1;margin-bottom:16px}
+.section-title .grad{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.section-sub{font-size:16px;color:var(--muted);line-height:1.7;max-width:520px;margin-bottom:48px}
+.section-header-center{text-align:center}
+.section-header-center .section-sub{margin:0 auto 48px}
+
+/* ── SERVICES ── */
+.services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.svc-card{
+  background:var(--card);border:1px solid var(--border);border-radius:20px;
+  padding:28px;transition:all .25s;cursor:default;position:relative;overflow:hidden
+}
+.svc-card::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:2px;
+  background:var(--grad);opacity:0;transition:opacity .25s
+}
+.svc-card:hover{border-color:rgba(37,99,235,.3);transform:translateY(-6px);box-shadow:0 24px 48px rgba(0,0,0,.4)}
+.svc-card:hover::before{opacity:1}
+.svc-icon{
+  width:48px;height:48px;border-radius:14px;
+  background:rgba(37,99,235,.15);border:1px solid rgba(37,99,235,.25);
+  display:flex;align-items:center;justify-content:center;margin-bottom:20px
+}
+.svc-icon svg{width:22px;height:22px;stroke:#60a5fa;fill:none;stroke-width:1.8}
+.svc-card h3{font-size:16px;font-weight:700;margin-bottom:10px}
+.svc-card p{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:16px}
+.svc-tags{display:flex;flex-wrap:wrap;gap:6px}
+.svc-tag{
+  font-size:11px;font-weight:500;color:rgba(255,255,255,.5);
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);
+  padding:3px 10px;border-radius:20px
+}
+
+/* ── PROCESS ── */
+.process-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.process-step{
+  background:var(--card);border:1px solid var(--border);border-radius:20px;
+  padding:24px;transition:all .25s;cursor:default;position:relative
+}
+.process-step:hover{border-color:rgba(124,58,237,.4);transform:translateY(-4px)}
+.step-num{
+  font-size:11px;font-weight:700;letter-spacing:2px;
+  background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  margin-bottom:16px;display:block
+}
+.process-step h4{font-size:14px;font-weight:700;margin-bottom:8px}
+.process-step p{font-size:12px;color:var(--muted);line-height:1.65}
+
+/* ── PLANS ── */
+.plans-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px}
+.plan{
+  background:var(--card);border:1px solid var(--border);border-radius:22px;
+  padding:28px;transition:all .25s;cursor:default;position:relative;overflow:hidden
+}
+.plan:hover{transform:translateY(-6px);box-shadow:0 24px 60px rgba(0,0,0,.5)}
+.plan.hot{border-color:rgba(37,99,235,.5);background:rgba(37,99,235,.06)}
+.plan.hot:hover{box-shadow:0 24px 60px rgba(37,99,235,.25)}
+.plan-popular{
+  display:inline-block;background:var(--grad);color:#fff;
+  font-size:10px;font-weight:700;padding:4px 12px;border-radius:20px;
+  margin-bottom:16px;letter-spacing:.5px
+}
+.plan h3{font-size:20px;font-weight:800;letter-spacing:-.5px;margin-bottom:6px}
+.plan-desc{font-size:12px;color:var(--muted);margin-bottom:20px}
+.plan-price{margin-bottom:24px}
+.plan-price .price-main{
+  font-size:34px;font-weight:900;letter-spacing:-1.5px;
+  background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  display:block;line-height:1.1
+}
+.plan-price .price-sub{font-size:12px;color:var(--muted);margin-top:6px;display:block}
+.plan ul{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:24px}
+.plan ul li{font-size:13px;color:rgba(255,255,255,.75);display:flex;gap:10px;align-items:flex-start}
+.plan ul li svg{width:16px;height:16px;stroke:#10b981;fill:none;stroke-width:2.5;flex-shrink:0;margin-top:1px}
+.plan-btn{
+  width:100%;padding:12px;border-radius:12px;font-size:13px;font-weight:700;
+  cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;
+  text-decoration:none;border:none
+}
+.plan-btn-ghost{background:rgba(255,255,255,.07);color:#fff;border:1px solid var(--border)}
+.plan-btn-ghost:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.2)}
+.plan-btn-primary{background:var(--grad);color:#fff}
+.plan-btn-primary:hover{opacity:.9;box-shadow:0 8px 24px rgba(37,99,235,.4)}
+.landing-addon{
+  background:rgba(37,99,235,.07);border:1.5px dashed rgba(37,99,235,.4);
+  border-radius:20px;padding:24px 28px;
+  display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center;
+  transition:all .25s
+}
+.landing-addon:hover{border-color:rgba(37,99,235,.7);background:rgba(37,99,235,.1);transform:translateY(-2px)}
+.addon-left{display:flex;gap:16px;align-items:flex-start}
+.addon-icon{
+  width:48px;height:48px;border-radius:14px;
+  background:rgba(37,99,235,.2);border:1px solid rgba(37,99,235,.3);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0
+}
+.addon-icon svg{width:22px;height:22px;stroke:#60a5fa;fill:none;stroke-width:1.8}
+.addon-left h4{font-size:15px;font-weight:700;margin-bottom:6px}
+.addon-left p{font-size:13px;color:var(--muted);line-height:1.6}
+.addon-feats{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.addon-feat{
+  font-size:11px;font-weight:500;color:#93c5fd;
+  background:rgba(37,99,235,.12);border:1px solid rgba(37,99,235,.2);
+  padding:3px 10px;border-radius:20px
+}
+.addon-right{text-align:right;flex-shrink:0}
+.addon-price-main{font-size:30px;font-weight:900;letter-spacing:-1px;color:#fff;display:block}
+.addon-price-sub{font-size:11px;color:var(--muted);display:block;margin-bottom:12px}
+
+/* ── ABOUT ── */
+.about-grid{display:grid;grid-template-columns:1fr 1.3fr;gap:80px;align-items:center}
+.about-photo-wrap{position:relative}
+.about-photo-ring{
+  width:300px;height:300px;border-radius:50%;
+  border:1px dashed rgba(37,99,235,.4);
+  display:flex;align-items:center;justify-content:center;
+  animation:spin 20s linear infinite;margin:0 auto 24px
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.about-photo-inner{
+  width:270px;height:270px;border-radius:50%;
+  background:var(--grad);
+  display:flex;align-items:center;justify-content:center;
+  font-size:80px;font-weight:900;color:rgba(255,255,255,.15);
+  border:3px solid rgba(255,255,255,.1);
+  animation:spin 20s linear infinite reverse;
+  overflow:hidden
+}
+.about-photo-inner img{width:100%;height:100%;object-fit:cover;object-position:center 10%}
+.about-cards{display:flex;flex-direction:column;gap:12px;max-width:300px;margin:0 auto}
+.about-card{
+  display:flex;align-items:center;gap:14px;
+  background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:14px 18px
+}
+.about-card-ico{
+  width:38px;height:38px;border-radius:10px;
+  background:rgba(37,99,235,.15);border:1px solid rgba(37,99,235,.2);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0
+}
+.about-card-ico svg{width:18px;height:18px;stroke:#60a5fa;fill:none;stroke-width:1.8}
+.about-card-t{font-size:13px;font-weight:600}
+.about-card-s{font-size:11px;color:var(--muted);margin-top:2px}
+.about-text h2{font-size:38px;font-weight:900;letter-spacing:-1.5px;line-height:1.15;margin-bottom:20px}
+.about-text p{font-size:14px;color:var(--muted);line-height:1.8;margin-bottom:14px}
+.skills-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.skill-tag{
+  font-size:12px;font-weight:500;
+  background:rgba(37,99,235,.1);border:1px solid rgba(37,99,235,.2);
+  color:#93c5fd;padding:5px 14px;border-radius:20px
+}
+
+/* ── CTA ── */
+.cta-section{
+  margin:0 24px 80px;border-radius:28px;overflow:hidden;
+  position:relative;padding:80px 24px;text-align:center;z-index:1;
+  background:linear-gradient(135deg,rgba(37,99,235,.2),rgba(124,58,237,.2));
+  border:1px solid rgba(37,99,235,.3)
+}
+.cta-section::before{
+  content:"";position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:600px;height:400px;
+  background:radial-gradient(ellipse,rgba(37,99,235,.15),transparent 70%);
+  pointer-events:none
+}
+.cta-section h2{font-size:44px;font-weight:900;letter-spacing:-2px;margin-bottom:16px;position:relative}
+.cta-section h2 .grad{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.cta-section p{font-size:16px;color:var(--muted);margin-bottom:36px;position:relative}
+.cta-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;position:relative}
+.cta-contact-row{
+  display:flex;justify-content:center;gap:16px;flex-wrap:wrap;
+  margin-top:28px;position:relative
+}
+.contact-item{
+  display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);
+  background:rgba(255,255,255,.05);border:1px solid var(--border);
+  padding:10px 18px;border-radius:10px;text-decoration:none;
+  transition:border-color .2s,color .2s
+}
+.contact-item:hover{border-color:rgba(255,255,255,.2);color:#fff}
+.contact-item svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;flex-shrink:0}
+
+/* ── FORM ── */
+.form-section{padding:0 24px 80px;max-width:740px;margin:0 auto;position:relative;z-index:1}
+.form-wrap{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:24px;padding:40px
+}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-group{display:flex;flex-direction:column;gap:8px}
+.form-group.full{grid-column:1/-1}
+.form-group label{font-size:12px;font-weight:600;color:rgba(255,255,255,.7);letter-spacing:.3px}
+.form-group input,.form-group select,.form-group textarea{
+  padding:12px 16px;border:1px solid var(--border);border-radius:12px;
+  font-size:14px;font-family:"Inter",sans-serif;
+  color:#fff;background:rgba(255,255,255,.05);
+  outline:none;transition:border-color .2s,box-shadow .2s;width:100%
+}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{
+  border-color:rgba(37,99,235,.6);box-shadow:0 0 0 3px rgba(37,99,235,.15)
+}
+.form-group select option{background:#0c0c1a;color:#fff}
+.form-group textarea{resize:vertical;min-height:120px}
+.form-group input::placeholder,.form-group textarea::placeholder{color:rgba(255,255,255,.25)}
+.form-submit{
+  width:100%;margin-top:20px;padding:14px;
+  background:var(--grad);color:#fff;font-size:14px;font-weight:700;
+  border:none;border-radius:12px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  transition:opacity .2s,transform .2s
+}
+.form-submit:hover{opacity:.9;transform:translateY(-1px)}
+.form-note{font-size:12px;color:var(--muted);text-align:center;margin-top:12px;display:flex;align-items:center;justify-content:center;gap:6px}
+.form-note svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2}
+.form-success{display:none;text-align:center;padding:40px}
+.form-success svg{width:56px;height:56px;stroke:#10b981;fill:none;stroke-width:1.5;margin:0 auto 16px;display:block}
+.form-success h3{font-size:22px;font-weight:700;margin-bottom:10px}
+.form-success p{font-size:14px;color:var(--muted);line-height:1.7}
+
+/* ── FOOTER ── */
+.footer{
+  border-top:1px solid var(--border);padding:32px 24px;
+  text-align:center;position:relative;z-index:1
+}
+.footer-logo{font-size:18px;font-weight:800;letter-spacing:-.5px;margin-bottom:8px}
+.footer-logo span{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.footer p{font-size:12px;color:rgba(255,255,255,.25)}
+
+/* ── ANIMATE ON SCROLL ── */
+.aos{opacity:0;transform:translateY(28px);transition:opacity .6s ease,transform .6s ease}
+.aos.visible{opacity:1;transform:none}
+
+/* ── MOBILE MENU ── */
+.mobile-menu{
+  display:none;position:fixed;inset:0;z-index:999;
+  background:rgba(6,6,14,.98);backdrop-filter:blur(20px);
+  flex-direction:column;align-items:center;justify-content:center;gap:32px;
+}
+.mobile-menu.open{display:flex}
+.mobile-menu a{font-size:22px;font-weight:700;color:#fff;text-decoration:none;cursor:pointer}
+.mobile-menu-close{
+  position:absolute;top:24px;right:24px;
+  background:none;border:1px solid var(--border);color:#fff;
+  width:40px;height:40px;border-radius:10px;cursor:pointer;font-size:20px;
+  display:flex;align-items:center;justify-content:center
+}
+
+/* ── WA ICON ── */
+.wa-ico{width:18px;height:18px;fill:#25d366;flex-shrink:0}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1024px){
+  .hero h1{font-size:48px}
+  .services-grid{grid-template-columns:1fr 1fr}
+  .process-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:768px){
+  .nav-links,.nav-cta{display:none}
+  .nav-mobile-btn{display:block}
+  .hero-inner{grid-template-columns:1fr}
+  .hero-right{display:none}
+  .hero h1{font-size:38px}
+  .stats-section{grid-template-columns:repeat(2,1fr)}
+  .services-grid{grid-template-columns:1fr}
+  .process-grid{grid-template-columns:1fr}
+  .plans-grid{grid-template-columns:1fr}
+  .about-grid{grid-template-columns:1fr}
+  .about-text{order:-1}
+  .section-title{font-size:30px}
+  .cta-section h2{font-size:30px}
+  .landing-addon{grid-template-columns:1fr}
+  .addon-right{text-align:left}
+  .form-grid{grid-template-columns:1fr}
+  .form-group.full{grid-column:1}
+  .hero{padding:100px 24px 60px}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="#" class="nav-logo">Vornix<span>.Digital</span></a>
+  <div class="nav-links">
+    <a href="#servicios">Servicios</a>
+    <a href="#planes">Planes</a>
+    <a href="#sobre-mi">Sobre mí</a>
+    <a href="https://vornixdigital.hashnode.dev" target="_blank" rel="noopener">Blog</a>
+    <a href="#contacto">Contacto</a>
+  </div>
+  <a href="#contacto" class="nav-cta">Llamada gratuita →</a>
+  <button class="nav-mobile-btn" onclick="document.getElementById('mobileMenu').classList.add('open')" aria-label="Abrir menú">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-menu-close" onclick="document.getElementById('mobileMenu').classList.remove('open')" aria-label="Cerrar menú">✕</button>
+  <a href="#servicios" onclick="document.getElementById('mobileMenu').classList.remove('open')">Servicios</a>
+  <a href="#planes" onclick="document.getElementById('mobileMenu').classList.remove('open')">Planes</a>
+  <a href="#sobre-mi" onclick="document.getElementById('mobileMenu').classList.remove('open')">Sobre mí</a>
+  <a href="#contacto" onclick="document.getElementById('mobileMenu').classList.remove('open')">Contacto</a>
+  <a href="#contacto" class="btn-primary" onclick="document.getElementById('mobileMenu').classList.remove('open')">Llamada gratuita →</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-badge">
+        <span class="hero-badge-dot"></span>
+        Consultor disponible · República Dominicana
+      </div>
+      <h1>Tu negocio<br>merece una<br><span class="grad">presencia digital</span><br>que vende.</h1>
+      <p>Estrategia de redes sociales, SEO y landing pages diseñadas para convertir visitantes en clientes. Resultados medibles, no solo seguidores.</p>
+      <div class="hero-btns">
+        <a href="#contacto" class="btn-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Agenda tu llamada gratis
+        </a>
+        <a href="#planes" class="btn-ghost">Ver servicios →</a>
+      </div>
+      <div class="hero-trust">
+        <div class="hero-trust-avatars">
+          <span style="background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;font-size:10px;font-weight:700">R</span>
+          <span style="background:linear-gradient(135deg,#0ea5e9,#10b981);color:#fff;font-size:10px;font-weight:700;margin-left:-8px">M</span>
+          <span style="background:linear-gradient(135deg,#f59e0b,#ef4444);color:#fff;font-size:10px;font-weight:700;margin-left:-8px">C</span>
+        </div>
+        <span class="hero-trust-text">+50 marcas ya confían en Vornix.Digital</span>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="dashboard">
+        <div class="dash-header">
+          <span class="dash-title">Performance Dashboard</span>
+          <span class="dash-live"><span class="dash-live-dot"></span>En vivo</span>
+        </div>
+        <div class="dash-kpis">
+          <div class="dash-kpi">
+            <div class="dash-kpi-val green">+312%</div>
+            <div class="dash-kpi-lbl">Alcance orgánico</div>
+            <div class="dash-kpi-delta">▲ vs mes anterior</div>
+          </div>
+          <div class="dash-kpi">
+            <div class="dash-kpi-val blue">8.4%</div>
+            <div class="dash-kpi-lbl">Tasa conversión</div>
+            <div class="dash-kpi-delta">▲ +2.1pp</div>
+          </div>
+          <div class="dash-kpi">
+            <div class="dash-kpi-val">4.2x</div>
+            <div class="dash-kpi-lbl">ROAS promedio</div>
+            <div class="dash-kpi-delta">▲ +0.8x</div>
+          </div>
+        </div>
+        <div class="dash-chart">
+          <div class="dash-chart-hdr">
+            <span class="dash-chart-lbl">Tráfico orgánico · últimas 8 semanas</span>
+          </div>
+          <svg class="dash-svg" viewBox="0 0 400 80" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="gr1" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#2563eb" stop-opacity=".4"/>
+                <stop offset="100%" stop-color="#2563eb" stop-opacity="0"/>
+              </linearGradient>
+              <linearGradient id="gr2" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#7c3aed" stop-opacity=".35"/>
+                <stop offset="100%" stop-color="#7c3aed" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <path d="M0,65 C30,60 60,45 100,38 C140,31 170,50 210,30 C250,10 280,22 320,15 C360,8 380,12 400,8 L400,80 L0,80 Z" fill="url(#gr1)"/>
+            <path d="M0,65 C30,60 60,45 100,38 C140,31 170,50 210,30 C250,10 280,22 320,15 C360,8 380,12 400,8" fill="none" stroke="#2563eb" stroke-width="2"/>
+            <path d="M0,70 C40,68 80,60 120,52 C160,44 190,58 230,48 C270,38 300,42 340,35 C370,29 390,30 400,28 L400,80 L0,80 Z" fill="url(#gr2)"/>
+            <path d="M0,70 C40,68 80,60 120,52 C160,44 190,58 230,48 C270,38 300,42 340,35 C370,29 390,30 400,28" fill="none" stroke="#7c3aed" stroke-width="2"/>
+          </svg>
+        </div>
+        <div class="dash-channels">
+          <div class="dash-channel">
+            <div class="dash-channel-ico">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1.8"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+            </div>
+            <div class="dash-channel-name">Instagram</div>
+            <div class="dash-channel-val">18.4k</div>
+            <div class="dash-channel-bar"><div class="dash-channel-fill" style="width:85%;background:linear-gradient(90deg,#e1306c,#f77737)"></div></div>
+          </div>
+          <div class="dash-channel">
+            <div class="dash-channel-ico">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1.8"><path d="M21 2H3v16h5v4l4-4h5l4-4V2zM11 11V7m4 4V7"/></svg>
+            </div>
+            <div class="dash-channel-name">TikTok</div>
+            <div class="dash-channel-val">32.1k</div>
+            <div class="dash-channel-bar"><div class="dash-channel-fill" style="width:95%;background:linear-gradient(90deg,#010101,#69c9d0)"></div></div>
+          </div>
+          <div class="dash-channel">
+            <div class="dash-channel-ico">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1.8"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg>
+            </div>
+            <div class="dash-channel-name">YouTube</div>
+            <div class="dash-channel-val">5.2k</div>
+            <div class="dash-channel-bar"><div class="dash-channel-fill" style="width:45%;background:linear-gradient(90deg,#ff0000,#ff6b6b)"></div></div>
+          </div>
+          <div class="dash-channel">
+            <div class="dash-channel-ico">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1.8"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </div>
+            <div class="dash-channel-name">SEO</div>
+            <div class="dash-channel-val">+124%</div>
+            <div class="dash-channel-bar"><div class="dash-channel-fill" style="width:70%;background:linear-gradient(90deg,#2563eb,#7c3aed)"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-section">
+  <div class="marquee-track">
+    <span class="marquee-item">Marketing Digital</span>
+    <span class="marquee-item">·</span>
+    <span class="marquee-item">Estrategia SEO</span>
+    <span class="marquee-item">·</span>
+    <span class="marquee-item">Redes Sociales</span>
+    <span class="marquee-item">·</span>
+    <span class="marquee-item">Landing Pages</span>
+    <span class="marquee-item">·</span>
+    <span class="marquee-item">Growth Marketing</span>
+    <span class="marquee-item">·</span>
+    <span class="marquee-item">Analítica Web</span>
+    <span class="marquee-item">·</span>
+    <span class="marquee-item">Contenido Visual</span>
+    <span class="marquee-item">·</span>
+    <span class="marquee-item">Marketing Digital</span>
+    <span class="marquee-item">·</span>
+    <span class="marquee-item">Estrategia SEO</span>
+    <span class="marquee-item">·</span>
+    <span class="marquee-item">Redes Sociales</span>
+    <span class="marquee-item">·</span>
+    <span class="marquee-item">Landing Pages</span>
+    <span class="marquee-item">·</span>
+    <span class="marquee-item">Growth Marketing</span>
+    <span class="marquee-item">·</span>
+    <span class="marquee-item">Analítica Web</span>
+    <span class="marquee-item">·</span>
+    <span class="marquee-item">Contenido Visual</span>
+    <span class="marquee-item">·</span>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-section">
+  <div class="stat-card aos">
+    <span class="stat-n" data-target="50">0</span>
+    <span class="stat-l">Marcas acompañadas</span>
+  </div>
+  <div class="stat-card aos" style="transition-delay:.1s">
+    <span class="stat-n" data-target="312" data-suffix="%">0%</span>
+    <span class="stat-l">Incremento promedio en alcance</span>
+  </div>
+  <div class="stat-card aos" style="transition-delay:.2s">
+    <span class="stat-n" data-target="8" data-suffix="x">0x</span>
+    <span class="stat-l">ROI promedio de clientes</span>
+  </div>
+  <div class="stat-card aos" style="transition-delay:.3s">
+    <span class="stat-n" data-target="4">0</span>
+    <span class="stat-l">Años liderando estrategia digital</span>
+  </div>
+</div>
+
+<!-- SERVICIOS -->
+<section id="servicios" class="section">
+  <div class="aos">
+    <div class="tag">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      Servicios
+    </div>
+    <h2 class="section-title">Todo lo que necesitas<br>para <span class="grad">dominar online</span></h2>
+    <p class="section-sub">Desde la estrategia hasta la ejecución. Cada servicio está diseñado para generar resultados medibles en ventas y posicionamiento.</p>
+  </div>
+  <div class="services-grid">
+    <div class="svc-card aos">
+      <div class="svc-icon">
+        <svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+      </div>
+      <h3>Marketing Digital & SEO</h3>
+      <p>Posicionamiento orgánico en buscadores, campañas de contenido y estrategia digital completa para atraer tráfico que convierte.</p>
+      <div class="svc-tags">
+        <span class="svc-tag">SEO On-Page</span>
+        <span class="svc-tag">Link Building</span>
+        <span class="svc-tag">Contenido</span>
+        <span class="svc-tag">Analytics</span>
+      </div>
+    </div>
+    <div class="svc-card aos" style="transition-delay:.1s">
+      <div class="svc-icon">
+        <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+      </div>
+      <h3>Consultoría de Redes Sociales</h3>
+      <p>Estrategia editorial, gestión de comunidad y creación de contenido para Instagram, TikTok y LinkedIn orientada a conversión real.</p>
+      <div class="svc-tags">
+        <span class="svc-tag">Instagram</span>
+        <span class="svc-tag">TikTok</span>
+        <span class="svc-tag">LinkedIn</span>
+        <span class="svc-tag">Reels</span>
+      </div>
+    </div>
+    <div class="svc-card aos" style="transition-delay:.2s">
+      <div class="svc-icon">
+        <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+      </div>
+      <h3>Landing Pages que Convierten</h3>
+      <p>Diseño y desarrollo de páginas de aterrizaje optimizadas para una sola acción. Sin distracciones. Adaptadas a tu marca y dispositivo.</p>
+      <div class="svc-tags">
+        <span class="svc-tag">CRO</span>
+        <span class="svc-tag">Mobile-first</span>
+        <span class="svc-tag">A/B Testing</span>
+        <span class="svc-tag">Copywriting</span>
+      </div>
+    </div>
+    <div class="svc-card aos" style="transition-delay:.05s">
+      <div class="svc-icon">
+        <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      </div>
+      <h3>Auditoría & Diagnóstico Digital</h3>
+      <p>Análisis completo de tu presencia en redes y web. Identifica qué falla, qué funciona y un plan de acción a 90 días con prioridades claras.</p>
+      <div class="svc-tags">
+        <span class="svc-tag">Auditoría RRSS</span>
+        <span class="svc-tag">SEO Técnico</span>
+        <span class="svc-tag">Plan 90 días</span>
+      </div>
+    </div>
+    <div class="svc-card aos" style="transition-delay:.15s">
+      <div class="svc-icon">
+        <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+      </div>
+      <h3>Analítica & Reporting</h3>
+      <p>Dashboards claros con métricas que importan. Datos convertidos en decisiones accionables para escalar lo que funciona y cortar lo que no.</p>
+      <div class="svc-tags">
+        <span class="svc-tag">GA4</span>
+        <span class="svc-tag">Dashboards</span>
+        <span class="svc-tag">KPIs</span>
+      </div>
+    </div>
+    <div class="svc-card aos" style="transition-delay:.25s">
+      <div class="svc-icon">
+        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </div>
+      <h3>Formación de Equipos</h3>
+      <p>Capacitación presencial y online para que tu equipo domine las redes sociales y ejecute estrategias digitales con impacto real en ventas.</p>
+      <div class="svc-tags">
+        <span class="svc-tag">Workshops</span>
+        <span class="svc-tag">Online</span>
+        <span class="svc-tag">Metodología</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<div class="section-full">
+  <div class="section-full-inner">
+    <div class="section-header-center aos">
+      <div class="tag" style="margin:0 auto 16px">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        Proceso
+      </div>
+      <h2 class="section-title">Cómo trabajo contigo</h2>
+      <p class="section-sub">Un proceso claro en 4 pasos diseñado para que veas resultados desde el primer mes.</p>
+    </div>
+    <div class="process-grid">
+      <div class="process-step aos">
+        <span class="step-num">01 · DIAGNÓSTICO</span>
+        <h4>Auditoría completa</h4>
+        <p>Analizo tu presencia digital actual: redes, web, SEO y competencia. Identifico oportunidades reales y puntos de fuga.</p>
+      </div>
+      <div class="process-step aos" style="transition-delay:.1s">
+        <span class="step-num">02 · ESTRATEGIA</span>
+        <h4>Plan personalizado</h4>
+        <p>Diseño una estrategia a medida con objetivos claros, KPIs definidos y acciones prioritarias según tu presupuesto y audiencia.</p>
+      </div>
+      <div class="process-step aos" style="transition-delay:.2s">
+        <span class="step-num">03 · EJECUCIÓN</span>
+        <h4>Implementación y contenido</h4>
+        <p>Pongo en marcha la estrategia: contenido, calendarios editoriales, optimizaciones SEO y landing pages que convierten.</p>
+      </div>
+      <div class="process-step aos" style="transition-delay:.3s">
+        <span class="step-num">04 · OPTIMIZACIÓN</span>
+        <h4>Medición y escala</h4>
+        <p>Reviso resultados cada mes con dashboards claros. Escalo lo que funciona y corrijo en tiempo real para maximizar el ROI.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PLANES -->
+<section id="planes" class="section">
+  <div class="section-header-center aos">
+    <div class="tag" style="margin:0 auto 16px">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      Planes
+    </div>
+    <h2 class="section-title">Invierte en resultados,<br>no en <span class="grad">promesas</span></h2>
+    <p class="section-sub">Tres planes diseñados para distintos momentos de crecimiento. Sin letras pequeñas, sin sorpresas.</p>
+  </div>
+  <div class="plans-grid">
+    <!-- BÁSICO -->
+    <div class="plan aos">
+      <h3>Básico</h3>
+      <p class="plan-desc">Diagnóstico digital completo</p>
+      <div class="plan-price">
+        <span class="price-main">RD$ 20,500</span>
+        <span class="price-sub">≈ US$ 348 · pago único por proyecto</span>
+      </div>
+      <ul>
+        <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Auditoría de redes sociales y web</li>
+        <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Informe detallado con hallazgos clave</li>
+        <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Plan de acción priorizado a 90 días</li>
+        <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Sesión de presentación y Q&A</li>
+        <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Análisis de competencia</li>
+      </ul>
+      <a href="https://wa.me/TUNUMERO?text=Hola%20Rafael%2C%20me%20interesa%20el%20Plan%20B%C3%A1sico%20de%20Vornix%20Digital%20(RD%24%2020.500).%20%C2%BFPodr%C3%ADamos%20hablar%3F" target="_blank" rel="noopener" class="plan-btn plan-btn-ghost" style="cursor:pointer">
+        <svg class="wa-ico" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+        Solicitar por WhatsApp
+      </a>
+    </div>
+    <!-- ESTRATÉGICO -->
+    <div class="plan hot aos" style="transition-delay:.1s">
+      <div class="plan-popular">⭐ Más solicitado</div>
+      <h3>Estratégico</h3>
+      <p class="plan-desc">Acompañamiento mensual completo</p>
+      <div class="plan-price">
+        <span class="price-main">RD$ 42,000</span>
+        <span class="price-sub">≈ US$ 712 · retainer mensual</span>
+      </div>
+      <ul>
+        <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Estrategia de redes y presencia web</li>
+        <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Calendario editorial y creación de contenido</li>
+        <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Analítica mensual con dashboard propio</li>
+        <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>2 sesiones de trabajo al mes</li>
+        <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Soporte prioritario por WhatsApp</li>
+        <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Informe de resultados mensual</li>
+      </ul>
+      <a href="https://wa.me/TUNUMERO?text=Hola%20Rafael%2C%20me%20interesa%20el%20Plan%20Estrat%C3%A9gico%20de%20Vornix%20Digital%20(RD%24%2042.000%2Fmes).%20%C2%BFPodr%C3%ADamos%20hablar%3F" target="_blank" rel="noopener" class="plan-btn plan-btn-primary" style="cursor:pointer">
+        <svg class="wa-ico" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+        Solicitar por WhatsApp
+      </a>
+    </div>
+    <!-- PREMIUM -->
+    <div class="plan aos" style="transition-delay:.2s">
+      <div class="plan-popular" style="background:linear-gradient(135deg,#7c3aed,#2563eb)">Dedicación exclusiva</div>
+      <h3>Premium</h3>
+      <p class="plan-desc">Todo incluido · mínimo 3 meses</p>
+      <div class="plan-price">
+        <span class="price-main">RD$ 118,000</span>
+        <span class="price-sub">≈ US$ 2,000 · mínimo 3 meses</span>
+      </div>
+      <ul>
+        <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Todo lo del plan Estratégico</li>
+        <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Gestión completa de redes y web</li>
+        <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><strong style="color:#fff">3 contenidos semanales</strong> — copy, diseño y publicación</li>
+        <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Reels y vídeo corto incluido</li>
+        <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Optimización SEO básica de web</li>
+        <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Gestión de reputación digital</li>
+        <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Reuniones semanales de seguimiento</li>
+        <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Soporte prioritario 24/5</li>
+      </ul>
+      <a href="https://wa.me/TUNUMERO?text=Hola%20Rafael%2C%20me%20interesa%20el%20Plan%20Premium%20de%20Vornix%20Digital%20(RD%24%20118.000%2Fmes).%20%C2%BFPodr%C3%ADamos%20hablar%3F" target="_blank" rel="noopener" class="plan-btn plan-btn-ghost" style="cursor:pointer">
+        <svg class="wa-ico" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+        Solicitar por WhatsApp
+      </a>
+    </div>
+  </div>
+
+  <!-- LANDING ADD-ON -->
+  <div class="landing-addon aos">
+    <div class="addon-left">
+      <div class="addon-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+      </div>
+      <div>
+        <h4>Landing Page que convierte <span style="background:rgba(37,99,235,.2);border:1px solid rgba(37,99,235,.3);color:#93c5fd;font-size:10px;padding:2px 8px;border-radius:20px;font-weight:500;vertical-align:middle;margin-left:8px">Servicio individual</span></h4>
+        <p>Página de aterrizaje diseñada para convertir visitantes en clientes. Sin distracciones, una sola acción, adaptada al 100% a tu marca.</p>
+        <div class="addon-feats">
+          <span class="addon-feat">Diseño premium</span>
+          <span class="addon-feat">Mobile-first</span>
+          <span class="addon-feat">CTA optimizada</span>
+          <span class="addon-feat">Integración formulario</span>
+          <span class="addon-feat">Entrega en 7 días</span>
+        </div>
+      </div>
+    </div>
+    <div class="addon-right">
+      <span class="addon-price-main">RD$ 8,835</span>
+      <span class="addon-price-sub">≈ US$ 150 · proyecto único</span>
+      <a href="https://wa.me/TUNUMERO?text=Hola%20Rafael%2C%20me%20interesa%20contratar%20una%20Landing%20Page%20con%20Vornix%20Digital%20(RD%24%208.835).%20%C2%BFPodr%C3%ADamos%20hablar%3F" target="_blank" rel="noopener" class="btn-primary" style="display:inline-flex;font-size:13px;padding:11px 20px;cursor:pointer">
+        <svg class="wa-ico" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+        Solicitar
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- SOBRE MÍ -->
+<section id="sobre-mi" class="section">
+  <div class="about-grid">
+    <div class="about-photo-wrap">
+      <div class="about-photo-ring">
+        <div class="about-photo-inner">
+          <!-- Reemplaza con tu foto: <img src="tu-foto.jpg" alt="Rafael — Vornix.Digital"> -->
+          R
+        </div>
+      </div>
+      <div class="about-cards">
+        <div class="about-card">
+          <div class="about-card-ico">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
+          </div>
+          <div>
+            <div class="about-card-t">Máster Growth Marketing</div>
+            <div class="about-card-s">ISDI · España & LATAM</div>
+          </div>
+        </div>
+        <div class="about-card">
+          <div class="about-card-ico">
+            <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          </div>
+          <div>
+            <div class="about-card-t">4 años en Grupo Santalucía</div>
+            <div class="about-card-s">Liderando estrategia digital</div>
+          </div>
+        </div>
+        <div class="about-card">
+          <div class="about-card-ico">
+            <svg viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+          </div>
+          <div>
+            <div class="about-card-t">The Power MBA</div>
+            <div class="about-card-s">Administración y Gestión Empresarial</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="about-text aos">
+      <div class="tag">Sobre mí</div>
+      <h2>Hola, soy <span class="grad">Rafael</span> — el estratega detrás de Vornix.Digital</h2>
+      <p>Llevo más de 4 años liderando estrategia digital en una de las principales corporaciones de España (Grupo Santalucía), donde aprendí que los resultados no se improvisan — se construyen con datos, creatividad y ejecución consistente.</p>
+      <p>Hoy aplico ese mismo nivel de exigencia a cada cliente de Vornix.Digital. No me interesa el vanity marketing: me importa que tus ventas crezcan, que tu marca sea reconocida y que cada peso invertido genere retorno medible.</p>
+      <p>Con formación en Growth Marketing (ISDI) y MBA, combino la visión estratégica con la ejecución táctica que tu negocio necesita para competir online en serio.</p>
+      <div class="skills-tags">
+        <span class="skill-tag">Growth Marketing</span>
+        <span class="skill-tag">SEO & SEM</span>
+        <span class="skill-tag">Social Media</span>
+        <span class="skill-tag">CRO</span>
+        <span class="skill-tag">Analytics</span>
+        <span class="skill-tag">Copywriting</span>
+        <span class="skill-tag">Paid Ads</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div id="contacto" class="cta-section">
+  <h2>¿Listo para hacer crecer<br>tu negocio <span class="grad">online?</span></h2>
+  <p>30 minutos de consulta gratuita. Sin compromiso. Solo resultados.</p>
+  <div class="cta-btns">
+    <a href="https://wa.me/TUNUMERO?text=Hola%20Rafael%2C%20me%20gustar%C3%ADa%20agendar%20una%20llamada%20gratuita%20con%20Vornix%20Digital." target="_blank" rel="noopener" class="btn-primary" style="font-size:15px;padding:16px 32px;cursor:pointer">
+      <svg class="wa-ico" style="width:20px;height:20px" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
+      Escríbeme por WhatsApp
+    </a>
+  </div>
+  <div class="cta-contact-row">
+    <a href="mailto:hola@vornixdigital.com" class="contact-item">
+      <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      hola@vornixdigital.com
+    </a>
+    <a href="https://vornixdigital.hashnode.dev" target="_blank" rel="noopener" class="contact-item">
+      <svg viewBox="0 0 24 24"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
+      Blog · vornixdigital.hashnode.dev
+    </a>
+  </div>
+</div>
+
+<!-- FORMULARIO -->
+<div class="form-section">
+  <div style="text-align:center;margin-bottom:32px" class="aos">
+    <div class="tag" style="margin:0 auto 16px">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      Formulario de contacto
+    </div>
+    <h2 class="section-title" style="font-size:32px">¿Prefieres que te <span class="grad">contactemos</span> nosotros?</h2>
+    <p style="font-size:14px;color:var(--muted);margin-top:12px">Déjanos tus datos y Rafael te escribe en menos de 24h.</p>
+  </div>
+  <div class="form-wrap aos">
+    <form name="contacto-vornix" method="POST" netlify data-netlify="true" data-netlify-honeypot="bot-field" id="vornix-form" action="/success">
+      <input type="hidden" name="form-name" value="contacto-vornix">
+      <input type="hidden" name="bot-field" style="display:none">
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="nombre">Nombre *</label>
+          <input type="text" id="nombre" name="nombre" placeholder="Tu nombre" required>
+        </div>
+        <div class="form-group">
+          <label for="empresa">Empresa / Marca</label>
+          <input type="text" id="empresa" name="empresa" placeholder="Nombre de tu negocio">
+        </div>
+        <div class="form-group">
+          <label for="email">Email *</label>
+          <input type="email" id="email" name="email" placeholder="correo@ejemplo.com" required>
+        </div>
+        <div class="form-group">
+          <label for="telefono">WhatsApp / Teléfono</label>
+          <input type="tel" id="telefono" name="telefono" placeholder="+1 809 000 0000">
+        </div>
+        <div class="form-group full">
+          <label for="servicio">¿Qué servicio te interesa? *</label>
+          <select id="servicio" name="servicio" required>
+            <option value="" disabled selected>Selecciona una opción</option>
+            <option value="basico">Plan Básico — RD$ 20,500</option>
+            <option value="estrategico">Plan Estratégico — RD$ 42,000/mes</option>
+            <option value="premium">Plan Premium — RD$ 118,000/mes</option>
+            <option value="landing">Landing Page — RD$ 8,835</option>
+            <option value="otro">Otro / Tengo una pregunta</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label for="mensaje">Cuéntame tu proyecto</label>
+          <textarea id="mensaje" name="mensaje" placeholder="¿Qué quieres conseguir? ¿Cuál es tu mayor reto digital ahora mismo?"></textarea>
+        </div>
+      </div>
+      <button type="submit" class="form-submit">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        Enviar mensaje
+      </button>
+      <p class="form-note">
+        <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Tus datos están seguros. Sin spam, sin cesión a terceros.
+      </p>
+    </form>
+    <div class="form-success" id="form-success">
+      <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      <h3>¡Mensaje recibido!</h3>
+      <p>Rafael te contactará en menos de 24 horas.<br>Mientras tanto, puedes escribirle directamente por WhatsApp.</p>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-logo">Vornix<span>.Digital</span></div>
+  <p>© 2026 Vornix Digital · República Dominicana &nbsp;·&nbsp; Precios en RD$ · Tipo de cambio referencial: 1 USD ≈ RD$ 58.90</p>
+</footer>
+
+<script>
+// Animate on scroll
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible') })
+}, {threshold:0.12})
+document.querySelectorAll('.aos').forEach(el => observer.observe(el))
+
+// Counter animation
+function animateCount(el) {
+  const target = +el.dataset.target
+  const suffix = el.dataset.suffix || ''
+  const duration = 1800
+  const start = performance.now()
+  const update = (now) => {
+    const progress = Math.min((now - start) / duration, 1)
+    const ease = 1 - Math.pow(1 - progress, 3)
+    el.textContent = Math.round(ease * target) + suffix
+    if(progress < 1) requestAnimationFrame(update)
+  }
+  requestAnimationFrame(update)
+}
+const counterObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if(e.isIntersecting) {
+      animateCount(e.target)
+      counterObs.unobserve(e.target)
+    }
+  })
+}, {threshold:0.5})
+document.querySelectorAll('.stat-n[data-target]').forEach(el => counterObs.observe(el))
+
+// Netlify form
+const form = document.getElementById('vornix-form')
+if(form) {
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault()
+    const data = new FormData(form)
+    try {
+      await fetch('/', {method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body: new URLSearchParams(data).toString()})
+      form.style.display = 'none'
+      document.getElementById('form-success').style.display = 'block'
+    } catch(err) { form.submit() }
+  })
+}
+</script>
+</body>
+</html>
