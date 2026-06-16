@@ -29,7 +29,16 @@
 <body>
 
 <h1>🏠 Incrustar Fotos — Villa Las Terrenas</h1>
-<p class="sub">Selecciona cada foto, pulsa "Generar HTML" y descarga el archivo completo listo para usar.</p>
+<p class="sub">Primero selecciona el HTML base, luego cada foto, y pulsa "Generar HTML".</p>
+
+<!-- HTML BASE -->
+<div class="card" style="border-color:#38bdf8;">
+  <h2 style="color:#38bdf8;">① Selecciona el archivo HTML base</h2>
+  <p>Selecciona el archivo <strong>villa-las-terrenas.html</strong> que descargaste</p>
+  <label class="upload-btn" for="htmlfile" style="background:#0369a1;">📄 Seleccionar villa-las-terrenas.html</label>
+  <input type="file" id="htmlfile" accept=".html,.htm" />
+  <div class="status" id="st-htmlfile">Sin seleccionar</div>
+</div>
 
 <!-- FOTOS HABITACIONES -->
 <div class="card">
@@ -115,6 +124,13 @@
     g13: 'galeria_13.jpg', g14: 'galeria_14.jpg', g15: 'galeria_15.jpg',
   };
 
+  // Preview HTML file
+  document.getElementById('htmlfile').addEventListener('change', () => {
+    const file = document.getElementById('htmlfile').files[0];
+    const st = document.getElementById('st-htmlfile');
+    if (file) { st.textContent = '✓ ' + file.name; st.className = 'status ok'; }
+  });
+
   // Preview al seleccionar
   Object.keys(slots).forEach(id => {
     const input = document.getElementById(id);
@@ -151,11 +167,16 @@
     progress.textContent   = 'Leyendo imágenes...';
 
     try {
-      // Cargar villa-las-terrenas.html desde la misma carpeta
+      // Leer el HTML base con FileReader
       progress.textContent = 'Cargando HTML base...';
-      const resp = await fetch('villa-las-terrenas.html');
-      if (!resp.ok) throw new Error('No se encontró villa-las-terrenas.html en la misma carpeta. Asegúrate de que ambos archivos estén juntos.');
-      let html = await resp.text();
+      const htmlInput = document.getElementById('htmlfile');
+      if (!htmlInput.files[0]) throw new Error('Selecciona primero el archivo villa-las-terrenas.html en el paso ①');
+      let html = await new Promise((resolve, reject) => {
+        const r = new FileReader();
+        r.onload = e => resolve(e.target.result);
+        r.onerror = reject;
+        r.readAsText(htmlInput.files[0]);
+      });
 
       // Reemplazar cada imagen con base64
       const ids = Object.keys(slots);
