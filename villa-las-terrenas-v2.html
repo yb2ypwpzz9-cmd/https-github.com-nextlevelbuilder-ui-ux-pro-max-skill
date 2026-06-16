@@ -267,25 +267,25 @@
     </div>
 
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-      <div class="space-card reveal cursor-pointer rounded-2xl overflow-hidden" style="transition-delay:0.05s">
+      <div class="space-card lb-trigger reveal cursor-pointer rounded-2xl overflow-hidden" data-src="foto_4.jpeg" data-alt="Piscina privada" style="transition-delay:0.05s">
         <div class="overflow-hidden rounded-2xl h-56 md:h-72">
           <img src="foto_4.jpeg" alt="Piscina privada" class="w-full h-full object-cover" />
         </div>
         <p class="mt-3 text-slate-800 text-sm font-semibold">Piscina Privada</p>
       </div>
-      <div class="space-card reveal cursor-pointer rounded-2xl overflow-hidden" style="transition-delay:0.1s">
+      <div class="space-card lb-trigger reveal cursor-pointer rounded-2xl overflow-hidden" data-src="galeria_03.jpeg" data-alt="Zona de hamacas" style="transition-delay:0.1s">
         <div class="overflow-hidden rounded-2xl h-56 md:h-72">
           <img src="galeria_03.jpeg" alt="Zona de hamacas" class="w-full h-full object-cover" />
         </div>
         <p class="mt-3 text-slate-800 text-sm font-semibold">Zona de Hamacas</p>
       </div>
-      <div class="space-card reveal cursor-pointer rounded-2xl overflow-hidden" style="transition-delay:0.15s">
+      <div class="space-card lb-trigger reveal cursor-pointer rounded-2xl overflow-hidden" data-src="galeria_06.jpeg" data-alt="Comedor exterior" style="transition-delay:0.15s">
         <div class="overflow-hidden rounded-2xl h-56 md:h-72">
           <img src="galeria_06.jpeg" alt="Comedor exterior" class="w-full h-full object-cover" />
         </div>
         <p class="mt-3 text-slate-800 text-sm font-semibold">Comedor Exterior</p>
       </div>
-      <div class="space-card reveal cursor-pointer rounded-2xl overflow-hidden" style="transition-delay:0.2s">
+      <div class="space-card lb-trigger reveal cursor-pointer rounded-2xl overflow-hidden" data-src="galeria_08.jpeg" data-alt="Salón interior" style="transition-delay:0.2s">
         <div class="overflow-hidden rounded-2xl h-56 md:h-72">
           <img src="galeria_08.jpeg" alt="Salón interior" class="w-full h-full object-cover" />
         </div>
@@ -301,10 +301,10 @@
 ════════════════════════════════════ -->
 <section class="bg-white py-20 md:py-28 px-6">
   <div class="max-w-7xl mx-auto">
-    <div class="text-right mb-14 reveal">
+    <div class="text-center mb-14 reveal">
       <p class="text-teal-600 text-sm font-semibold tracking-widest uppercase mb-3">Lo que incluye</p>
       <h2 class="font-serif font-bold text-slate-900 text-4xl md:text-5xl leading-tight">
-        Equipamiento de<br/>Primera Clase
+        Equipamiento de Primera Clase
       </h2>
     </div>
 
@@ -356,7 +356,7 @@
     <div class="grid md:grid-cols-3 gap-6">
       <!-- Hab 1 -->
       <article class="room-card bg-white rounded-2xl overflow-hidden cursor-default">
-        <div class="relative h-56 overflow-hidden">
+        <div class="relative h-56 overflow-hidden lb-trigger cursor-zoom-in" data-src="hab1.jpeg" data-alt="Suite King Master">
           <img src="hab1.jpeg" alt="Suite King Master" class="room-img w-full h-full object-cover" />
           <span class="absolute top-4 left-4 bg-teal-700 text-white text-xs font-bold px-3 py-1.5 rounded-full tracking-wider">HABITACIÓN 1</span>
           <span class="absolute top-4 right-4 bg-white/90 text-slate-700 text-xs font-medium px-3 py-1.5 rounded-full">Master Suite</span>
@@ -376,7 +376,7 @@
 
       <!-- Hab 2 -->
       <article class="room-card bg-white rounded-2xl overflow-hidden cursor-default">
-        <div class="relative h-56 overflow-hidden">
+        <div class="relative h-56 overflow-hidden lb-trigger cursor-zoom-in" data-src="hab2.jpeg" data-alt="Suite King Deluxe">
           <img src="hab2.jpeg" alt="Suite King Deluxe" class="room-img w-full h-full object-cover" />
           <span class="absolute top-4 left-4 bg-teal-700 text-white text-xs font-bold px-3 py-1.5 rounded-full tracking-wider">HABITACIÓN 2</span>
           <span class="absolute top-4 right-4 bg-white/90 text-slate-700 text-xs font-medium px-3 py-1.5 rounded-full">King Suite</span>
@@ -396,7 +396,7 @@
 
       <!-- Hab 3 -->
       <article class="room-card bg-white rounded-2xl overflow-hidden cursor-default">
-        <div class="relative h-56 overflow-hidden">
+        <div class="relative h-56 overflow-hidden lb-trigger cursor-zoom-in" data-src="hab3.jpeg" data-alt="Suite Twin Familiar">
           <img src="hab3.jpeg" alt="Suite Twin Familiar" class="room-img w-full h-full object-cover" />
           <span class="absolute top-4 left-4 bg-teal-700 text-white text-xs font-bold px-3 py-1.5 rounded-full tracking-wider">HABITACIÓN 3</span>
           <span class="absolute top-4 right-4 bg-white/90 text-slate-700 text-xs font-medium px-3 py-1.5 rounded-full">Suite Twin</span>
@@ -778,8 +778,20 @@
   const lightbox  = document.getElementById('lightbox');
   const lbImg     = document.getElementById('lb-img');
   const lbCounter = document.getElementById('lb-counter');
-  const thumbs    = [...document.querySelectorAll('#gallery-grid .gallery-thumb')];
+
+  // Gallery grid thumbs (have prev/next navigation)
+  const thumbs = [...document.querySelectorAll('#gallery-grid .gallery-thumb')];
   let current = 0;
+  let navMode = false; // true = navigable gallery, false = standalone
+
+  function openLBSrc(src, alt) {
+    lbImg.src = src;
+    lbImg.alt = alt || '';
+    lbCounter.textContent = '';
+    lightbox.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    navMode = false;
+  }
 
   function openLB(idx) {
     current = idx;
@@ -788,12 +800,21 @@
     lbCounter.textContent = (idx + 1) + ' / ' + thumbs.length;
     lightbox.classList.add('active');
     document.body.style.overflow = 'hidden';
+    navMode = true;
   }
-  function closeLB() { lightbox.classList.remove('active'); document.body.style.overflow = ''; }
-  function prevPhoto() { openLB((current - 1 + thumbs.length) % thumbs.length); }
-  function nextPhoto() { openLB((current + 1) % thumbs.length); }
 
+  function closeLB() { lightbox.classList.remove('active'); document.body.style.overflow = ''; }
+  function prevPhoto() { if (navMode) openLB((current - 1 + thumbs.length) % thumbs.length); }
+  function nextPhoto() { if (navMode) openLB((current + 1) % thumbs.length); }
+
+  // Gallery grid
   thumbs.forEach((t, i) => t.addEventListener('click', () => openLB(i)));
+
+  // Standalone triggers (espacios + habitaciones)
+  document.querySelectorAll('.lb-trigger').forEach(el => {
+    el.addEventListener('click', () => openLBSrc(el.dataset.src, el.dataset.alt));
+  });
+
   document.getElementById('lb-close').addEventListener('click', closeLB);
   document.getElementById('lb-prev').addEventListener('click', prevPhoto);
   document.getElementById('lb-next').addEventListener('click', nextPhoto);
