@@ -364,15 +364,14 @@
         </article>
 
         <!-- Piscina Privada -->
-        <article class="feature-card glass-card rounded-2xl overflow-hidden cursor-default reveal" style="transition-delay:0.12s">
-          <!-- foto_4.jpg: piscina + casa de frente -->
-          <div class="h-36 overflow-hidden">
-            <img src="foto_4.jpg" alt="Piscina privada Villa Las Terrenas" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105" loading="lazy" />
+        <article class="feature-card glass-card rounded-2xl p-7 text-center cursor-default reveal" style="transition-delay:0.12s">
+          <div class="w-14 h-14 bg-turquoise-600/10 rounded-2xl flex items-center justify-center mx-auto mb-5">
+            <svg class="w-7 h-7 text-turquoise-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 15 Q6 13 9 15 Q12 17 15 15 Q18 13 21 15M3 19 Q6 17 9 19 Q12 21 15 19 Q18 17 21 19M12 3v4M9.5 5.5l2.5-2.5 2.5 2.5"/>
+            </svg>
           </div>
-          <div class="p-5 text-center">
-            <h3 class="font-serif text-earth-800 text-xl font-semibold mb-2">Piscina Privada</h3>
-            <p class="text-earth-600 text-sm leading-relaxed">Refréscate en tu piscina exclusiva con deck de madera. El retiro perfecto bajo el sol caribeño.</p>
-          </div>
+          <h3 class="font-serif text-earth-800 text-xl font-semibold mb-2">Piscina Privada</h3>
+          <p class="text-earth-600 text-sm leading-relaxed">Refréscate en tu piscina exclusiva con deck de madera. El retiro perfecto bajo el sol caribeño.</p>
         </article>
 
         <!-- Parqueo -->
@@ -957,52 +956,6 @@
        JAVASCRIPT
   ═══════════════════════════════════ -->
   <script>
-    // ════════════════════════════════════
-    // DIAGNÓSTICO — muestra qué archivos faltan
-    // Quita este bloque cuando todo funcione
-    // ════════════════════════════════════
-    (function() {
-      const files = [
-        'villa-hero.mp4','foto_4.jpg',
-        'hab1.jpg','hab2.jpg','hab3.jpg',
-        'galeria_01.jpg','galeria_02.jpg','galeria_03.jpg',
-        'galeria_04.jpg','galeria_05.jpg','galeria_06.jpg',
-        'galeria_07.jpg','galeria_08.jpg','galeria_09.jpg',
-        'galeria_10.jpg','galeria_11.jpg','galeria_12.jpg',
-        'galeria_13.jpg','galeria_14.jpg','galeria_15.jpg'
-      ];
-      const box = document.createElement('div');
-      box.id = 'diag-box';
-      box.style.cssText = 'position:fixed;bottom:80px;left:12px;z-index:9999;background:rgba(0,0,0,0.85);color:#fff;font-size:11px;font-family:monospace;padding:10px 14px;border-radius:10px;max-width:260px;max-height:260px;overflow-y:auto;line-height:1.7';
-      box.innerHTML = '<b style="color:#22d3ee">Archivos detectados:</b><br>';
-      document.body.appendChild(box);
-
-      let checked = 0;
-      files.forEach(name => {
-        const isVideo = name.endsWith('.mp4');
-        if (isVideo) {
-          const v = document.createElement('video');
-          v.src = name;
-          v.onloadedmetadata = () => addResult(name, true);
-          v.onerror = () => addResult(name, false);
-        } else {
-          const img = new Image();
-          img.onload = () => addResult(name, true);
-          img.onerror = () => addResult(name, false);
-          img.src = name;
-        }
-      });
-
-      function addResult(name, ok) {
-        box.innerHTML += `<span style="color:${ok?'#4ade80':'#f87171'}">${ok?'✓':'✗'} ${name}</span><br>`;
-        checked++;
-        if (checked === files.length) {
-          box.innerHTML += '<br><span style="color:#fbbf24;font-size:10px">Cierra con doble clic</span>';
-          box.ondblclick = () => box.remove();
-        }
-      }
-    })();
-
     // ── Sticky header ──
     const header = document.getElementById('header');
     window.addEventListener('scroll', () => {
