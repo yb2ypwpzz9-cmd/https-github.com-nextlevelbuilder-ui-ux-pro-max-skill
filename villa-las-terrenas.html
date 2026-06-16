@@ -1157,6 +1157,56 @@
       const diff = touchStartX - e.changedTouches[0].clientX;
       if (Math.abs(diff) > 50) { diff > 0 ? nextPhoto() : prevPhoto(); }
     });
+
+    // ════════════════════════════════════
+    // DIAGNÓSTICO DE IMÁGENES
+    // ════════════════════════════════════
+    (function() {
+      const panel = document.createElement('div');
+      panel.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:#1a1a1a;color:#fff;font-family:monospace;font-size:11px;max-height:220px;overflow-y:auto;z-index:99999;padding:8px 12px;';
+      panel.innerHTML = '<div style="color:#facc15;font-weight:bold;margin-bottom:4px;">📋 DIAGNÓSTICO DE ARCHIVOS — Cierra esta barra cuando termines</div>';
+
+      const allImgs = document.querySelectorAll('img');
+      let loaded = 0, failed = 0;
+
+      allImgs.forEach(img => {
+        const src = img.getAttribute('src');
+        if (!src) return;
+        const row = document.createElement('div');
+        row.style.padding = '1px 0';
+
+        const checkImg = new Image();
+        checkImg.onload = () => {
+          loaded++;
+          row.innerHTML = '<span style="color:#4ade80">✅ OK</span> — ' + src;
+          updateSummary();
+        };
+        checkImg.onerror = () => {
+          failed++;
+          row.innerHTML = '<span style="color:#f87171">❌ FALLA</span> — ' + src + ' <span style="color:#fbbf24">(¿nombre incorrecto o archivo no está en la carpeta?)</span>';
+          updateSummary();
+        };
+        checkImg.src = src + '?t=' + Date.now();
+        panel.appendChild(row);
+      });
+
+      const summary = document.createElement('div');
+      summary.style.cssText = 'position:sticky;top:0;background:#1a1a1a;padding:4px 0;border-bottom:1px solid #444;margin-bottom:4px;color:#facc15;font-weight:bold;';
+      panel.insertBefore(summary, panel.children[1]);
+
+      function updateSummary() {
+        summary.textContent = '📊 Resultado: ' + loaded + ' cargadas ✅  |  ' + failed + ' fallidas ❌  |  Total: ' + allImgs.length;
+      }
+      updateSummary();
+
+      const closeBtn = document.createElement('button');
+      closeBtn.textContent = '✕ Cerrar diagnóstico';
+      closeBtn.style.cssText = 'position:absolute;top:6px;right:10px;background:#ef4444;color:white;border:none;padding:3px 10px;border-radius:4px;cursor:pointer;font-size:11px;';
+      closeBtn.onclick = () => panel.remove();
+      panel.appendChild(closeBtn);
+
+      document.body.appendChild(panel);
+    })();
   </script>
 
 </body>
