@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Incrustar Fotos en la Villa</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, sans-serif; background: #0f172a; color: #e2e8f0; min-height: 100vh; padding: 32px 16px; }
+    h1 { font-size: 1.5rem; font-weight: 700; color: #38bdf8; margin-bottom: 6px; }
+    p.sub { color: #94a3b8; font-size: 0.875rem; margin-bottom: 28px; }
+    .card { background: #1e293b; border-radius: 12px; padding: 20px; margin-bottom: 16px; border: 1px solid #334155; }
+    .card h2 { font-size: 0.9rem; font-weight: 600; color: #f8fafc; margin-bottom: 4px; }
+    .card p { font-size: 0.78rem; color: #94a3b8; margin-bottom: 10px; }
+    label.upload-btn { display: inline-block; background: #0284c7; color: white; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 0.82rem; font-weight: 600; transition: background 0.2s; }
+    label.upload-btn:hover { background: #0369a1; }
+    input[type=file] { display: none; }
+    .preview { width: 80px; height: 56px; object-fit: cover; border-radius: 6px; margin-top: 8px; border: 2px solid #22c55e; display: none; }
+    .status { font-size: 0.75rem; margin-top: 6px; color: #94a3b8; }
+    .status.ok { color: #22c55e; }
+    .status.err { color: #f87171; }
+    .btn-generate { display: block; width: 100%; margin-top: 24px; padding: 14px; background: #16a34a; color: white; border: none; border-radius: 10px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background 0.2s; }
+    .btn-generate:hover { background: #15803d; }
+    .btn-generate:disabled { background: #374151; color: #6b7280; cursor: not-allowed; }
+    .progress { display: none; margin-top: 16px; background: #0f172a; border-radius: 8px; padding: 12px; font-size: 0.8rem; color: #38bdf8; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 480px) { .grid-2 { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+<h1>🏠 Incrustar Fotos — Villa Las Terrenas</h1>
+<p class="sub">Selecciona cada foto, pulsa "Generar HTML" y descarga el archivo completo listo para usar.</p>
+
+<!-- FOTOS HABITACIONES -->
+<div class="card">
+  <h2>Habitaciones (3 fotos)</h2>
+  <p>Las fotos principales de cada habitación</p>
+  <div class="grid-2">
+    <div>
+      <label class="upload-btn" for="hab1">📁 Habitación 1 (Master)</label>
+      <input type="file" id="hab1" accept="image/*" />
+      <img class="preview" id="prev-hab1" />
+      <div class="status" id="st-hab1">Sin seleccionar</div>
+    </div>
+    <div>
+      <label class="upload-btn" for="hab2">📁 Habitación 2 (King)</label>
+      <input type="file" id="hab2" accept="image/*" />
+      <img class="preview" id="prev-hab2" />
+      <div class="status" id="st-hab2">Sin seleccionar</div>
+    </div>
+    <div>
+      <label class="upload-btn" for="hab3">📁 Habitación 3 (Twin)</label>
+      <input type="file" id="hab3" accept="image/*" />
+      <img class="preview" id="prev-hab3" />
+      <div class="status" id="st-hab3">Sin seleccionar</div>
+    </div>
+  </div>
+</div>
+
+<!-- FOTO PRINCIPAL -->
+<div class="card">
+  <h2>Foto principal (piscina / exterior)</h2>
+  <p>La foto grande de la galería — foto_4.jpg</p>
+  <label class="upload-btn" for="foto4">📁 Foto principal</label>
+  <input type="file" id="foto4" accept="image/*" />
+  <img class="preview" id="prev-foto4" />
+  <div class="status" id="st-foto4">Sin seleccionar</div>
+</div>
+
+<!-- GALERÍA 01-08 -->
+<div class="card">
+  <h2>Galería — fotos 1 a 8</h2>
+  <p>Selecciona las 8 primeras fotos de la galería</p>
+  <div class="grid-2">
+    <div id="slot-g01"><label class="upload-btn" for="g01">📁 Galería 01</label><input type="file" id="g01" accept="image/*" /><img class="preview" id="prev-g01" /><div class="status" id="st-g01">Sin seleccionar</div></div>
+    <div id="slot-g02"><label class="upload-btn" for="g02">📁 Galería 02</label><input type="file" id="g02" accept="image/*" /><img class="preview" id="prev-g02" /><div class="status" id="st-g02">Sin seleccionar</div></div>
+    <div id="slot-g03"><label class="upload-btn" for="g03">📁 Galería 03</label><input type="file" id="g03" accept="image/*" /><img class="preview" id="prev-g03" /><div class="status" id="st-g03">Sin seleccionar</div></div>
+    <div id="slot-g04"><label class="upload-btn" for="g04">📁 Galería 04</label><input type="file" id="g04" accept="image/*" /><img class="preview" id="prev-g04" /><div class="status" id="st-g04">Sin seleccionar</div></div>
+    <div id="slot-g05"><label class="upload-btn" for="g05">📁 Galería 05</label><input type="file" id="g05" accept="image/*" /><img class="preview" id="prev-g05" /><div class="status" id="st-g05">Sin seleccionar</div></div>
+    <div id="slot-g06"><label class="upload-btn" for="g06">📁 Galería 06</label><input type="file" id="g06" accept="image/*" /><img class="preview" id="prev-g06" /><div class="status" id="st-g06">Sin seleccionar</div></div>
+    <div id="slot-g07"><label class="upload-btn" for="g07">📁 Galería 07</label><input type="file" id="g07" accept="image/*" /><img class="preview" id="prev-g07" /><div class="status" id="st-g07">Sin seleccionar</div></div>
+    <div id="slot-g08"><label class="upload-btn" for="g08">📁 Galería 08</label><input type="file" id="g08" accept="image/*" /><img class="preview" id="prev-g08" /><div class="status" id="st-g08">Sin seleccionar</div></div>
+  </div>
+</div>
+
+<!-- GALERÍA 09-15 -->
+<div class="card">
+  <h2>Galería — fotos 9 a 15</h2>
+  <p>Selecciona las 7 últimas fotos de la galería</p>
+  <div class="grid-2">
+    <div><label class="upload-btn" for="g09">📁 Galería 09</label><input type="file" id="g09" accept="image/*" /><img class="preview" id="prev-g09" /><div class="status" id="st-g09">Sin seleccionar</div></div>
+    <div><label class="upload-btn" for="g10">📁 Galería 10</label><input type="file" id="g10" accept="image/*" /><img class="preview" id="prev-g10" /><div class="status" id="st-g10">Sin seleccionar</div></div>
+    <div><label class="upload-btn" for="g11">📁 Galería 11</label><input type="file" id="g11" accept="image/*" /><img class="preview" id="prev-g11" /><div class="status" id="st-g11">Sin seleccionar</div></div>
+    <div><label class="upload-btn" for="g12">📁 Galería 12</label><input type="file" id="g12" accept="image/*" /><img class="preview" id="prev-g12" /><div class="status" id="st-g12">Sin seleccionar</div></div>
+    <div><label class="upload-btn" for="g13">📁 Galería 13</label><input type="file" id="g13" accept="image/*" /><img class="preview" id="prev-g13" /><div class="status" id="st-g13">Sin seleccionar</div></div>
+    <div><label class="upload-btn" for="g14">📁 Galería 14</label><input type="file" id="g14" accept="image/*" /><img class="preview" id="prev-g14" /><div class="status" id="st-g14">Sin seleccionar</div></div>
+    <div><label class="upload-btn" for="g15">📁 Galería 15</label><input type="file" id="g15" accept="image/*" /><img class="preview" id="prev-g15" /><div class="status" id="st-g15">Sin seleccionar</div></div>
+  </div>
+</div>
+
+<button class="btn-generate" id="btn-gen" onclick="generateHTML()">⚙️ Generar HTML con fotos incrustadas</button>
+<div class="progress" id="progress">Procesando imágenes... por favor espera.</div>
+
+<script>
+  // Mapa de input → placeholder en el HTML
+  const slots = {
+    hab1:  'hab1.jpg',
+    hab2:  'hab2.jpg',
+    hab3:  'hab3.jpg',
+    foto4: 'foto_4.jpg',
+    g01: 'galeria_01.jpg', g02: 'galeria_02.jpg', g03: 'galeria_03.jpg',
+    g04: 'galeria_04.jpg', g05: 'galeria_05.jpg', g06: 'galeria_06.jpg',
+    g07: 'galeria_07.jpg', g08: 'galeria_08.jpg', g09: 'galeria_09.jpg',
+    g10: 'galeria_10.jpg', g11: 'galeria_11.jpg', g12: 'galeria_12.jpg',
+    g13: 'galeria_13.jpg', g14: 'galeria_14.jpg', g15: 'galeria_15.jpg',
+  };
+
+  // Preview al seleccionar
+  Object.keys(slots).forEach(id => {
+    const input = document.getElementById(id);
+    input.addEventListener('change', () => {
+      const file = input.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        const prev = document.getElementById('prev-' + id);
+        const st   = document.getElementById('st-' + id);
+        prev.src = e.target.result;
+        prev.style.display = 'block';
+        st.textContent = '✓ ' + file.name;
+        st.className = 'status ok';
+      };
+      reader.readAsDataURL(file);
+    });
+  });
+
+  function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload  = e => resolve(e.target.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async function generateHTML() {
+    const btn      = document.getElementById('btn-gen');
+    const progress = document.getElementById('progress');
+    btn.disabled = true;
+    progress.style.display = 'block';
+    progress.textContent   = 'Leyendo imágenes...';
+
+    try {
+      // Cargar villa-las-terrenas.html desde la misma carpeta
+      progress.textContent = 'Cargando HTML base...';
+      const resp = await fetch('villa-las-terrenas.html');
+      if (!resp.ok) throw new Error('No se encontró villa-las-terrenas.html en la misma carpeta. Asegúrate de que ambos archivos estén juntos.');
+      let html = await resp.text();
+
+      // Reemplazar cada imagen con base64
+      const ids = Object.keys(slots);
+      for (let i = 0; i < ids.length; i++) {
+        const id       = ids[i];
+        const filename = slots[id];
+        const input    = document.getElementById(id);
+        progress.textContent = `Procesando ${filename} (${i+1}/${ids.length})...`;
+
+        if (input.files[0]) {
+          const b64 = await fileToBase64(input.files[0]);
+          // Reemplazar todas las ocurrencias de ese nombre de archivo en src="" y data-src=""
+          const re1 = new RegExp('src="' + filename.replace('.', '\\.') + '"', 'g');
+          const re2 = new RegExp('data-src="' + filename.replace('.', '\\.') + '"', 'g');
+          html = html.replace(re1, `src="${b64}"`);
+          html = html.replace(re2, `data-src="${b64}"`);
+        }
+      }
+
+      // Quitar el panel de diagnóstico si existe
+      html = html.replace(/\/\/ ═+\s*\/\/ DIAGNÓSTICO[\s\S]*?\}\)\(\);/m, '');
+
+      progress.textContent = 'Generando descarga...';
+
+      // Descargar
+      const blob = new Blob([html], { type: 'text/html' });
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href     = url;
+      a.download = 'villa-las-terrenas-FINAL.html';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      progress.style.background = '#14532d';
+      progress.textContent = '✅ ¡Listo! Descarga iniciada — abre villa-las-terrenas-FINAL.html en Chrome y verás todas las fotos.';
+    } catch (err) {
+      progress.style.background = '#450a0a';
+      progress.textContent = '❌ Error: ' + err.message;
+      btn.disabled = false;
+    }
+  }
+</script>
+</body>
+</html>
