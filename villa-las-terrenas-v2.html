@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Villa exclusiva con piscina privada en Las Terrenas, República Dominicana. 3 habitaciones con baño en suite, a pocos metros de la playa." />
+  <title>Villa Las Terrenas · Tu Paraíso Caribeño</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            teal: {
+              50:  '#f0fdfa', 100: '#ccfbf1', 200: '#99f6e4',
+              300: '#5eead4', 400: '#2dd4bf', 500: '#14b8a6',
+              600: '#0d9488', 700: '#0f766e', 800: '#115e59', 900: '#134e4a',
+            },
+            sand: { DEFAULT: '#f8f5f0', dark: '#ede8e0' },
+          },
+          fontFamily: {
+            serif: ['"Playfair Display"', 'Georgia', 'serif'],
+            sans:  ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: #fff; color: #0f172a; }
+
+    /* ── Reveal ── */
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.65s ease, transform 0.65s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ── Header ── */
+    #header { transition: background 0.3s, box-shadow 0.3s; }
+    #header.scrolled { background: rgba(255,255,255,0.96); box-shadow: 0 1px 20px rgba(0,0,0,0.08); backdrop-filter: blur(12px); }
+    #header.scrolled .nav-link { color: #0f172a; }
+    #header.scrolled .nav-link:hover { color: #0d9488; }
+    #header.scrolled .logo-text { color: #0f172a; }
+    #header.scrolled .btn-contact { background: #0d9488; color: #fff; }
+
+    .nav-link { transition: color 0.2s; }
+    .btn-contact { transition: background 0.2s, color 0.2s; }
+
+    /* ── Mobile menu ── */
+    #mobile-menu { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+    #mobile-menu.open { max-height: 400px; }
+
+    /* ── Hero ── */
+    .hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+
+    /* ── Space cards ── */
+    .space-card img { transition: transform 0.5s ease; }
+    .space-card:hover img { transform: scale(1.06); }
+
+    /* ── Room cards ── */
+    .room-card { transition: box-shadow 0.3s, transform 0.3s; }
+    .room-card:hover { box-shadow: 0 20px 60px rgba(0,0,0,0.12); transform: translateY(-4px); }
+    .room-img { transition: transform 0.5s ease; }
+    .room-card:hover .room-img { transform: scale(1.04); }
+
+    /* ── Lightbox ── */
+    #lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 9000; align-items: center; justify-content: center; }
+    #lightbox.active { display: flex; }
+    #lb-img { max-width: 90vw; max-height: 85vh; object-fit: contain; border-radius: 8px; }
+    #lb-close { position: absolute; top: 20px; right: 24px; color: #fff; font-size: 2rem; cursor: pointer; background: none; border: none; line-height: 1; }
+    #lb-prev, #lb-next { position: absolute; top: 50%; transform: translateY(-50%); color: #fff; font-size: 2rem; background: rgba(255,255,255,0.15); border: none; cursor: pointer; padding: 12px 18px; border-radius: 8px; transition: background 0.2s; }
+    #lb-prev { left: 16px; } #lb-next { right: 16px; }
+    #lb-prev:hover, #lb-next:hover { background: rgba(255,255,255,0.25); }
+    #lb-counter { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); color: #fff; font-size: 0.85rem; letter-spacing: 0.05em; }
+
+    /* ── Testimonial cards ── */
+    .testimonial-card { transition: box-shadow 0.3s; }
+    .testimonial-card:hover { box-shadow: 0 12px 40px rgba(0,0,0,0.08); }
+
+    /* ── Form inputs ── */
+    .form-field { width: 100%; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px 16px; font-family: 'Inter', sans-serif; font-size: 0.875rem; color: #0f172a; outline: none; transition: border-color 0.2s, box-shadow 0.2s; background: #fff; }
+    .form-field:focus { border-color: #0d9488; box-shadow: 0 0 0 3px rgba(13,148,136,0.12); }
+    .form-field::placeholder { color: #94a3b8; }
+
+    /* ── WhatsApp FAB ── */
+    .whatsapp-fab { transition: transform 0.2s; }
+    .whatsapp-fab:hover { transform: scale(1.08); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal, .space-card img, .room-card, .room-img { transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════
+     HEADER
+════════════════════════════════════ -->
+<header id="header" class="fixed top-0 left-0 right-0 z-50 px-6 py-4">
+  <div class="max-w-7xl mx-auto flex items-center justify-between">
+
+    <!-- Logo -->
+    <a href="#" class="flex items-center gap-2.5 cursor-pointer" aria-label="Villa Las Terrenas inicio">
+      <svg class="w-8 h-8 text-teal-400" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <path d="M16 4 C10 4 6 9 8 14 C10 10 14 9 16 9 C18 9 22 10 24 14 C26 9 22 4 16 4Z" fill="currentColor" opacity="0.9"/>
+        <path d="M12 10 C8 10 5 13 6 17 C8 14 11 13 13 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.7"/>
+        <path d="M4 22 Q8 19 12 22 Q16 25 20 22 Q24 19 28 22" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>
+        <path d="M4 26 Q8 23 12 26 Q16 29 20 26 Q24 23 28 26" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.6"/>
+        <line x1="16" y1="9" x2="16" y2="22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <div>
+        <p class="logo-text font-serif font-bold text-white text-base leading-tight tracking-wide">Villa Las Terrenas</p>
+        <p class="text-white/60 text-[10px] tracking-widest uppercase leading-tight">República Dominicana</p>
+      </div>
+    </a>
+
+    <!-- Desktop nav -->
+    <nav class="hidden md:flex items-center gap-8" aria-label="Navegación principal">
+      <a href="#galeria"      class="nav-link text-white/85 text-sm font-medium hover:text-white cursor-pointer">Galería</a>
+      <a href="#habitaciones" class="nav-link text-white/85 text-sm font-medium hover:text-white cursor-pointer">Habitaciones</a>
+      <a href="#ubicacion"    class="nav-link text-white/85 text-sm font-medium hover:text-white cursor-pointer">Ubicación</a>
+      <a href="#reservar"     class="nav-link text-white/85 text-sm font-medium hover:text-white cursor-pointer">Reservar</a>
+    </nav>
+
+    <div class="hidden md:flex items-center gap-4">
+      <a href="#reservar" class="btn-contact bg-white/15 border border-white/30 text-white text-sm font-semibold px-5 py-2.5 rounded-full cursor-pointer hover:bg-white hover:text-teal-800 transition-all duration-200">
+        Contactar
+      </a>
+    </div>
+
+    <!-- Hamburger -->
+    <button id="menu-toggle" class="md:hidden text-white p-2 cursor-pointer" aria-label="Abrir menú" aria-expanded="false">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path id="bar1" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16"/><path id="bar2" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 12h16"/><path id="bar3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 18h16"/></svg>
+    </button>
+  </div>
+
+  <!-- Mobile menu -->
+  <div id="mobile-menu" class="md:hidden bg-white/95 backdrop-blur-md rounded-2xl mt-3 mx-0 overflow-hidden" role="navigation" aria-label="Menú móvil">
+    <div class="flex flex-col py-4">
+      <a href="#galeria"      class="mobile-nav-link px-6 py-3 text-slate-800 text-sm font-medium hover:text-teal-700 hover:bg-teal-50 cursor-pointer transition-colors">Galería</a>
+      <a href="#habitaciones" class="mobile-nav-link px-6 py-3 text-slate-800 text-sm font-medium hover:text-teal-700 hover:bg-teal-50 cursor-pointer transition-colors">Habitaciones</a>
+      <a href="#ubicacion"    class="mobile-nav-link px-6 py-3 text-slate-800 text-sm font-medium hover:text-teal-700 hover:bg-teal-50 cursor-pointer transition-colors">Ubicación</a>
+      <a href="#reservar"     class="mobile-nav-link px-6 py-3 text-slate-800 text-sm font-medium hover:text-teal-700 hover:bg-teal-50 cursor-pointer transition-colors">Reservar</a>
+      <div class="px-6 pt-2 pb-3">
+        <a href="#reservar" class="mobile-nav-link block text-center bg-teal-600 text-white text-sm font-semibold px-5 py-3 rounded-xl cursor-pointer">Contactar</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+
+<!-- ════════════════════════════════════
+     HERO
+════════════════════════════════════ -->
+<section class="relative w-full h-screen min-h-[600px] overflow-hidden" aria-label="Cabecera principal">
+  <!-- Video -->
+  <video id="hero-video" class="hero-video" autoplay muted loop playsinline preload="auto" poster="foto_4.jpeg" aria-hidden="true">
+    <source src="villa-hero.mp4" type="video/mp4" />
+  </video>
+  <!-- Gradient overlay -->
+  <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-black/20 to-black/60" aria-hidden="true"></div>
+
+  <!-- Content -->
+  <div class="relative z-10 h-full flex flex-col justify-between px-6 md:px-12 lg:px-20 py-28">
+    <!-- Top: "TU PARAÍSO" -->
+    <div>
+      <h1 class="font-serif font-black text-white leading-none tracking-tight" style="font-size: clamp(3.5rem, 10vw, 9rem);">
+        TU PARAÍSO
+      </h1>
+    </div>
+
+    <!-- Bottom row: tagline left + "CARIBEÑO" right -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-8">
+      <div class="max-w-sm">
+        <p class="text-white/80 text-base md:text-lg leading-relaxed mb-6">
+          Villa exclusiva con piscina privada en complejo residencial, a pocos metros de la playa y los mejores restaurantes de Las Terrenas.
+        </p>
+        <a href="#reservar" class="inline-block bg-white text-teal-900 text-sm font-bold px-7 py-3.5 rounded-full cursor-pointer hover:bg-teal-50 transition-colors duration-200">
+          Reserva Tu Estancia
+        </a>
+      </div>
+      <div class="text-right">
+        <p class="font-serif font-black text-white leading-none italic tracking-tight" style="font-size: clamp(3.5rem, 10vw, 9rem);">
+          Caribeño
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════
+     BIENVENIDO
+════════════════════════════════════ -->
+<section class="bg-white py-20 md:py-28 px-6" id="bienvenido">
+  <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 lg:gap-20 items-center">
+
+    <!-- Images collage -->
+    <div class="reveal grid grid-cols-2 gap-3 h-[420px] md:h-[500px]">
+      <div class="col-span-2 rounded-2xl overflow-hidden h-56 md:h-64">
+        <img src="foto_4.jpeg" alt="Piscina privada Villa Las Terrenas" class="w-full h-full object-cover" />
+      </div>
+      <div class="rounded-2xl overflow-hidden">
+        <img src="galeria_01.jpeg" alt="Exterior villa con palapa" class="w-full h-full object-cover" />
+      </div>
+      <div class="rounded-2xl overflow-hidden">
+        <img src="galeria_02.jpeg" alt="Vista piscina desde palapa" class="w-full h-full object-cover" />
+      </div>
+    </div>
+
+    <!-- Text -->
+    <div class="reveal" style="transition-delay:0.15s">
+      <p class="text-teal-600 text-sm font-semibold tracking-widest uppercase mb-4">Bienvenido</p>
+      <h2 class="font-serif font-bold text-slate-900 text-4xl md:text-5xl leading-tight mb-6">
+        Bienvenido a<br/>Villa Las Terrenas
+      </h2>
+      <p class="text-slate-600 text-lg leading-relaxed mb-8">
+        En Villa Las Terrenas nos comprometemos a ofrecerte la perfecta combinación de alojamiento de lujo, hospitalidad cálida y momentos inolvidables en el Caribe.
+      </p>
+      <div class="flex flex-wrap gap-6">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-teal-50 rounded-xl flex items-center justify-center flex-shrink-0">
+            <svg class="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+          </div>
+          <div>
+            <p class="font-semibold text-slate-800 text-sm">3 Habitaciones</p>
+            <p class="text-slate-500 text-xs">Baño en suite propio</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-teal-50 rounded-xl flex items-center justify-center flex-shrink-0">
+            <svg class="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15 Q6 13 9 15 Q12 17 15 15 Q18 13 21 15M3 19 Q6 17 9 19 Q12 21 15 19 Q18 17 21 19M12 3v4M9.5 5.5l2.5-2.5 2.5 2.5"/></svg>
+          </div>
+          <div>
+            <p class="font-semibold text-slate-800 text-sm">Piscina Privada</p>
+            <p class="text-slate-500 text-xs">Exclusiva para huéspedes</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 bg-teal-50 rounded-xl flex items-center justify-center flex-shrink-0">
+            <svg class="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          </div>
+          <div>
+            <p class="font-semibold text-slate-800 text-sm">A Pocos Metros</p>
+            <p class="text-slate-500 text-xs">De la playa y restaurantes</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════
+     ESPACIOS
+════════════════════════════════════ -->
+<section class="bg-sand py-20 md:py-24 px-6" id="galeria">
+  <div class="max-w-7xl mx-auto">
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+      <h2 class="reveal font-serif font-bold text-slate-900 text-4xl md:text-5xl leading-tight">
+        Espacios para<br/>Explorar
+      </h2>
+      <p class="reveal text-slate-500 text-sm max-w-xs text-right hidden md:block" style="transition-delay:0.1s">Comodidad última y vistas inolvidables</p>
+    </div>
+
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="space-card reveal cursor-pointer rounded-2xl overflow-hidden" style="transition-delay:0.05s">
+        <div class="overflow-hidden rounded-2xl h-56 md:h-72">
+          <img src="foto_4.jpeg" alt="Piscina privada" class="w-full h-full object-cover" />
+        </div>
+        <p class="mt-3 text-slate-800 text-sm font-semibold">Piscina Privada</p>
+      </div>
+      <div class="space-card reveal cursor-pointer rounded-2xl overflow-hidden" style="transition-delay:0.1s">
+        <div class="overflow-hidden rounded-2xl h-56 md:h-72">
+          <img src="galeria_03.jpeg" alt="Zona de hamacas" class="w-full h-full object-cover" />
+        </div>
+        <p class="mt-3 text-slate-800 text-sm font-semibold">Zona de Hamacas</p>
+      </div>
+      <div class="space-card reveal cursor-pointer rounded-2xl overflow-hidden" style="transition-delay:0.15s">
+        <div class="overflow-hidden rounded-2xl h-56 md:h-72">
+          <img src="galeria_06.jpeg" alt="Comedor exterior" class="w-full h-full object-cover" />
+        </div>
+        <p class="mt-3 text-slate-800 text-sm font-semibold">Comedor Exterior</p>
+      </div>
+      <div class="space-card reveal cursor-pointer rounded-2xl overflow-hidden" style="transition-delay:0.2s">
+        <div class="overflow-hidden rounded-2xl h-56 md:h-72">
+          <img src="galeria_08.jpeg" alt="Salón interior" class="w-full h-full object-cover" />
+        </div>
+        <p class="mt-3 text-slate-800 text-sm font-semibold">Salón Interior</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════
+     AMENIDADES
+════════════════════════════════════ -->
+<section class="bg-white py-20 md:py-28 px-6">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-right mb-14 reveal">
+      <p class="text-teal-600 text-sm font-semibold tracking-widest uppercase mb-3">Lo que incluye</p>
+      <h2 class="font-serif font-bold text-slate-900 text-4xl md:text-5xl leading-tight">
+        Equipamiento de<br/>Primera Clase
+      </h2>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-8">
+      <!-- Alojamiento -->
+      <div class="reveal p-8 border border-slate-100 rounded-2xl hover:border-teal-200 hover:shadow-lg transition-all duration-300 cursor-default" style="transition-delay:0.05s">
+        <div class="w-12 h-12 bg-teal-50 rounded-2xl flex items-center justify-center mb-6">
+          <svg class="w-6 h-6 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        </div>
+        <h3 class="font-serif text-xl font-semibold text-slate-900 mb-3">Alojamiento</h3>
+        <p class="text-slate-500 text-sm leading-relaxed">3 habitaciones con baño en suite, aire acondicionado, camas king size y twin.</p>
+      </div>
+
+      <!-- Cocina -->
+      <div class="reveal p-8 border border-slate-100 rounded-2xl hover:border-teal-200 hover:shadow-lg transition-all duration-300 cursor-default" style="transition-delay:0.1s">
+        <div class="w-12 h-12 bg-teal-50 rounded-2xl flex items-center justify-center mb-6">
+          <svg class="w-6 h-6 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/></svg>
+        </div>
+        <h3 class="font-serif text-xl font-semibold text-slate-900 mb-3">Cocina y Comedor</h3>
+        <p class="text-slate-500 text-sm leading-relaxed">Cocina totalmente equipada, comedor exterior con mesa de madera y zona BBQ.</p>
+      </div>
+
+      <!-- Actividades -->
+      <div class="reveal p-8 border border-slate-100 rounded-2xl hover:border-teal-200 hover:shadow-lg transition-all duration-300 cursor-default" style="transition-delay:0.15s">
+        <div class="w-12 h-12 bg-teal-50 rounded-2xl flex items-center justify-center mb-6">
+          <svg class="w-6 h-6 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 15 Q6 13 9 15 Q12 17 15 15 Q18 13 21 15M3 19 Q6 17 9 19 Q12 21 15 19 Q18 17 21 19M12 3v4M9.5 5.5l2.5-2.5 2.5 2.5"/></svg>
+        </div>
+        <h3 class="font-serif text-xl font-semibold text-slate-900 mb-3">Actividades</h3>
+        <p class="text-slate-500 text-sm leading-relaxed">Excursiones en catamarán, avistamiento de ballenas, caminatas por manglares y más.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════
+     HABITACIONES
+════════════════════════════════════ -->
+<section class="bg-sand py-20 md:py-28 px-6" id="habitaciones">
+  <div class="max-w-7xl mx-auto">
+    <div class="mb-14 reveal">
+      <p class="text-teal-600 text-sm font-semibold tracking-widest uppercase mb-3">Descanso de lujo</p>
+      <h2 class="font-serif font-bold text-slate-900 text-4xl md:text-5xl leading-tight">
+        Nuestras Habitaciones
+      </h2>
+      <p class="text-slate-500 mt-3 max-w-lg">Las 3 habitaciones cuentan con baño en suite propio, garantizando privacidad y confort para todos.</p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6">
+      <!-- Hab 1 -->
+      <article class="room-card bg-white rounded-2xl overflow-hidden cursor-default">
+        <div class="relative h-56 overflow-hidden">
+          <img src="hab1.jpeg" alt="Suite King Master" class="room-img w-full h-full object-cover" />
+          <span class="absolute top-4 left-4 bg-teal-700 text-white text-xs font-bold px-3 py-1.5 rounded-full tracking-wider">HABITACIÓN 1</span>
+          <span class="absolute top-4 right-4 bg-white/90 text-slate-700 text-xs font-medium px-3 py-1.5 rounded-full">Master Suite</span>
+        </div>
+        <div class="p-6">
+          <h3 class="font-serif text-xl font-semibold text-slate-900 mb-1">Suite King Master</h3>
+          <p class="text-teal-600 text-xs font-semibold tracking-wide mb-4">Cama King Size · Baño en Suite</p>
+          <p class="text-slate-500 text-sm leading-relaxed mb-5">La habitación principal con cama King Size de lujo. Amplia y luminosa, perfecta para una pareja que busca máximo confort.</p>
+          <ul class="space-y-2">
+            <li class="flex items-center gap-2 text-sm text-slate-600"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Cama King Size</li>
+            <li class="flex items-center gap-2 text-sm text-slate-600"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Baño en suite privado</li>
+            <li class="flex items-center gap-2 text-sm text-slate-600"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Aire acondicionado</li>
+            <li class="flex items-center gap-2 text-sm text-slate-600"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Armario empotrado madera</li>
+          </ul>
+        </div>
+      </article>
+
+      <!-- Hab 2 -->
+      <article class="room-card bg-white rounded-2xl overflow-hidden cursor-default">
+        <div class="relative h-56 overflow-hidden">
+          <img src="hab2.jpeg" alt="Suite King Deluxe" class="room-img w-full h-full object-cover" />
+          <span class="absolute top-4 left-4 bg-teal-700 text-white text-xs font-bold px-3 py-1.5 rounded-full tracking-wider">HABITACIÓN 2</span>
+          <span class="absolute top-4 right-4 bg-white/90 text-slate-700 text-xs font-medium px-3 py-1.5 rounded-full">King Suite</span>
+        </div>
+        <div class="p-6">
+          <h3 class="font-serif text-xl font-semibold text-slate-900 mb-1">Suite King Deluxe</h3>
+          <p class="text-teal-600 text-xs font-semibold tracking-wide mb-4">Cama King Size · Baño en Suite</p>
+          <p class="text-slate-500 text-sm leading-relaxed mb-5">Segunda suite King con decoración caribeña y arte local. Ideal para una segunda pareja.</p>
+          <ul class="space-y-2">
+            <li class="flex items-center gap-2 text-sm text-slate-600"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Cama King Size</li>
+            <li class="flex items-center gap-2 text-sm text-slate-600"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Baño en suite privado</li>
+            <li class="flex items-center gap-2 text-sm text-slate-600"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Decoración caribeña</li>
+            <li class="flex items-center gap-2 text-sm text-slate-600"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Arte caribeño original</li>
+          </ul>
+        </div>
+      </article>
+
+      <!-- Hab 3 -->
+      <article class="room-card bg-white rounded-2xl overflow-hidden cursor-default">
+        <div class="relative h-56 overflow-hidden">
+          <img src="hab3.jpeg" alt="Suite Twin Familiar" class="room-img w-full h-full object-cover" />
+          <span class="absolute top-4 left-4 bg-teal-700 text-white text-xs font-bold px-3 py-1.5 rounded-full tracking-wider">HABITACIÓN 3</span>
+          <span class="absolute top-4 right-4 bg-white/90 text-slate-700 text-xs font-medium px-3 py-1.5 rounded-full">Suite Twin</span>
+        </div>
+        <div class="p-6">
+          <h3 class="font-serif text-xl font-semibold text-slate-900 mb-1">Suite Twin Familiar</h3>
+          <p class="text-teal-600 text-xs font-semibold tracking-wide mb-4">2 Camas Individuales · Baño en Suite</p>
+          <p class="text-slate-500 text-sm leading-relaxed mb-5">Perfecta para niños, amigos o familias. Dos camas individuales cómodas con su propio baño privado.</p>
+          <ul class="space-y-2">
+            <li class="flex items-center gap-2 text-sm text-slate-600"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>2 Camas individuales</li>
+            <li class="flex items-center gap-2 text-sm text-slate-600"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Baño en suite privado</li>
+            <li class="flex items-center gap-2 text-sm text-slate-600"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Ideal familias y amigos</li>
+            <li class="flex items-center gap-2 text-sm text-slate-600"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Aire acondicionado</li>
+          </ul>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════
+     TESTIMONIOS
+════════════════════════════════════ -->
+<section class="bg-white py-20 md:py-28 px-6">
+  <div class="max-w-7xl mx-auto">
+    <div class="mb-14 reveal">
+      <p class="text-teal-600 text-sm font-semibold tracking-widest uppercase mb-3">Experiencias reales</p>
+      <h2 class="font-serif font-bold text-slate-900 text-4xl md:text-5xl leading-tight">
+        Lo Que Dicen<br/>Nuestros Huéspedes
+      </h2>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="testimonial-card reveal bg-sand rounded-2xl p-8 cursor-default" style="transition-delay:0.05s">
+        <div class="flex gap-1 mb-5">
+          <svg class="w-4 h-4 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg class="w-4 h-4 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg class="w-4 h-4 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg class="w-4 h-4 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg class="w-4 h-4 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+        </div>
+        <p class="text-slate-700 text-sm leading-relaxed mb-6 italic">"Una experiencia mágica. La villa superó todas nuestras expectativas. La piscina, el ambiente, la tranquilidad... volveremos sin duda."</p>
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 bg-teal-600 rounded-full flex items-center justify-center text-white text-xs font-bold">AC</div>
+          <div>
+            <p class="text-slate-800 text-sm font-semibold">Ana & Carlos</p>
+            <p class="text-slate-400 text-xs">Pareja</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card reveal bg-sand rounded-2xl p-8 cursor-default" style="transition-delay:0.1s">
+        <div class="flex gap-1 mb-5">
+          <svg class="w-4 h-4 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg class="w-4 h-4 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg class="w-4 h-4 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg class="w-4 h-4 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg class="w-4 h-4 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+        </div>
+        <p class="text-slate-700 text-sm leading-relaxed mb-6 italic">"El lugar perfecto para desconectar. Los niños disfrutaron la piscina y nosotros la terraza por las noches. Absolutamente recomendable."</p>
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 bg-teal-600 rounded-full flex items-center justify-center text-white text-xs font-bold">FM</div>
+          <div>
+            <p class="text-slate-800 text-sm font-semibold">La Familia Martínez</p>
+            <p class="text-slate-400 text-xs">Familia de 4</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card reveal bg-sand rounded-2xl p-8 cursor-default" style="transition-delay:0.15s">
+        <div class="flex gap-1 mb-5">
+          <svg class="w-4 h-4 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg class="w-4 h-4 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg class="w-4 h-4 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg class="w-4 h-4 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <svg class="w-4 h-4 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+        </div>
+        <p class="text-slate-700 text-sm leading-relaxed mb-6 italic">"Las Terrenas es un paraíso y esta villa es su joya. Ubicación, comodidad y lujo en un solo lugar."</p>
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 bg-teal-600 rounded-full flex items-center justify-center text-white text-xs font-bold">SL</div>
+          <div>
+            <p class="text-slate-800 text-sm font-semibold">Sophie L.</p>
+            <p class="text-slate-400 text-xs">Viajera</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════
+     CTA BANNER
+════════════════════════════════════ -->
+<section class="relative py-24 md:py-32 px-6 overflow-hidden" id="ubicacion">
+  <div class="absolute inset-0">
+    <img src="galeria_07.jpeg" alt="" aria-hidden="true" class="w-full h-full object-cover" />
+    <div class="absolute inset-0 bg-teal-900/85"></div>
+  </div>
+  <div class="relative z-10 max-w-3xl mx-auto text-center reveal">
+    <h2 class="font-serif font-bold text-white text-5xl md:text-6xl lg:text-7xl leading-tight mb-6">
+      ¡Tu Destino<br/>te Espera!
+    </h2>
+    <p class="text-teal-200 text-base md:text-lg mb-10 tracking-wide">
+      Villa Las Terrenas · Las Terrenas, Samaná, República Dominicana
+    </p>
+    <a href="#reservar" class="inline-block border-2 border-white text-white font-semibold px-10 py-4 rounded-full cursor-pointer hover:bg-white hover:text-teal-900 transition-all duration-300 text-sm tracking-wide">
+      Hacer una Reserva
+    </a>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════
+     GALERÍA COMPLETA
+════════════════════════════════════ -->
+<section class="bg-sand py-20 md:py-28 px-6">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-14 reveal">
+      <p class="text-teal-600 text-sm font-semibold tracking-widest uppercase mb-3">Fotografías</p>
+      <h2 class="font-serif font-bold text-slate-900 text-4xl md:text-5xl">Descubre la Villa</h2>
+      <p class="text-slate-400 text-sm mt-3">Haz clic en cualquier foto para verla en grande</p>
+    </div>
+
+    <div id="gallery-grid" class="columns-2 md:columns-3 lg:columns-4 gap-3 space-y-3">
+      <div class="gallery-thumb break-inside-avoid rounded-xl overflow-hidden cursor-pointer" data-src="galeria_04.jpeg" data-alt="Sofá turquesa con plantas">
+        <img src="galeria_04.jpeg" alt="Sofá turquesa con plantas" class="w-full hover:scale-105 transition-transform duration-500" />
+      </div>
+      <div class="gallery-thumb break-inside-avoid rounded-xl overflow-hidden cursor-pointer" data-src="galeria_05.jpeg" data-alt="Terraza con sillón">
+        <img src="galeria_05.jpeg" alt="Terraza con sillón" class="w-full hover:scale-105 transition-transform duration-500" />
+      </div>
+      <div class="gallery-thumb break-inside-avoid rounded-xl overflow-hidden cursor-pointer" data-src="galeria_09.jpeg" data-alt="Cocina">
+        <img src="galeria_09.jpeg" alt="Cocina" class="w-full hover:scale-105 transition-transform duration-500" />
+      </div>
+      <div class="gallery-thumb break-inside-avoid rounded-xl overflow-hidden cursor-pointer" data-src="galeria_10.jpeg" data-alt="Comedor interior">
+        <img src="galeria_10.jpeg" alt="Comedor interior" class="w-full hover:scale-105 transition-transform duration-500" />
+      </div>
+      <div class="gallery-thumb break-inside-avoid rounded-xl overflow-hidden cursor-pointer" data-src="galeria_11.jpeg" data-alt="Escalera interior">
+        <img src="galeria_11.jpeg" alt="Escalera interior" class="w-full hover:scale-105 transition-transform duration-500" />
+      </div>
+      <div class="gallery-thumb break-inside-avoid rounded-xl overflow-hidden cursor-pointer" data-src="galeria_12.jpeg" data-alt="Playa Las Terrenas">
+        <img src="galeria_12.jpeg" alt="Playa Las Terrenas" class="w-full hover:scale-105 transition-transform duration-500" />
+      </div>
+      <div class="gallery-thumb break-inside-avoid rounded-xl overflow-hidden cursor-pointer" data-src="galeria_13.jpeg" data-alt="Baño en suite">
+        <img src="galeria_13.jpeg" alt="Baño en suite" class="w-full hover:scale-105 transition-transform duration-500" />
+      </div>
+      <div class="gallery-thumb break-inside-avoid rounded-xl overflow-hidden cursor-pointer" data-src="galeria_14.jpeg" data-alt="Baño master">
+        <img src="galeria_14.jpeg" alt="Baño master con ducha" class="w-full hover:scale-105 transition-transform duration-500" />
+      </div>
+      <div class="gallery-thumb break-inside-avoid rounded-xl overflow-hidden cursor-pointer" data-src="galeria_15.jpeg" data-alt="Comedor exterior">
+        <img src="galeria_15.jpeg" alt="Comedor exterior" class="w-full hover:scale-105 transition-transform duration-500" />
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════
+     FORMULARIO RESERVA
+════════════════════════════════════ -->
+<section class="bg-white py-20 md:py-28 px-6" id="reservar">
+  <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 lg:gap-20 items-start">
+
+    <!-- Left: image + info -->
+    <div class="reveal">
+      <div class="rounded-2xl overflow-hidden h-64 md:h-80 mb-8">
+        <img src="galeria_02.jpeg" alt="Vista piscina villa" class="w-full h-full object-cover" />
+      </div>
+      <p class="text-teal-600 text-sm font-semibold tracking-widest uppercase mb-3">Reservas</p>
+      <h2 class="font-serif font-bold text-slate-900 text-3xl md:text-4xl leading-tight mb-4">Completa tu Reserva</h2>
+      <p class="text-slate-500 text-sm leading-relaxed mb-6">Cuéntanos las fechas y número de huéspedes. Te confirmaremos disponibilidad en menos de 24 horas.</p>
+      <div class="space-y-4">
+        <div class="flex items-center gap-3 text-sm text-slate-600">
+          <svg class="w-5 h-5 text-teal-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          Las Terrenas, Samaná, República Dominicana
+        </div>
+        <div class="flex items-center gap-3 text-sm text-slate-600">
+          <svg class="w-5 h-5 text-teal-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+          Villa completa · 3 habitaciones con baño en suite
+        </div>
+        <div class="flex items-center gap-3 text-sm text-slate-600">
+          <svg class="w-5 h-5 text-teal-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+          Complejo residencial privado con seguridad
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: form -->
+    <div class="reveal" style="transition-delay:0.15s">
+      <form action="https://formspree.io/f/TU_ID_AQUI" method="POST" class="space-y-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label for="nombre" class="block text-slate-700 text-xs font-semibold mb-1.5 tracking-wide uppercase">Nombre completo <span class="text-teal-600">*</span></label>
+            <input type="text" id="nombre" name="nombre" required autocomplete="name" placeholder="Tu nombre" class="form-field" />
+          </div>
+          <div>
+            <label for="email" class="block text-slate-700 text-xs font-semibold mb-1.5 tracking-wide uppercase">Email <span class="text-teal-600">*</span></label>
+            <input type="email" id="email" name="email" required autocomplete="email" placeholder="tu@correo.com" class="form-field" />
+          </div>
+        </div>
+
+        <div>
+          <label for="telefono" class="block text-slate-700 text-xs font-semibold mb-1.5 tracking-wide uppercase">Teléfono</label>
+          <input type="tel" id="telefono" name="telefono" autocomplete="tel" placeholder="+34 600 000 000" class="form-field" />
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label for="fecha-entrada" class="block text-slate-700 text-xs font-semibold mb-1.5 tracking-wide uppercase">Fecha llegada <span class="text-teal-600">*</span></label>
+            <input type="date" id="fecha-entrada" name="fecha_entrada" required class="form-field cursor-pointer" />
+          </div>
+          <div>
+            <label for="fecha-salida" class="block text-slate-700 text-xs font-semibold mb-1.5 tracking-wide uppercase">Fecha salida <span class="text-teal-600">*</span></label>
+            <input type="date" id="fecha-salida" name="fecha_salida" required class="form-field cursor-pointer" />
+          </div>
+        </div>
+
+        <div>
+          <label for="huespedes" class="block text-slate-700 text-xs font-semibold mb-1.5 tracking-wide uppercase">Número de huéspedes</label>
+          <select id="huespedes" name="huespedes" class="form-field cursor-pointer appearance-none">
+            <option value="">Seleccionar...</option>
+            <option value="1-2">1 – 2 personas</option>
+            <option value="3-4">3 – 4 personas</option>
+            <option value="5-6">5 – 6 personas</option>
+            <option value="6+">Más de 6</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="mensaje" class="block text-slate-700 text-xs font-semibold mb-1.5 tracking-wide uppercase">Mensaje</label>
+          <textarea id="mensaje" name="mensaje" rows="4" placeholder="Cuéntanos algo sobre tu estancia, preferencias o preguntas..." class="form-field resize-none"></textarea>
+        </div>
+
+        <button type="submit" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-semibold py-4 rounded-xl cursor-pointer transition-colors duration-200 text-sm tracking-wide">
+          Completar Reserva
+        </button>
+      </form>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════
+     FOOTER
+════════════════════════════════════ -->
+<footer class="bg-teal-900 py-12 px-6">
+  <div class="max-w-7xl mx-auto">
+    <div class="flex flex-col md:flex-row items-center justify-between gap-8 pb-8 border-b border-teal-800">
+      <!-- Logo -->
+      <div class="flex items-center gap-2.5">
+        <svg class="w-7 h-7 text-teal-400" viewBox="0 0 32 32" fill="none">
+          <path d="M16 4 C10 4 6 9 8 14 C10 10 14 9 16 9 C18 9 22 10 24 14 C26 9 22 4 16 4Z" fill="currentColor" opacity="0.9"/>
+          <path d="M4 22 Q8 19 12 22 Q16 25 20 22 Q24 19 28 22" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>
+          <line x1="16" y1="9" x2="16" y2="22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <div>
+          <p class="font-serif font-bold text-white text-base">Villa Las Terrenas</p>
+          <p class="text-teal-400 text-[10px] tracking-widest uppercase">República Dominicana</p>
+        </div>
+      </div>
+
+      <!-- Nav -->
+      <nav class="flex items-center gap-6 flex-wrap justify-center">
+        <a href="#galeria"      class="text-teal-300 text-sm hover:text-white transition-colors cursor-pointer">Galería</a>
+        <a href="#habitaciones" class="text-teal-300 text-sm hover:text-white transition-colors cursor-pointer">Habitaciones</a>
+        <a href="#ubicacion"    class="text-teal-300 text-sm hover:text-white transition-colors cursor-pointer">Ubicación</a>
+        <a href="#reservar"     class="text-teal-300 text-sm hover:text-white transition-colors cursor-pointer">Reservar</a>
+      </nav>
+
+      <!-- CTA -->
+      <a href="#reservar" class="bg-white text-teal-900 text-sm font-bold px-6 py-2.5 rounded-full cursor-pointer hover:bg-teal-50 transition-colors duration-200 flex-shrink-0">
+        Contactar
+      </a>
+    </div>
+
+    <div class="flex flex-col md:flex-row items-center justify-between gap-3 pt-6 text-teal-500 text-xs">
+      <p>&copy; 2025 Villa Las Terrenas · Todos los derechos reservados</p>
+      <p>Diseñado para experiencias de lujo</p>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ════════════════════════════════════
+     LIGHTBOX
+════════════════════════════════════ -->
+<div id="lightbox" role="dialog" aria-modal="true" aria-label="Visor de fotos">
+  <button id="lb-close" aria-label="Cerrar">&times;</button>
+  <button id="lb-prev" aria-label="Foto anterior">&#8249;</button>
+  <img id="lb-img" src="" alt="" />
+  <button id="lb-next" aria-label="Foto siguiente">&#8250;</button>
+  <div id="lb-counter"></div>
+</div>
+
+
+<!-- ════════════════════════════════════
+     WHATSAPP FAB
+════════════════════════════════════ -->
+<a href="https://wa.me/TU_NUMERO_AQUI?text=Hola%2C%20me%20interesa%20la%20villa%20en%20Las%20Terrenas.%20%C2%BFPodr%C3%ADan%20darme%20m%C3%A1s%20informaci%C3%B3n%3F"
+   target="_blank" rel="noopener noreferrer"
+   class="whatsapp-fab fixed bottom-6 right-6 z-50 w-14 h-14 bg-[#25D366] rounded-full flex items-center justify-center cursor-pointer shadow-lg"
+   aria-label="Contactar por WhatsApp">
+  <svg class="w-7 h-7 text-white relative z-10" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+  </svg>
+  <span class="absolute inset-0 rounded-full bg-[#25D366] opacity-40 animate-ping" aria-hidden="true"></span>
+</a>
+
+
+<!-- ════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════ -->
+<script>
+  // ── Sticky header ──
+  const header = document.getElementById('header');
+  window.addEventListener('scroll', () => {
+    header.classList.toggle('scrolled', window.scrollY > 80);
+  }, { passive: true });
+
+  // ── Mobile menu ──
+  const menuToggle = document.getElementById('menu-toggle');
+  const mobileMenu = document.getElementById('mobile-menu');
+  let menuOpen = false;
+  menuToggle.addEventListener('click', () => {
+    menuOpen = !menuOpen;
+    mobileMenu.classList.toggle('open', menuOpen);
+    menuToggle.setAttribute('aria-expanded', menuOpen);
+  });
+  document.querySelectorAll('.mobile-nav-link').forEach(link => {
+    link.addEventListener('click', () => {
+      menuOpen = false;
+      mobileMenu.classList.remove('open');
+      menuToggle.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  // ── Scroll reveal ──
+  const revealObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); } });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+  // ── Smooth scroll ──
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const t = document.querySelector(a.getAttribute('href'));
+      if (t) { e.preventDefault(); window.scrollTo({ top: t.getBoundingClientRect().top + window.scrollY - 80, behavior: 'smooth' }); }
+    });
+  });
+
+  // ── Date validation ──
+  const fIn = document.getElementById('fecha-entrada');
+  const fOut = document.getElementById('fecha-salida');
+  const today = new Date().toISOString().split('T')[0];
+  fIn.min = fOut.min = today;
+  fIn.addEventListener('change', () => {
+    fOut.min = fIn.value;
+    if (fOut.value && fOut.value <= fIn.value) fOut.value = '';
+  });
+
+  // ── Video autoplay ──
+  (function () {
+    const vid = document.getElementById('hero-video');
+    if (!vid) return;
+    function tryPlay() {
+      vid.muted = true;
+      const p = vid.play();
+      if (p !== undefined) p.catch(() => {
+        ['click','scroll','touchstart'].forEach(ev => document.addEventListener(ev, () => { vid.muted = true; vid.play(); }, { once: true, passive: true }));
+      });
+    }
+    if (vid.readyState >= 2) tryPlay();
+    else { vid.addEventListener('canplay', tryPlay, { once: true }); vid.addEventListener('loadeddata', tryPlay, { once: true }); }
+    vid.addEventListener('error', () => { vid.style.display = 'none'; });
+  })();
+
+  // ── Lightbox ──
+  const lightbox  = document.getElementById('lightbox');
+  const lbImg     = document.getElementById('lb-img');
+  const lbCounter = document.getElementById('lb-counter');
+  const thumbs    = [...document.querySelectorAll('#gallery-grid .gallery-thumb')];
+  let current = 0;
+
+  function openLB(idx) {
+    current = idx;
+    lbImg.src = thumbs[idx].dataset.src;
+    lbImg.alt = thumbs[idx].dataset.alt || '';
+    lbCounter.textContent = (idx + 1) + ' / ' + thumbs.length;
+    lightbox.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLB() { lightbox.classList.remove('active'); document.body.style.overflow = ''; }
+  function prevPhoto() { openLB((current - 1 + thumbs.length) % thumbs.length); }
+  function nextPhoto() { openLB((current + 1) % thumbs.length); }
+
+  thumbs.forEach((t, i) => t.addEventListener('click', () => openLB(i)));
+  document.getElementById('lb-close').addEventListener('click', closeLB);
+  document.getElementById('lb-prev').addEventListener('click', prevPhoto);
+  document.getElementById('lb-next').addEventListener('click', nextPhoto);
+  lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLB(); });
+  document.addEventListener('keydown', e => {
+    if (!lightbox.classList.contains('active')) return;
+    if (e.key === 'Escape') closeLB();
+    if (e.key === 'ArrowLeft') prevPhoto();
+    if (e.key === 'ArrowRight') nextPhoto();
+  });
+  let touchX = 0;
+  lightbox.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; }, { passive: true });
+  lightbox.addEventListener('touchend', e => {
+    const diff = touchX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) diff > 0 ? nextPhoto() : prevPhoto();
+  });
+</script>
+
+</body>
+</html>
