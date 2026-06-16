@@ -63,6 +63,11 @@
 
     /* ── Hero video ── */
     .hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+    /* Fallback gradient shown while/if video doesn't load */
+    #hero-fallback {
+      position: absolute; inset: 0; z-index: 0;
+      background: linear-gradient(135deg, #155e75 0%, #0891b2 45%, #0e7490 100%);
+    }
     .hero-overlay {
       background: linear-gradient(to bottom, rgba(12,74,110,0.50) 0%, rgba(8,145,178,0.22) 40%, rgba(28,25,23,0.70) 100%);
     }
@@ -255,16 +260,18 @@
   ═══════════════════════════════════ -->
   <section id="inicio" class="relative min-h-screen flex items-end pb-16 md:pb-24 overflow-hidden">
 
+    <!-- Fallback gradient (visible siempre, queda detrás del video) -->
+    <div id="hero-fallback"></div>
+
     <!-- Video background -->
     <video
+      id="hero-video"
       class="hero-video"
-      autoplay muted loop playsinline
+      muted loop playsinline preload="auto"
       poster="foto_4.jpg"
       aria-hidden="true"
     >
       <source src="villa-hero.mp4" type="video/mp4" />
-      <!-- Fallback si el navegador no soporta video -->
-      <img src="foto_4.jpg" alt="Villa Las Terrenas piscina privada" class="absolute inset-0 w-full h-full object-cover" />
     </video>
 
     <!-- Overlay gradient -->
@@ -1013,6 +1020,40 @@
         }
       });
     });
+
+    // ════════════════════════════════════
+    // VIDEO AUTOPLAY — forzado con promise
+    // ════════════════════════════════════
+    (function () {
+      const vid = document.getElementById('hero-video');
+      if (!vid) return;
+
+      function tryPlay() {
+        vid.muted = true;
+        const p = vid.play();
+        if (p !== undefined) {
+          p.catch(() => {
+            // Si el navegador bloquea autoplay, esperamos
+            // cualquier interacción del usuario para reproducir
+            document.addEventListener('click',  () => { vid.muted = true; vid.play(); }, { once: true });
+            document.addEventListener('scroll', () => { vid.muted = true; vid.play(); }, { once: true, passive: true });
+            document.addEventListener('touchstart', () => { vid.muted = true; vid.play(); }, { once: true, passive: true });
+          });
+        }
+      }
+
+      if (vid.readyState >= 2) {
+        tryPlay();
+      } else {
+        vid.addEventListener('canplay', tryPlay, { once: true });
+        vid.addEventListener('loadeddata', tryPlay, { once: true });
+      }
+
+      // Si el video falla al cargar, mostramos el poster como fallback
+      vid.addEventListener('error', () => {
+        vid.style.display = 'none';
+      });
+    })();
 
     // ════════════════════════════════════
     // LIGHTBOX
