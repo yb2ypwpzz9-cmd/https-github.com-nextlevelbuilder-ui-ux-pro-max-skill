@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Villa exclusiva con piscina privada en Las Terrenas, República Dominicana. 3 habitaciones en suite a pocos metros de la playa." />
+  <title>Villa Las Terrenas · Paraíso Exclusivo en el Caribe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600;1,700&family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ink:   { DEFAULT:'#07100e', 2:'#0d1a17', 3:'#122018' },
+            cream: { DEFAULT:'#f5f0e8', muted:'#c8c0b0' },
+            teal:  { 300:'#5eead4', 400:'#2dd4bf', 500:'#14b8a6', 600:'#0d9488', 700:'#0f766e', 900:'#134e4a' },
+          },
+          fontFamily: {
+            serif: ['Cormorant','Georgia','serif'],
+            sans:  ['Montserrat','system-ui','sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    /* ─── Base ─── */
+    html { scroll-behavior:smooth; }
+    body { font-family:'Montserrat',sans-serif; background:#07100e; color:#f5f0e8; overflow-x:hidden; }
+    *, *::before, *::after { box-sizing:border-box; }
+
+    /* ─── Hero entrance ─── */
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(48px); }
+      to   { opacity:1; transform:none; }
+    }
+    .fe1 { animation:fadeUp .9s cubic-bezier(.22,1,.36,1) .2s both; }
+    .fe2 { animation:fadeUp .9s cubic-bezier(.22,1,.36,1) .42s both; }
+    .fe3 { animation:fadeUp .9s cubic-bezier(.22,1,.36,1) .6s both; }
+    .fe4 { animation:fadeUp .9s cubic-bezier(.22,1,.36,1) .76s both; }
+    .fe5 { animation:fadeUp .9s cubic-bezier(.22,1,.36,1) .9s both; }
+
+    /* ─── Scroll reveal ─── */
+    .rv    { opacity:0; transform:translateY(32px); transition:opacity .75s cubic-bezier(.22,1,.36,1),transform .75s cubic-bezier(.22,1,.36,1); }
+    .rv.on { opacity:1; transform:none; }
+    .rl    { opacity:0; transform:translateX(-40px); transition:opacity .75s cubic-bezier(.22,1,.36,1),transform .75s cubic-bezier(.22,1,.36,1); }
+    .rl.on { opacity:1; transform:none; }
+    .rr    { opacity:0; transform:translateX(40px);  transition:opacity .75s cubic-bezier(.22,1,.36,1),transform .75s cubic-bezier(.22,1,.36,1); }
+    .rr.on { opacity:1; transform:none; }
+
+    /* ─── Stroke text ─── */
+    .stroke { -webkit-text-stroke:1.5px rgba(245,240,232,.36); color:transparent; }
+
+    /* ─── Marquee ─── */
+    @keyframes mq { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+    .mq-track { display:flex; white-space:nowrap; animation:mq 32s linear infinite; }
+
+    /* ─── Header ─── */
+    #hdr { transition:background .3s,backdrop-filter .3s,border-color .3s; }
+    #hdr.scrolled { background:rgba(7,16,14,.96); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); border-bottom:1px solid rgba(255,255,255,.06); }
+
+    /* ─── Sticky bar ─── */
+    #sbar { transform:translateY(-100%); transition:transform .4s cubic-bezier(.22,1,.36,1); }
+    #sbar.on { transform:translateY(0); }
+
+    /* ─── Glass ─── */
+    .glass { background:rgba(255,255,255,.07); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px); border:1px solid rgba(255,255,255,.11); }
+
+    /* ─── Buttons — 44px min touch target ─── */
+    .btn-teal {
+      display:inline-flex; align-items:center; justify-content:center; gap:8px;
+      background:#2dd4bf; color:#07100e;
+      font-family:'Montserrat',sans-serif; font-weight:700; font-size:.76rem; letter-spacing:.09em; text-transform:uppercase;
+      padding:15px 30px; border-radius:100px; cursor:pointer; text-decoration:none;
+      transition:background .2s,transform .2s,box-shadow .2s;
+      border:none; outline:none; min-height:44px;
+    }
+    .btn-teal:hover { background:#5eead4; transform:translateY(-2px); box-shadow:0 14px 36px rgba(45,212,191,.28); }
+    .btn-teal:focus-visible { outline:3px solid #2dd4bf; outline-offset:3px; }
+
+    .btn-outline {
+      display:inline-flex; align-items:center; justify-content:center; gap:8px;
+      border:1px solid rgba(245,240,232,.22); color:#f5f0e8;
+      font-family:'Montserrat',sans-serif; font-weight:600; font-size:.76rem; letter-spacing:.09em; text-transform:uppercase;
+      padding:15px 30px; border-radius:100px; cursor:pointer; text-decoration:none;
+      transition:border-color .2s,background .2s; background:transparent; min-height:44px;
+    }
+    .btn-outline:hover { border-color:#2dd4bf; background:rgba(45,212,191,.08); }
+    .btn-outline:focus-visible { outline:3px solid #2dd4bf; outline-offset:3px; }
+
+    /* ─── Rooms sticky swap ─── */
+    #rimg { transition:opacity .4s ease,transform .4s cubic-bezier(.22,1,.36,1); }
+    #rimg.out { opacity:0; transform:scale(1.04); }
+
+    /* ─── Gallery items ─── */
+    .gi { overflow:hidden; position:relative; cursor:pointer; border-radius:16px; }
+    .gi img { display:block; width:100%; height:100%; object-fit:cover; transition:transform .6s cubic-bezier(.22,1,.36,1); }
+    .gi:hover img { transform:scale(1.06); }
+    .gi-ov { position:absolute; inset:0; background:linear-gradient(to top,rgba(7,16,14,.7) 0%,transparent 55%); opacity:0; transition:opacity .25s ease; display:flex; align-items:flex-end; padding:1rem 1.25rem; }
+    .gi:hover .gi-ov { opacity:1; }
+    .gi:focus-visible { outline:3px solid #2dd4bf; outline-offset:2px; border-radius:16px; }
+
+    /* ─── Form fields ─── */
+    .ff {
+      width:100%; background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.14);
+      border-radius:10px; padding:13px 16px;
+      font-family:'Montserrat',sans-serif; font-size:.82rem; color:#f5f0e8;
+      outline:none; transition:border-color .2s,box-shadow .2s; min-height:44px;
+    }
+    .ff:focus { border-color:#2dd4bf; box-shadow:0 0 0 3px rgba(45,212,191,.14); }
+    .ff::placeholder { color:rgba(245,240,232,.28); }
+    .ff option { background:#0d1a17; }
+
+    /* ─── Lightbox ─── */
+    #lb { display:none; position:fixed; inset:0; background:rgba(0,0,0,.94); z-index:9000; align-items:center; justify-content:center; }
+    #lb.on { display:flex; }
+    #lb-img { max-width:90vw; max-height:87vh; object-fit:contain; border-radius:8px; }
+    #lb-x { position:absolute; top:18px; right:22px; color:#fff; font-size:2rem; background:none; border:none; cursor:pointer; line-height:1; min-width:44px; min-height:44px; display:flex; align-items:center; justify-content:center; }
+    #lb-p,#lb-n { position:absolute; top:50%; transform:translateY(-50%); color:#fff; font-size:2rem; background:rgba(255,255,255,.1); border:none; cursor:pointer; padding:10px 16px; border-radius:8px; transition:background .2s; min-width:44px; min-height:44px; }
+    #lb-p { left:14px; } #lb-n { right:14px; }
+    #lb-p:hover,#lb-n:hover { background:rgba(255,255,255,.22); }
+    #lb-c { position:absolute; bottom:18px; left:50%; transform:translateX(-50%); color:rgba(255,255,255,.45); font-size:.73rem; letter-spacing:.12em; }
+
+    /* ─── WA FAB ─── */
+    .wa-fab { transition:transform .2s; }
+    .wa-fab:hover { transform:scale(1.08); }
+    .wa-fab:focus-visible { outline:3px solid #fff; outline-offset:3px; border-radius:50%; }
+
+    /* ─── Scroll dot ─── */
+    @keyframes sdot { 0%,100%{transform:translateY(0)} 50%{transform:translateY(9px)} }
+    .sdot { animation:sdot 1.9s ease-in-out infinite; }
+
+    /* ─── Mobile menu ─── */
+    #mmenu { max-height:0; overflow:hidden; transition:max-height .4s ease; }
+    #mmenu.open { max-height:420px; }
+
+    /* ─── Reduced motion (accessibility) ─── */
+    @media (prefers-reduced-motion:reduce) {
+      *, *::before, *::after { animation:none!important; transition:none!important; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ STICKY CTA BAR ══ -->
+<div id="sbar" class="fixed top-0 left-0 right-0 z-[70] bg-ink-2 border-b border-white/[.07] px-5 py-2.5 flex items-center justify-between gap-4" role="banner">
+  <p class="text-cream/55 text-[11px] font-semibold tracking-widest uppercase hidden sm:block truncate">Villa Las Terrenas · Piscina Privada · 3 hab. en suite</p>
+  <a href="#reservar" class="btn-teal py-2 px-5 text-[10px] ml-auto flex-shrink-0">Reservar ahora →</a>
+</div>
+
+
+<!-- ══ HEADER ══ -->
+<header id="hdr" class="fixed top-0 left-0 right-0 z-50 px-6 md:px-10 py-5">
+  <div class="max-w-screen-xl mx-auto flex items-center justify-between">
+
+    <a href="#" class="flex items-center gap-3 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-400" aria-label="Villa Las Terrenas — inicio">
+      <svg class="w-7 h-7 text-teal-400 flex-shrink-0" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <path d="M16 4C10 4 6 9 8 14C10 10 14 9 16 9C18 9 22 10 24 14C26 9 22 4 16 4Z" fill="currentColor" opacity=".9"/>
+        <path d="M4 22 Q8 19 12 22 Q16 25 20 22 Q24 19 28 22" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>
+        <line x1="16" y1="9" x2="16" y2="22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <div>
+        <p class="font-serif font-bold text-cream text-sm leading-tight">Villa Las Terrenas</p>
+        <p class="text-cream/28 text-[9px] tracking-[.18em] uppercase">República Dominicana</p>
+      </div>
+    </a>
+
+    <nav class="hidden md:flex items-center gap-8" aria-label="Navegación principal">
+      <a href="#villa"        class="text-cream/48 text-[11px] font-semibold tracking-[.13em] uppercase hover:text-cream transition-colors duration-200 focus-visible:outline-none focus-visible:text-teal-400">La Villa</a>
+      <a href="#habitaciones" class="text-cream/48 text-[11px] font-semibold tracking-[.13em] uppercase hover:text-cream transition-colors duration-200 focus-visible:outline-none focus-visible:text-teal-400">Habitaciones</a>
+      <a href="#experiencias" class="text-cream/48 text-[11px] font-semibold tracking-[.13em] uppercase hover:text-cream transition-colors duration-200 focus-visible:outline-none focus-visible:text-teal-400">Experiencias</a>
+    </nav>
+
+    <a href="#reservar" class="hidden md:inline-flex btn-teal text-[10px] py-2.5 px-5">Consultar disponibilidad</a>
+
+    <button id="mbtn" class="md:hidden text-cream/65 hover:text-cream p-2 cursor-pointer rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-400 transition-colors" aria-label="Abrir menú" aria-expanded="false" aria-controls="mmenu">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+  </div>
+
+  <div id="mmenu" class="md:hidden bg-ink-2/98 backdrop-blur-xl rounded-2xl mt-3 border border-white/[.06]">
+    <nav class="flex flex-col py-3" aria-label="Menú móvil">
+      <a href="#villa"        class="mob px-6 py-3.5 text-cream/65 text-sm font-semibold hover:text-cream hover:bg-white/[.04] transition-colors">La Villa</a>
+      <a href="#habitaciones" class="mob px-6 py-3.5 text-cream/65 text-sm font-semibold hover:text-cream hover:bg-white/[.04] transition-colors">Habitaciones</a>
+      <a href="#experiencias" class="mob px-6 py-3.5 text-cream/65 text-sm font-semibold hover:text-cream hover:bg-white/[.04] transition-colors">Experiencias</a>
+      <div class="px-6 pt-2 pb-4"><a href="#reservar" class="mob btn-teal w-full text-xs">Consultar disponibilidad</a></div>
+    </nav>
+  </div>
+</header>
+
+
+<!-- ══ HERO ══ -->
+<section class="relative w-full min-h-screen overflow-hidden flex flex-col" id="hero" style="min-height:640px">
+  <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover" style="object-position:center center;" aria-hidden="true">
+    <source src="villa-hero.mp4" type="video/mp4" />
+  </video>
+  <div class="absolute inset-0 bg-gradient-to-b from-ink/70 via-ink/15 to-ink/88" aria-hidden="true"></div>
+  <div class="absolute inset-0 bg-ink/20" aria-hidden="true"></div>
+
+  <div class="relative z-10 flex-1 flex flex-col justify-between px-6 md:px-12 lg:px-20 pt-28 pb-10 max-w-screen-xl mx-auto w-full">
+
+    <div class="fe1">
+      <span class="inline-flex items-center gap-2 border border-cream/16 text-cream/52 text-[10px] font-semibold tracking-[.22em] uppercase px-4 py-2 rounded-full">
+        <span class="w-1.5 h-1.5 bg-teal-400 rounded-full animate-pulse" aria-hidden="true"></span>
+        Las Terrenas · Samaná · República Dominicana
+      </span>
+    </div>
+
+    <div>
+      <div class="overflow-hidden leading-none">
+        <p class="fe2 stroke font-serif select-none" style="font-size:clamp(4.5rem,13.5vw,12rem);letter-spacing:-.025em;line-height:.88;" aria-hidden="true">Villa</p>
+      </div>
+      <div class="overflow-hidden leading-none -mt-1 md:-mt-3">
+        <h1 class="fe3 font-serif font-bold text-cream" style="font-size:clamp(2.8rem,9.5vw,9rem);letter-spacing:-.03em;line-height:.92;">Las Terrenas</h1>
+      </div>
+
+      <div class="fe4 flex flex-col md:flex-row md:items-end justify-between gap-6 mt-7 md:mt-10">
+        <p class="text-cream/52 text-sm md:text-base leading-[1.85] max-w-xs font-light">
+          Villa exclusiva con piscina privada.<br/>A pocos metros de la playa y los mejores restaurantes.
+        </p>
+        <div class="flex gap-3 flex-wrap">
+          <a href="#reservar" class="btn-teal">Reservar Estancia</a>
+          <a href="#villa"    class="btn-outline">Ver la villa</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="fe5 absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 pointer-events-none" aria-hidden="true">
+      <span class="text-cream/22 text-[9px] tracking-[.24em] uppercase">Scroll</span>
+      <div class="w-px h-10 bg-gradient-to-b from-cream/28 to-transparent sdot"></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══ MARQUEE ══ -->
+<div class="bg-teal-400 py-3.5 overflow-hidden" aria-hidden="true">
+  <div class="mq-track select-none">
+    <span class="text-ink text-[10px] font-bold tracking-[.18em] uppercase px-8">Piscina Privada</span><span class="text-ink/30 px-2">·</span>
+    <span class="text-ink text-[10px] font-bold tracking-[.18em] uppercase px-8">3 Habitaciones en Suite</span><span class="text-ink/30 px-2">·</span>
+    <span class="text-ink text-[10px] font-bold tracking-[.18em] uppercase px-8">A Metros de la Playa</span><span class="text-ink/30 px-2">·</span>
+    <span class="text-ink text-[10px] font-bold tracking-[.18em] uppercase px-8">Villa Completa Exclusiva</span><span class="text-ink/30 px-2">·</span>
+    <span class="text-ink text-[10px] font-bold tracking-[.18em] uppercase px-8">Complejo Privado</span><span class="text-ink/30 px-2">·</span>
+    <span class="text-ink text-[10px] font-bold tracking-[.18em] uppercase px-8">República Dominicana</span><span class="text-ink/30 px-2">·</span>
+    <span class="text-ink text-[10px] font-bold tracking-[.18em] uppercase px-8">Piscina Privada</span><span class="text-ink/30 px-2">·</span>
+    <span class="text-ink text-[10px] font-bold tracking-[.18em] uppercase px-8">3 Habitaciones en Suite</span><span class="text-ink/30 px-2">·</span>
+    <span class="text-ink text-[10px] font-bold tracking-[.18em] uppercase px-8">A Metros de la Playa</span><span class="text-ink/30 px-2">·</span>
+    <span class="text-ink text-[10px] font-bold tracking-[.18em] uppercase px-8">Villa Completa Exclusiva</span><span class="text-ink/30 px-2">·</span>
+    <span class="text-ink text-[10px] font-bold tracking-[.18em] uppercase px-8">Complejo Privado</span><span class="text-ink/30 px-2">·</span>
+    <span class="text-ink text-[10px] font-bold tracking-[.18em] uppercase px-8">República Dominicana</span><span class="text-ink/30 px-2">·</span>
+  </div>
+</div>
+
+
+<!-- ══ LA VILLA ══ -->
+<section class="bg-cream py-28 md:py-36 px-6 md:px-12 lg:px-20 overflow-hidden" id="villa">
+  <div class="max-w-screen-xl mx-auto grid md:grid-cols-2 gap-16 lg:gap-28 items-center">
+
+    <div class="rl">
+      <p class="text-teal-600 text-[10px] font-bold tracking-[.22em] uppercase mb-6">La Villa</p>
+      <h2 class="font-serif font-bold text-ink leading-[1.04] mb-8" style="font-size:clamp(2.6rem,5vw,4.6rem);">
+        Un lugar<br/>que solo<br/><em class="text-teal-600">existe aquí</em>
+      </h2>
+      <p class="text-ink/55 text-[15px] leading-[1.85] mb-10 max-w-sm">
+        La villa completa es tuya — sin compartir, sin interrupciones. La combinación perfecta de lujo, privacidad y autenticidad caribeña.
+      </p>
+      <div class="grid grid-cols-3 gap-6 pt-8 border-t border-ink/10">
+        <div>
+          <p class="font-serif text-ink font-bold stat-n" data-count="3" style="font-size:2.8rem;line-height:1;">0</p>
+          <p class="text-ink/35 text-[10px] tracking-[.1em] mt-2 uppercase">Habitaciones</p>
+        </div>
+        <div>
+          <p class="font-serif text-ink font-bold stat-n" data-count="6" style="font-size:2.8rem;line-height:1;">0</p>
+          <p class="text-ink/35 text-[10px] tracking-[.1em] mt-2 uppercase">Huéspedes</p>
+        </div>
+        <div>
+          <p class="font-serif text-ink font-bold" style="font-size:2.8rem;line-height:1;">∞</p>
+          <p class="text-ink/35 text-[10px] tracking-[.1em] mt-2 uppercase">Recuerdos</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Editorial staggered images -->
+    <div class="rr relative" style="transition-delay:.12s">
+      <div class="grid grid-cols-2 gap-3">
+        <div class="col-span-2 rounded-2xl overflow-hidden" style="height:17rem;">
+          <img src="foto_4.jpeg" alt="Piscina privada de la villa con agua turquesa" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
+        </div>
+        <div class="rounded-2xl overflow-hidden" style="height:11rem;margin-top:-2rem;margin-left:1.25rem;">
+          <img src="galeria_01.jpeg" alt="Exterior y jardines de la villa" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
+        </div>
+        <div class="rounded-2xl overflow-hidden" style="height:11rem;">
+          <img src="galeria_02.jpeg" alt="Zona de piscina con palmeras" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══ GALERÍA EDITORIAL ══ -->
+<section class="bg-ink-2 py-24 md:py-32 px-6 md:px-12 lg:px-20" id="galeria">
+  <div class="max-w-screen-xl mx-auto">
+
+    <div class="flex items-end justify-between mb-10 rv">
+      <div>
+        <p class="text-teal-400 text-[10px] font-bold tracking-[.22em] uppercase mb-3">Fotogalería</p>
+        <h2 class="font-serif font-bold text-cream leading-tight" style="font-size:clamp(2rem,4vw,3.2rem);">Espacios<br/><em>para explorar</em></h2>
+      </div>
+      <p class="text-cream/25 text-xs hidden md:block tracking-wide" aria-hidden="true">Toca para ampliar</p>
+    </div>
+
+    <!-- Asymmetric 12-col grid -->
+    <div class="grid grid-cols-12 gap-3 rv" style="transition-delay:.08s">
+      <div class="gi col-span-12 md:col-span-7" style="height:580px;grid-row:span 2" data-src="foto_4.jpeg" data-alt="Piscina privada" tabindex="0" role="button" aria-label="Ver piscina privada en grande">
+        <img src="foto_4.jpeg" alt="Piscina privada de la villa" />
+        <div class="gi-ov"><span class="text-cream font-semibold text-sm">Piscina Privada</span></div>
+      </div>
+      <div class="gi col-span-6 md:col-span-5" style="height:284px" data-src="galeria_03.jpeg" data-alt="Zona exterior" tabindex="0" role="button" aria-label="Ver zona exterior">
+        <img src="galeria_03.jpeg" alt="Zona exterior y terraza" />
+        <div class="gi-ov"><span class="text-cream font-semibold text-sm">Exterior</span></div>
+      </div>
+      <div class="gi col-span-6 md:col-span-5" style="height:284px" data-src="galeria_04.jpeg" data-alt="Salón interior" tabindex="0" role="button" aria-label="Ver salón interior">
+        <img src="galeria_04.jpeg" alt="Salón interior de la villa" />
+        <div class="gi-ov"><span class="text-cream font-semibold text-sm">Salón</span></div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-3 rv" style="transition-delay:.16s">
+      <div class="gi h-44" data-src="galeria_05.jpeg" data-alt="Terraza" tabindex="0" role="button" aria-label="Ver terraza"><img src="galeria_05.jpeg" alt="Terraza" /><div class="gi-ov"><span class="text-cream text-xs font-semibold">Terraza</span></div></div>
+      <div class="gi h-44" data-src="galeria_06.jpeg" data-alt="Comedor exterior" tabindex="0" role="button" aria-label="Ver comedor exterior"><img src="galeria_06.jpeg" alt="Comedor exterior" /><div class="gi-ov"><span class="text-cream text-xs font-semibold">Comedor</span></div></div>
+      <div class="gi h-44" data-src="galeria_07.jpeg" data-alt="Jardín" tabindex="0" role="button" aria-label="Ver jardín"><img src="galeria_07.jpeg" alt="Jardín tropical" /><div class="gi-ov"><span class="text-cream text-xs font-semibold">Jardín</span></div></div>
+      <div class="gi h-44" data-src="galeria_08.jpeg" data-alt="Interior" tabindex="0" role="button" aria-label="Ver interior"><img src="galeria_08.jpeg" alt="Interior de la villa" /><div class="gi-ov"><span class="text-cream text-xs font-semibold">Interior</span></div></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══ HABITACIONES — STICKY SCROLL ══ -->
+<section class="bg-ink" id="habitaciones">
+  <div class="max-w-screen-xl mx-auto px-6 md:px-12 lg:px-20 pt-20 pb-6">
+    <div class="rv">
+      <p class="text-teal-400 text-[10px] font-bold tracking-[.22em] uppercase mb-3">Descanso de lujo</p>
+      <h2 class="font-serif font-bold text-cream leading-tight" style="font-size:clamp(2rem,4vw,3.2rem);">Tres Habitaciones,<br/><em>Un Solo Paraíso</em></h2>
+    </div>
+  </div>
+
+  <div class="flex flex-col md:flex-row max-w-screen-xl mx-auto px-6 md:px-12 lg:px-20 pb-24 gap-10 mt-8">
+
+    <!-- Sticky image — desktop -->
+    <div class="hidden md:block md:w-1/2 self-start" style="position:sticky;top:6rem;">
+      <div class="relative rounded-3xl overflow-hidden" style="height:58vh;">
+        <img id="rimg" src="hab1.jpeg" alt="Suite King Master" class="w-full h-full object-cover" />
+        <div class="absolute inset-0 bg-gradient-to-t from-ink/45 to-transparent pointer-events-none" aria-hidden="true"></div>
+        <span id="rbadge" class="absolute top-5 left-5 bg-teal-400 text-ink text-xs font-bold px-3 py-1.5 rounded-full tracking-wide" aria-live="polite">HAB. 1</span>
+      </div>
+    </div>
+
+    <!-- Panels right -->
+    <div class="md:w-1/2 divide-y divide-white/[.07]">
+
+      <div class="room-p py-16 md:py-24" data-img="hab1.jpeg" data-badge="HAB. 1">
+        <div class="md:hidden rounded-2xl overflow-hidden mb-8" style="height:14rem;"><img src="hab1.jpeg" alt="Suite King Master" class="w-full h-full object-cover" /></div>
+        <div class="rv">
+          <span class="text-teal-400 text-[10px] font-bold tracking-[.22em] uppercase">Habitación 1</span>
+          <h3 class="font-serif text-cream font-bold mt-2 mb-4 leading-tight" style="font-size:clamp(1.8rem,3vw,2.6rem);">Suite King<br/><em>Master</em></h3>
+          <p class="text-cream/42 text-[14px] leading-[1.9] mb-6 max-w-xs">Amplia y luminosa, perfecta para máximo confort. Cama King Size, baño en suite y aire acondicionado.</p>
+          <div class="flex flex-wrap gap-2">
+            <span class="border border-white/12 text-cream/52 text-xs px-3 py-1.5 rounded-full">King Size</span>
+            <span class="border border-white/12 text-cream/52 text-xs px-3 py-1.5 rounded-full">Baño privado</span>
+            <span class="border border-white/12 text-cream/52 text-xs px-3 py-1.5 rounded-full">AC</span>
+            <span class="border border-white/12 text-cream/52 text-xs px-3 py-1.5 rounded-full">Armario</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="room-p py-16 md:py-24" data-img="hab2.jpeg" data-badge="HAB. 2">
+        <div class="md:hidden rounded-2xl overflow-hidden mb-8" style="height:14rem;"><img src="hab2.jpeg" alt="Suite King Deluxe" class="w-full h-full object-cover" /></div>
+        <div class="rv" style="transition-delay:.05s">
+          <span class="text-teal-400 text-[10px] font-bold tracking-[.22em] uppercase">Habitación 2</span>
+          <h3 class="font-serif text-cream font-bold mt-2 mb-4 leading-tight" style="font-size:clamp(1.8rem,3vw,2.6rem);">Suite King<br/><em>Deluxe</em></h3>
+          <p class="text-cream/42 text-[14px] leading-[1.9] mb-6 max-w-xs">Decoración caribeña y arte local. Ideal para una segunda pareja con el mismo nivel de exclusividad.</p>
+          <div class="flex flex-wrap gap-2">
+            <span class="border border-white/12 text-cream/52 text-xs px-3 py-1.5 rounded-full">King Size</span>
+            <span class="border border-white/12 text-cream/52 text-xs px-3 py-1.5 rounded-full">Arte caribeño</span>
+            <span class="border border-white/12 text-cream/52 text-xs px-3 py-1.5 rounded-full">AC</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="room-p py-16 md:py-24" data-img="hab3.jpeg" data-badge="HAB. 3">
+        <div class="md:hidden rounded-2xl overflow-hidden mb-8" style="height:14rem;"><img src="hab3.jpeg" alt="Suite Twin Familiar" class="w-full h-full object-cover" /></div>
+        <div class="rv" style="transition-delay:.1s">
+          <span class="text-teal-400 text-[10px] font-bold tracking-[.22em] uppercase">Habitación 3</span>
+          <h3 class="font-serif text-cream font-bold mt-2 mb-4 leading-tight" style="font-size:clamp(1.8rem,3vw,2.6rem);">Suite Twin<br/><em>Familiar</em></h3>
+          <p class="text-cream/42 text-[14px] leading-[1.9] mb-6 max-w-xs">Perfecta para niños, amigos o familias. Dos camas cómodas con baño privado y toda la comodidad.</p>
+          <div class="flex flex-wrap gap-2">
+            <span class="border border-white/12 text-cream/52 text-xs px-3 py-1.5 rounded-full">2 camas</span>
+            <span class="border border-white/12 text-cream/52 text-xs px-3 py-1.5 rounded-full">Familias</span>
+            <span class="border border-white/12 text-cream/52 text-xs px-3 py-1.5 rounded-full">Baño privado</span>
+            <span class="border border-white/12 text-cream/52 text-xs px-3 py-1.5 rounded-full">AC</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ══ AMENIDADES ══ -->
+<section class="bg-ink-3 py-24 md:py-32 px-6 md:px-12 lg:px-20">
+  <div class="max-w-screen-xl mx-auto grid md:grid-cols-2 gap-14 items-start">
+
+    <div class="rl">
+      <p class="text-teal-400 text-[10px] font-bold tracking-[.22em] uppercase mb-4">Todo incluido</p>
+      <h2 class="font-serif font-bold text-cream leading-tight mb-6" style="font-size:clamp(2rem,4vw,3.2rem);">Equipamiento<br/><em>de primera</em></h2>
+      <p class="text-cream/35 text-[14px] leading-relaxed max-w-xs">Cada detalle ha sido pensado para que solo te preocupes de disfrutar.</p>
+    </div>
+
+    <ul class="divide-y divide-white/[.07] rr" style="transition-delay:.1s" aria-label="Amenidades de la villa">
+      <li class="flex items-center gap-5 py-5">
+        <div class="w-10 h-10 rounded-xl bg-teal-400/10 flex items-center justify-center flex-shrink-0" aria-hidden="true">
+          <svg class="w-5 h-5 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 15 Q6 13 9 15 Q12 17 15 15 Q18 13 21 15"/></svg>
+        </div>
+        <div><p class="text-cream text-sm font-semibold">Piscina privada exclusiva</p><p class="text-cream/35 text-xs mt-0.5">Solo para los huéspedes de la villa</p></div>
+      </li>
+      <li class="flex items-center gap-5 py-5">
+        <div class="w-10 h-10 rounded-xl bg-teal-400/10 flex items-center justify-center flex-shrink-0" aria-hidden="true">
+          <svg class="w-5 h-5 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0"/></svg>
+        </div>
+        <div><p class="text-cream text-sm font-semibold">WiFi de alta velocidad</p><p class="text-cream/35 text-xs mt-0.5">En todas las habitaciones y espacios comunes</p></div>
+      </li>
+      <li class="flex items-center gap-5 py-5">
+        <div class="w-10 h-10 rounded-xl bg-teal-400/10 flex items-center justify-center flex-shrink-0" aria-hidden="true">
+          <svg class="w-5 h-5 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+        </div>
+        <div><p class="text-cream text-sm font-semibold">Aire acondicionado</p><p class="text-cream/35 text-xs mt-0.5">En cada habitación y salón</p></div>
+      </li>
+      <li class="flex items-center gap-5 py-5">
+        <div class="w-10 h-10 rounded-xl bg-teal-400/10 flex items-center justify-center flex-shrink-0" aria-hidden="true">
+          <svg class="w-5 h-5 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+        </div>
+        <div><p class="text-cream text-sm font-semibold">Complejo residencial privado</p><p class="text-cream/35 text-xs mt-0.5">Seguridad y tranquilidad garantizadas</p></div>
+      </li>
+      <li class="flex items-center gap-5 py-5">
+        <div class="w-10 h-10 rounded-xl bg-teal-400/10 flex items-center justify-center flex-shrink-0" aria-hidden="true">
+          <svg class="w-5 h-5 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
+        </div>
+        <div><p class="text-cream text-sm font-semibold">A pocos metros de la playa</p><p class="text-cream/35 text-xs mt-0.5">Restaurantes y playas a pasos de la villa</p></div>
+      </li>
+      <li class="flex items-center gap-5 py-5">
+        <div class="w-10 h-10 rounded-xl bg-teal-400/10 flex items-center justify-center flex-shrink-0" aria-hidden="true">
+          <svg class="w-5 h-5 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        </div>
+        <div><p class="text-cream text-sm font-semibold">Villa entera para ti</p><p class="text-cream/35 text-xs mt-0.5">Sin compartir, solo tú y los tuyos</p></div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+
+<!-- ══ EXPERIENCIAS ══ -->
+<section class="relative py-32 md:py-40 px-6 md:px-12 lg:px-20 overflow-hidden" id="experiencias">
+  <img src="galeria_09.jpeg" alt="" aria-hidden="true" class="absolute inset-0 w-full h-full object-cover" />
+  <div class="absolute inset-0 bg-ink/82" aria-hidden="true"></div>
+  <div class="absolute inset-0 bg-gradient-to-r from-ink/95 via-ink/60 to-transparent" aria-hidden="true"></div>
+
+  <div class="relative z-10 max-w-screen-xl mx-auto">
+    <div class="max-w-2xl">
+      <div class="rv">
+        <p class="text-teal-400 text-[10px] font-bold tracking-[.22em] uppercase mb-5">Más allá de la villa</p>
+        <h2 class="font-serif font-bold text-cream leading-[1.04] mb-8" style="font-size:clamp(2.4rem,5.5vw,4.8rem);">¿Listos para<br/><em class="text-teal-300">la Aventura?</em></h2>
+        <p class="text-cream/52 text-[14px] leading-[1.9] mb-12 max-w-sm">Gestionamos directamente tus excursiones. Tú solo disfruta — nosotros nos encargamos de todo.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
+        <div class="rv glass rounded-2xl p-6" style="transition-delay:.05s">
+          <svg class="w-6 h-6 text-teal-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 15 Q6 13 9 15 Q12 17 15 15 Q18 13 21 15M3 19 Q6 17 9 19 Q12 21 15 19 Q18 17 21 19M12 3v4"/></svg>
+          <h3 class="text-cream font-serif font-bold text-lg mb-2">Excursiones Marinas</h3>
+          <p class="text-cream/45 text-xs leading-relaxed">Paseos en catamarán, avistamiento de ballenas y snorkel en aguas cristalinas.</p>
+        </div>
+        <div class="rv glass rounded-2xl p-6" style="transition-delay:.1s">
+          <svg class="w-6 h-6 text-teal-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M5 3l14 9-14 9V3z"/></svg>
+          <h3 class="text-cream font-serif font-bold text-lg mb-2">Naturaleza y Selva</h3>
+          <p class="text-cream/45 text-xs leading-relaxed">Caminatas por los manglares y rutas naturales con guía local experto.</p>
+        </div>
+        <div class="rv glass rounded-2xl p-6" style="transition-delay:.15s">
+          <svg class="w-6 h-6 text-teal-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <h3 class="text-cream font-serif font-bold text-lg mb-2">Gastronomía Local</h3>
+          <p class="text-cream/45 text-xs leading-relaxed">Los mejores restaurantes de Las Terrenas a pocos pasos. Mariscos frescos.</p>
+        </div>
+      </div>
+
+      <div class="rv" style="transition-delay:.2s"><a href="#reservar" class="btn-teal">Reservar ahora</a></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══ FORMULARIO ══ -->
+<section class="bg-ink py-24 md:py-32 px-6 md:px-12 lg:px-20" id="reservar">
+  <div class="max-w-screen-xl mx-auto grid md:grid-cols-2 gap-16 lg:gap-24 items-center">
+
+    <div class="rl">
+      <p class="text-teal-400 text-[10px] font-bold tracking-[.22em] uppercase mb-4">Reservas</p>
+      <h2 class="font-serif font-bold text-cream leading-tight mb-6" style="font-size:clamp(2.4rem,4.5vw,4rem);">Haz tuya<br/>esta<br/><em>experiencia</em></h2>
+      <p class="text-cream/36 text-[14px] leading-[1.9] mb-8 max-w-xs">Te confirmaremos disponibilidad en menos de 24 horas. También puedes escribirnos directamente por WhatsApp.</p>
+      <ul class="space-y-3 mb-10" aria-label="Ventajas de reservar">
+        <li class="flex items-center gap-3 text-cream/52 text-sm"><svg class="w-4 h-4 text-teal-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Respuesta en menos de 24h</li>
+        <li class="flex items-center gap-3 text-cream/52 text-sm"><svg class="w-4 h-4 text-teal-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Atención personalizada en español</li>
+        <li class="flex items-center gap-3 text-cream/52 text-sm"><svg class="w-4 h-4 text-teal-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Villa completa reservada solo para ti</li>
+      </ul>
+      <div class="rounded-2xl overflow-hidden hidden md:block" style="height:13rem;">
+        <img src="foto_4.jpeg" alt="Piscina privada de la villa" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
+      </div>
+    </div>
+
+    <div class="rr" style="transition-delay:.12s">
+      <form action="https://formspree.io/f/TU_ID_AQUI" method="POST" novalidate class="space-y-4">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label for="nombre" class="block text-cream/35 text-[10px] font-bold tracking-[.15em] uppercase mb-2">Nombre *</label>
+            <input type="text" id="nombre" name="nombre" required autocomplete="given-name" placeholder="Tu nombre" class="ff" />
+          </div>
+          <div>
+            <label for="email" class="block text-cream/35 text-[10px] font-bold tracking-[.15em] uppercase mb-2">Email *</label>
+            <input type="email" id="email" name="email" required autocomplete="email" placeholder="tu@correo.com" class="ff" />
+          </div>
+        </div>
+        <div>
+          <label for="telefono" class="block text-cream/35 text-[10px] font-bold tracking-[.15em] uppercase mb-2">Teléfono</label>
+          <input type="tel" id="telefono" name="telefono" autocomplete="tel" placeholder="+34 600 000 000" class="ff" />
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label for="fin" class="block text-cream/35 text-[10px] font-bold tracking-[.15em] uppercase mb-2">Llegada *</label>
+            <input type="date" id="fin" name="fecha_entrada" required class="ff cursor-pointer" />
+          </div>
+          <div>
+            <label for="fout" class="block text-cream/35 text-[10px] font-bold tracking-[.15em] uppercase mb-2">Salida *</label>
+            <input type="date" id="fout" name="fecha_salida" required class="ff cursor-pointer" />
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label for="huespedes" class="block text-cream/35 text-[10px] font-bold tracking-[.15em] uppercase mb-2">Huéspedes</label>
+            <select id="huespedes" name="huespedes" class="ff cursor-pointer appearance-none">
+              <option value="">Seleccionar...</option>
+              <option value="1-2">1 – 2 personas</option>
+              <option value="3-4">3 – 4 personas</option>
+              <option value="5-6">5 – 6 personas</option>
+            </select>
+          </div>
+          <div>
+            <label for="mensaje" class="block text-cream/35 text-[10px] font-bold tracking-[.15em] uppercase mb-2">Mensaje</label>
+            <input type="text" id="mensaje" name="mensaje" placeholder="Preferencias..." class="ff" />
+          </div>
+        </div>
+        <button type="submit" class="btn-teal w-full py-4 mt-1" style="border-radius:12px;">Completar Reserva →</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══ FOOTER ══ -->
+<footer class="bg-ink-2 border-t border-white/[.06] py-10 px-6 md:px-12">
+  <div class="max-w-screen-xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+    <div class="flex items-center gap-3">
+      <svg class="w-6 h-6 text-teal-400" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <path d="M16 4C10 4 6 9 8 14C10 10 14 9 16 9C18 9 22 10 24 14C26 9 22 4 16 4Z" fill="currentColor" opacity=".9"/>
+        <path d="M4 22 Q8 19 12 22 Q16 25 20 22 Q24 19 28 22" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>
+        <line x1="16" y1="9" x2="16" y2="22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <div>
+        <p class="font-serif font-bold text-cream text-sm">Villa Las Terrenas</p>
+        <p class="text-cream/20 text-[9px] tracking-[.18em] uppercase">República Dominicana</p>
+      </div>
+    </div>
+    <nav class="flex items-center gap-6 flex-wrap justify-center" aria-label="Footer">
+      <a href="#villa"        class="text-cream/26 text-xs hover:text-cream transition-colors duration-200 tracking-wide">La Villa</a>
+      <a href="#galeria"      class="text-cream/26 text-xs hover:text-cream transition-colors duration-200 tracking-wide">Galería</a>
+      <a href="#habitaciones" class="text-cream/26 text-xs hover:text-cream transition-colors duration-200 tracking-wide">Habitaciones</a>
+      <a href="#experiencias" class="text-cream/26 text-xs hover:text-cream transition-colors duration-200 tracking-wide">Experiencias</a>
+      <a href="#reservar"     class="text-cream/26 text-xs hover:text-cream transition-colors duration-200 tracking-wide">Reservar</a>
+    </nav>
+    <p class="text-cream/16 text-xs">&copy; 2025 Villa Las Terrenas</p>
+  </div>
+</footer>
+
+
+<!-- ══ LIGHTBOX ══ -->
+<div id="lb" role="dialog" aria-modal="true" aria-label="Visor de fotos">
+  <button id="lb-x" aria-label="Cerrar visor">&times;</button>
+  <button id="lb-p" aria-label="Foto anterior">&#8249;</button>
+  <img id="lb-img" src="" alt="" />
+  <button id="lb-n" aria-label="Foto siguiente">&#8250;</button>
+  <div id="lb-c" aria-live="polite"></div>
+</div>
+
+
+<!-- ══ WHATSAPP FAB ══ -->
+<a href="https://wa.me/TU_NUMERO_AQUI?text=Hola%2C%20me%20interesa%20la%20Villa%20Las%20Terrenas.%20%C2%BFPodr%C3%ADan%20darme%20m%C3%A1s%20informaci%C3%B3n%3F"
+   target="_blank" rel="noopener noreferrer"
+   class="wa-fab fixed bottom-6 right-6 z-50 w-14 h-14 bg-[#25D366] rounded-full flex items-center justify-center shadow-xl shadow-green-900/30"
+   aria-label="Contactar por WhatsApp" style="min-width:44px;min-height:44px;">
+  <svg class="w-7 h-7 text-white relative z-10" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+  </svg>
+  <span class="absolute inset-0 rounded-full bg-[#25D366] opacity-40 animate-ping" aria-hidden="true"></span>
+</a>
+
+
+<!-- ══ JS ══ -->
+<script>
+(function(){
+  'use strict';
+
+  // Header + sticky bar
+  const hdr  = document.getElementById('hdr');
+  const sbar = document.getElementById('sbar');
+  let sOn = false;
+  window.addEventListener('scroll', function(){
+    const y = window.scrollY;
+    hdr.classList.toggle('scrolled', y > 80);
+    const heroH = document.getElementById('hero').offsetHeight;
+    const show  = y > heroH * 0.6;
+    if (show !== sOn){ sbar.classList.toggle('on', show); sOn = show; }
+  }, { passive:true });
+
+  // Mobile menu
+  const mbtn  = document.getElementById('mbtn');
+  const mmenu = document.getElementById('mmenu');
+  let mOpen = false;
+  mbtn.addEventListener('click', function(){
+    mOpen = !mOpen;
+    mmenu.classList.toggle('open', mOpen);
+    mbtn.setAttribute('aria-expanded', mOpen);
+  });
+  document.querySelectorAll('.mob').forEach(function(l){
+    l.addEventListener('click', function(){
+      mOpen = false; mmenu.classList.remove('open'); mbtn.setAttribute('aria-expanded','false');
+    });
+  });
+
+  // Smooth scroll (offset for fixed header)
+  document.querySelectorAll('a[href^="#"]').forEach(function(a){
+    a.addEventListener('click', function(e){
+      var t = document.querySelector(a.getAttribute('href'));
+      if(t){ e.preventDefault(); window.scrollTo({ top: t.getBoundingClientRect().top + window.scrollY - 64, behavior:'smooth' }); }
+    });
+  });
+
+  // Scroll reveal
+  var rObs = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('on'); rObs.unobserve(e.target); } });
+  },{ threshold:0.08, rootMargin:'0px 0px -36px 0px' });
+  document.querySelectorAll('.rv,.rl,.rr').forEach(function(el){ rObs.observe(el); });
+
+  // Count-up (cubic ease-out)
+  var cObs = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(!e.isIntersecting) return;
+      var el = e.target, target = parseInt(el.dataset.count);
+      var st = null;
+      function tick(ts){
+        if(!st) st = ts;
+        var p = Math.min((ts-st)/900,1);
+        el.textContent = Math.floor((1-Math.pow(1-p,3))*target);
+        if(p<1) requestAnimationFrame(tick); else el.textContent = target;
+      }
+      requestAnimationFrame(tick);
+      cObs.unobserve(el);
+    });
+  },{ threshold:0.5 });
+  document.querySelectorAll('.stat-n[data-count]').forEach(function(el){ cObs.observe(el); });
+
+  // Rooms sticky image swap
+  var rImg   = document.getElementById('rimg');
+  var rBadge = document.getElementById('rbadge');
+  if(rImg){
+    var rObs2 = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(!e.isIntersecting) return;
+        var ns = e.target.dataset.img, nb = e.target.dataset.badge;
+        if(ns && !rImg.src.endsWith(ns)){
+          rImg.classList.add('out');
+          setTimeout(function(){
+            rImg.src = ns; rImg.alt = 'Habitación — ' + nb;
+            if(rBadge) rBadge.textContent = nb;
+            rImg.classList.remove('out');
+          }, 220);
+        }
+      });
+    },{ threshold:0.5 });
+    document.querySelectorAll('.room-p').forEach(function(p){ rObs2.observe(p); });
+  }
+
+  // Lightbox
+  var lb    = document.getElementById('lb');
+  var lbImg = document.getElementById('lb-img');
+  var lbC   = document.getElementById('lb-c');
+  var imgs  = Array.from(document.querySelectorAll('.gi'));
+  var cur   = 0;
+
+  function openIdx(i){
+    cur = i;
+    lbImg.src = imgs[i].dataset.src;
+    lbImg.alt = imgs[i].dataset.alt || '';
+    lbC.textContent = (i+1) + ' / ' + imgs.length;
+    lb.classList.add('on');
+    document.body.style.overflow = 'hidden';
+    document.getElementById('lb-x').focus();
+  }
+  function closeLB(){ lb.classList.remove('on'); document.body.style.overflow=''; }
+  function prev(){ openIdx((cur-1+imgs.length)%imgs.length); }
+  function next(){ openIdx((cur+1)%imgs.length); }
+
+  imgs.forEach(function(el,i){
+    el.addEventListener('click', function(){ openIdx(i); });
+    el.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); openIdx(i); } });
+  });
+  document.getElementById('lb-x').addEventListener('click', closeLB);
+  document.getElementById('lb-p').addEventListener('click', prev);
+  document.getElementById('lb-n').addEventListener('click', next);
+  lb.addEventListener('click', function(e){ if(e.target===lb) closeLB(); });
+  document.addEventListener('keydown', function(e){
+    if(!lb.classList.contains('on')) return;
+    if(e.key==='Escape') closeLB();
+    if(e.key==='ArrowLeft') prev();
+    if(e.key==='ArrowRight') next();
+  });
+  var tx = 0;
+  lb.addEventListener('touchstart', function(e){ tx = e.touches[0].clientX; },{ passive:true });
+  lb.addEventListener('touchend',   function(e){ var d = tx - e.changedTouches[0].clientX; if(Math.abs(d)>50) d>0?next():prev(); });
+
+  // Date validation
+  var fin  = document.getElementById('fin');
+  var fout = document.getElementById('fout');
+  if(fin&&fout){
+    var today = new Date().toISOString().split('T')[0];
+    fin.min = fout.min = today;
+    fin.addEventListener('change', function(){ fout.min = fin.value; if(fout.value && fout.value<=fin.value) fout.value=''; });
+  }
+
+})();
+</script>
+</body>
+</html>
