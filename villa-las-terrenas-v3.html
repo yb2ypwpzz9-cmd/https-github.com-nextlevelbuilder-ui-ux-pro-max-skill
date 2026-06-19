@@ -288,80 +288,6 @@
 
 
 <!-- ════════════════════════════════════
-     CHECK-IN / CHECK-OUT + SELLOS
-════════════════════════════════════ -->
-<section class="bg-sand border-b border-slate-100 py-10 px-6">
-  <div class="max-w-7xl mx-auto">
-
-    <!-- Pills: check-in / check-out / idiomas -->
-    <div class="flex flex-wrap gap-4 justify-center mb-8 reveal">
-      <!-- Check-in -->
-      <div class="flex items-center gap-3 bg-white rounded-2xl px-6 py-4 shadow-sm border border-slate-100">
-        <div class="w-10 h-10 bg-teal-50 rounded-xl flex items-center justify-center flex-shrink-0">
-          <svg class="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>
-        </div>
-        <div>
-          <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Check-in</p>
-          <p class="text-slate-800 font-semibold text-sm">15:00 – 20:00</p>
-          <p class="text-slate-400 text-xs">Avisar con 24h si llegas tarde</p>
-        </div>
-      </div>
-      <!-- Check-out -->
-      <div class="flex items-center gap-3 bg-white rounded-2xl px-6 py-4 shadow-sm border border-slate-100">
-        <div class="w-10 h-10 bg-teal-50 rounded-xl flex items-center justify-center flex-shrink-0">
-          <svg class="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
-        </div>
-        <div>
-          <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Check-out</p>
-          <p class="text-slate-800 font-semibold text-sm">Hasta las 11:00</p>
-          <p class="text-slate-400 text-xs">Salida máxima a las 11:00 am</p>
-        </div>
-      </div>
-      <!-- Idiomas -->
-      <div class="flex items-center gap-3 bg-white rounded-2xl px-6 py-4 shadow-sm border border-slate-100">
-        <div class="w-10 h-10 bg-teal-50 rounded-xl flex items-center justify-center flex-shrink-0">
-          <svg class="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"/></svg>
-        </div>
-        <div>
-          <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Atención</p>
-          <p class="text-slate-800 font-semibold text-sm">Español · English</p>
-          <p class="text-slate-400 text-xs">Respuesta en menos de 24 h</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Sellos de confianza -->
-    <div class="flex flex-wrap gap-4 justify-center reveal" style="transition-delay:0.1s">
-      <!-- Airbnb -->
-      <div class="flex items-center gap-2.5 bg-white border border-slate-100 rounded-full px-5 py-2.5 shadow-sm">
-        <svg class="w-5 h-5 text-[#FF5A5F] flex-shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M11.997 0C5.37 0 0 5.373 0 12s5.37 12 11.997 12C18.63 24 24 18.627 24 12S18.629 0 11.997 0zm-.002 4.5c1.07 0 1.935.866 1.935 1.933 0 1.07-.865 1.935-1.935 1.935-1.068 0-1.933-.865-1.933-1.935S10.927 4.5 11.995 4.5zM17.5 18.5H6.5c-.553 0-1-.447-1-1 0-.277.113-.527.293-.71l2.207-2.21c.388-.387.388-1.017 0-1.405l-1.293-1.291a1.006 1.006 0 010-1.418l2.5-2.5a1.006 1.006 0 011.413 0l1.38 1.377 1.38-1.377a1.006 1.006 0 011.413 0l2.5 2.5a1.006 1.006 0 010 1.418l-1.293 1.291c-.388.388-.388 1.018 0 1.405l2.207 2.21c.18.183.293.433.293.71 0 .553-.448 1-1 1z"/></svg>
-        <span class="text-slate-700 text-xs font-semibold">Disponible en Airbnb</span>
-      </div>
-      <!-- Google Reviews -->
-      <div class="flex items-center gap-2.5 bg-white border border-slate-100 rounded-full px-5 py-2.5 shadow-sm">
-        <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#4285F4"/><path d="M20 12.23A8.27 8.27 0 0012 4c-2.32 0-4.42.95-5.95 2.48L8.5 9c.9-.85 2.12-1.38 3.5-1.38 1.3 0 2.42.44 3.33 1.17l-1.33 1.35V12h5.97c.02-.26.03-.52.03-.77z" fill="white" fill-opacity="0.3"/><path d="M12 20c2.35 0 4.32-.78 5.76-2.1l-2.68-2.2A5.25 5.25 0 0112 17c-2.54 0-4.68-1.72-5.45-4.04H3.79v2.28A8.98 8.98 0 0012 20z" fill="#34A853"/><path d="M6.55 12.96A5.23 5.23 0 016.27 12c0-.33.06-.65.15-.96V8.76H3.79A8.98 8.98 0 003 12c0 1.46.35 2.85.96 4.08l2.59-2.12z" fill="#FBBC05"/><path d="M12 7c1.38 0 2.6.53 3.5 1.38l2.46-2.46A8.95 8.95 0 0012 4 8.98 8.98 0 003.79 8.76l2.76 2.24A5.37 5.37 0 0112 7z" fill="#EA4335"/></svg>
-        <div>
-          <span class="text-slate-700 text-xs font-semibold">Google Reseñas</span>
-          <span class="ml-2 text-[10px] text-slate-400 bg-slate-100 rounded-full px-2 py-0.5">Próximamente</span>
-        </div>
-      </div>
-      <!-- Reserva segura -->
-      <div class="flex items-center gap-2.5 bg-white border border-slate-100 rounded-full px-5 py-2.5 shadow-sm">
-        <svg class="w-5 h-5 text-teal-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-        <span class="text-slate-700 text-xs font-semibold">Reserva 100% Segura</span>
-      </div>
-      <!-- Respuesta rapida -->
-      <div class="flex items-center gap-2.5 bg-white border border-slate-100 rounded-full px-5 py-2.5 shadow-sm">
-        <svg class="w-5 h-5 text-teal-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
-        <span class="text-slate-700 text-xs font-semibold">Respuesta &lt; 24 h</span>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-
-<!-- ════════════════════════════════════
      AMENIDADES
 ════════════════════════════════════ -->
 <section class="bg-white py-20 md:py-28 px-6">
@@ -782,6 +708,18 @@
     <div class="space-y-4 reveal" style="transition-delay:0.05s">
 
       <!-- FAQ item -->
+      <!-- Check-in / Check-out -->
+      <details class="faq-item border border-slate-100 rounded-2xl overflow-hidden group">
+        <summary class="flex items-center justify-between gap-4 px-6 py-5 cursor-pointer select-none hover:bg-slate-50 transition-colors duration-200">
+          <span class="text-slate-800 font-semibold text-sm">¿Cuáles son los horarios de check-in y check-out?</span>
+          <svg class="w-5 h-5 text-teal-500 flex-shrink-0 transition-transform duration-200 group-open:rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+        </summary>
+        <div class="px-6 pb-5 text-slate-500 text-sm leading-relaxed border-t border-slate-100 pt-4 space-y-1">
+          <p><strong class="text-slate-700">Check-in:</strong> de 3:00 PM a 8:00 PM. Si prevés llegar más tarde, avisa con al menos <strong class="text-slate-700">24 horas de antelación</strong>.</p>
+          <p><strong class="text-slate-700">Check-out:</strong> antes de las <strong class="text-slate-700">11:00 AM</strong>.</p>
+        </div>
+      </details>
+
       <details class="faq-item border border-slate-100 rounded-2xl overflow-hidden group">
         <summary class="flex items-center justify-between gap-4 px-6 py-5 cursor-pointer select-none hover:bg-slate-50 transition-colors duration-200">
           <span class="text-slate-800 font-semibold text-sm">¿Se admiten mascotas?</span>
@@ -938,6 +876,11 @@
         <button type="submit" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-semibold py-4 rounded-xl cursor-pointer transition-colors duration-200 text-sm tracking-wide">
           Completar Reserva
         </button>
+
+        <div class="flex items-center justify-center gap-2 pt-2">
+          <svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+          <span class="text-slate-400 text-xs">Reserva 100% segura · Respuesta en menos de 24 h</span>
+        </div>
       </form>
     </div>
   </div>
