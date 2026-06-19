@@ -120,6 +120,15 @@
   }
   </script>
 
+  <!-- Google Analytics 4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-29BZWEKZYG"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-29BZWEKZYG');
+  </script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&display=swap" rel="stylesheet" />
@@ -1221,6 +1230,31 @@
   lightbox.addEventListener('touchend', e => {
     const diff = touchX - e.changedTouches[0].clientX;
     if (Math.abs(diff) > 50) diff > 0 ? nextPhoto() : prevPhoto();
+  });
+
+  // ── GA4 Eventos de conversión ──
+  // Clic WhatsApp FAB (botón flotante)
+  document.querySelector('.whatsapp-fab').addEventListener('click', () => {
+    gtag('event', 'click_whatsapp', { event_category: 'conversión', event_label: 'FAB WhatsApp' });
+  });
+
+  // Clic botón WhatsApp Hero
+  document.querySelectorAll('a[href*="wa.me"]').forEach(el => {
+    el.addEventListener('click', () => {
+      gtag('event', 'click_whatsapp', { event_category: 'conversión', event_label: el.textContent.trim().substring(0, 50) });
+    });
+  });
+
+  // Clic "Ver Precios y Calendario"
+  document.querySelectorAll('a[href="#precios"]').forEach(el => {
+    el.addEventListener('click', () => {
+      gtag('event', 'click_ver_precios', { event_category: 'interés', event_label: 'Ver Precios Hero' });
+    });
+  });
+
+  // Envío formulario de reserva
+  document.querySelector('form').addEventListener('submit', () => {
+    gtag('event', 'envio_formulario', { event_category: 'conversión', event_label: 'Formulario Reserva' });
   });
 </script>
 
