@@ -347,28 +347,28 @@
     </div>
 
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-      <div class="space-card lb-trigger reveal cursor-pointer rounded-2xl overflow-hidden" data-src="foto_4.jpeg" data-alt="Piscina privada de Villa Vitao Garden en Las Terrenas" style="transition-delay:0.05s">
+      <div class="space-card lb-trigger reveal cursor-pointer rounded-2xl" data-src="foto_4.jpeg" data-alt="Piscina privada de Villa Vitao Garden en Las Terrenas" style="transition-delay:0.05s">
         <div class="overflow-hidden rounded-2xl h-56 md:h-72">
           <img src="foto_4.jpeg" alt="Piscina privada de Villa Vitao Garden en Las Terrenas, República Dominicana" class="w-full h-full object-cover" />
         </div>
         <p class="mt-3 text-slate-800 text-sm font-semibold">Piscina Privada</p>
         <p class="text-slate-400 text-xs mt-0.5">Relájate en tu propia piscina con palapa y tumbonas, rodeada de jardín tropical</p>
       </div>
-      <div class="space-card lb-trigger reveal cursor-pointer rounded-2xl overflow-hidden" data-src="galeria_03.jpeg" data-alt="Zona de hamacas y jardín tropical de Villa Vitao Garden en Las Terrenas" style="transition-delay:0.1s">
+      <div class="space-card lb-trigger reveal cursor-pointer rounded-2xl" data-src="galeria_03.jpeg" data-alt="Zona de hamacas y jardín tropical de Villa Vitao Garden en Las Terrenas" style="transition-delay:0.1s">
         <div class="overflow-hidden rounded-2xl h-56 md:h-72">
           <img src="galeria_03.jpeg" alt="Zona de hamacas y jardín tropical de Villa Vitao Garden en Las Terrenas" class="w-full h-full object-cover" />
         </div>
         <p class="mt-3 text-slate-800 text-sm font-semibold">Terraza Exterior</p>
         <p class="text-slate-400 text-xs mt-0.5">El lugar ideal para el café de la mañana o disfrutar de la brisa de Las Terrenas en total privacidad</p>
       </div>
-      <div class="space-card lb-trigger reveal cursor-pointer rounded-2xl overflow-hidden" data-src="galeria_06.jpeg" data-alt="Comedor exterior con jardín en alquiler de villa en Las Terrenas" style="transition-delay:0.15s">
+      <div class="space-card lb-trigger reveal cursor-pointer rounded-2xl" data-src="galeria_06.jpeg" data-alt="Comedor exterior con jardín en alquiler de villa en Las Terrenas" style="transition-delay:0.15s">
         <div class="overflow-hidden rounded-2xl h-56 md:h-72">
           <img src="galeria_06.jpeg" alt="Comedor exterior con jardín en alquiler de villa en Las Terrenas" class="w-full h-full object-cover" />
         </div>
         <p class="mt-3 text-slate-800 text-sm font-semibold">Salón Interior</p>
         <p class="text-slate-400 text-xs mt-0.5">Zona de estar moderna con sofá turquesa y plantas exóticas, perfecta para conectar con los tuyos</p>
       </div>
-      <div class="space-card lb-trigger reveal cursor-pointer rounded-2xl overflow-hidden" data-src="galeria_08.jpeg" data-alt="Salón interior con diseño tropical en villa de lujo en Las Terrenas" style="transition-delay:0.2s">
+      <div class="space-card lb-trigger reveal cursor-pointer rounded-2xl" data-src="galeria_08.jpeg" data-alt="Salón interior con diseño tropical en villa de lujo en Las Terrenas" style="transition-delay:0.2s">
         <div class="overflow-hidden rounded-2xl h-56 md:h-72">
           <img src="galeria_08.jpeg" alt="Salón interior con diseño tropical en villa de lujo en Las Terrenas" class="w-full h-full object-cover" />
         </div>
@@ -505,14 +505,9 @@
     </div>
 
     <!-- Nota gasto de luz -->
-    <div class="reveal bg-amber-50 border border-amber-200 rounded-2xl p-5 flex items-start gap-4" style="transition-delay:0.15s">
-      <div class="w-9 h-9 bg-amber-100 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5">
-        <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-      </div>
-      <div>
-        <p class="text-amber-800 font-semibold text-sm mb-1">Consumo Eléctrico · Se cobra aparte</p>
-        <p class="text-amber-700 text-sm leading-relaxed">Para promover el uso responsable de la energía y mantener nuestras tarifas bajas, el gasto eléctrico se abona según consumo real: <strong>15 RD$ por kW</strong>. Tomamos fotografía del contador al <strong>check-in</strong> y al <strong>check-out</strong> — solo pagas lo que consumes.</p>
-      </div>
+    <div class="reveal flex items-center gap-2.5 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3" style="transition-delay:0.15s">
+      <svg class="w-4 h-4 text-amber-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+      <p class="text-amber-700 text-xs leading-relaxed"><strong>Electricidad aparte:</strong> se fotografía el contador al check-in y check-out · <strong>15 RD$ por kW</strong> consumido.</p>
     </div>
 
     <div class="text-center mt-8 reveal" style="transition-delay:0.2s">
@@ -557,8 +552,8 @@
         <div class="room-slider">
           <div class="room-slides" id="sl-hab1">
             <img src="hab1.jpeg" alt="Habitación Master con cama King Size y baño en suite en villa de Las Terrenas" class="cursor-zoom-in" onclick="openLBSrc('hab1.jpeg','Habitación Master con cama King Size y baño en suite')" />
-            <img src="galeria_13.jpeg" alt="Lavabo y vanity del baño en suite en villa vacacional en Las Terrenas" class="cursor-zoom-in" onclick="openLBSrc('galeria_13.jpeg','Baño en suite — lavabo')" />
             <img src="galeria_14.jpeg" alt="Ducha del baño en suite privado en villa vacacional en Las Terrenas" class="cursor-zoom-in" onclick="openLBSrc('galeria_14.jpeg','Baño en suite — ducha')" />
+            <img src="galeria_13.jpeg" alt="Lavabo y vanity del baño en suite en villa vacacional en Las Terrenas" class="cursor-zoom-in" onclick="openLBSrc('galeria_13.jpeg','Baño en suite — lavabo')" />
           </div>
           <button class="sl-btn prev" aria-label="Foto anterior" onclick="mvSlide('hab1',-1)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg></button>
           <button class="sl-btn next" aria-label="Foto siguiente" onclick="mvSlide('hab1',1)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></button>
@@ -611,8 +606,8 @@
         <div class="room-slider">
           <div class="room-slides" id="sl-hab3">
             <img src="hab3.jpeg" alt="Habitación twin familiar con dos camas y baño en suite en villa Las Terrenas" class="cursor-zoom-in" onclick="openLBSrc('hab3.jpeg','Habitación Twin Familiar — Villa Vitao Garden')" />
-            <img src="galeria_13.jpeg" alt="Lavabo y vanity del baño en suite en villa vacacional en Las Terrenas" class="cursor-zoom-in" onclick="openLBSrc('galeria_13.jpeg','Baño en suite — lavabo')" />
             <img src="galeria_14.jpeg" alt="Ducha del baño en suite privado en villa vacacional en Las Terrenas" class="cursor-zoom-in" onclick="openLBSrc('galeria_14.jpeg','Baño en suite — ducha')" />
+            <img src="galeria_13.jpeg" alt="Lavabo y vanity del baño en suite en villa vacacional en Las Terrenas" class="cursor-zoom-in" onclick="openLBSrc('galeria_13.jpeg','Baño en suite — lavabo')" />
           </div>
           <button class="sl-btn prev" aria-label="Foto anterior" onclick="mvSlide('hab3',-1)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg></button>
           <button class="sl-btn next" aria-label="Foto siguiente" onclick="mvSlide('hab3',1)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></button>
