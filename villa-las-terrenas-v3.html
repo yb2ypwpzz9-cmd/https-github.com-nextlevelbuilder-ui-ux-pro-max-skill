@@ -288,6 +288,80 @@
 
 
 <!-- ════════════════════════════════════
+     CHECK-IN / CHECK-OUT + SELLOS
+════════════════════════════════════ -->
+<section class="bg-sand border-b border-slate-100 py-10 px-6">
+  <div class="max-w-7xl mx-auto">
+
+    <!-- Pills: check-in / check-out / idiomas -->
+    <div class="flex flex-wrap gap-4 justify-center mb-8 reveal">
+      <!-- Check-in -->
+      <div class="flex items-center gap-3 bg-white rounded-2xl px-6 py-4 shadow-sm border border-slate-100">
+        <div class="w-10 h-10 bg-teal-50 rounded-xl flex items-center justify-center flex-shrink-0">
+          <svg class="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>
+        </div>
+        <div>
+          <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Check-in</p>
+          <p class="text-slate-800 font-semibold text-sm">15:00 – 20:00</p>
+          <p class="text-slate-400 text-xs">Avisar con 24h si llegas tarde</p>
+        </div>
+      </div>
+      <!-- Check-out -->
+      <div class="flex items-center gap-3 bg-white rounded-2xl px-6 py-4 shadow-sm border border-slate-100">
+        <div class="w-10 h-10 bg-teal-50 rounded-xl flex items-center justify-center flex-shrink-0">
+          <svg class="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+        </div>
+        <div>
+          <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Check-out</p>
+          <p class="text-slate-800 font-semibold text-sm">Hasta las 11:00</p>
+          <p class="text-slate-400 text-xs">Salida máxima a las 11:00 am</p>
+        </div>
+      </div>
+      <!-- Idiomas -->
+      <div class="flex items-center gap-3 bg-white rounded-2xl px-6 py-4 shadow-sm border border-slate-100">
+        <div class="w-10 h-10 bg-teal-50 rounded-xl flex items-center justify-center flex-shrink-0">
+          <svg class="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"/></svg>
+        </div>
+        <div>
+          <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Atención</p>
+          <p class="text-slate-800 font-semibold text-sm">Español · English</p>
+          <p class="text-slate-400 text-xs">Respuesta en menos de 24 h</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sellos de confianza -->
+    <div class="flex flex-wrap gap-4 justify-center reveal" style="transition-delay:0.1s">
+      <!-- Airbnb -->
+      <div class="flex items-center gap-2.5 bg-white border border-slate-100 rounded-full px-5 py-2.5 shadow-sm">
+        <svg class="w-5 h-5 text-[#FF5A5F] flex-shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M11.997 0C5.37 0 0 5.373 0 12s5.37 12 11.997 12C18.63 24 24 18.627 24 12S18.629 0 11.997 0zm-.002 4.5c1.07 0 1.935.866 1.935 1.933 0 1.07-.865 1.935-1.935 1.935-1.068 0-1.933-.865-1.933-1.935S10.927 4.5 11.995 4.5zM17.5 18.5H6.5c-.553 0-1-.447-1-1 0-.277.113-.527.293-.71l2.207-2.21c.388-.387.388-1.017 0-1.405l-1.293-1.291a1.006 1.006 0 010-1.418l2.5-2.5a1.006 1.006 0 011.413 0l1.38 1.377 1.38-1.377a1.006 1.006 0 011.413 0l2.5 2.5a1.006 1.006 0 010 1.418l-1.293 1.291c-.388.388-.388 1.018 0 1.405l2.207 2.21c.18.183.293.433.293.71 0 .553-.448 1-1 1z"/></svg>
+        <span class="text-slate-700 text-xs font-semibold">Disponible en Airbnb</span>
+      </div>
+      <!-- Google Reviews -->
+      <div class="flex items-center gap-2.5 bg-white border border-slate-100 rounded-full px-5 py-2.5 shadow-sm">
+        <svg class="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#4285F4"/><path d="M20 12.23A8.27 8.27 0 0012 4c-2.32 0-4.42.95-5.95 2.48L8.5 9c.9-.85 2.12-1.38 3.5-1.38 1.3 0 2.42.44 3.33 1.17l-1.33 1.35V12h5.97c.02-.26.03-.52.03-.77z" fill="white" fill-opacity="0.3"/><path d="M12 20c2.35 0 4.32-.78 5.76-2.1l-2.68-2.2A5.25 5.25 0 0112 17c-2.54 0-4.68-1.72-5.45-4.04H3.79v2.28A8.98 8.98 0 0012 20z" fill="#34A853"/><path d="M6.55 12.96A5.23 5.23 0 016.27 12c0-.33.06-.65.15-.96V8.76H3.79A8.98 8.98 0 003 12c0 1.46.35 2.85.96 4.08l2.59-2.12z" fill="#FBBC05"/><path d="M12 7c1.38 0 2.6.53 3.5 1.38l2.46-2.46A8.95 8.95 0 0012 4 8.98 8.98 0 003.79 8.76l2.76 2.24A5.37 5.37 0 0112 7z" fill="#EA4335"/></svg>
+        <div>
+          <span class="text-slate-700 text-xs font-semibold">Google Reseñas</span>
+          <span class="ml-2 text-[10px] text-slate-400 bg-slate-100 rounded-full px-2 py-0.5">Próximamente</span>
+        </div>
+      </div>
+      <!-- Reserva segura -->
+      <div class="flex items-center gap-2.5 bg-white border border-slate-100 rounded-full px-5 py-2.5 shadow-sm">
+        <svg class="w-5 h-5 text-teal-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+        <span class="text-slate-700 text-xs font-semibold">Reserva 100% Segura</span>
+      </div>
+      <!-- Respuesta rapida -->
+      <div class="flex items-center gap-2.5 bg-white border border-slate-100 rounded-full px-5 py-2.5 shadow-sm">
+        <svg class="w-5 h-5 text-teal-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+        <span class="text-slate-700 text-xs font-semibold">Respuesta &lt; 24 h</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════
      AMENIDADES
 ════════════════════════════════════ -->
 <section class="bg-white py-20 md:py-28 px-6">
@@ -356,6 +430,79 @@
 
 
 <!-- ════════════════════════════════════
+     PRECIOS
+════════════════════════════════════ -->
+<section class="bg-white py-16 md:py-20 px-6" id="precios">
+  <div class="max-w-4xl mx-auto">
+    <div class="text-center mb-10 reveal">
+      <p class="text-teal-600 text-sm font-semibold tracking-widest uppercase mb-3">Tarifas</p>
+      <h2 class="font-serif font-bold text-slate-900 text-4xl md:text-5xl leading-tight">Precios por Noche</h2>
+      <p class="text-slate-500 mt-3 text-sm">Villa completa · 3 habitaciones · hasta 6 personas</p>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-6 mb-8">
+      <!-- Tarifa L-J -->
+      <div class="reveal p-8 border-2 border-slate-100 rounded-2xl hover:border-teal-200 hover:shadow-lg transition-all duration-300 cursor-default" style="transition-delay:0.05s">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <p class="text-slate-500 text-xs font-semibold tracking-widest uppercase mb-1">Lunes – Jueves</p>
+            <p class="font-serif text-4xl font-bold text-slate-900">180 <span class="text-xl font-sans font-medium text-slate-500">USD</span></p>
+            <p class="text-slate-400 text-xs mt-1">por noche</p>
+          </div>
+          <div class="w-14 h-14 bg-teal-50 rounded-2xl flex items-center justify-center flex-shrink-0">
+            <svg class="w-7 h-7 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          </div>
+        </div>
+        <div class="h-px bg-slate-100 mb-4"></div>
+        <ul class="text-slate-500 text-sm space-y-1.5">
+          <li class="flex items-center gap-2"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Villa completa · 3 hab. en suite</li>
+          <li class="flex items-center gap-2"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Piscina privada incluida</li>
+          <li class="flex items-center gap-2"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Ropa de cama y toallas</li>
+        </ul>
+      </div>
+      <!-- Tarifa V-D -->
+      <div class="reveal p-8 border-2 border-teal-500 rounded-2xl shadow-lg cursor-default relative overflow-hidden" style="transition-delay:0.1s">
+        <span class="absolute top-4 right-4 bg-teal-600 text-white text-[10px] font-bold px-3 py-1 rounded-full tracking-wider">MÁS POPULAR</span>
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <p class="text-teal-600 text-xs font-semibold tracking-widest uppercase mb-1">Viernes – Domingo</p>
+            <p class="font-serif text-4xl font-bold text-slate-900">210 <span class="text-xl font-sans font-medium text-slate-500">USD</span></p>
+            <p class="text-slate-400 text-xs mt-1">por noche</p>
+          </div>
+          <div class="w-14 h-14 bg-teal-50 rounded-2xl flex items-center justify-center flex-shrink-0">
+            <svg class="w-7 h-7 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
+          </div>
+        </div>
+        <div class="h-px bg-teal-100 mb-4"></div>
+        <ul class="text-slate-500 text-sm space-y-1.5">
+          <li class="flex items-center gap-2"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Villa completa · 3 hab. en suite</li>
+          <li class="flex items-center gap-2"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Piscina privada incluida</li>
+          <li class="flex items-center gap-2"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Ideal fines de semana</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Nota gasto de luz -->
+    <div class="reveal bg-amber-50 border border-amber-200 rounded-2xl p-5 flex items-start gap-4" style="transition-delay:0.15s">
+      <div class="w-9 h-9 bg-amber-100 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5">
+        <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+      </div>
+      <div>
+        <p class="text-amber-800 font-semibold text-sm mb-1">Gasto de electricidad · Aparte</p>
+        <p class="text-amber-700 text-sm leading-relaxed">Se fotografía el contador al <strong>check-in</strong> y al <strong>check-out</strong>. El consumo se calcula multiplicando los kW consumidos × <strong>15 RD$</strong>.</p>
+      </div>
+    </div>
+
+    <div class="text-center mt-8 reveal" style="transition-delay:0.2s">
+      <a href="#reservar" class="inline-block bg-teal-600 hover:bg-teal-700 text-white font-semibold px-10 py-3.5 rounded-full cursor-pointer transition-colors duration-200 text-sm tracking-wide">
+        Consultar Disponibilidad
+      </a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════
      HABITACIONES
 ════════════════════════════════════ -->
 <section class="bg-sand py-20 md:py-28 px-6" id="habitaciones">
@@ -387,8 +534,8 @@
       <article class="room-card bg-white rounded-2xl overflow-hidden cursor-default">
         <div class="room-slider">
           <div class="room-slides" id="sl-hab1">
-            <img src="hab1.jpeg" alt="Suite King Master" />
-            <img src="galeria_13.jpeg" alt="Baño en suite — Habitación Master" />
+            <img src="hab1.jpeg" alt="Suite King Master" class="cursor-zoom-in" onclick="openLBSrc('hab1.jpeg','Suite King Master')" />
+            <img src="galeria_14.jpeg" alt="Baño en suite — Habitación Master" class="cursor-zoom-in" onclick="openLBSrc('galeria_14.jpeg','Baño en suite — Habitación Master')" />
           </div>
           <button class="sl-btn prev" aria-label="Foto anterior" onclick="mvSlide('hab1',-1)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg></button>
           <button class="sl-btn next" aria-label="Foto siguiente" onclick="mvSlide('hab1',1)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></button>
@@ -413,8 +560,8 @@
       <article class="room-card bg-white rounded-2xl overflow-hidden cursor-default">
         <div class="room-slider">
           <div class="room-slides" id="sl-hab2">
-            <img src="hab2.jpeg" alt="Suite King con Terraza" />
-            <img src="galeria_13.jpeg" alt="Baño en suite — Habitación 2" />
+            <img src="hab2.jpeg" alt="Suite King con Terraza" class="cursor-zoom-in" onclick="openLBSrc('hab2.jpeg','Suite King con Terraza')" />
+            <img src="galeria_14.jpeg" alt="Baño en suite — Habitación 2" class="cursor-zoom-in" onclick="openLBSrc('galeria_14.jpeg','Baño en suite — Habitación 2')" />
           </div>
           <button class="sl-btn prev" aria-label="Foto anterior" onclick="mvSlide('hab2',-1)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg></button>
           <button class="sl-btn next" aria-label="Foto siguiente" onclick="mvSlide('hab2',1)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></button>
@@ -439,8 +586,8 @@
       <article class="room-card bg-white rounded-2xl overflow-hidden cursor-default">
         <div class="room-slider">
           <div class="room-slides" id="sl-hab3">
-            <img src="hab3.jpeg" alt="Suite Twin Familiar" />
-            <img src="galeria_13.jpeg" alt="Baño en suite — Habitación 3" />
+            <img src="hab3.jpeg" alt="Suite Twin Familiar" class="cursor-zoom-in" onclick="openLBSrc('hab3.jpeg','Suite Twin Familiar')" />
+            <img src="galeria_14.jpeg" alt="Baño en suite — Habitación 3" class="cursor-zoom-in" onclick="openLBSrc('galeria_14.jpeg','Baño en suite — Habitación 3')" />
           </div>
           <button class="sl-btn prev" aria-label="Foto anterior" onclick="mvSlide('hab3',-1)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg></button>
           <button class="sl-btn next" aria-label="Foto siguiente" onclick="mvSlide('hab3',1)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg></button>
@@ -608,8 +755,8 @@
       <div class="gallery-thumb break-inside-avoid rounded-xl overflow-hidden cursor-pointer" data-src="galeria_12.jpeg" data-alt="Playa Las Terrenas">
         <img src="galeria_12.jpeg" alt="Playa Las Terrenas" class="w-full hover:scale-105 transition-transform duration-500" />
       </div>
-      <div class="gallery-thumb break-inside-avoid rounded-xl overflow-hidden cursor-pointer" data-src="galeria_13.jpeg" data-alt="Baño en suite">
-        <img src="galeria_13.jpeg" alt="Baño en suite" class="w-full hover:scale-105 transition-transform duration-500" />
+      <div class="gallery-thumb break-inside-avoid rounded-xl overflow-hidden cursor-pointer" data-src="galeria_14.jpeg" data-alt="Baño en suite">
+        <img src="galeria_14.jpeg" alt="Baño en suite" class="w-full hover:scale-105 transition-transform duration-500" />
       </div>
       <div class="gallery-thumb break-inside-avoid rounded-xl overflow-hidden cursor-pointer" data-src="galeria_14.jpeg" data-alt="Baño master">
         <img src="galeria_14.jpeg" alt="Baño master con ducha" class="w-full hover:scale-105 transition-transform duration-500" />
@@ -617,6 +764,96 @@
       <div class="gallery-thumb break-inside-avoid rounded-xl overflow-hidden cursor-pointer" data-src="galeria_15.jpeg" data-alt="Comedor exterior">
         <img src="galeria_15.jpeg" alt="Comedor exterior" class="w-full hover:scale-105 transition-transform duration-500" />
       </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════════
+     FAQ / NORMAS
+════════════════════════════════════ -->
+<section class="bg-white py-20 md:py-28 px-6" id="faq">
+  <div class="max-w-3xl mx-auto">
+    <div class="text-center mb-14 reveal">
+      <p class="text-teal-600 text-sm font-semibold tracking-widest uppercase mb-3">Preguntas frecuentes</p>
+      <h2 class="font-serif font-bold text-slate-900 text-4xl md:text-5xl leading-tight">Todo lo que Necesitas Saber</h2>
+    </div>
+
+    <div class="space-y-4 reveal" style="transition-delay:0.05s">
+
+      <!-- FAQ item -->
+      <details class="faq-item border border-slate-100 rounded-2xl overflow-hidden group">
+        <summary class="flex items-center justify-between gap-4 px-6 py-5 cursor-pointer select-none hover:bg-slate-50 transition-colors duration-200">
+          <span class="text-slate-800 font-semibold text-sm">¿Se admiten mascotas?</span>
+          <svg class="w-5 h-5 text-teal-500 flex-shrink-0 transition-transform duration-200 group-open:rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+        </summary>
+        <div class="px-6 pb-5 text-slate-500 text-sm leading-relaxed border-t border-slate-100 pt-4">
+          Sí, se admite <strong class="text-slate-700">1 mascota por reserva</strong>. Consulta al hacer tu reserva para que podamos prepararla todo correctamente.
+        </div>
+      </details>
+
+      <details class="faq-item border border-slate-100 rounded-2xl overflow-hidden group">
+        <summary class="flex items-center justify-between gap-4 px-6 py-5 cursor-pointer select-none hover:bg-slate-50 transition-colors duration-200">
+          <span class="text-slate-800 font-semibold text-sm">¿Se permiten eventos o fiestas?</span>
+          <svg class="w-5 h-5 text-teal-500 flex-shrink-0 transition-transform duration-200 group-open:rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+        </summary>
+        <div class="px-6 pb-5 text-slate-500 text-sm leading-relaxed border-t border-slate-100 pt-4">
+          <strong class="text-slate-700">No</strong>. Los eventos y fiestas no están permitidos en la villa. La propiedad está ubicada en un complejo residencial privado y se pide respetar la tranquilidad de los vecinos.
+        </div>
+      </details>
+
+      <details class="faq-item border border-slate-100 rounded-2xl overflow-hidden group">
+        <summary class="flex items-center justify-between gap-4 px-6 py-5 cursor-pointer select-none hover:bg-slate-50 transition-colors duration-200">
+          <span class="text-slate-800 font-semibold text-sm">¿Está permitido fumar?</span>
+          <svg class="w-5 h-5 text-teal-500 flex-shrink-0 transition-transform duration-200 group-open:rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+        </summary>
+        <div class="px-6 pb-5 text-slate-500 text-sm leading-relaxed border-t border-slate-100 pt-4">
+          Se puede fumar <strong class="text-slate-700">en el exterior de la villa</strong> (jardín y terraza). Queda <strong class="text-slate-700">prohibido fumar dentro de la casa</strong>.
+        </div>
+      </details>
+
+      <details class="faq-item border border-slate-100 rounded-2xl overflow-hidden group">
+        <summary class="flex items-center justify-between gap-4 px-6 py-5 cursor-pointer select-none hover:bg-slate-50 transition-colors duration-200">
+          <span class="text-slate-800 font-semibold text-sm">¿Cómo se calcula el gasto de electricidad?</span>
+          <svg class="w-5 h-5 text-teal-500 flex-shrink-0 transition-transform duration-200 group-open:rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+        </summary>
+        <div class="px-6 pb-5 text-slate-500 text-sm leading-relaxed border-t border-slate-100 pt-4">
+          La electricidad se abona a parte. Se hace una <strong class="text-slate-700">fotografía del contador en el check-in y otra en el check-out</strong>. El consumo final = kW consumidos × <strong class="text-slate-700">15 RD$</strong>.
+        </div>
+      </details>
+
+      <details class="faq-item border border-slate-100 rounded-2xl overflow-hidden group">
+        <summary class="flex items-center justify-between gap-4 px-6 py-5 cursor-pointer select-none hover:bg-slate-50 transition-colors duration-200">
+          <span class="text-slate-800 font-semibold text-sm">¿En qué idiomas atienden?</span>
+          <svg class="w-5 h-5 text-teal-500 flex-shrink-0 transition-transform duration-200 group-open:rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+        </summary>
+        <div class="px-6 pb-5 text-slate-500 text-sm leading-relaxed border-t border-slate-100 pt-4">
+          Atendemos en <strong class="text-slate-700">Español e Inglés</strong>. Respondemos a todas las consultas en menos de 24 horas.
+        </div>
+      </details>
+
+      <details class="faq-item border border-slate-100 rounded-2xl overflow-hidden group">
+        <summary class="flex items-center justify-between gap-4 px-6 py-5 cursor-pointer select-none hover:bg-slate-50 transition-colors duration-200">
+          <span class="text-slate-800 font-semibold text-sm">¿Cuál es la política de cancelación?</span>
+          <svg class="w-5 h-5 text-teal-500 flex-shrink-0 transition-transform duration-200 group-open:rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+        </summary>
+        <div class="px-6 pb-5 text-slate-500 text-sm leading-relaxed border-t border-slate-100 pt-4 space-y-2">
+          <p><span class="inline-block w-2 h-2 rounded-full bg-teal-500 mr-2 align-middle"></span><strong class="text-teal-700">Cancelación gratuita</strong> hasta 5 días antes del check-in.</p>
+          <p><span class="inline-block w-2 h-2 rounded-full bg-amber-400 mr-2 align-middle"></span>Si cancelas después del check-in, se reembolsa el <strong class="text-slate-700">50% de las noches no utilizadas</strong>.</p>
+          <p><span class="inline-block w-2 h-2 rounded-full bg-slate-300 mr-2 align-middle"></span>La tarifa de limpieza se reembolsa si el huésped no llega a utilizar la villa.</p>
+        </div>
+      </details>
+
+      <details class="faq-item border border-slate-100 rounded-2xl overflow-hidden group">
+        <summary class="flex items-center justify-between gap-4 px-6 py-5 cursor-pointer select-none hover:bg-slate-50 transition-colors duration-200">
+          <span class="text-slate-800 font-semibold text-sm">¿Dónde puedo hacer mi reserva?</span>
+          <svg class="w-5 h-5 text-teal-500 flex-shrink-0 transition-transform duration-200 group-open:rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+        </summary>
+        <div class="px-6 pb-5 text-slate-500 text-sm leading-relaxed border-t border-slate-100 pt-4">
+          Puedes reservar directamente desde esta página usando el formulario de contacto, o encontrarnos en <strong class="text-slate-700">Airbnb</strong>. También puedes contactarnos por WhatsApp para una atención más personalizada.
+        </div>
+      </details>
+
     </div>
   </div>
 </section>
