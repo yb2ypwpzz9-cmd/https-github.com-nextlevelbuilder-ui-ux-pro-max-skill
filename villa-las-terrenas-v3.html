@@ -970,32 +970,31 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- ════════════════════════════════════
      CALENDARIO DISPONIBILIDAD
 ════════════════════════════════════ -->
-<section class="bg-slate-50 py-14 px-6" id="disponibilidad">
-  <div class="max-w-2xl mx-auto reveal">
-    <h2 class="font-serif font-bold text-slate-900 text-2xl mb-6 text-center">Calendario de Reservas</h2>
-
-    <!-- Legend -->
-    <div class="flex items-center justify-center gap-5 mb-6 text-xs text-slate-500">
-      <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-teal-400 inline-block"></span> Disponible</span>
-      <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-red-400 inline-block"></span> Ocupado</span>
-      <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded bg-slate-200 inline-block"></span> Pasado</span>
+<section class="bg-white py-10 px-6 border-t border-slate-100" id="disponibilidad">
+  <div class="max-w-3xl mx-auto reveal">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="font-serif font-semibold text-slate-800 text-lg">Disponibilidad</h2>
+      <div class="flex items-center gap-4 text-xs text-slate-400">
+        <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-sm bg-teal-400 inline-block"></span> Libre</span>
+        <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-sm bg-red-300 inline-block"></span> Ocupado</span>
+      </div>
     </div>
 
     <!-- Nav -->
-    <div class="flex items-center justify-between mb-4 px-1">
-      <button id="cal-prev" class="p-1.5 rounded-lg hover:bg-slate-200 transition-colors cursor-pointer" aria-label="Mes anterior">
-        <svg class="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+    <div class="flex items-center justify-between mb-3">
+      <button id="cal-prev" class="p-1 rounded hover:bg-slate-100 transition-colors cursor-pointer" aria-label="Mes anterior">
+        <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
       </button>
-      <span id="cal-title" class="text-sm font-semibold text-slate-700"></span>
-      <button id="cal-next" class="p-1.5 rounded-lg hover:bg-slate-200 transition-colors cursor-pointer" aria-label="Mes siguiente">
-        <svg class="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+      <span id="cal-title" class="text-xs font-medium text-slate-500 tracking-wide"></span>
+      <button id="cal-next" class="p-1 rounded hover:bg-slate-100 transition-colors cursor-pointer" aria-label="Mes siguiente">
+        <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
       </button>
     </div>
 
     <!-- Calendar grid -->
-    <div id="calendar-container">
-      <div class="flex items-center justify-center py-12 text-slate-400 text-sm">
-        <svg class="animate-spin w-4 h-4 mr-2 text-teal-500" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/></svg>
+    <div id="calendar-container" class="grid grid-cols-2 gap-4">
+      <div class="flex items-center justify-center py-8 text-slate-300 text-xs col-span-2">
+        <svg class="animate-spin w-3.5 h-3.5 mr-1.5 text-teal-400" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/></svg>
         Cargando…
       </div>
     </div>
@@ -1337,12 +1336,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       let startDow = firstDay.getDay();
       startDow = startDow === 0 ? 6 : startDow - 1;
 
-      let html = `<div class="bg-white rounded-2xl border border-slate-100 p-4">`;
-      html += `<div class="grid grid-cols-7 gap-0.5 mb-1">`;
+      let html = `<div class="bg-slate-50 rounded-xl p-3">`;
+      html += `<p class="text-center text-xs font-semibold text-slate-600 mb-2">${monthNames[month]} ${year}</p>`;
+      html += `<div class="grid grid-cols-7 gap-px mb-1">`;
       dayNames.forEach(d => {
-        html += `<div class="text-center text-slate-400 text-xs font-semibold py-1">${d}</div>`;
+        html += `<div class="text-center text-slate-400" style="font-size:9px">${d}</div>`;
       });
-      html += `</div><div class="grid grid-cols-7 gap-0.5">`;
+      html += `</div><div class="grid grid-cols-7 gap-px">`;
 
       for (let i = 0; i < startDow; i++) html += `<div></div>`;
 
@@ -1353,13 +1353,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         const isBlocked = blockedSet.has(dateStr);
         const isToday = cellDate.getTime() === today.getTime();
 
-        let cls = 'aspect-square flex items-center justify-center rounded text-xs font-medium ';
-        if (isPast)        cls += 'bg-slate-100 text-slate-300 cursor-default';
-        else if (isBlocked) cls += 'bg-red-400 text-white cursor-not-allowed';
-        else               cls += 'bg-teal-50 text-teal-700 hover:bg-teal-500 hover:text-white cursor-pointer transition-colors duration-150';
-        if (isToday) cls += ' ring-2 ring-teal-500 ring-offset-1';
+        let cls = 'aspect-square flex items-center justify-center rounded-sm cursor-default ';
+        if (isPast)         cls += 'text-slate-300';
+        else if (isBlocked) cls += 'bg-red-300 text-white';
+        else                cls += 'bg-teal-100 text-teal-700 hover:bg-teal-400 hover:text-white cursor-pointer transition-colors duration-100';
+        if (isToday)        cls += ' ring-1 ring-teal-500';
 
-        html += `<div class="${cls}">${day}</div>`;
+        html += `<div class="${cls}" style="font-size:10px">${day}</div>`;
       }
 
       html += `</div></div>`;
@@ -1367,19 +1367,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     }
 
     function draw() {
-      titleEl.textContent = `${monthNames[curMonth]} ${curYear}`;
-      container.innerHTML = renderMonth(curYear, curMonth);
+      const m1 = curMonth === 11 ? 0 : curMonth + 1;
+      const y1 = curMonth === 11 ? curYear + 1 : curYear;
+      titleEl.textContent = `${monthNames[curMonth]} · ${monthNames[m1]}`;
+      container.innerHTML = renderMonth(curYear, curMonth) + renderMonth(y1, m1);
     }
 
     document.getElementById('cal-prev').addEventListener('click', () => {
-      curMonth--;
-      if (curMonth < 0) { curMonth = 11; curYear--; }
+      curMonth -= 2;
+      if (curMonth < 0) { curMonth += 12; curYear--; }
       draw();
     });
 
     document.getElementById('cal-next').addEventListener('click', () => {
-      curMonth++;
-      if (curMonth > 11) { curMonth = 0; curYear++; }
+      curMonth += 2;
+      if (curMonth > 11) { curMonth -= 12; curYear++; }
       draw();
     });
 
