@@ -255,8 +255,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <nav class="hidden md:flex items-center gap-8" aria-label="Navegación principal">
       <a href="#galeria"      class="nav-link text-white/85 text-sm font-medium hover:text-white cursor-pointer">Galería</a>
       <a href="#habitaciones" class="nav-link text-white/85 text-sm font-medium hover:text-white cursor-pointer">Habitaciones</a>
-      <a href="#ubicacion"    class="nav-link text-white/85 text-sm font-medium hover:text-white cursor-pointer">Ubicación</a>
-      <a href="#reservar"     class="nav-link text-white/85 text-sm font-medium hover:text-white cursor-pointer">Reservar</a>
+      <a href="#ubicacion"      class="nav-link text-white/85 text-sm font-medium hover:text-white cursor-pointer">Ubicación</a>
+      <a href="#disponibilidad" class="nav-link text-white/85 text-sm font-medium hover:text-white cursor-pointer">Disponibilidad</a>
+      <a href="#reservar"       class="nav-link text-white/85 text-sm font-medium hover:text-white cursor-pointer">Reservar</a>
     </nav>
 
     <div class="hidden md:flex items-center gap-4">
@@ -967,6 +968,32 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 
 <!-- ════════════════════════════════════
+     CALENDARIO DISPONIBILIDAD
+════════════════════════════════════ -->
+<section class="bg-slate-50 py-20 md:py-28 px-6" id="disponibilidad">
+  <div class="max-w-4xl mx-auto reveal">
+    <p class="text-teal-600 text-sm font-semibold tracking-widest uppercase mb-3 text-center">Disponibilidad en tiempo real</p>
+    <h2 class="font-serif font-bold text-slate-900 text-3xl md:text-4xl leading-tight mb-3 text-center">Calendario de Reservas</h2>
+    <p class="text-slate-500 text-sm text-center mb-10">Sincronizado con Airbnb · Se actualiza automáticamente</p>
+
+    <!-- Legend -->
+    <div class="flex items-center justify-center gap-6 mb-8 text-sm">
+      <span class="flex items-center gap-2"><span class="w-4 h-4 rounded bg-teal-500 inline-block"></span> Disponible</span>
+      <span class="flex items-center gap-2"><span class="w-4 h-4 rounded bg-red-400 inline-block"></span> Ocupado</span>
+      <span class="flex items-center gap-2"><span class="w-4 h-4 rounded bg-slate-200 inline-block"></span> Pasado</span>
+    </div>
+
+    <!-- Calendar grid -->
+    <div id="calendar-container" class="grid md:grid-cols-2 gap-8">
+      <div class="flex items-center justify-center py-16 text-slate-400 text-sm col-span-2">
+        <svg class="animate-spin w-5 h-5 mr-2 text-teal-500" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/></svg>
+        Cargando disponibilidad…
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════
      FORMULARIO RESERVA
 ════════════════════════════════════ -->
 <section class="bg-white py-20 md:py-28 px-6" id="reservar">
@@ -1269,6 +1296,80 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   document.querySelector('form').addEventListener('submit', () => {
     gtag('event', 'envio_formulario', { event_category: 'conversión', event_label: 'Formulario Reserva' });
   });
+
+  // ── Calendario de disponibilidad ──────────────────────────────────
+  (async function initCalendar() {
+    const container = document.getElementById('calendar-container');
+    const today = new Date();
+    today.setHours(0,0,0,0);
+
+    let blocked = [];
+    try {
+      const res = await fetch('/.netlify/functions/calendar');
+      const data = await res.json();
+      blocked = data.blocked || [];
+    } catch(e) {
+      console.warn('Calendar fetch failed', e);
+    }
+
+    const blockedSet = new Set(blocked);
+
+    function pad(n) { return String(n).padStart(2,'0'); }
+
+    function renderMonth(year, month) {
+      const monthNames = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+      const dayNames = ['Lu','Ma','Mi','Ju','Vi','Sá','Do'];
+
+      const firstDay = new Date(year, month, 1);
+      const lastDay = new Date(year, month + 1, 0);
+      // Monday-based: 0=Mon … 6=Sun
+      let startDow = firstDay.getDay(); // 0=Sun
+      startDow = (startDow === 0) ? 6 : startDow - 1;
+
+      let html = `<div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">`;
+      html += `<h3 class="font-serif font-bold text-slate-800 text-lg mb-5 text-center">${monthNames[month]} ${year}</h3>`;
+      html += `<div class="grid grid-cols-7 gap-1 mb-2">`;
+      dayNames.forEach(d => {
+        html += `<div class="text-center text-slate-400 text-xs font-semibold pb-1">${d}</div>`;
+      });
+      html += `</div><div class="grid grid-cols-7 gap-1">`;
+
+      // Empty cells
+      for (let i = 0; i < startDow; i++) {
+        html += `<div></div>`;
+      }
+
+      for (let day = 1; day <= lastDay.getDate(); day++) {
+        const dateStr = `${year}-${pad(month+1)}-${pad(day)}`;
+        const cellDate = new Date(year, month, day);
+        const isPast = cellDate < today;
+        const isBlocked = blockedSet.has(dateStr);
+        const isToday = cellDate.getTime() === today.getTime();
+
+        let cls = 'aspect-square flex items-center justify-center rounded-lg text-xs font-medium ';
+        if (isPast) {
+          cls += 'bg-slate-100 text-slate-300 cursor-default';
+        } else if (isBlocked) {
+          cls += 'bg-red-400 text-white cursor-not-allowed';
+        } else {
+          cls += 'bg-teal-50 text-teal-700 hover:bg-teal-500 hover:text-white cursor-pointer transition-colors duration-150';
+        }
+        if (isToday) cls += ' ring-2 ring-teal-500 ring-offset-1';
+
+        html += `<div class="${cls}" title="${dateStr}">${day}</div>`;
+      }
+
+      html += `</div></div>`;
+      return html;
+    }
+
+    const m0 = today.getMonth();
+    const y0 = today.getFullYear();
+    const m1 = m0 === 11 ? 0 : m0 + 1;
+    const y1 = m0 === 11 ? y0 + 1 : y0;
+
+    container.innerHTML = renderMonth(y0, m0) + renderMonth(y1, m1);
+  })();
 </script>
 
 </body>
