@@ -24,6 +24,9 @@
 - [ ] **Social proof** — añadir rating de Airbnb + número de reseñas en la web
 - [ ] **Urgencia / disponibilidad** — elementos de conversión ("Solo disponible estas fechas", etc.)
 
+## Internacionalización
+- [ ] **Web bilingüe ES/EN** — añadir selector de idioma (ES/EN) en el menú, traducción natural al inglés de todo el contenido (no traducción automática). Dobla alcance SEO para mercado angloparlante (EE.UU., Irlanda, UK). Cambia idioma al instante sin recargar página.
+
 ## SEO Contenido
 - [ ] **Blog / sección contenido** — artículos sobre Las Terrenas y Samaná para tráfico orgánico a largo plazo
 
