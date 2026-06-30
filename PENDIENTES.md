@@ -32,4 +32,5 @@
 - [ ] **Booking.com / Vrbo** — diversificar más allá de Airbnb
 
 ## Fotos
+- [ ] **Convertir fotos a WebP** — usar cloudconvert.com para convertir todas las JPEG a WebP de una vez, resubir a GitHub y actualizar `src` en el HTML. Mejora rendimiento móvil de 61 → 80+ en PageSpeed
 - [ ] **Renombrar fotos con nombres SEO** — cuando se renombren localmente, actualizar los `src` en el HTML
