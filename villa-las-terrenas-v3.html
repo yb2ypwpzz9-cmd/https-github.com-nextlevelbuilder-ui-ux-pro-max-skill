@@ -264,16 +264,22 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     <!-- Desktop nav -->
     <nav class="hidden md:flex items-center gap-8" aria-label="Navegación principal">
-      <a href="#galeria"      class="nav-link text-white/85 text-sm font-medium hover:text-white cursor-pointer">Galería</a>
-      <a href="#habitaciones" class="nav-link text-white/85 text-sm font-medium hover:text-white cursor-pointer">Habitaciones</a>
-      <a href="#ubicacion"      class="nav-link text-white/85 text-sm font-medium hover:text-white cursor-pointer">Ubicación</a>
-      <a href="#disponibilidad" class="nav-link text-white/85 text-sm font-medium hover:text-white cursor-pointer">Disponibilidad</a>
-      <a href="#reservar"       class="nav-link text-white/85 text-sm font-medium hover:text-white cursor-pointer">Reservar</a>
+      <a href="#galeria"      class="nav-link text-white/85 text-sm font-medium hover:text-white cursor-pointer" data-i18n="nav_gallery">Galería</a>
+      <a href="#habitaciones" class="nav-link text-white/85 text-sm font-medium hover:text-white cursor-pointer" data-i18n="nav_rooms">Habitaciones</a>
+      <a href="#ubicacion"      class="nav-link text-white/85 text-sm font-medium hover:text-white cursor-pointer" data-i18n="nav_location">Ubicación</a>
+      <a href="#disponibilidad" class="nav-link text-white/85 text-sm font-medium hover:text-white cursor-pointer" data-i18n="nav_availability">Disponibilidad</a>
+      <a href="#reservar"       class="nav-link text-white/85 text-sm font-medium hover:text-white cursor-pointer" data-i18n="nav_book">Reservar</a>
     </nav>
 
     <div class="hidden md:flex items-center gap-4">
+      <!-- Language selector -->
+      <div class="flex items-center gap-1 bg-white/10 border border-white/20 rounded-full px-1 py-1" role="group" aria-label="Seleccionar idioma">
+        <button onclick="setLang('es')" id="lang-es" class="lang-btn px-2.5 py-1 rounded-full text-xs font-semibold transition-all duration-200 text-white/80 hover:text-white hover:bg-white/20">ES</button>
+        <button onclick="setLang('en')" id="lang-en" class="lang-btn px-2.5 py-1 rounded-full text-xs font-semibold transition-all duration-200 text-white/80 hover:text-white hover:bg-white/20">EN</button>
+        <button onclick="setLang('fr')" id="lang-fr" class="lang-btn px-2.5 py-1 rounded-full text-xs font-semibold transition-all duration-200 text-white/80 hover:text-white hover:bg-white/20">FR</button>
+      </div>
       <a href="#reservar" class="btn-contact bg-white/15 border border-white/30 text-white text-sm font-semibold px-5 py-2.5 rounded-full cursor-pointer hover:bg-white hover:text-teal-800 transition-all duration-200">
-        Contactar
+        <span data-i18n="nav_contact">Contactar</span>
       </a>
     </div>
 
@@ -286,12 +292,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <!-- Mobile menu -->
   <div id="mobile-menu" class="md:hidden bg-white/95 backdrop-blur-md rounded-2xl mt-3 mx-0 overflow-hidden" role="navigation" aria-label="Menú móvil">
     <div class="flex flex-col py-4">
-      <a href="#galeria"      class="mobile-nav-link px-6 py-3 text-slate-800 text-sm font-medium hover:text-teal-700 hover:bg-teal-50 cursor-pointer transition-colors">Galería</a>
-      <a href="#habitaciones" class="mobile-nav-link px-6 py-3 text-slate-800 text-sm font-medium hover:text-teal-700 hover:bg-teal-50 cursor-pointer transition-colors">Habitaciones</a>
-      <a href="#ubicacion"    class="mobile-nav-link px-6 py-3 text-slate-800 text-sm font-medium hover:text-teal-700 hover:bg-teal-50 cursor-pointer transition-colors">Ubicación</a>
-      <a href="#reservar"     class="mobile-nav-link px-6 py-3 text-slate-800 text-sm font-medium hover:text-teal-700 hover:bg-teal-50 cursor-pointer transition-colors">Reservar</a>
+      <a href="#galeria"      class="mobile-nav-link px-6 py-3 text-slate-800 text-sm font-medium hover:text-teal-700 hover:bg-teal-50 cursor-pointer transition-colors" data-i18n="nav_gallery">Galería</a>
+      <a href="#habitaciones" class="mobile-nav-link px-6 py-3 text-slate-800 text-sm font-medium hover:text-teal-700 hover:bg-teal-50 cursor-pointer transition-colors" data-i18n="nav_rooms">Habitaciones</a>
+      <a href="#ubicacion"    class="mobile-nav-link px-6 py-3 text-slate-800 text-sm font-medium hover:text-teal-700 hover:bg-teal-50 cursor-pointer transition-colors" data-i18n="nav_location">Ubicación</a>
+      <a href="#reservar"     class="mobile-nav-link px-6 py-3 text-slate-800 text-sm font-medium hover:text-teal-700 hover:bg-teal-50 cursor-pointer transition-colors" data-i18n="nav_book">Reservar</a>
       <div class="px-6 pt-2 pb-3">
-        <a href="#reservar" class="mobile-nav-link block text-center bg-teal-600 text-white text-sm font-semibold px-5 py-3 rounded-xl cursor-pointer">Contactar</a>
+        <a href="#reservar" class="mobile-nav-link block text-center bg-teal-600 text-white text-sm font-semibold px-5 py-3 rounded-xl cursor-pointer"><span data-i18n="nav_contact">Contactar</span></a>
+      </div>
+      <div class="flex items-center justify-center gap-3 px-6 pb-4 pt-1 border-t border-slate-100 mt-1">
+        <button onclick="setLang('es')" id="mob-lang-es" class="mob-lang-btn text-xs font-semibold px-3 py-1.5 rounded-full border border-slate-200 text-slate-600 hover:border-teal-500 hover:text-teal-600 transition-all duration-200">ES</button>
+        <button onclick="setLang('en')" id="mob-lang-en" class="mob-lang-btn text-xs font-semibold px-3 py-1.5 rounded-full border border-slate-200 text-slate-600 hover:border-teal-500 hover:text-teal-600 transition-all duration-200">EN</button>
+        <button onclick="setLang('fr')" id="mob-lang-fr" class="mob-lang-btn text-xs font-semibold px-3 py-1.5 rounded-full border border-slate-200 text-slate-600 hover:border-teal-500 hover:text-teal-600 transition-all duration-200">FR</button>
       </div>
     </div>
   </div>
@@ -316,16 +327,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div class="relative z-10 h-full flex flex-col justify-center px-6 md:px-12 lg:px-20">
     <div class="max-w-3xl">
       <h1 class="font-serif font-black text-white leading-tight drop-shadow-2xl mb-6" style="font-size: clamp(2.2rem, 5.5vw, 4.5rem); text-shadow: 0 4px 32px rgba(0,0,0,0.45);">
-        Villa Vitao Garden:<br/><em>Villa Privada</em><br/>con Piscina en Las Terrenas
+        <span data-i18n="hero_title">Villa Vitao Garden:<br/><em>Villa Privada</em><br/>con Piscina en Las Terrenas</span>
       </h1>
-      <p class="text-white/90 text-base md:text-lg leading-relaxed mb-8 max-w-md drop-shadow-lg">
+      <p class="text-white/90 text-base md:text-lg leading-relaxed mb-8 max-w-md drop-shadow-lg" data-i18n="hero_sub">
         Disfruta de un oasis de tranquilidad y confort en Samaná. Tu alquiler vacacional exclusivo con jardín tropical, palmeras y piscina privada a minutos de las mejores playas.
       </p>
       <div class="flex flex-wrap gap-3">
-        <a href="https://wa.me/TU_NUMERO_AQUI?text=Hola%2C%20me%20interesa%20consultar%20disponibilidad%20de%20Villa%20Vitao%20Garden." target="_blank" rel="noopener noreferrer" class="inline-block bg-[#25D366] text-white text-sm font-bold px-7 py-3.5 rounded-full cursor-pointer hover:bg-[#1ebe5d] transition-colors duration-200 shadow-xl">
-          Consultar Disponibilidad por WhatsApp
+        <a id="wa-hero" href="https://wa.me/18097572184?text=Hola%2C%20me%20interesa%20consultar%20disponibilidad%20de%20Villa%20Vitao%20Garden." target="_blank" rel="noopener noreferrer" class="inline-block bg-[#25D366] text-white text-sm font-bold px-7 py-3.5 rounded-full cursor-pointer hover:bg-[#1ebe5d] transition-colors duration-200 shadow-xl">
+          <span data-i18n="wa_btn">Consultar Disponibilidad por WhatsApp</span>
         </a>
-        <a href="#precios" class="inline-block bg-white/20 border border-white/60 text-white text-sm font-semibold px-7 py-3.5 rounded-full cursor-pointer hover:bg-white/30 transition-colors duration-200 shadow-xl backdrop-blur-sm">
+        <a href="#precios" class="inline-block bg-white/20 border border-white/60 text-white text-sm font-semibold px-7 py-3.5 rounded-full cursor-pointer hover:bg-white/30 transition-colors duration-200 shadow-xl backdrop-blur-sm" data-i18n="hero_prices_btn">
           Ver Precios y Calendario
         </a>
       </div>
@@ -355,17 +366,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     <!-- Text -->
     <div class="reveal" style="transition-delay:0.15s">
-      <p class="text-teal-600 text-sm font-semibold tracking-widest uppercase mb-4">Bienvenido</p>
-      <h2 class="font-serif font-bold text-slate-900 text-4xl md:text-5xl leading-tight mb-6">
+      <p class="text-teal-600 text-sm font-semibold tracking-widest uppercase mb-4" data-i18n="welcome_label">Bienvenido</p>
+      <h2 class="font-serif font-bold text-slate-900 text-4xl md:text-5xl leading-tight mb-6" data-i18n="welcome_title">
         Tu Refugio Tropical Exclusivo<br/>en Las Terrenas, Samaná
       </h2>
-      <p class="text-slate-600 text-base leading-relaxed mb-4">
+      <p class="text-slate-600 text-base leading-relaxed mb-4" data-i18n="welcome_p1">
         Bienvenidos a <strong>Villa Vitao Garden</strong>, un espacio único diseñado exclusivamente para tu descanso y privacidad en la Península de Samaná. Nuestra villa combina la esencia del Caribe con comodidades modernas para ofrecerte una estancia vacacional inolvidable.
       </p>
-      <p class="text-slate-600 text-base leading-relaxed mb-8">
+      <p class="text-slate-600 text-base leading-relaxed mb-8" data-i18n="welcome_p2">
         El refugio privado perfecto para familias, parejas o grupos de amigos que buscan desconectar en un entorno seguro. Aquí disfrutarás de un espectacular <strong>jardín tropical rodeado de palmeras y cocoteros</strong>, un área de piscina privada para tu total relajación y amplias zonas exteriores totalmente equipadas.
       </p>
-      <p class="text-slate-600 leading-relaxed mt-3">
+      <p class="text-slate-600 leading-relaxed mt-3" data-i18n="welcome_seo">
         Si buscas una <strong>villa vacacional en Samaná con piscina privada</strong>, Villa Vitao Garden es tu mejor opción en Las Terrenas. A minutos de Playa Cosón y las playas más bonitas de la <strong>Península de Samaná</strong>, ideal para familias y parejas que buscan un <strong>alquiler vacacional privado en República Dominicana</strong> sin comisiones.
       </p>
     </div>
@@ -770,13 +781,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="absolute inset-0 bg-teal-900/85"></div>
   </div>
   <div class="relative z-10 max-w-3xl mx-auto text-center reveal">
-    <h2 class="font-serif font-bold text-white text-5xl md:text-6xl lg:text-7xl leading-tight mb-6">
+    <h2 class="font-serif font-bold text-white text-5xl md:text-6xl lg:text-7xl leading-tight mb-6" data-i18n="cta_title">
       Tu Alquiler Vacacional<br/>en Las Terrenas<br/><em>te Espera</em>
     </h2>
-    <p class="text-teal-200 text-base md:text-lg mb-10 tracking-wide">
+    <p class="text-teal-200 text-base md:text-lg mb-10 tracking-wide" data-i18n="cta_sub">
       Villa Vitao Garden · Piscina privada · Las Terrenas, Samaná, República Dominicana
     </p>
-    <a href="#reservar" class="inline-block border-2 border-white text-white font-semibold px-10 py-4 rounded-full cursor-pointer hover:bg-white hover:text-teal-900 transition-all duration-300 text-sm tracking-wide">
+    <a href="#reservar" class="inline-block border-2 border-white text-white font-semibold px-10 py-4 rounded-full cursor-pointer hover:bg-white hover:text-teal-900 transition-all duration-300 text-sm tracking-wide" data-i18n="cta_btn">
       Hacer una Reserva
     </a>
   </div>
@@ -901,7 +912,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <svg class="w-5 h-5 text-teal-500 flex-shrink-0 transition-transform duration-200 group-open:rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
         </summary>
         <div class="px-6 pb-5 text-slate-500 text-sm leading-relaxed border-t border-slate-100 pt-4">
-          Atendemos en <strong class="text-slate-700">Español e Inglés</strong>. Respondemos a todas las consultas en menos de 24 horas.
+          Atendemos en <strong class="text-slate-700">Español, Inglés y Francés</strong>. Respondemos a todas las consultas en menos de 24 horas.
         </div>
       </details>
 
@@ -958,10 +969,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <section class="bg-white py-10 px-6 border-t border-slate-100" id="disponibilidad">
   <div class="max-w-3xl mx-auto reveal">
     <div class="flex items-center justify-between mb-4">
-      <h2 class="font-serif font-semibold text-slate-800 text-lg">Disponibilidad</h2>
+      <h2 class="font-serif font-semibold text-slate-800 text-lg" data-i18n="cal_title">Disponibilidad</h2>
       <div class="flex items-center gap-4 text-xs text-slate-400">
-        <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-sm bg-teal-400 inline-block"></span> Libre</span>
-        <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-sm bg-red-300 inline-block"></span> Ocupado</span>
+        <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-sm bg-teal-400 inline-block"></span> <span data-i18n="cal_free">Libre</span></span>
+        <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-sm bg-red-300 inline-block"></span> <span data-i18n="cal_busy">Ocupado</span></span>
       </div>
     </div>
 
@@ -997,9 +1008,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div class="rounded-2xl overflow-hidden h-64 md:h-80 mb-8">
         <img src="galeria_02.jpeg" alt="Vista de la piscina privada desde la palapa del alquiler en Las Terrenas" class="w-full h-full object-cover" />
       </div>
-      <p class="text-teal-600 text-sm font-semibold tracking-widest uppercase mb-3">Reservas</p>
-      <h2 class="font-serif font-bold text-slate-900 text-3xl md:text-4xl leading-tight mb-4">Reserva tu Villa en<br/>Las Terrenas</h2>
-      <p class="text-slate-500 text-sm leading-relaxed mb-6">Cuéntanos tus fechas y número de huéspedes. Confirmamos disponibilidad en menos de 24 horas por email o WhatsApp.</p>
+      <p class="text-teal-600 text-sm font-semibold tracking-widest uppercase mb-3" data-i18n="book_label">Reservas</p>
+      <h2 class="font-serif font-bold text-slate-900 text-3xl md:text-4xl leading-tight mb-4" data-i18n="book_title">Reserva tu Villa en<br/>Las Terrenas</h2>
+      <p class="text-slate-500 text-sm leading-relaxed mb-6" data-i18n="book_sub">Cuéntanos tus fechas y número de huéspedes. Confirmamos disponibilidad en menos de 24 horas por email o WhatsApp.</p>
       <div class="space-y-4">
         <div class="flex items-center gap-3 text-sm text-slate-600">
           <svg class="w-5 h-5 text-teal-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
@@ -1023,8 +1034,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <p class="hidden"><label>No rellenar: <input name="bot-field" /></label></p>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label for="nombre" class="block text-slate-700 text-xs font-semibold mb-1.5 tracking-wide uppercase">Nombre completo <span class="text-teal-600">*</span></label>
-            <input type="text" id="nombre" name="nombre" required autocomplete="name" placeholder="Tu nombre" class="form-field" />
+            <label for="nombre" class="block text-slate-700 text-xs font-semibold mb-1.5 tracking-wide uppercase" data-i18n="form_name">Nombre completo <span class="text-teal-600">*</span></label>
+            <input type="text" id="nombre" name="nombre" required autocomplete="name" placeholder="Tu nombre" class="form-field" data-i18n-placeholder="form_name_ph" />
           </div>
           <div>
             <label for="email" class="block text-slate-700 text-xs font-semibold mb-1.5 tracking-wide uppercase">Email <span class="text-teal-600">*</span></label>
@@ -1033,44 +1044,44 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
 
         <div>
-          <label for="telefono" class="block text-slate-700 text-xs font-semibold mb-1.5 tracking-wide uppercase">Teléfono</label>
+          <label for="telefono" class="block text-slate-700 text-xs font-semibold mb-1.5 tracking-wide uppercase" data-i18n="form_phone">Teléfono</label>
           <input type="tel" id="telefono" name="telefono" autocomplete="tel" placeholder="+34 600 000 000" class="form-field" />
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label for="fecha-entrada" class="block text-slate-700 text-xs font-semibold mb-1.5 tracking-wide uppercase">Fecha llegada <span class="text-teal-600">*</span></label>
+            <label for="fecha-entrada" class="block text-slate-700 text-xs font-semibold mb-1.5 tracking-wide uppercase" data-i18n="form_checkin">Fecha llegada <span class="text-teal-600">*</span></label>
             <input type="date" id="fecha-entrada" name="fecha_entrada" required class="form-field cursor-pointer" />
           </div>
           <div>
-            <label for="fecha-salida" class="block text-slate-700 text-xs font-semibold mb-1.5 tracking-wide uppercase">Fecha salida <span class="text-teal-600">*</span></label>
+            <label for="fecha-salida" class="block text-slate-700 text-xs font-semibold mb-1.5 tracking-wide uppercase" data-i18n="form_checkout">Fecha salida <span class="text-teal-600">*</span></label>
             <input type="date" id="fecha-salida" name="fecha_salida" required class="form-field cursor-pointer" />
           </div>
         </div>
 
         <div>
-          <label for="huespedes" class="block text-slate-700 text-xs font-semibold mb-1.5 tracking-wide uppercase">Número de huéspedes</label>
+          <label for="huespedes" class="block text-slate-700 text-xs font-semibold mb-1.5 tracking-wide uppercase" data-i18n="form_guests">Número de huéspedes</label>
           <select id="huespedes" name="huespedes" class="form-field cursor-pointer appearance-none">
-            <option value="">Seleccionar...</option>
-            <option value="1-2">1 – 2 personas</option>
-            <option value="3-4">3 – 4 personas</option>
-            <option value="5-6">5 – 6 personas</option>
-            <option value="6+">Más de 6</option>
+            <option value="" data-i18n="form_select">Seleccionar...</option>
+            <option value="1-2" data-i18n="form_guests_12">1 – 2 personas</option>
+            <option value="3-4" data-i18n="form_guests_34">3 – 4 personas</option>
+            <option value="5-6" data-i18n="form_guests_56">5 – 6 personas</option>
+            <option value="6+" data-i18n="form_guests_more">Más de 6</option>
           </select>
         </div>
 
         <div>
-          <label for="mensaje" class="block text-slate-700 text-xs font-semibold mb-1.5 tracking-wide uppercase">Mensaje</label>
-          <textarea id="mensaje" name="mensaje" rows="4" placeholder="Cuéntanos algo sobre tu estancia, preferencias o preguntas..." class="form-field resize-none"></textarea>
+          <label for="mensaje" class="block text-slate-700 text-xs font-semibold mb-1.5 tracking-wide uppercase" data-i18n="form_message">Mensaje</label>
+          <textarea id="mensaje" name="mensaje" rows="4" placeholder="Cuéntanos algo sobre tu estancia, preferencias o preguntas..." class="form-field resize-none" data-i18n-placeholder="form_message_ph"></textarea>
         </div>
 
-        <button type="submit" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-semibold py-4 rounded-xl cursor-pointer transition-colors duration-200 text-sm tracking-wide">
+        <button type="submit" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-semibold py-4 rounded-xl cursor-pointer transition-colors duration-200 text-sm tracking-wide" data-i18n="form_submit">
           Completar Reserva
         </button>
 
         <div class="flex items-center justify-center gap-2 pt-2">
           <svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-          <span class="text-slate-400 text-xs">Reserva 100% segura · Respuesta en menos de 24 h</span>
+          <span class="text-slate-400 text-xs" data-i18n="form_secure">Reserva 100% segura · Respuesta en menos de 24 h</span>
         </div>
       </form>
     </div>
@@ -1099,14 +1110,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       <!-- Nav -->
       <nav class="flex items-center gap-6 flex-wrap justify-center">
-        <a href="#galeria"      class="text-teal-300 text-sm hover:text-white transition-colors cursor-pointer">Galería</a>
-        <a href="#habitaciones" class="text-teal-300 text-sm hover:text-white transition-colors cursor-pointer">Habitaciones</a>
-        <a href="#ubicacion"    class="text-teal-300 text-sm hover:text-white transition-colors cursor-pointer">Ubicación</a>
-        <a href="#reservar"     class="text-teal-300 text-sm hover:text-white transition-colors cursor-pointer">Reservar</a>
+        <a href="#galeria"      class="text-teal-300 text-sm hover:text-white transition-colors cursor-pointer" data-i18n="nav_gallery">Galería</a>
+        <a href="#habitaciones" class="text-teal-300 text-sm hover:text-white transition-colors cursor-pointer" data-i18n="nav_rooms">Habitaciones</a>
+        <a href="#ubicacion"    class="text-teal-300 text-sm hover:text-white transition-colors cursor-pointer" data-i18n="nav_location">Ubicación</a>
+        <a href="#reservar"     class="text-teal-300 text-sm hover:text-white transition-colors cursor-pointer" data-i18n="nav_book">Reservar</a>
       </nav>
 
       <!-- CTA -->
-      <a href="#reservar" class="bg-white text-teal-900 text-sm font-bold px-6 py-2.5 rounded-full cursor-pointer hover:bg-teal-50 transition-colors duration-200 flex-shrink-0">
+      <a href="#reservar" class="bg-white text-teal-900 text-sm font-bold px-6 py-2.5 rounded-full cursor-pointer hover:bg-teal-50 transition-colors duration-200 flex-shrink-0" data-i18n="nav_contact">
         Contactar
       </a>
     </div>
@@ -1134,7 +1145,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- ════════════════════════════════════
      WHATSAPP FAB
 ════════════════════════════════════ -->
-<a href="https://wa.me/TU_NUMERO_AQUI?text=Hola%2C%20me%20interesa%20la%20villa%20en%20Las%20Terrenas.%20%C2%BFPodr%C3%ADan%20darme%20m%C3%A1s%20informaci%C3%B3n%3F"
+<a id="wa-fab" href="https://wa.me/18097572184?text=Hola%2C%20me%20interesa%20la%20villa%20en%20Las%20Terrenas.%20%C2%BFPodr%C3%ADan%20darme%20m%C3%A1s%20informaci%C3%B3n%3F"
    target="_blank" rel="noopener noreferrer"
    class="whatsapp-fab fixed bottom-6 right-6 z-50 w-14 h-14 bg-[#25D366] rounded-full flex items-center justify-center cursor-pointer shadow-lg"
    aria-label="Contactar por WhatsApp">
@@ -1371,6 +1382,158 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     });
 
     draw();
+  })();
+
+  // ── i18n Trilingual ES / EN / FR ──────────────────────────────────
+  const T = {
+    es: {
+      nav_gallery: 'Galería', nav_rooms: 'Habitaciones', nav_location: 'Ubicación',
+      nav_availability: 'Disponibilidad', nav_book: 'Reservar', nav_contact: 'Contactar',
+      hero_title: 'Villa Vitao Garden:<br/><em>Villa Privada</em><br/>con Piscina en Las Terrenas',
+      hero_sub: 'Disfruta de un oasis de tranquilidad y confort en Samaná. Tu alquiler vacacional exclusivo con jardín tropical, palmeras y piscina privada a minutos de las mejores playas.',
+      wa_btn: 'Consultar Disponibilidad por WhatsApp',
+      hero_prices_btn: 'Ver Precios y Calendario',
+      welcome_label: 'Bienvenido',
+      welcome_title: 'Tu Refugio Tropical Exclusivo<br/>en Las Terrenas, Samaná',
+      welcome_p1: 'Bienvenidos a <strong>Villa Vitao Garden</strong>, un espacio único diseñado exclusivamente para tu descanso y privacidad en la Península de Samaná. Nuestra villa combina la esencia del Caribe con comodidades modernas para ofrecerte una estancia vacacional inolvidable.',
+      welcome_p2: 'El refugio privado perfecto para familias, parejas o grupos de amigos que buscan desconectar en un entorno seguro. Aquí disfrutarás de un espectacular <strong>jardín tropical rodeado de palmeras y cocoteros</strong>, un área de piscina privada para tu total relajación y amplias zonas exteriores totalmente equipadas.',
+      welcome_seo: 'Si buscas una <strong>villa vacacional en Samaná con piscina privada</strong>, Villa Vitao Garden es tu mejor opción en Las Terrenas. A minutos de Playa Cosón y las playas más bonitas de la <strong>Península de Samaná</strong>, ideal para familias y parejas que buscan un <strong>alquiler vacacional privado en República Dominicana</strong> sin comisiones.',
+      cta_title: 'Tu Alquiler Vacacional<br/>en Las Terrenas<br/><em>te Espera</em>',
+      cta_sub: 'Villa Vitao Garden · Piscina privada · Las Terrenas, Samaná, República Dominicana',
+      cta_btn: 'Hacer una Reserva',
+      cal_title: 'Disponibilidad', cal_free: 'Libre', cal_busy: 'Ocupado',
+      book_label: 'Reservas',
+      book_title: 'Reserva tu Villa en<br/>Las Terrenas',
+      book_sub: 'Cuéntanos tus fechas y número de huéspedes. Confirmamos disponibilidad en menos de 24 horas por email o WhatsApp.',
+      form_name: 'Nombre completo <span class="text-teal-600">*</span>',
+      form_name_ph: 'Tu nombre',
+      form_phone: 'Teléfono',
+      form_checkin: 'Fecha llegada <span class="text-teal-600">*</span>',
+      form_checkout: 'Fecha salida <span class="text-teal-600">*</span>',
+      form_guests: 'Número de huéspedes',
+      form_select: 'Seleccionar...', form_guests_12: '1 – 2 personas', form_guests_34: '3 – 4 personas',
+      form_guests_56: '5 – 6 personas', form_guests_more: 'Más de 6',
+      form_message: 'Mensaje',
+      form_message_ph: 'Cuéntanos algo sobre tu estancia, preferencias o preguntas...',
+      form_submit: 'Completar Reserva',
+      form_secure: 'Reserva 100% segura · Respuesta en menos de 24 h',
+      wa_text: 'Hola%2C%20me%20interesa%20consultar%20disponibilidad%20de%20Villa%20Vitao%20Garden.',
+      wa_fab_text: 'Hola%2C%20me%20interesa%20la%20villa%20en%20Las%20Terrenas.%20%C2%BFPodr%C3%ADan%20darme%20m%C3%A1s%20informaci%C3%B3n%3F',
+    },
+    en: {
+      nav_gallery: 'Gallery', nav_rooms: 'Bedrooms', nav_location: 'Location',
+      nav_availability: 'Availability', nav_book: 'Book', nav_contact: 'Contact',
+      hero_title: 'Villa Vitao Garden:<br/><em>Private Villa</em><br/>with Pool in Las Terrenas',
+      hero_sub: 'Enjoy a peaceful tropical oasis in Samaná. Your exclusive vacation rental with lush gardens, palm trees and a private pool, minutes from the best beaches.',
+      wa_btn: 'Check Availability on WhatsApp',
+      hero_prices_btn: 'See Prices & Calendar',
+      welcome_label: 'Welcome',
+      welcome_title: 'Your Exclusive Tropical Retreat<br/>in Las Terrenas, Samaná',
+      welcome_p1: 'Welcome to <strong>Villa Vitao Garden</strong>, a unique space designed exclusively for your rest and privacy on the Samaná Peninsula. Our villa blends Caribbean essence with modern comforts for an unforgettable vacation.',
+      welcome_p2: 'The perfect private retreat for families, couples or groups of friends looking to unwind in a safe environment. Enjoy a spectacular <strong>tropical garden surrounded by palms and coconut trees</strong>, a private pool area for total relaxation and fully equipped outdoor spaces.',
+      welcome_seo: 'If you are looking for a <strong>vacation villa in Samaná with a private pool</strong>, Villa Vitao Garden is your best choice in Las Terrenas. Minutes from Playa Cosón and the most beautiful beaches of the <strong>Samaná Peninsula</strong>, ideal for families and couples seeking a <strong>private vacation rental in the Dominican Republic</strong> with no commissions.',
+      cta_title: 'Your Vacation Villa<br/>in Las Terrenas<br/><em>Awaits You</em>',
+      cta_sub: 'Villa Vitao Garden · Private Pool · Las Terrenas, Samaná, Dominican Republic',
+      cta_btn: 'Make a Reservation',
+      cal_title: 'Availability', cal_free: 'Available', cal_busy: 'Booked',
+      book_label: 'Reservations',
+      book_title: 'Book Your Villa in<br/>Las Terrenas',
+      book_sub: 'Tell us your dates and number of guests. We confirm availability within 24 hours by email or WhatsApp.',
+      form_name: 'Full name <span class="text-teal-600">*</span>',
+      form_name_ph: 'Your name',
+      form_phone: 'Phone',
+      form_checkin: 'Check-in date <span class="text-teal-600">*</span>',
+      form_checkout: 'Check-out date <span class="text-teal-600">*</span>',
+      form_guests: 'Number of guests',
+      form_select: 'Select...', form_guests_12: '1 – 2 guests', form_guests_34: '3 – 4 guests',
+      form_guests_56: '5 – 6 guests', form_guests_more: 'More than 6',
+      form_message: 'Message',
+      form_message_ph: 'Tell us about your stay, preferences or questions...',
+      form_submit: 'Complete Booking',
+      form_secure: '100% secure booking · Response within 24 h',
+      wa_text: 'Hello%2C%20I%27m%20interested%20in%20checking%20availability%20at%20Villa%20Vitao%20Garden.',
+      wa_fab_text: 'Hello%2C%20I%27m%20interested%20in%20the%20villa%20in%20Las%20Terrenas.%20Could%20you%20give%20me%20more%20information%3F',
+    },
+    fr: {
+      nav_gallery: 'Galerie', nav_rooms: 'Chambres', nav_location: 'Localisation',
+      nav_availability: 'Disponibilité', nav_book: 'Réserver', nav_contact: 'Contact',
+      hero_title: 'Villa Vitao Garden:<br/><em>Villa Privée</em><br/>avec Piscine à Las Terrenas',
+      hero_sub: 'Profitez d\'une oasis de tranquillité et de confort à Samaná. Votre location de vacances exclusive avec jardin tropical, palmiers et piscine privée à quelques minutes des plus belles plages.',
+      wa_btn: 'Vérifier la disponibilité sur WhatsApp',
+      hero_prices_btn: 'Voir les Prix & Calendrier',
+      welcome_label: 'Bienvenue',
+      welcome_title: 'Votre Retraite Tropicale Exclusive<br/>à Las Terrenas, Samaná',
+      welcome_p1: 'Bienvenue à <strong>Villa Vitao Garden</strong>, un espace unique conçu exclusivement pour votre repos et votre intimité sur la péninsule de Samaná. Notre villa allie l\'essence des Caraïbes à des équipements modernes pour un séjour de vacances inoubliable.',
+      welcome_p2: 'Le refuge privé idéal pour les familles, les couples ou les groupes d\'amis souhaitant se ressourcer dans un cadre sécurisé. Profitez d\'un magnifique <strong>jardin tropical entouré de palmiers et de cocotiers</strong>, d\'un espace piscine privée pour une détente totale et de vastes espaces extérieurs entièrement aménagés.',
+      welcome_seo: 'Si vous cherchez une <strong>villa de vacances à Samaná avec piscine privée</strong>, Villa Vitao Garden est votre meilleur choix à Las Terrenas. À quelques minutes de Playa Cosón et des plus belles plages de la <strong>péninsule de Samaná</strong>, idéale pour les familles et les couples à la recherche d\'une <strong>location privée en République Dominicaine</strong> sans commissions.',
+      cta_title: 'Votre Villa de Vacances<br/>à Las Terrenas<br/><em>vous Attend</em>',
+      cta_sub: 'Villa Vitao Garden · Piscine privée · Las Terrenas, Samaná, République Dominicaine',
+      cta_btn: 'Faire une Réservation',
+      cal_title: 'Disponibilité', cal_free: 'Disponible', cal_busy: 'Occupé',
+      book_label: 'Réservations',
+      book_title: 'Réservez Votre Villa à<br/>Las Terrenas',
+      book_sub: 'Indiquez-nous vos dates et le nombre de voyageurs. Nous confirmons la disponibilité en moins de 24 heures par e-mail ou WhatsApp.',
+      form_name: 'Nom complet <span class="text-teal-600">*</span>',
+      form_name_ph: 'Votre nom',
+      form_phone: 'Téléphone',
+      form_checkin: 'Date d\'arrivée <span class="text-teal-600">*</span>',
+      form_checkout: 'Date de départ <span class="text-teal-600">*</span>',
+      form_guests: 'Nombre de voyageurs',
+      form_select: 'Sélectionner...', form_guests_12: '1 – 2 personnes', form_guests_34: '3 – 4 personnes',
+      form_guests_56: '5 – 6 personnes', form_guests_more: 'Plus de 6',
+      form_message: 'Message',
+      form_message_ph: 'Parlez-nous de votre séjour, de vos préférences ou de vos questions...',
+      form_submit: 'Finaliser la Réservation',
+      form_secure: 'Réservation 100% sécurisée · Réponse en moins de 24 h',
+      wa_text: 'Bonjour%2C%20je%20souhaite%20vérifier%20la%20disponibilité%20de%20Villa%20Vitao%20Garden.',
+      wa_fab_text: 'Bonjour%2C%20je%20suis%20intéressé%28e%29%20par%20la%20villa%20à%20Las%20Terrenas.%20Pourriez-vous%20me%20donner%20plus%20d%27informations%3F',
+    }
+  };
+
+  function setLang(lang) {
+    if (!T[lang]) return;
+    localStorage.setItem('lang', lang);
+    document.documentElement.lang = lang;
+
+    // Apply text translations
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (T[lang][key] !== undefined) el.innerHTML = T[lang][key];
+    });
+
+    // Apply placeholder translations
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+      const key = el.getAttribute('data-i18n-placeholder');
+      if (T[lang][key] !== undefined) el.placeholder = T[lang][key];
+    });
+
+    // Update WhatsApp links
+    const waHero = document.getElementById('wa-hero');
+    if (waHero) waHero.href = 'https://wa.me/18097572184?text=' + T[lang].wa_text;
+    const waFab = document.getElementById('wa-fab');
+    if (waFab) waFab.href = 'https://wa.me/18097572184?text=' + T[lang].wa_fab_text;
+
+    // Update active button state — desktop
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      const active = btn.id === 'lang-' + lang;
+      btn.classList.toggle('bg-white/30', active);
+      btn.classList.toggle('text-white', active);
+      btn.classList.toggle('text-white/80', !active);
+    });
+    // Update active button state — mobile
+    document.querySelectorAll('.mob-lang-btn').forEach(btn => {
+      const active = btn.id === 'mob-lang-' + lang;
+      btn.classList.toggle('border-teal-500', active);
+      btn.classList.toggle('text-teal-600', active);
+      btn.classList.toggle('border-slate-200', !active);
+      btn.classList.toggle('text-slate-600', !active);
+    });
+  }
+
+  // Init on page load
+  (function() {
+    const saved = localStorage.getItem('lang') || 'es';
+    setLang(saved);
   })();
 </script>
 
