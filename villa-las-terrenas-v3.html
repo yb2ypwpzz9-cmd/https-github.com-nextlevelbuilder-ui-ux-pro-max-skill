@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" id="html-root">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -192,7 +192,7 @@
 
     /* ── Mobile menu ── */
     #mobile-menu { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
-    #mobile-menu.open { max-height: 400px; }
+    #mobile-menu.open { max-height: 500px; }
 
     /* ── Hero parallax suave ── */
     #hero-img { transition: transform 0.1s linear; will-change: transform; }
@@ -233,6 +233,11 @@
     @media (prefers-reduced-motion: reduce) {
       .reveal, .space-card img, .room-card, .room-img { transition: none !important; }
     }
+
+    /* ── Language switcher active state ── */
+    .lang-btn { transition: all 0.2s; opacity: 0.38; font-size: 1.45rem; line-height: 1; background: none; border: none; padding: 2px 3px; }
+    .lang-btn:hover { opacity: 0.75; }
+    .lang-btn.lang-active { opacity: 1; transform: scale(1.18); filter: drop-shadow(0 1px 3px rgba(0,0,0,0.25)); }
   </style>
 </head>
 <body>
@@ -272,11 +277,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </nav>
 
     <div class="hidden md:flex items-center gap-4">
-      <!-- Language selector -->
-      <div class="flex items-center gap-1 bg-white/10 border border-white/20 rounded-full px-1 py-1" role="group" aria-label="Seleccionar idioma">
-        <button onclick="setLang('es')" id="lang-es" class="lang-btn px-2.5 py-1 rounded-full text-xs font-semibold transition-all duration-200 text-white/80 hover:text-white hover:bg-white/20">ES</button>
-        <button onclick="setLang('en')" id="lang-en" class="lang-btn px-2.5 py-1 rounded-full text-xs font-semibold transition-all duration-200 text-white/80 hover:text-white hover:bg-white/20">EN</button>
-        <button onclick="setLang('fr')" id="lang-fr" class="lang-btn px-2.5 py-1 rounded-full text-xs font-semibold transition-all duration-200 text-white/80 hover:text-white hover:bg-white/20">FR</button>
+      <div class="flex items-center gap-1 text-white/70 text-xs font-medium" id="lang-switcher-desktop">
+        <button onclick="applyLang('es')" class="lang-btn cursor-pointer" data-lang="es" title="Español">🇪🇸</button>
+        <button onclick="applyLang('en')" class="lang-btn cursor-pointer" data-lang="en" title="English">🇬🇧</button>
+        <button onclick="applyLang('fr')" class="lang-btn cursor-pointer" data-lang="fr" title="Français">🇫🇷</button>
       </div>
       <a href="#reservar" class="btn-contact bg-white/15 border border-white/30 text-white text-sm font-semibold px-5 py-2.5 rounded-full cursor-pointer hover:bg-white hover:text-teal-800 transition-all duration-200">
         <span data-i18n="nav_contact">Contactar</span>
@@ -297,12 +301,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <a href="#ubicacion"    class="mobile-nav-link px-6 py-3 text-slate-800 text-sm font-medium hover:text-teal-700 hover:bg-teal-50 cursor-pointer transition-colors" data-i18n="nav_location">Ubicación</a>
       <a href="#reservar"     class="mobile-nav-link px-6 py-3 text-slate-800 text-sm font-medium hover:text-teal-700 hover:bg-teal-50 cursor-pointer transition-colors" data-i18n="nav_book">Reservar</a>
       <div class="px-6 pt-2 pb-3">
-        <a href="#reservar" class="mobile-nav-link block text-center bg-teal-600 text-white text-sm font-semibold px-5 py-3 rounded-xl cursor-pointer"><span data-i18n="nav_contact">Contactar</span></a>
+        <a href="#reservar" class="mobile-nav-link block text-center bg-teal-600 text-white text-sm font-semibold px-5 py-3 rounded-xl cursor-pointer" data-i18n="nav_contact">Contactar</a>
       </div>
-      <div class="flex items-center justify-center gap-3 px-6 pb-4 pt-1 border-t border-slate-100 mt-1">
-        <button onclick="setLang('es')" id="mob-lang-es" class="mob-lang-btn text-xs font-semibold px-3 py-1.5 rounded-full border border-slate-200 text-slate-600 hover:border-teal-500 hover:text-teal-600 transition-all duration-200">ES</button>
-        <button onclick="setLang('en')" id="mob-lang-en" class="mob-lang-btn text-xs font-semibold px-3 py-1.5 rounded-full border border-slate-200 text-slate-600 hover:border-teal-500 hover:text-teal-600 transition-all duration-200">EN</button>
-        <button onclick="setLang('fr')" id="mob-lang-fr" class="mob-lang-btn text-xs font-semibold px-3 py-1.5 rounded-full border border-slate-200 text-slate-600 hover:border-teal-500 hover:text-teal-600 transition-all duration-200">FR</button>
+      <div class="px-6 py-3 border-t border-slate-100 flex items-center gap-2 text-xs font-medium text-slate-500" id="lang-switcher-mobile">
+        <button onclick="applyLang('es')" class="lang-btn cursor-pointer" data-lang="es" title="Español">🇪🇸</button>
+        <button onclick="applyLang('en')" class="lang-btn cursor-pointer" data-lang="en" title="English">🇬🇧</button>
+        <button onclick="applyLang('fr')" class="lang-btn cursor-pointer" data-lang="fr" title="Français">🇫🇷</button>
       </div>
     </div>
   </div>
@@ -326,15 +330,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <!-- Content -->
   <div class="relative z-10 h-full flex flex-col justify-center px-6 md:px-12 lg:px-20">
     <div class="max-w-3xl">
-      <h1 class="font-serif font-black text-white leading-tight drop-shadow-2xl mb-6" style="font-size: clamp(2.2rem, 5.5vw, 4.5rem); text-shadow: 0 4px 32px rgba(0,0,0,0.45);">
-        <span data-i18n="hero_title">Villa Vitao Garden:<br/><em>Villa Privada</em><br/>con Piscina en Las Terrenas</span>
+      <h1 class="font-serif font-black text-white leading-tight drop-shadow-2xl mb-6" style="font-size: clamp(2.2rem, 5.5vw, 4.5rem); text-shadow: 0 4px 32px rgba(0,0,0,0.45);" data-i18n="hero_title">
+        Villa Vitao Garden:<br/><em>Villa Privada</em><br/>con Piscina en Las Terrenas
       </h1>
-      <p class="text-white/90 text-base md:text-lg leading-relaxed mb-8 max-w-md drop-shadow-lg" data-i18n="hero_sub">
+      <p class="text-white/90 text-base md:text-lg leading-relaxed mb-8 max-w-md drop-shadow-lg" data-i18n="hero_subtitle">
         Disfruta de un oasis de tranquilidad y confort en Samaná. Tu alquiler vacacional exclusivo con jardín tropical, palmeras y piscina privada a minutos de las mejores playas.
       </p>
       <div class="flex flex-wrap gap-3">
-        <a id="wa-hero" href="https://wa.me/18097572184?text=Hola%2C%20me%20interesa%20consultar%20disponibilidad%20de%20Villa%20Vitao%20Garden." target="_blank" rel="noopener noreferrer" class="inline-block bg-[#25D366] text-white text-sm font-bold px-7 py-3.5 rounded-full cursor-pointer hover:bg-[#1ebe5d] transition-colors duration-200 shadow-xl">
-          <span data-i18n="wa_btn">Consultar Disponibilidad por WhatsApp</span>
+        <a id="hero-wa-btn" href="https://wa.me/18097572184?text=Hola%2C%20me%20interesa%20consultar%20disponibilidad%20de%20Villa%20Vitao%20Garden." target="_blank" rel="noopener noreferrer" class="inline-block bg-[#25D366] text-white text-sm font-bold px-7 py-3.5 rounded-full cursor-pointer hover:bg-[#1ebe5d] transition-colors duration-200 shadow-xl" data-i18n="hero_wa_btn">
+          Consultar Disponibilidad por WhatsApp
         </a>
         <a href="#precios" class="inline-block bg-white/20 border border-white/60 text-white text-sm font-semibold px-7 py-3.5 rounded-full cursor-pointer hover:bg-white/30 transition-colors duration-200 shadow-xl backdrop-blur-sm" data-i18n="hero_prices_btn">
           Ver Precios y Calendario
@@ -366,7 +370,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     <!-- Text -->
     <div class="reveal" style="transition-delay:0.15s">
-      <p class="text-teal-600 text-sm font-semibold tracking-widest uppercase mb-4" data-i18n="welcome_label">Bienvenido</p>
+      <p class="text-teal-600 text-sm font-semibold tracking-widest uppercase mb-4" data-i18n="welcome_badge">Bienvenido</p>
       <h2 class="font-serif font-bold text-slate-900 text-4xl md:text-5xl leading-tight mb-6" data-i18n="welcome_title">
         Tu Refugio Tropical Exclusivo<br/>en Las Terrenas, Samaná
       </h2>
@@ -376,7 +380,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <p class="text-slate-600 text-base leading-relaxed mb-8" data-i18n="welcome_p2">
         El refugio privado perfecto para familias, parejas o grupos de amigos que buscan desconectar en un entorno seguro. Aquí disfrutarás de un espectacular <strong>jardín tropical rodeado de palmeras y cocoteros</strong>, un área de piscina privada para tu total relajación y amplias zonas exteriores totalmente equipadas.
       </p>
-      <p class="text-slate-600 leading-relaxed mt-3" data-i18n="welcome_seo">
+      <p class="text-slate-600 leading-relaxed mt-3" data-i18n="welcome_p3">
         Si buscas una <strong>villa vacacional en Samaná con piscina privada</strong>, Villa Vitao Garden es tu mejor opción en Las Terrenas. A minutos de Playa Cosón y las playas más bonitas de la <strong>Península de Samaná</strong>, ideal para familias y parejas que buscan un <strong>alquiler vacacional privado en República Dominicana</strong> sin comisiones.
       </p>
     </div>
@@ -390,7 +394,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <section class="bg-sand py-20 md:py-24 px-6" id="galeria">
   <div class="max-w-7xl mx-auto">
     <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
-      <h2 class="reveal font-serif font-bold text-slate-900 text-4xl md:text-5xl leading-tight">
+      <h2 class="reveal font-serif font-bold text-slate-900 text-4xl md:text-5xl leading-tight" data-i18n="spaces_title">
         Instalaciones y Zonas<br/>Exteriores de la Villa
       </h2>
       <p class="reveal text-slate-500 text-sm max-w-xs text-right hidden md:block" style="transition-delay:0.1s">Cada rincón está pensado para una experiencia caribeña auténtica</p>
@@ -401,29 +405,29 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <div class="overflow-hidden rounded-2xl h-56 md:h-72">
           <img src="foto_4.jpeg" alt="Piscina privada y tumbonas en el jardín tropical de Villa Vitao Garden, Las Terrenas" class="w-full h-full object-cover" />
         </div>
-        <p class="mt-3 text-slate-800 text-sm font-semibold">Piscina Privada</p>
-        <p class="text-slate-400 text-xs mt-0.5">Relájate en tu propia piscina con palapa y tumbonas, rodeada de jardín tropical</p>
+        <p class="mt-3 text-slate-800 text-sm font-semibold" data-i18n="space_pool_title">Piscina Privada</p>
+        <p class="text-slate-400 text-xs mt-0.5" data-i18n="space_pool_desc">Relájate en tu propia piscina con palapa y tumbonas, rodeada de jardín tropical</p>
       </div>
       <div class="space-card lb-trigger reveal cursor-pointer rounded-2xl" data-src="galeria_03.jpeg" data-alt="Zona de hamacas y jardín tropical de Villa Vitao Garden en Las Terrenas" style="transition-delay:0.1s">
         <div class="overflow-hidden rounded-2xl h-56 md:h-72">
           <img src="galeria_03.jpeg" alt="Terraza exterior techada con sillón y vistas al jardín en Las Terrenas" class="w-full h-full object-cover" />
         </div>
-        <p class="mt-3 text-slate-800 text-sm font-semibold">Terraza Exterior</p>
-        <p class="text-slate-400 text-xs mt-0.5">El lugar ideal para el café de la mañana o disfrutar de la brisa de Las Terrenas en total privacidad</p>
+        <p class="mt-3 text-slate-800 text-sm font-semibold" data-i18n="space_terrace_title">Terraza Exterior</p>
+        <p class="text-slate-400 text-xs mt-0.5" data-i18n="space_terrace_desc">El lugar ideal para el café de la mañana o disfrutar de la brisa de Las Terrenas en total privacidad</p>
       </div>
       <div class="space-card lb-trigger reveal cursor-pointer rounded-2xl" data-src="galeria_04.jpeg" data-alt="Salón moderno y sofá turquesa con plantas exóticas en Villa Vitao Garden" style="transition-delay:0.15s">
         <div class="overflow-hidden rounded-2xl h-56 md:h-72">
           <img src="galeria_04.jpeg" alt="Salón moderno y sofá turquesa con plantas exóticas en Villa Vitao Garden" class="w-full h-full object-cover" />
         </div>
-        <p class="mt-3 text-slate-800 text-sm font-semibold">Salón Exterior</p>
-        <p class="text-slate-400 text-xs mt-0.5">Zona de estar moderna con sofá turquesa y plantas exóticas, perfecta para conectar con los tuyos</p>
+        <p class="mt-3 text-slate-800 text-sm font-semibold" data-i18n="space_salon_title">Salón Exterior</p>
+        <p class="text-slate-400 text-xs mt-0.5" data-i18n="space_salon_desc">Zona de estar moderna con sofá turquesa y plantas exóticas, perfecta para conectar con los tuyos</p>
       </div>
       <div class="space-card lb-trigger reveal cursor-pointer rounded-2xl" data-src="galeria_09.jpeg" data-alt="Cocina de diseño totalmente equipada en alquiler vacacional Villa Vitao Garden" style="transition-delay:0.2s">
         <div class="overflow-hidden rounded-2xl h-56 md:h-72">
           <img src="galeria_09.jpeg" alt="Cocina de diseño totalmente equipada en alquiler vacacional Villa Vitao Garden" class="w-full h-full object-cover" />
         </div>
-        <p class="mt-3 text-slate-800 text-sm font-semibold">Cocina Equipada</p>
-        <p class="text-slate-400 text-xs mt-0.5">Espacio moderno con electrodomésticos y utensilios listos para preparar tus platos favoritos</p>
+        <p class="mt-3 text-slate-800 text-sm font-semibold" data-i18n="space_kitchen_title">Cocina Equipada</p>
+        <p class="text-slate-400 text-xs mt-0.5" data-i18n="space_kitchen_desc">Espacio moderno con electrodomésticos y utensilios listos para preparar tus platos favoritos</p>
       </div>
     </div>
   </div>
@@ -436,8 +440,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <section class="bg-white py-20 md:py-28 px-6">
   <div class="max-w-7xl mx-auto">
     <div class="text-center mb-14 reveal">
-      <p class="text-teal-600 text-sm font-semibold tracking-widest uppercase mb-3">Incluido en tu estancia</p>
-      <h2 class="font-serif font-bold text-slate-900 text-4xl md:text-5xl leading-tight">
+      <p class="text-teal-600 text-sm font-semibold tracking-widest uppercase mb-3" data-i18n="amenities_badge">Incluido en tu estancia</p>
+      <h2 class="font-serif font-bold text-slate-900 text-4xl md:text-5xl leading-tight" data-i18n="amenities_title">
         Todo lo que Necesitas<br/>en tu Villa Vacacional
       </h2>
     </div>
@@ -448,14 +452,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <div class="w-12 h-12 bg-teal-50 rounded-2xl flex items-center justify-center mb-6">
           <svg class="w-6 h-6 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
         </div>
-        <h3 class="font-serif text-xl font-semibold text-slate-900 mb-1">Ropa de Cama y Baño</h3>
-        <p class="text-slate-400 text-xs mb-3">Sábanas, toallas de ducha y toalla de piscina incluidas en cada estancia.</p>
+        <h3 class="font-serif text-xl font-semibold text-slate-900 mb-1" data-i18n="amenity1_title">Ropa de Cama y Baño</h3>
+        <p class="text-slate-400 text-xs mb-3" data-i18n="amenity1_desc">Sábanas, toallas de ducha y toalla de piscina incluidas en cada estancia.</p>
         <ul class="text-slate-500 text-sm leading-relaxed space-y-1">
-          <li>· Sábanas de cama</li>
-          <li>· Toallas de ducha</li>
-          <li>· Toalla de piscina</li>
-          <li>· Jabón de manos</li>
-          <li>· Gel de ducha</li>
+          <li data-i18n="amenity1_li1">· Sábanas de cama</li>
+          <li data-i18n="amenity1_li2">· Toallas de ducha</li>
+          <li data-i18n="amenity1_li3">· Toalla de piscina</li>
+          <li data-i18n="amenity1_li4">· Jabón de manos</li>
+          <li data-i18n="amenity1_li5">· Gel de ducha</li>
         </ul>
       </div>
 
@@ -464,13 +468,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <div class="w-12 h-12 bg-teal-50 rounded-2xl flex items-center justify-center mb-6">
           <svg class="w-6 h-6 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
         </div>
-        <h3 class="font-serif text-xl font-semibold text-slate-900 mb-1">Cocina Equipada y Básicos</h3>
-        <p class="text-slate-400 text-xs mb-3">Cocina totalmente equipada para que prepares tus comidas con total comodidad.</p>
+        <h3 class="font-serif text-xl font-semibold text-slate-900 mb-1" data-i18n="amenity2_title">Cocina Equipada y Básicos</h3>
+        <p class="text-slate-400 text-xs mb-3" data-i18n="amenity2_desc">Cocina totalmente equipada para que prepares tus comidas con total comodidad.</p>
         <ul class="text-slate-500 text-sm leading-relaxed space-y-1">
-          <li>· Kit de café</li>
-          <li>· Aceite, sal y vinagre</li>
-          <li>· Cocina totalmente equipada</li>
-          <li>· Comedor exterior</li>
+          <li data-i18n="amenity2_li1">· Kit de café</li>
+          <li data-i18n="amenity2_li2">· Aceite, sal y vinagre</li>
+          <li data-i18n="amenity2_li3">· Cocina totalmente equipada</li>
+          <li data-i18n="amenity2_li4">· Comedor exterior</li>
         </ul>
       </div>
 
@@ -479,20 +483,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <div class="w-12 h-12 bg-teal-50 rounded-2xl flex items-center justify-center mb-6">
           <svg class="w-6 h-6 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         </div>
-        <h3 class="font-serif text-xl font-semibold text-slate-900 mb-1">Cancelación Flexible</h3>
-        <p class="text-slate-400 text-xs mb-3">Política de cancelación gratuita hasta 5 días antes de tu llegada.</p>
+        <h3 class="font-serif text-xl font-semibold text-slate-900 mb-1" data-i18n="amenity3_title">Cancelación Flexible</h3>
+        <p class="text-slate-400 text-xs mb-3" data-i18n="amenity3_desc">Política de cancelación gratuita hasta 5 días antes de tu llegada.</p>
         <div class="space-y-3">
           <div class="flex items-start gap-2">
             <span class="mt-0.5 w-2 h-2 rounded-full bg-teal-500 flex-shrink-0"></span>
-            <p class="text-slate-700 text-sm leading-relaxed"><strong class="text-teal-700">Cancelación gratuita</strong> hasta 5 días antes del check-in.</p>
+            <p class="text-slate-700 text-sm leading-relaxed" data-i18n="amenity3_p1"><strong class="text-teal-700">Cancelación gratuita</strong> hasta 5 días antes del check-in.</p>
           </div>
           <div class="flex items-start gap-2">
             <span class="mt-0.5 w-2 h-2 rounded-full bg-amber-400 flex-shrink-0"></span>
-            <p class="text-slate-500 text-sm leading-relaxed">Si cancelas después del check-in, se reembolsa el <strong>50% de las noches no utilizadas</strong>.</p>
+            <p class="text-slate-500 text-sm leading-relaxed" data-i18n="amenity3_p2">Si cancelas después del check-in, se reembolsa el <strong>50% de las noches no utilizadas</strong>.</p>
           </div>
           <div class="flex items-start gap-2">
             <span class="mt-0.5 w-2 h-2 rounded-full bg-slate-300 flex-shrink-0"></span>
-            <p class="text-slate-500 text-sm leading-relaxed">La tarifa de limpieza se reembolsa si el huésped no llega a utilizar la villa.</p>
+            <p class="text-slate-500 text-sm leading-relaxed" data-i18n="amenity3_p3">La tarifa de limpieza se reembolsa si el huésped no llega a utilizar la villa.</p>
           </div>
         </div>
       </div>
@@ -507,8 +511,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <section class="bg-white py-16 md:py-20 px-6" id="precios">
   <div class="max-w-4xl mx-auto">
     <div class="text-center mb-10 reveal">
-      <p class="text-teal-600 text-sm font-semibold tracking-widest uppercase mb-3">Transparencia total en tu reserva directa</p>
-      <h2 class="font-serif font-bold text-slate-900 text-4xl md:text-5xl leading-tight">Tarifas de Alquiler y Precios por Noche</h2>
+      <p class="text-teal-600 text-sm font-semibold tracking-widest uppercase mb-3" data-i18n="prices_badge">Transparencia total en tu reserva directa</p>
+      <h2 class="font-serif font-bold text-slate-900 text-4xl md:text-5xl leading-tight" data-i18n="prices_title">Tarifas de Alquiler y Precios por Noche</h2>
       <p class="text-slate-500 mt-3 text-sm">Tarifas competitivas para disfrutar de Las Terrenas sin intermediarios ni comisiones ocultas · 3 habitaciones en suite · hasta 6 personas</p>
     </div>
 
@@ -517,9 +521,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div class="reveal p-8 border-2 border-slate-100 rounded-2xl hover:border-teal-200 hover:shadow-lg transition-all duration-300 cursor-default" style="transition-delay:0.05s">
         <div class="flex items-center justify-between mb-4">
           <div>
-            <p class="text-slate-500 text-xs font-semibold tracking-widest uppercase mb-1">Lunes – Jueves</p>
+            <p class="text-slate-500 text-xs font-semibold tracking-widest uppercase mb-1" data-i18n="prices_weekday">Lunes – Jueves</p>
             <p class="font-sans text-4xl font-bold text-slate-900 tabular-nums">180 <span class="text-xl font-medium text-slate-500">USD</span></p>
-            <p class="text-slate-400 text-xs mt-1">por noche</p>
+            <p class="text-slate-400 text-xs mt-1" data-i18n="prices_per_night">por noche</p>
           </div>
           <div class="w-14 h-14 bg-teal-50 rounded-2xl flex items-center justify-center flex-shrink-0">
             <svg class="w-7 h-7 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
@@ -536,9 +540,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div class="reveal p-8 border-2 border-teal-500 rounded-2xl shadow-lg cursor-default relative overflow-hidden" style="transition-delay:0.1s">
         <div class="flex items-center justify-between mb-4">
           <div>
-            <p class="text-teal-600 text-xs font-semibold tracking-widest uppercase mb-1">Viernes – Domingo · Fin de semana</p>
+            <p class="text-teal-600 text-xs font-semibold tracking-widest uppercase mb-1" data-i18n="prices_weekend">Viernes – Domingo · Fin de semana</p>
             <p class="font-sans text-4xl font-bold text-slate-900 tabular-nums">210 <span class="text-xl font-medium text-slate-500">USD</span></p>
-            <p class="text-slate-400 text-xs mt-1">por noche</p>
+            <p class="text-slate-400 text-xs mt-1" data-i18n="prices_per_night">por noche</p>
           </div>
           <div class="w-14 h-14 bg-teal-50 rounded-2xl flex items-center justify-center flex-shrink-0">
             <svg class="w-7 h-7 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
@@ -556,11 +560,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- Nota gasto de luz -->
     <div class="reveal flex items-center gap-2.5 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3" style="transition-delay:0.15s">
       <svg class="w-4 h-4 text-amber-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-      <p class="text-amber-700 text-xs leading-relaxed"><strong>Electricidad aparte:</strong> se fotografía el contador al check-in y check-out · <strong>15 RD$ por kW</strong> consumido.</p>
+      <p class="text-amber-700 text-xs leading-relaxed" data-i18n="electricity_note">Como en la mayoría de los alojamientos en Las Terrenas, el consumo eléctrico no está incluido en la tarifa del alquiler. A la llegada, nuestro personal realizará una fotografía del contador de luz durante el check-in, y otra en el check-out. El coste final se calcula multiplicando los kW consumidos × <strong>15 RD$</strong>.</p>
     </div>
 
     <div class="text-center mt-8 reveal" style="transition-delay:0.2s">
-      <a href="#reservar" class="inline-block bg-teal-600 hover:bg-teal-700 text-white font-semibold px-10 py-3.5 rounded-full cursor-pointer transition-colors duration-200 text-sm tracking-wide">
+      <a href="#reservar" class="inline-block bg-teal-600 hover:bg-teal-700 text-white font-semibold px-10 py-3.5 rounded-full cursor-pointer transition-colors duration-200 text-sm tracking-wide" data-i18n="prices_cta">
         Consultar Disponibilidad
       </a>
     </div>
@@ -574,8 +578,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <section class="bg-sand py-20 md:py-28 px-6" id="habitaciones">
   <div class="max-w-7xl mx-auto">
     <div class="mb-14 reveal">
-      <p class="text-teal-600 text-sm font-semibold tracking-widest uppercase mb-3">Descanso y privacidad</p>
-      <h2 class="font-serif font-bold text-slate-900 text-4xl md:text-5xl leading-tight">
+      <p class="text-teal-600 text-sm font-semibold tracking-widest uppercase mb-3" data-i18n="rooms_badge">Descanso y privacidad</p>
+      <h2 class="font-serif font-bold text-slate-900 text-4xl md:text-5xl leading-tight" data-i18n="rooms_title">
         Habitaciones de Lujo con Baño<br/>en Suite en Las Terrenas
       </h2>
       <p class="text-slate-500 mt-3 max-w-lg">Villa Vitao Garden está diseñada para ofrecer el máximo confort a grupos y familias. La distribución de la casa garantiza total independencia en cada estancia.</p>
@@ -611,9 +615,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <span class="absolute top-4 right-4 bg-white/90 text-slate-700 text-xs font-medium px-3 py-1.5 rounded-full">Master Suite</span>
         </div>
         <div class="p-6">
-          <h3 class="font-serif text-xl font-semibold text-slate-900 mb-1">Suite King Master</h3>
-          <p class="text-teal-600 text-xs font-semibold tracking-wide mb-4">Cama King Size · Baño en Suite</p>
-          <p class="text-slate-500 text-sm leading-relaxed mb-5">La habitación principal de la villa. Cama King Size, baño en suite y armario empotrado. Amplia y confortable para una estancia de lujo en Las Terrenas.</p>
+          <h3 class="font-serif text-xl font-semibold text-slate-900 mb-1" data-i18n="room1_name">Suite King Master</h3>
+          <p class="text-teal-600 text-xs font-semibold tracking-wide mb-4" data-i18n="room1_sub">Cama King Size · Baño en Suite</p>
+          <p class="text-slate-500 text-sm leading-relaxed mb-5" data-i18n="room1_desc">La habitación principal de la villa. Cama King Size, baño en suite y armario empotrado. Amplia y confortable para una estancia de lujo en Las Terrenas.</p>
           <ul class="space-y-2">
             <li class="flex items-center gap-2 text-sm text-slate-600"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Cama King Size</li>
             <li class="flex items-center gap-2 text-sm text-slate-600"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Baño en suite privado</li>
@@ -638,9 +642,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <span class="absolute top-4 right-4 bg-white/90 text-slate-700 text-xs font-medium px-3 py-1.5 rounded-full">King Suite</span>
         </div>
         <div class="p-6">
-          <h3 class="font-serif text-xl font-semibold text-slate-900 mb-1">Suite King con Terraza</h3>
-          <p class="text-teal-600 text-xs font-semibold tracking-wide mb-4">Cama King Size · Terraza · Baño en Suite</p>
-          <p class="text-slate-500 text-sm leading-relaxed mb-5">La habitación más luminosa del alquiler vacacional. Cama King Size, terraza privada con luz natural y baño en suite. Ideal para despertar con la brisa del Caribe.</p>
+          <h3 class="font-serif text-xl font-semibold text-slate-900 mb-1" data-i18n="room2_name">Suite King con Terraza</h3>
+          <p class="text-teal-600 text-xs font-semibold tracking-wide mb-4" data-i18n="room2_sub">Cama King Size · Terraza · Baño en Suite</p>
+          <p class="text-slate-500 text-sm leading-relaxed mb-5" data-i18n="room2_desc">La habitación más luminosa del alquiler vacacional. Cama King Size, terraza privada con luz natural y baño en suite. Ideal para despertar con la brisa del Caribe.</p>
           <ul class="space-y-2">
             <li class="flex items-center gap-2 text-sm text-slate-600"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Cama King Size</li>
             <li class="flex items-center gap-2 text-sm text-slate-600"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Terraza privada</li>
@@ -665,9 +669,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <span class="absolute top-4 right-4 bg-white/90 text-slate-700 text-xs font-medium px-3 py-1.5 rounded-full">Suite Twin</span>
         </div>
         <div class="p-6">
-          <h3 class="font-serif text-xl font-semibold text-slate-900 mb-1">Suite Twin Familiar</h3>
-          <p class="text-teal-600 text-xs font-semibold tracking-wide mb-4">2 Camas Individuales · Baño en Suite</p>
-          <p class="text-slate-500 text-sm leading-relaxed mb-5">Perfecta para familias o grupos de amigos. Dos camas individuales confortables, baño en suite privado y aire acondicionado. Máximo confort en Las Terrenas.</p>
+          <h3 class="font-serif text-xl font-semibold text-slate-900 mb-1" data-i18n="room3_name">Suite Twin Familiar</h3>
+          <p class="text-teal-600 text-xs font-semibold tracking-wide mb-4" data-i18n="room3_sub">2 Camas Individuales · Baño en Suite</p>
+          <p class="text-slate-500 text-sm leading-relaxed mb-5" data-i18n="room3_desc">Perfecta para familias o grupos de amigos. Dos camas individuales confortables, baño en suite privado y aire acondicionado. Máximo confort en Las Terrenas.</p>
           <ul class="space-y-2">
             <li class="flex items-center gap-2 text-sm text-slate-600"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>2 Camas individuales</li>
             <li class="flex items-center gap-2 text-sm text-slate-600"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Baño en suite privado</li>
@@ -707,8 +711,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <section class="bg-white py-20 md:py-28 px-6">
   <div class="max-w-7xl mx-auto">
     <div class="mb-14 reveal">
-      <p class="text-teal-600 text-sm font-semibold tracking-widest uppercase mb-3">Experiencias reales</p>
-      <h2 class="font-serif font-bold text-slate-900 text-4xl md:text-5xl leading-tight">
+      <p class="text-teal-600 text-sm font-semibold tracking-widest uppercase mb-3" data-i18n="testimonials_badge">Experiencias reales</p>
+      <h2 class="font-serif font-bold text-slate-900 text-4xl md:text-5xl leading-tight" data-i18n="testimonials_title">
         Opiniones de Huéspedes<br/>de Villa Vitao Garden
       </h2>
     </div>
@@ -722,12 +726,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <svg class="w-4 h-4 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
           <svg class="w-4 h-4 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
         </div>
-        <p class="text-slate-700 text-sm leading-relaxed mb-6 italic">"Una experiencia mágica. La villa superó todas nuestras expectativas. La piscina, el ambiente, la tranquilidad... volveremos sin duda."</p>
+        <p class="text-slate-700 text-sm leading-relaxed mb-6 italic" data-i18n="t1_quote">"Una experiencia mágica. La villa superó todas nuestras expectativas. La piscina, el ambiente, la tranquilidad... volveremos sin duda."</p>
         <div class="flex items-center gap-3">
           <div class="w-9 h-9 bg-teal-600 rounded-full flex items-center justify-center text-white text-xs font-bold">AC</div>
           <div>
             <p class="text-slate-800 text-sm font-semibold">Ana & Carlos</p>
-            <p class="text-slate-400 text-xs">Pareja</p>
+            <p class="text-slate-400 text-xs" data-i18n="t1_type">Pareja</p>
           </div>
         </div>
       </div>
@@ -740,12 +744,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <svg class="w-4 h-4 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
           <svg class="w-4 h-4 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
         </div>
-        <p class="text-slate-700 text-sm leading-relaxed mb-6 italic">"El lugar perfecto para desconectar. Los niños disfrutaron la piscina y nosotros la terraza por las noches. Absolutamente recomendable."</p>
+        <p class="text-slate-700 text-sm leading-relaxed mb-6 italic" data-i18n="t2_quote">"El lugar perfecto para desconectar. Los niños disfrutaron la piscina y nosotros la terraza por las noches. Absolutamente recomendable."</p>
         <div class="flex items-center gap-3">
           <div class="w-9 h-9 bg-teal-600 rounded-full flex items-center justify-center text-white text-xs font-bold">FM</div>
           <div>
             <p class="text-slate-800 text-sm font-semibold">La Familia Martínez</p>
-            <p class="text-slate-400 text-xs">Familia de 4</p>
+            <p class="text-slate-400 text-xs" data-i18n="t2_type">Familia de 4</p>
           </div>
         </div>
       </div>
@@ -758,12 +762,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <svg class="w-4 h-4 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
           <svg class="w-4 h-4 text-teal-500" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
         </div>
-        <p class="text-slate-700 text-sm leading-relaxed mb-6 italic">"Las Terrenas es un paraíso y esta villa es su joya. Ubicación, comodidad y lujo en un solo lugar."</p>
+        <p class="text-slate-700 text-sm leading-relaxed mb-6 italic" data-i18n="t3_quote">"Las Terrenas es un paraíso y esta villa es su joya. Ubicación, comodidad y lujo en un solo lugar."</p>
         <div class="flex items-center gap-3">
           <div class="w-9 h-9 bg-teal-600 rounded-full flex items-center justify-center text-white text-xs font-bold">SL</div>
           <div>
             <p class="text-slate-800 text-sm font-semibold">Sophie L.</p>
-            <p class="text-slate-400 text-xs">Viajera</p>
+            <p class="text-slate-400 text-xs" data-i18n="t3_type">Viajera</p>
           </div>
         </div>
       </div>
@@ -800,9 +804,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <section class="bg-sand py-20 md:py-28 px-6">
   <div class="max-w-7xl mx-auto">
     <div class="text-center mb-14 reveal">
-      <p class="text-teal-600 text-sm font-semibold tracking-widest uppercase mb-3">Fotografías</p>
-      <h2 class="font-serif font-bold text-slate-900 text-4xl md:text-5xl">Descubre la Villa</h2>
-      <p class="text-slate-400 text-sm mt-3">Haz clic en cualquier foto para verla en grande</p>
+      <p class="text-teal-600 text-sm font-semibold tracking-widest uppercase mb-3" data-i18n="gallery_badge">Fotografías</p>
+      <h2 class="font-serif font-bold text-slate-900 text-4xl md:text-5xl" data-i18n="gallery_title">Descubre la Villa</h2>
+      <p class="text-slate-400 text-sm mt-3" data-i18n="gallery_hint">Haz clic en cualquier foto para verla en grande</p>
     </div>
 
     <div id="gallery-grid" class="columns-2 md:columns-3 lg:columns-4 gap-3 space-y-3">
@@ -847,8 +851,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <section class="bg-white py-20 md:py-28 px-6" id="faq">
   <div class="max-w-3xl mx-auto">
     <div class="text-center mb-14 reveal">
-      <p class="text-teal-600 text-sm font-semibold tracking-widest uppercase mb-3">Preguntas frecuentes</p>
-      <h2 class="font-serif font-bold text-slate-900 text-4xl md:text-5xl leading-tight">Preguntas Frecuentes sobre Villa Vitao Garden</h2>
+      <p class="text-teal-600 text-sm font-semibold tracking-widest uppercase mb-3" data-i18n="faq_badge">Preguntas frecuentes</p>
+      <h2 class="font-serif font-bold text-slate-900 text-4xl md:text-5xl leading-tight" data-i18n="faq_title">Preguntas Frecuentes sobre Villa Vitao Garden</h2>
     </div>
 
     <div class="space-y-4 reveal" style="transition-delay:0.05s">
@@ -857,10 +861,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <!-- Check-in / Check-out -->
       <details class="faq-item border border-slate-100 rounded-2xl overflow-hidden group">
         <summary class="flex items-center justify-between gap-4 px-6 py-5 cursor-pointer select-none hover:bg-slate-50 transition-colors duration-200">
-          <span class="text-slate-800 font-semibold text-sm">¿Cuáles son los horarios de llegada y salida de la villa?</span>
+          <span class="text-slate-800 font-semibold text-sm" data-i18n="faq1_q">¿Cuáles son los horarios de llegada y salida de la villa?</span>
           <svg class="w-5 h-5 text-teal-500 flex-shrink-0 transition-transform duration-200 group-open:rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
         </summary>
-        <div class="px-6 pb-5 text-slate-500 text-sm leading-relaxed border-t border-slate-100 pt-4 space-y-1">
+        <div class="px-6 pb-5 text-slate-500 text-sm leading-relaxed border-t border-slate-100 pt-4 space-y-1" data-i18n="faq1_a">
           <p><strong class="text-slate-700">Check-in:</strong> de 3:00 PM a 8:00 PM. Si prevés llegar más tarde, avisa con al menos <strong class="text-slate-700">24 horas de antelación</strong>.</p>
           <p><strong class="text-slate-700">Check-out:</strong> antes de las <strong class="text-slate-700">11:00 AM</strong>.</p>
         </div>
@@ -868,60 +872,60 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       <details class="faq-item border border-slate-100 rounded-2xl overflow-hidden group">
         <summary class="flex items-center justify-between gap-4 px-6 py-5 cursor-pointer select-none hover:bg-slate-50 transition-colors duration-200">
-          <span class="text-slate-800 font-semibold text-sm">¿Se admiten mascotas en el alquiler vacacional?</span>
+          <span class="text-slate-800 font-semibold text-sm" data-i18n="faq2_q">¿Se admiten mascotas en el alquiler vacacional?</span>
           <svg class="w-5 h-5 text-teal-500 flex-shrink-0 transition-transform duration-200 group-open:rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
         </summary>
-        <div class="px-6 pb-5 text-slate-500 text-sm leading-relaxed border-t border-slate-100 pt-4">
+        <div class="px-6 pb-5 text-slate-500 text-sm leading-relaxed border-t border-slate-100 pt-4" data-i18n="faq2_a">
           Sí, se admite <strong class="text-slate-700">1 mascota por reserva</strong>. Consulta al hacer tu reserva para que podamos prepararla todo correctamente.
         </div>
       </details>
 
       <details class="faq-item border border-slate-100 rounded-2xl overflow-hidden group">
         <summary class="flex items-center justify-between gap-4 px-6 py-5 cursor-pointer select-none hover:bg-slate-50 transition-colors duration-200">
-          <span class="text-slate-800 font-semibold text-sm">¿Se permiten eventos o fiestas?</span>
+          <span class="text-slate-800 font-semibold text-sm" data-i18n="faq3_q">¿Se permiten eventos o fiestas?</span>
           <svg class="w-5 h-5 text-teal-500 flex-shrink-0 transition-transform duration-200 group-open:rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
         </summary>
-        <div class="px-6 pb-5 text-slate-500 text-sm leading-relaxed border-t border-slate-100 pt-4">
+        <div class="px-6 pb-5 text-slate-500 text-sm leading-relaxed border-t border-slate-100 pt-4" data-i18n="faq3_a">
           <strong class="text-slate-700">No</strong>. Los eventos y fiestas no están permitidos en la villa. La propiedad está ubicada en un complejo residencial privado y se pide respetar la tranquilidad de los vecinos.
         </div>
       </details>
 
       <details class="faq-item border border-slate-100 rounded-2xl overflow-hidden group">
         <summary class="flex items-center justify-between gap-4 px-6 py-5 cursor-pointer select-none hover:bg-slate-50 transition-colors duration-200">
-          <span class="text-slate-800 font-semibold text-sm">¿Está permitido fumar en Villa Vitao Garden?</span>
+          <span class="text-slate-800 font-semibold text-sm" data-i18n="faq4_q">¿Está permitido fumar en Villa Vitao Garden?</span>
           <svg class="w-5 h-5 text-teal-500 flex-shrink-0 transition-transform duration-200 group-open:rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
         </summary>
-        <div class="px-6 pb-5 text-slate-500 text-sm leading-relaxed border-t border-slate-100 pt-4">
+        <div class="px-6 pb-5 text-slate-500 text-sm leading-relaxed border-t border-slate-100 pt-4" data-i18n="faq4_a">
           Se puede fumar <strong class="text-slate-700">en el exterior de la villa</strong> (jardín y terraza). Queda <strong class="text-slate-700">prohibido fumar dentro de la casa</strong>.
         </div>
       </details>
 
       <details class="faq-item border border-slate-100 rounded-2xl overflow-hidden group">
         <summary class="flex items-center justify-between gap-4 px-6 py-5 cursor-pointer select-none hover:bg-slate-50 transition-colors duration-200">
-          <span class="text-slate-800 font-semibold text-sm">¿Cómo funciona el consumo eléctrico en la villa?</span>
+          <span class="text-slate-800 font-semibold text-sm" data-i18n="faq5_q">¿Cómo funciona el consumo eléctrico en la villa?</span>
           <svg class="w-5 h-5 text-teal-500 flex-shrink-0 transition-transform duration-200 group-open:rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
         </summary>
-        <div class="px-6 pb-5 text-slate-500 text-sm leading-relaxed border-t border-slate-100 pt-4">
+        <div class="px-6 pb-5 text-slate-500 text-sm leading-relaxed border-t border-slate-100 pt-4" data-i18n="faq5_a">
           La electricidad se abona a parte. Se hace una <strong class="text-slate-700">fotografía del contador en el check-in y otra en el check-out</strong>. El consumo final = kW consumidos × <strong class="text-slate-700">15 RD$</strong>.
         </div>
       </details>
 
       <details class="faq-item border border-slate-100 rounded-2xl overflow-hidden group">
         <summary class="flex items-center justify-between gap-4 px-6 py-5 cursor-pointer select-none hover:bg-slate-50 transition-colors duration-200">
-          <span class="text-slate-800 font-semibold text-sm">¿En qué idiomas atienden?</span>
+          <span class="text-slate-800 font-semibold text-sm" data-i18n="faq6_q">¿En qué idiomas atienden?</span>
           <svg class="w-5 h-5 text-teal-500 flex-shrink-0 transition-transform duration-200 group-open:rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
         </summary>
-        <div class="px-6 pb-5 text-slate-500 text-sm leading-relaxed border-t border-slate-100 pt-4">
+        <div class="px-6 pb-5 text-slate-500 text-sm leading-relaxed border-t border-slate-100 pt-4" data-i18n="faq6_a">
           Atendemos en <strong class="text-slate-700">Español, Inglés y Francés</strong>. Respondemos a todas las consultas en menos de 24 horas.
         </div>
       </details>
 
       <details class="faq-item border border-slate-100 rounded-2xl overflow-hidden group">
         <summary class="flex items-center justify-between gap-4 px-6 py-5 cursor-pointer select-none hover:bg-slate-50 transition-colors duration-200">
-          <span class="text-slate-800 font-semibold text-sm">¿Cuál es la política de cancelación?</span>
+          <span class="text-slate-800 font-semibold text-sm" data-i18n="faq7_q">¿Cuál es la política de cancelación?</span>
           <svg class="w-5 h-5 text-teal-500 flex-shrink-0 transition-transform duration-200 group-open:rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
         </summary>
-        <div class="px-6 pb-5 text-slate-500 text-sm leading-relaxed border-t border-slate-100 pt-4 space-y-2">
+        <div class="px-6 pb-5 text-slate-500 text-sm leading-relaxed border-t border-slate-100 pt-4 space-y-2" data-i18n="faq7_a">
           <p><span class="inline-block w-2 h-2 rounded-full bg-teal-500 mr-2 align-middle"></span><strong class="text-teal-700">Cancelación gratuita</strong> hasta 5 días antes del check-in.</p>
           <p><span class="inline-block w-2 h-2 rounded-full bg-amber-400 mr-2 align-middle"></span>Si cancelas después del check-in, se reembolsa el <strong class="text-slate-700">50% de las noches no utilizadas</strong>.</p>
           <p><span class="inline-block w-2 h-2 rounded-full bg-slate-300 mr-2 align-middle"></span>La tarifa de limpieza se reembolsa si el huésped no llega a utilizar la villa.</p>
@@ -930,30 +934,30 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       <details class="faq-item border border-slate-100 rounded-2xl overflow-hidden group">
         <summary class="flex items-center justify-between gap-4 px-6 py-5 cursor-pointer select-none hover:bg-slate-50 transition-colors duration-200">
-          <span class="text-slate-800 font-semibold text-sm">¿Cómo puedo reservar la villa?</span>
+          <span class="text-slate-800 font-semibold text-sm" data-i18n="faq8_q">¿Cómo puedo reservar la villa?</span>
           <svg class="w-5 h-5 text-teal-500 flex-shrink-0 transition-transform duration-200 group-open:rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
         </summary>
-        <div class="px-6 pb-5 text-slate-500 text-sm leading-relaxed border-t border-slate-100 pt-4">
+        <div class="px-6 pb-5 text-slate-500 text-sm leading-relaxed border-t border-slate-100 pt-4" data-i18n="faq8_a">
           El proceso es directo, rápido y seguro. Haz clic en el botón de WhatsApp o rellena nuestro formulario de contacto. Te confirmaremos la disponibilidad de fechas y te guiaremos en los pasos para asegurar tu <strong class="text-slate-700">reserva directa con el propietario</strong>, evitando las comisiones de las grandes plataformas.
         </div>
       </details>
 
       <details class="faq-item border border-slate-100 rounded-2xl overflow-hidden group">
         <summary class="flex items-center justify-between gap-4 px-6 py-5 cursor-pointer select-none hover:bg-slate-50 transition-colors duration-200">
-          <span class="text-slate-800 font-semibold text-sm">¿Cuál es la capacidad máxima de la propiedad?</span>
+          <span class="text-slate-800 font-semibold text-sm" data-i18n="faq9_q">¿Cuál es la capacidad máxima de la propiedad?</span>
           <svg class="w-5 h-5 text-teal-500 flex-shrink-0 transition-transform duration-200 group-open:rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
         </summary>
-        <div class="px-6 pb-5 text-slate-500 text-sm leading-relaxed border-t border-slate-100 pt-4">
+        <div class="px-6 pb-5 text-slate-500 text-sm leading-relaxed border-t border-slate-100 pt-4" data-i18n="faq9_a">
           Villa Vitao Garden aloja cómodamente hasta un máximo de <strong class="text-slate-700">6 huéspedes</strong>, gracias a sus 3 amplias habitaciones con cama doble y baños privados en suite.
         </div>
       </details>
 
       <details class="faq-item border border-slate-100 rounded-2xl overflow-hidden group">
         <summary class="flex items-center justify-between gap-4 px-6 py-5 cursor-pointer select-none hover:bg-slate-50 transition-colors duration-200">
-          <span class="text-slate-800 font-semibold text-sm">¿Cómo se gestionan las llaves y el ingreso (Check-in)?</span>
+          <span class="text-slate-800 font-semibold text-sm" data-i18n="faq10_q">¿Cómo se gestionan las llaves y el ingreso (Check-in)?</span>
           <svg class="w-5 h-5 text-teal-500 flex-shrink-0 transition-transform duration-200 group-open:rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
         </summary>
-        <div class="px-6 pb-5 text-slate-500 text-sm leading-relaxed border-t border-slate-100 pt-4">
+        <div class="px-6 pb-5 text-slate-500 text-sm leading-relaxed border-t border-slate-100 pt-4" data-i18n="faq10_a">
           Una vez confirmada tu reserva, nos coordinaremos contigo por WhatsApp. El día de tu llegada a Las Terrenas, <strong class="text-slate-700">una persona de nuestro equipo te recibirá directamente en la villa</strong> para entregarte las llaves, mostrarte el jardín, la piscina, tomar la foto del contador de luz y asegurarse de que tengas todo lo necesario para iniciar tus vacaciones.
         </div>
       </details>
@@ -972,7 +976,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <h2 class="font-serif font-semibold text-slate-800 text-lg" data-i18n="cal_title">Disponibilidad</h2>
       <div class="flex items-center gap-4 text-xs text-slate-400">
         <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-sm bg-teal-400 inline-block"></span> <span data-i18n="cal_free">Libre</span></span>
-        <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-sm bg-red-300 inline-block"></span> <span data-i18n="cal_busy">Ocupado</span></span>
+        <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-sm bg-red-300 inline-block"></span> <span data-i18n="cal_booked">Ocupado</span></span>
       </div>
     </div>
 
@@ -991,7 +995,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div id="calendar-container" class="grid grid-cols-2 gap-4">
       <div class="flex items-center justify-center py-8 text-slate-300 text-xs col-span-2">
         <svg class="animate-spin w-3.5 h-3.5 mr-1.5 text-teal-400" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/></svg>
-        Cargando…
+        <span data-i18n="cal_loading">Cargando…</span>
       </div>
     </div>
   </div>
@@ -1008,9 +1012,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div class="rounded-2xl overflow-hidden h-64 md:h-80 mb-8">
         <img src="galeria_02.jpeg" alt="Vista de la piscina privada desde la palapa del alquiler en Las Terrenas" class="w-full h-full object-cover" />
       </div>
-      <p class="text-teal-600 text-sm font-semibold tracking-widest uppercase mb-3" data-i18n="book_label">Reservas</p>
+      <p class="text-teal-600 text-sm font-semibold tracking-widest uppercase mb-3" data-i18n="book_badge">Reservas</p>
       <h2 class="font-serif font-bold text-slate-900 text-3xl md:text-4xl leading-tight mb-4" data-i18n="book_title">Reserva tu Villa en<br/>Las Terrenas</h2>
-      <p class="text-slate-500 text-sm leading-relaxed mb-6" data-i18n="book_sub">Cuéntanos tus fechas y número de huéspedes. Confirmamos disponibilidad en menos de 24 horas por email o WhatsApp.</p>
+      <p class="text-slate-500 text-sm leading-relaxed mb-6" data-i18n="book_subtitle">Cuéntanos tus fechas y número de huéspedes. Confirmamos disponibilidad en menos de 24 horas por email o WhatsApp.</p>
       <div class="space-y-4">
         <div class="flex items-center gap-3 text-sm text-slate-600">
           <svg class="w-5 h-5 text-teal-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
@@ -1123,8 +1127,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
 
     <div class="flex flex-col md:flex-row items-center justify-between gap-3 pt-6 text-teal-500 text-xs">
-      <p>&copy; 2025 Villa Vitao Garden · Todos los derechos reservados</p>
-      <p>Diseñado para experiencias de lujo</p>
+      <p data-i18n="footer_copy">&copy; 2025 Villa Vitao Garden · Todos los derechos reservados</p>
+      <p data-i18n="footer_tagline">Diseñado para experiencias de lujo</p>
     </div>
   </div>
 </footer>
@@ -1145,7 +1149,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- ════════════════════════════════════
      WHATSAPP FAB
 ════════════════════════════════════ -->
-<a id="wa-fab" href="https://wa.me/18097572184?text=Hola%2C%20me%20interesa%20la%20villa%20en%20Las%20Terrenas.%20%C2%BFPodr%C3%ADan%20darme%20m%C3%A1s%20informaci%C3%B3n%3F"
+<a id="whatsapp-fab-link" href="https://wa.me/18097572184?text=Hola%2C%20me%20interesa%20la%20villa%20en%20Las%20Terrenas.%20%C2%BFPodr%C3%ADan%20darme%20m%C3%A1s%20informaci%C3%B3n%3F"
    target="_blank" rel="noopener noreferrer"
    class="whatsapp-fab fixed bottom-6 right-6 z-50 w-14 h-14 bg-[#25D366] rounded-full flex items-center justify-center cursor-pointer shadow-lg"
    aria-label="Contactar por WhatsApp">
@@ -1385,15 +1389,22 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   })();
 
   // ── i18n Trilingual ES / EN / FR ──────────────────────────────────
-  const T = {
+  const translations = {
     es: {
-      nav_gallery: 'Galería', nav_rooms: 'Habitaciones', nav_location: 'Ubicación',
-      nav_availability: 'Disponibilidad', nav_book: 'Reservar', nav_contact: 'Contactar',
+      nav_gallery: 'Galería',
+      nav_rooms: 'Habitaciones',
+      nav_location: 'Ubicación',
+      nav_availability: 'Disponibilidad',
+      nav_book: 'Reservar',
+      nav_contact: 'Contactar',
+
       hero_title: 'Villa Vitao Garden:<br/><em>Villa Privada</em><br/>con Piscina en Las Terrenas',
-      hero_sub: 'Disfruta de un oasis de tranquilidad y confort en Samaná. Tu alquiler vacacional exclusivo con jardín tropical, palmeras y piscina privada a minutos de las mejores playas.',
-      wa_btn: 'Consultar Disponibilidad por WhatsApp',
+      hero_subtitle: 'Disfruta de un oasis de tranquilidad y confort en Samaná. Tu alquiler vacacional exclusivo con jardín tropical, palmeras y piscina privada a minutos de las mejores playas.',
+      hero_wa_btn: 'Consultar Disponibilidad por WhatsApp',
       hero_prices_btn: 'Ver Precios y Calendario',
-      welcome_label: 'Bienvenido',
+      hero_wa_msg: 'Hola%2C%20me%20interesa%20consultar%20disponibilidad%20de%20Villa%20Vitao%20Garden.',
+
+      welcome_badge: 'Bienvenido',
       welcome_title: 'Tu Refugio Tropical Exclusivo<br/>en Las Terrenas, Samaná',
       welcome_p1: 'Bienvenidos a <strong>Villa Vitao Garden</strong>, un espacio único diseñado exclusivamente para tu descanso y privacidad en la Península de Samaná. Nuestra villa combina la esencia del Caribe con comodidades modernas para ofrecerte una estancia vacacional inolvidable.',
       welcome_p2: 'El refugio privado perfecto para familias, parejas o grupos de amigos que buscan desconectar en un entorno seguro. Aquí disfrutarás de un espectacular <strong>jardín tropical rodeado de palmeras y cocoteros</strong>, un área de piscina privada para tu total relajación y amplias zonas exteriores totalmente equipadas.',
@@ -1419,6 +1430,71 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       form_secure: 'Reserva 100% segura · Respuesta en menos de 24 h',
       wa_text: 'Hola%2C%20me%20interesa%20consultar%20disponibilidad%20de%20Villa%20Vitao%20Garden.',
       wa_fab_text: 'Hola%2C%20me%20interesa%20la%20villa%20en%20Las%20Terrenas.%20%C2%BFPodr%C3%ADan%20darme%20m%C3%A1s%20informaci%C3%B3n%3F',
+      electricity_note: 'Como en la mayoría de los alojamientos en Las Terrenas, el consumo eléctrico no está incluido en la tarifa del alquiler. A la llegada, nuestro personal realizará una fotografía del contador de luz durante el check-in, y otra en el check-out. El coste final se calcula multiplicando los kW consumidos × <strong>15 RD$</strong>.',
+      spaces_title: 'Instalaciones y Zonas<br/>Exteriores de la Villa',
+      spaces_sub: 'Cada rincón está pensado para una experiencia caribeña auténtica',
+      space1_title: 'Piscina Privada', space1_desc: 'Relájate en tu propia piscina con palapa y tumbonas, rodeada de jardín tropical',
+      space2_title: 'Terraza Exterior', space2_desc: 'El lugar ideal para el café de la mañana o disfrutar de la brisa de Las Terrenas en total privacidad',
+      space3_title: 'Salón Exterior', space3_desc: 'Zona de estar moderna con sofá turquesa y plantas exóticas, perfecta para conectar con los tuyos',
+      space4_title: 'Cocina Equipada', space4_desc: 'Espacio moderno con electrodomésticos y utensilios listos para preparar tus platos favoritos',
+      amen_label: 'Incluido en tu estancia',
+      amen_title: 'Todo lo que Necesitas<br/>en tu Villa Vacacional',
+      amen1_title: 'Ropa de Cama y Baño', amen1_sub: 'Sábanas, toallas de ducha y toalla de piscina incluidas en cada estancia.',
+      amen1_list: '<li>· Sábanas de cama</li><li>· Toallas de ducha</li><li>· Toalla de piscina</li><li>· Jabón de manos</li><li>· Gel de ducha</li>',
+      amen2_title: 'Cocina Equipada y Básicos', amen2_sub: 'Cocina totalmente equipada para que prepares tus comidas con total comodidad.',
+      amen2_list: '<li>· Kit de café</li><li>· Aceite, sal y vinagre</li><li>· Cocina totalmente equipada</li><li>· Comedor exterior</li>',
+      amen3_title: 'Cancelación Flexible', amen3_sub: 'Política de cancelación gratuita hasta 5 días antes de tu llegada.',
+      amen3_list: '<div class="flex items-start gap-2"><span class="mt-0.5 w-2 h-2 rounded-full bg-teal-500 flex-shrink-0"></span><p class="text-slate-700 text-sm leading-relaxed"><strong class="text-teal-700">Cancelación gratuita</strong> hasta 5 días antes del check-in.</p></div><div class="flex items-start gap-2"><span class="mt-0.5 w-2 h-2 rounded-full bg-amber-400 flex-shrink-0"></span><p class="text-slate-500 text-sm leading-relaxed">Si cancelas después del check-in, se reembolsa el <strong>50% de las noches no utilizadas</strong>.</p></div><div class="flex items-start gap-2"><span class="mt-0.5 w-2 h-2 rounded-full bg-slate-300 flex-shrink-0"></span><p class="text-slate-500 text-sm leading-relaxed">La tarifa de limpieza se reembolsa si el huésped no llega a utilizar la villa.</p></div>',
+      prices_label: 'Transparencia total en tu reserva directa',
+      prices_title: 'Tarifas de Alquiler y Precios por Noche',
+      prices_sub: 'Tarifas competitivas para disfrutar de Las Terrenas sin intermediarios ni comisiones ocultas · 3 habitaciones en suite · hasta 6 personas',
+      price1_days: 'Lunes – Jueves', price_night: 'por noche', price2_days: 'Viernes – Domingo · Fin de semana',
+      price1_features: '<li class="flex items-center gap-2"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Villa completa · 3 hab. en suite</li><li class="flex items-center gap-2"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Piscina privada incluida</li><li class="flex items-center gap-2"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Ropa de cama y toallas</li>',
+      price2_features: '<li class="flex items-center gap-2"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Villa completa · 3 hab. en suite</li><li class="flex items-center gap-2"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Piscina privada incluida</li><li class="flex items-center gap-2"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Ideal fines de semana</li>',
+      prices_cta: 'Consultar Disponibilidad',
+      rooms_label: 'Descanso y privacidad',
+      rooms_title: 'Habitaciones de Lujo con Baño<br/>en Suite en Las Terrenas',
+      rooms_sub: 'Villa Vitao Garden está diseñada para ofrecer el máximo confort a grupos y familias. La distribución de la casa garantiza total independencia en cada estancia.',
+      room1_title: 'Suite King Master', room1_sub: 'Cama King Size · Baño en Suite',
+      room1_desc: 'La habitación principal de la villa. Cama King Size, baño en suite y armario empotrado. Amplia y confortable para una estancia de lujo en Las Terrenas.',
+      room1_features: '<li class="flex items-center gap-2 text-sm text-slate-600"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Cama King Size</li><li class="flex items-center gap-2 text-sm text-slate-600"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Baño en suite privado</li><li class="flex items-center gap-2 text-sm text-slate-600"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Climatización independiente</li><li class="flex items-center gap-2 text-sm text-slate-600"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Armario empotrado madera</li>',
+      room2_title: 'Suite King con Terraza', room2_sub: 'Cama King Size · Terraza · Baño en Suite',
+      room2_desc: 'La habitación más luminosa del alquiler vacacional. Cama King Size, terraza privada con luz natural y baño en suite. Ideal para despertar con la brisa del Caribe.',
+      room2_features: '<li class="flex items-center gap-2 text-sm text-slate-600"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Cama King Size</li><li class="flex items-center gap-2 text-sm text-slate-600"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Terraza privada</li><li class="flex items-center gap-2 text-sm text-slate-600"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Muy luminosa</li><li class="flex items-center gap-2 text-sm text-slate-600"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Baño en suite privado</li>',
+      room3_title: 'Suite Twin Familiar', room3_sub: '2 Camas Individuales · Baño en Suite',
+      room3_desc: 'Perfecta para familias o grupos de amigos. Dos camas individuales confortables, baño en suite privado y aire acondicionado. Máximo confort en Las Terrenas.',
+      room3_features: '<li class="flex items-center gap-2 text-sm text-slate-600"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>2 Camas individuales</li><li class="flex items-center gap-2 text-sm text-slate-600"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Baño en suite privado</li><li class="flex items-center gap-2 text-sm text-slate-600"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Ideal familias y amigos</li><li class="flex items-center gap-2 text-sm text-slate-600"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Climatización independiente</li>',
+      test_label: 'Experiencias reales', test_title: 'Opiniones de Huéspedes<br/>de Villa Vitao Garden',
+      test1_quote: '"Una experiencia mágica. La villa superó todas nuestras expectativas. La piscina, el ambiente, la tranquilidad... volveremos sin duda."',
+      test1_role: 'Pareja',
+      test2_quote: '"El lugar perfecto para desconectar. Los niños disfrutaron la piscina y nosotros la terraza por las noches. Absolutamente recomendable."',
+      test2_role: 'Familia de 4',
+      test3_quote: '"Las Terrenas es un paraíso y esta villa es su joya. Ubicación, comodidad y lujo en un solo lugar."',
+      test3_role: 'Viajera',
+      gallery_label: 'Fotografías', gallery_title: 'Descubre la Villa', gallery_hint: 'Haz clic en cualquier foto para verla en grande',
+      faq_label: 'Preguntas frecuentes', faq_title: 'Preguntas Frecuentes sobre Villa Vitao Garden',
+      faq1_q: '¿Cuáles son los horarios de llegada y salida de la villa?',
+      faq1_a: '<p><strong class="text-slate-700">Check-in:</strong> de 3:00 PM a 8:00 PM. Si prevés llegar más tarde, avisa con al menos <strong class="text-slate-700">24 horas de antelación</strong>.</p><p><strong class="text-slate-700">Check-out:</strong> antes de las <strong class="text-slate-700">11:00 AM</strong>.</p>',
+      faq2_q: '¿Se admiten mascotas en el alquiler vacacional?',
+      faq2_a: 'Sí, se admite <strong class="text-slate-700">1 mascota por reserva</strong>. Consulta al hacer tu reserva para que podamos prepararla todo correctamente.',
+      faq3_q: '¿Se permiten eventos o fiestas?',
+      faq3_a: '<strong class="text-slate-700">No</strong>. Los eventos y fiestas no están permitidos en la villa. La propiedad está ubicada en un complejo residencial privado y se pide respetar la tranquilidad de los vecinos.',
+      faq4_q: '¿Está permitido fumar en Villa Vitao Garden?',
+      faq4_a: 'Se puede fumar <strong class="text-slate-700">en el exterior de la villa</strong> (jardín y terraza). Queda <strong class="text-slate-700">prohibido fumar dentro de la casa</strong>.',
+      faq5_q: '¿Cómo funciona el consumo eléctrico en la villa?',
+      faq5_a: 'La electricidad se abona a parte. Se hace una <strong class="text-slate-700">fotografía del contador en el check-in y otra en el check-out</strong>. El consumo final = kW consumidos × <strong class="text-slate-700">15 RD$</strong>.',
+      faq6_q: '¿En qué idiomas atienden?',
+      faq6_a: 'Atendemos en <strong class="text-slate-700">Español, Inglés y Francés</strong>. Respondemos a todas las consultas en menos de 24 horas.',
+      faq7_q: '¿Cuál es la política de cancelación?',
+      faq7_a: '<p><span class="inline-block w-2 h-2 rounded-full bg-teal-500 mr-2 align-middle"></span><strong class="text-teal-700">Cancelación gratuita</strong> hasta 5 días antes del check-in.</p><p><span class="inline-block w-2 h-2 rounded-full bg-amber-400 mr-2 align-middle"></span>Si cancelas después del check-in, se reembolsa el <strong class="text-slate-700">50% de las noches no utilizadas</strong>.</p><p><span class="inline-block w-2 h-2 rounded-full bg-slate-300 mr-2 align-middle"></span>La tarifa de limpieza se reembolsa si el huésped no llega a utilizar la villa.</p>',
+      faq8_q: '¿Cómo puedo reservar la villa?',
+      faq8_a: 'El proceso es directo, rápido y seguro. Haz clic en el botón de WhatsApp o rellena nuestro formulario de contacto. Te confirmaremos la disponibilidad de fechas y te guiaremos en los pasos para asegurar tu <strong class="text-slate-700">reserva directa con el propietario</strong>, evitando las comisiones de las grandes plataformas.',
+      faq9_q: '¿Cuál es la capacidad máxima de la propiedad?',
+      faq9_a: 'Villa Vitao Garden aloja cómodamente hasta un máximo de <strong class="text-slate-700">6 huéspedes</strong>, gracias a sus 3 amplias habitaciones con cama doble y baños privados en suite.',
+      faq10_q: '¿Cómo se gestionan las llaves y el ingreso (Check-in)?',
+      faq10_a: 'Una vez confirmada tu reserva, nos coordinaremos contigo por WhatsApp. El día de tu llegada a Las Terrenas, <strong class="text-slate-700">una persona de nuestro equipo te recibirá directamente en la villa</strong> para entregarte las llaves, mostrarte el jardín, la piscina, tomar la foto del contador de luz y asegurarse de que tengas todo lo necesario para iniciar tus vacaciones.',
+      footer_copy: '&copy; 2025 Villa Vitao Garden · Todos los derechos reservados',
+      footer_tagline: 'Diseñado para experiencias de lujo',
     },
     en: {
       nav_gallery: 'Gallery', nav_rooms: 'Bedrooms', nav_location: 'Location',
@@ -1453,6 +1529,70 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       form_secure: '100% secure booking · Response within 24 h',
       wa_text: 'Hello%2C%20I%27m%20interested%20in%20checking%20availability%20at%20Villa%20Vitao%20Garden.',
       wa_fab_text: 'Hello%2C%20I%27m%20interested%20in%20the%20villa%20in%20Las%20Terrenas.%20Could%20you%20give%20me%20more%20information%3F',
+      electricity_note: 'As is common in most accommodations in Las Terrenas, electricity is not included in the rental rate. On arrival, our staff will take a photo of the electricity meter at check-in and another at check-out. The final cost is calculated by multiplying the kWh consumed × <strong>15 RD$</strong>.',
+      spaces_title: 'Villa Facilities &amp;<br/>Outdoor Spaces',
+      spaces_sub: 'Every corner is designed for an authentic Caribbean experience',
+      space1_title: 'Private Pool', space1_desc: 'Relax in your own pool with palapa and sun loungers, surrounded by tropical garden',
+      space2_title: 'Outdoor Terrace', space2_desc: 'The perfect spot for morning coffee or enjoying the Las Terrenas breeze in total privacy',
+      space3_title: 'Outdoor Lounge', space3_desc: 'Modern living area with turquoise sofa and exotic plants, perfect for connecting with your group',
+      space4_title: 'Equipped Kitchen', space4_desc: 'Modern space with appliances and utensils ready to prepare your favourite meals',
+      amen_label: 'Included in your stay',
+      amen_title: 'Everything You Need<br/>in Your Vacation Villa',
+      amen1_title: 'Bed & Bath Linen', amen1_sub: 'Bed sheets, bath towels and pool towels included in every stay.',
+      amen1_list: '<li>· Bed sheets</li><li>· Bath towels</li><li>· Pool towel</li><li>· Hand soap</li><li>· Shower gel</li>',
+      amen2_title: 'Equipped Kitchen & Basics', amen2_sub: 'Fully equipped kitchen so you can prepare your meals with ease.',
+      amen2_list: '<li>· Coffee kit</li><li>· Oil, salt & vinegar</li><li>· Fully equipped kitchen</li><li>· Outdoor dining area</li>',
+      amen3_title: 'Flexible Cancellation', amen3_sub: 'Free cancellation policy up to 5 days before your arrival.',
+      amen3_list: '<div class="flex items-start gap-2"><span class="mt-0.5 w-2 h-2 rounded-full bg-teal-500 flex-shrink-0"></span><p class="text-slate-700 text-sm leading-relaxed"><strong class="text-teal-700">Free cancellation</strong> up to 5 days before check-in.</p></div><div class="flex items-start gap-2"><span class="mt-0.5 w-2 h-2 rounded-full bg-amber-400 flex-shrink-0"></span><p class="text-slate-500 text-sm leading-relaxed">If you cancel after check-in, <strong>50% of unused nights</strong> will be refunded.</p></div><div class="flex items-start gap-2"><span class="mt-0.5 w-2 h-2 rounded-full bg-slate-300 flex-shrink-0"></span><p class="text-slate-500 text-sm leading-relaxed">The cleaning fee is refunded if the guest does not use the villa.</p></div>',
+      prices_label: 'Full transparency on your direct booking',
+      prices_title: 'Rental Rates & Nightly Prices',
+      prices_sub: 'Competitive rates to enjoy Las Terrenas without middlemen or hidden fees · 3 en-suite bedrooms · up to 6 guests',
+      price1_days: 'Monday – Thursday', price_night: 'per night', price2_days: 'Friday – Sunday · Weekend',
+      price1_features: '<li class="flex items-center gap-2"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Entire villa · 3 en-suite bedrooms</li><li class="flex items-center gap-2"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Private pool included</li><li class="flex items-center gap-2"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Bed linen & towels</li>',
+      price2_features: '<li class="flex items-center gap-2"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Entire villa · 3 en-suite bedrooms</li><li class="flex items-center gap-2"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Private pool included</li><li class="flex items-center gap-2"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Perfect for weekends</li>',
+      prices_cta: 'Check Availability',
+      rooms_label: 'Rest & Privacy', rooms_title: 'Luxury En-Suite Bedrooms<br/>in Las Terrenas',
+      rooms_sub: 'Villa Vitao Garden is designed to offer maximum comfort for groups and families. The villa layout ensures complete independence in every room.',
+      room1_title: 'King Master Suite', room1_sub: 'King Size Bed · En-Suite Bathroom',
+      room1_desc: 'The main bedroom of the villa. King Size bed, en-suite bathroom and built-in wardrobe. Spacious and comfortable for a luxury stay in Las Terrenas.',
+      room1_features: '<li class="flex items-center gap-2 text-sm text-slate-600"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>King Size Bed</li><li class="flex items-center gap-2 text-sm text-slate-600"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Private en-suite bathroom</li><li class="flex items-center gap-2 text-sm text-slate-600"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Independent A/C</li><li class="flex items-center gap-2 text-sm text-slate-600"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Wooden built-in wardrobe</li>',
+      room2_title: 'King Suite with Terrace', room2_sub: 'King Size Bed · Private Terrace · En-Suite Bathroom',
+      room2_desc: 'The brightest bedroom in the villa. King Size bed, private terrace with natural light and en-suite bathroom. Perfect to wake up to the Caribbean breeze.',
+      room2_features: '<li class="flex items-center gap-2 text-sm text-slate-600"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>King Size Bed</li><li class="flex items-center gap-2 text-sm text-slate-600"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Private terrace</li><li class="flex items-center gap-2 text-sm text-slate-600"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Very bright</li><li class="flex items-center gap-2 text-sm text-slate-600"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Private en-suite bathroom</li>',
+      room3_title: 'Family Twin Suite', room3_sub: '2 Single Beds · En-Suite Bathroom',
+      room3_desc: 'Perfect for families or groups of friends. Two comfortable single beds, private en-suite bathroom and air conditioning. Maximum comfort in Las Terrenas.',
+      room3_features: '<li class="flex items-center gap-2 text-sm text-slate-600"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>2 Single beds</li><li class="flex items-center gap-2 text-sm text-slate-600"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Private en-suite bathroom</li><li class="flex items-center gap-2 text-sm text-slate-600"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Ideal for families & friends</li><li class="flex items-center gap-2 text-sm text-slate-600"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Independent A/C</li>',
+      test_label: 'Real experiences', test_title: 'Guest Reviews<br/>of Villa Vitao Garden',
+      test1_quote: '"A magical experience. The villa exceeded all our expectations. The pool, the atmosphere, the tranquillity... we will definitely return."',
+      test1_role: 'Couple',
+      test2_quote: '"The perfect place to unwind. The kids loved the pool and we enjoyed the terrace in the evenings. Absolutely recommended."',
+      test2_role: 'Family of 4',
+      test3_quote: '"Las Terrenas is paradise and this villa is its gem. Location, comfort and luxury all in one place."',
+      test3_role: 'Traveller',
+      gallery_label: 'Photos', gallery_title: 'Discover the Villa', gallery_hint: 'Click on any photo to view it full size',
+      faq_label: 'Frequently asked questions', faq_title: 'FAQ about Villa Vitao Garden',
+      faq1_q: 'What are the check-in and check-out times?',
+      faq1_a: '<p><strong class="text-slate-700">Check-in:</strong> from 3:00 PM to 8:00 PM. If you expect to arrive later, please notify us at least <strong class="text-slate-700">24 hours in advance</strong>.</p><p><strong class="text-slate-700">Check-out:</strong> before <strong class="text-slate-700">11:00 AM</strong>.</p>',
+      faq2_q: 'Are pets allowed at the vacation rental?',
+      faq2_a: 'Yes, <strong class="text-slate-700">1 pet per booking</strong> is allowed. Please let us know when booking so we can prepare everything correctly.',
+      faq3_q: 'Are events or parties allowed?',
+      faq3_a: '<strong class="text-slate-700">No</strong>. Events and parties are not permitted at the villa. The property is located in a private residential complex and we ask that you respect the peace of the neighbours.',
+      faq4_q: 'Is smoking allowed at Villa Vitao Garden?',
+      faq4_a: 'Smoking is allowed <strong class="text-slate-700">outside the villa</strong> (garden and terrace). Smoking <strong class="text-slate-700">inside the house is strictly prohibited</strong>.',
+      faq5_q: 'How does electricity consumption work at the villa?',
+      faq5_a: 'Electricity is charged separately. A <strong class="text-slate-700">photo of the meter is taken at check-in and at check-out</strong>. Final cost = kWh consumed × <strong class="text-slate-700">15 RD$</strong>.',
+      faq6_q: 'What languages do you speak?',
+      faq6_a: 'We communicate in <strong class="text-slate-700">Spanish, English and French</strong>. We respond to all enquiries within 24 hours.',
+      faq7_q: 'What is the cancellation policy?',
+      faq7_a: '<p><span class="inline-block w-2 h-2 rounded-full bg-teal-500 mr-2 align-middle"></span><strong class="text-teal-700">Free cancellation</strong> up to 5 days before check-in.</p><p><span class="inline-block w-2 h-2 rounded-full bg-amber-400 mr-2 align-middle"></span>If you cancel after check-in, <strong class="text-slate-700">50% of unused nights</strong> will be refunded.</p><p><span class="inline-block w-2 h-2 rounded-full bg-slate-300 mr-2 align-middle"></span>The cleaning fee is refunded if the guest does not use the villa.</p>',
+      faq8_q: 'How do I book the villa?',
+      faq8_a: 'The process is straightforward, quick and secure. Click the WhatsApp button or fill in our contact form. We will confirm availability and guide you through the steps to secure your <strong class="text-slate-700">direct booking with the owner</strong>, avoiding commission from large platforms.',
+      faq9_q: 'What is the maximum capacity of the property?',
+      faq9_a: 'Villa Vitao Garden comfortably accommodates up to <strong class="text-slate-700">6 guests</strong>, thanks to its 3 spacious bedrooms with double beds and private en-suite bathrooms.',
+      faq10_q: 'How are keys and check-in managed?',
+      faq10_a: 'Once your booking is confirmed, we will coordinate with you via WhatsApp. On the day of your arrival in Las Terrenas, <strong class="text-slate-700">a member of our team will meet you directly at the villa</strong> to hand over the keys, show you the garden and pool, take the meter photo and make sure you have everything you need to start your holiday.',
+      footer_copy: '&copy; 2025 Villa Vitao Garden · All rights reserved',
+      footer_tagline: 'Designed for luxury experiences',
     },
     fr: {
       nav_gallery: 'Galerie', nav_rooms: 'Chambres', nav_location: 'Localisation',
@@ -1485,55 +1625,120 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       form_message_ph: 'Parlez-nous de votre séjour, de vos préférences ou de vos questions...',
       form_submit: 'Finaliser la Réservation',
       form_secure: 'Réservation 100% sécurisée · Réponse en moins de 24 h',
-      wa_text: 'Bonjour%2C%20je%20souhaite%20vérifier%20la%20disponibilité%20de%20Villa%20Vitao%20Garden.',
-      wa_fab_text: 'Bonjour%2C%20je%20suis%20intéressé%28e%29%20par%20la%20villa%20à%20Las%20Terrenas.%20Pourriez-vous%20me%20donner%20plus%20d%27informations%3F',
+      wa_fab_msg: 'Bonjour%2C%20je%20suis%20int%C3%A9ress%C3%A9(e)%20par%20la%20Villa%20Vitao%20Garden%20%C3%A0%20Las%20Terrenas.%20Pouvez-vous%20me%20donner%20plus%20d%27informations%20%3F',
+      hero_wa_msg: 'Bonjour%2C%20je%20suis%20int%C3%A9ress%C3%A9(e)%20par%20la%20disponibilit%C3%A9%20de%20Villa%20Vitao%20Garden.',
+      electricity_note: 'Comme dans la plupart des hébergements à Las Terrenas, la consommation d\'électricité n\'est pas incluse dans le tarif de location. À l\'arrivée, notre personnel prendra une photo du compteur lors du check-in, et une autre au check-out. Le coût final est calculé en multipliant les kWh consommés × <strong>15 RD$</strong>.',
+      spaces_title: 'Installations et Espaces<br/>Extérieurs de la Villa',
+      spaces_sub: 'Chaque recoin est pensé pour une expérience caribéenne authentique',
+      space1_title: 'Piscine Privée', space1_desc: 'Détendez-vous dans votre propre piscine avec palapa et chaises longues, entourée d\'un jardin tropical',
+      space2_title: 'Terrasse Extérieure', space2_desc: 'L\'endroit idéal pour le café du matin ou profiter de la brise de Las Terrenas en toute intimité',
+      space3_title: 'Salon Extérieur', space3_desc: 'Espace de vie moderne avec canapé turquoise et plantes exotiques, parfait pour se retrouver entre proches',
+      space4_title: 'Cuisine Équipée', space4_desc: 'Espace moderne avec électroménagers et ustensiles prêts pour préparer vos plats préférés',
+      amen_label: 'Inclus dans votre séjour',
+      amen_title: 'Tout ce dont Vous avez Besoin<br/>dans Votre Villa de Vacances',
+      amen1_title: 'Linge de Lit et de Bain', amen1_sub: 'Draps, serviettes de bain et serviette de piscine inclus à chaque séjour.',
+      amen1_list: '<li>· Draps de lit</li><li>· Serviettes de bain</li><li>· Serviette de piscine</li><li>· Savon pour les mains</li><li>· Gel douche</li>',
+      amen2_title: 'Cuisine Équipée & Produits de Base', amen2_sub: 'Cuisine entièrement équipée pour préparer vos repas en toute commodité.',
+      amen2_list: '<li>· Kit café</li><li>· Huile, sel et vinaigre</li><li>· Cuisine entièrement équipée</li><li>· Salle à manger extérieure</li>',
+      amen3_title: 'Annulation Flexible', amen3_sub: 'Annulation gratuite jusqu\'à 5 jours avant votre arrivée.',
+      amen3_list: '<div class="flex items-start gap-2"><span class="mt-0.5 w-2 h-2 rounded-full bg-teal-500 flex-shrink-0"></span><p class="text-slate-700 text-sm leading-relaxed"><strong class="text-teal-700">Annulation gratuite</strong> jusqu\'à 5 jours avant le check-in.</p></div><div class="flex items-start gap-2"><span class="mt-0.5 w-2 h-2 rounded-full bg-amber-400 flex-shrink-0"></span><p class="text-slate-500 text-sm leading-relaxed">En cas d\'annulation après le check-in, <strong>50 % des nuits non utilisées</strong> seront remboursées.</p></div><div class="flex items-start gap-2"><span class="mt-0.5 w-2 h-2 rounded-full bg-slate-300 flex-shrink-0"></span><p class="text-slate-500 text-sm leading-relaxed">Les frais de ménage sont remboursés si le client n\'a pas utilisé la villa.</p></div>',
+      prices_label: 'Transparence totale sur votre réservation directe',
+      prices_title: 'Tarifs de Location et Prix par Nuit',
+      prices_sub: 'Tarifs compétitifs pour profiter de Las Terrenas sans intermédiaires ni frais cachés · 3 chambres en suite · jusqu\'à 6 personnes',
+      price1_days: 'Lundi – Jeudi', price_night: 'par nuit', price2_days: 'Vendredi – Dimanche · Week-end',
+      price1_features: '<li class="flex items-center gap-2"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Villa entière · 3 ch. en suite</li><li class="flex items-center gap-2"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Piscine privée incluse</li><li class="flex items-center gap-2"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Linge de lit et serviettes</li>',
+      price2_features: '<li class="flex items-center gap-2"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Villa entière · 3 ch. en suite</li><li class="flex items-center gap-2"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Piscine privée incluse</li><li class="flex items-center gap-2"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Idéal pour les week-ends</li>',
+      prices_cta: 'Vérifier la Disponibilité',
+      rooms_label: 'Repos et intimité', rooms_title: 'Chambres de Luxe en Suite<br/>à Las Terrenas',
+      rooms_sub: 'Villa Vitao Garden est conçue pour offrir un confort maximal aux groupes et aux familles. La disposition de la villa garantit une totale indépendance dans chaque chambre.',
+      room1_title: 'Suite King Master', room1_sub: 'Lit King Size · Salle de bain en suite',
+      room1_desc: 'La chambre principale de la villa. Lit King Size, salle de bain en suite et armoire encastrée. Spacieuse et confortable pour un séjour de luxe à Las Terrenas.',
+      room1_features: '<li class="flex items-center gap-2 text-sm text-slate-600"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Lit King Size</li><li class="flex items-center gap-2 text-sm text-slate-600"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Salle de bain en suite privée</li><li class="flex items-center gap-2 text-sm text-slate-600"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Climatisation indépendante</li><li class="flex items-center gap-2 text-sm text-slate-600"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Armoire encastrée en bois</li>',
+      room2_title: 'Suite King avec Terrasse', room2_sub: 'Lit King Size · Terrasse Privée · Salle de bain en suite',
+      room2_desc: 'La chambre la plus lumineuse de la villa. Lit King Size, terrasse privée avec lumière naturelle et salle de bain en suite. Parfaite pour se réveiller avec la brise des Caraïbes.',
+      room2_features: '<li class="flex items-center gap-2 text-sm text-slate-600"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Lit King Size</li><li class="flex items-center gap-2 text-sm text-slate-600"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Terrasse privée</li><li class="flex items-center gap-2 text-sm text-slate-600"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Très lumineuse</li><li class="flex items-center gap-2 text-sm text-slate-600"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Salle de bain en suite privée</li>',
+      room3_title: 'Suite Twin Familiale', room3_sub: '2 Lits Simples · Salle de bain en suite',
+      room3_desc: 'Parfaite pour les familles ou les groupes d\'amis. Deux lits simples confortables, salle de bain en suite privée et climatisation. Confort maximal à Las Terrenas.',
+      room3_features: '<li class="flex items-center gap-2 text-sm text-slate-600"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>2 Lits simples</li><li class="flex items-center gap-2 text-sm text-slate-600"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Salle de bain en suite privée</li><li class="flex items-center gap-2 text-sm text-slate-600"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Idéale pour familles et amis</li><li class="flex items-center gap-2 text-sm text-slate-600"><svg class="w-4 h-4 text-teal-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>Climatisation indépendante</li>',
+      test_label: 'Expériences réelles', test_title: 'Avis de Voyageurs<br/>sur Villa Vitao Garden',
+      test1_quote: '"Une expérience magique. La villa a dépassé toutes nos attentes. La piscine, l\'ambiance, la tranquillité... nous reviendrons sans aucun doute."',
+      test1_role: 'Couple',
+      test2_quote: '"L\'endroit parfait pour se déconnecter. Les enfants ont adoré la piscine et nous avons profité de la terrasse le soir. Absolument recommandé."',
+      test2_role: 'Famille de 4',
+      test3_quote: '"Las Terrenas est un paradis et cette villa en est le joyau. Emplacement, confort et luxe réunis en un seul endroit."',
+      test3_role: 'Voyageuse',
+      gallery_label: 'Photos', gallery_title: 'Découvrez la Villa', gallery_hint: 'Cliquez sur une photo pour l\'agrandir',
+      faq_label: 'Questions fréquentes', faq_title: 'FAQ sur Villa Vitao Garden',
+      faq1_q: 'Quels sont les horaires d\'arrivée et de départ de la villa ?',
+      faq1_a: '<p><strong class="text-slate-700">Check-in :</strong> de 15h00 à 20h00. Si vous prévoyez d\'arriver plus tard, merci de nous prévenir au moins <strong class="text-slate-700">24 heures à l\'avance</strong>.</p><p><strong class="text-slate-700">Check-out :</strong> avant <strong class="text-slate-700">11h00</strong>.</p>',
+      faq2_q: 'Les animaux de compagnie sont-ils acceptés ?',
+      faq2_a: 'Oui, <strong class="text-slate-700">1 animal de compagnie par réservation</strong> est accepté. Merci de le préciser lors de votre réservation afin que nous puissions tout préparer correctement.',
+      faq3_q: 'Les événements ou fêtes sont-ils autorisés ?',
+      faq3_a: '<strong class="text-slate-700">Non</strong>. Les événements et les fêtes ne sont pas autorisés dans la villa. La propriété est située dans une résidence privée et nous vous demandons de respecter la tranquillité des voisins.',
+      faq4_q: 'Peut-on fumer à Villa Vitao Garden ?',
+      faq4_a: 'Il est possible de fumer <strong class="text-slate-700">à l\'extérieur de la villa</strong> (jardin et terrasse). Il est <strong class="text-slate-700">strictement interdit de fumer à l\'intérieur</strong>.',
+      faq5_q: 'Comment fonctionne la consommation électrique dans la villa ?',
+      faq5_a: 'L\'électricité est facturée séparément. Une <strong class="text-slate-700">photo du compteur est prise au check-in et au check-out</strong>. Le coût final = kWh consommés × <strong class="text-slate-700">15 RD$</strong>.',
+      faq6_q: 'En quelles langues êtes-vous disponibles ?',
+      faq6_a: 'Nous communiquons en <strong class="text-slate-700">Espagnol, Anglais et Français</strong>. Nous répondons à toutes les demandes en moins de 24 heures.',
+      faq7_q: 'Quelle est la politique d\'annulation ?',
+      faq7_a: '<p><span class="inline-block w-2 h-2 rounded-full bg-teal-500 mr-2 align-middle"></span><strong class="text-teal-700">Annulation gratuite</strong> jusqu\'à 5 jours avant le check-in.</p><p><span class="inline-block w-2 h-2 rounded-full bg-amber-400 mr-2 align-middle"></span>En cas d\'annulation après le check-in, <strong class="text-slate-700">50 % des nuits non utilisées</strong> seront remboursées.</p><p><span class="inline-block w-2 h-2 rounded-full bg-slate-300 mr-2 align-middle"></span>Les frais de ménage sont remboursés si le client n\'a pas utilisé la villa.</p>',
+      faq8_q: 'Comment réserver la villa ?',
+      faq8_a: 'Le processus est simple, rapide et sécurisé. Cliquez sur le bouton WhatsApp ou remplissez notre formulaire de contact. Nous confirmerons la disponibilité et vous guiderons dans les étapes pour sécuriser votre <strong class="text-slate-700">réservation directe avec le propriétaire</strong>, sans les commissions des grandes plateformes.',
+      faq9_q: 'Quelle est la capacité maximale de la villa ?',
+      faq9_a: 'Villa Vitao Garden accueille confortablement jusqu\'à <strong class="text-slate-700">6 voyageurs</strong>, grâce à ses 3 chambres spacieuses avec lits doubles et salles de bain privées en suite.',
+      faq10_q: 'Comment se gèrent les clés et l\'arrivée (Check-in) ?',
+      faq10_a: 'Une fois votre réservation confirmée, nous coordonnerons avec vous par WhatsApp. Le jour de votre arrivée à Las Terrenas, <strong class="text-slate-700">un membre de notre équipe vous accueillera directement à la villa</strong> pour vous remettre les clés, vous montrer le jardin et la piscine, prendre la photo du compteur et s\'assurer que vous avez tout ce qu\'il vous faut pour commencer vos vacances.',
+      footer_copy: '&copy; 2025 Villa Vitao Garden · Tous droits réservés',
+      footer_tagline: 'Conçu pour des expériences de luxe',
     }
   };
 
-  function setLang(lang) {
-    if (!T[lang]) return;
-    localStorage.setItem('lang', lang);
+  let currentLang = 'es';
+
+  function applyLang(lang) {
+    if (!translations[lang]) return;
+    currentLang = lang;
+    localStorage.setItem('villa_lang', lang);
     document.documentElement.lang = lang;
 
-    // Apply text translations
+    const t = translations[lang];
+
+    // Update all data-i18n elements
     document.querySelectorAll('[data-i18n]').forEach(el => {
       const key = el.getAttribute('data-i18n');
-      if (T[lang][key] !== undefined) el.innerHTML = T[lang][key];
+      if (t[key] !== undefined) el.innerHTML = t[key];
     });
 
-    // Apply placeholder translations
+    // Update placeholders
     document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
       const key = el.getAttribute('data-i18n-placeholder');
-      if (T[lang][key] !== undefined) el.placeholder = T[lang][key];
+      if (t[key] !== undefined) el.placeholder = t[key];
     });
 
-    // Update WhatsApp links
-    const waHero = document.getElementById('wa-hero');
-    if (waHero) waHero.href = 'https://wa.me/18097572184?text=' + T[lang].wa_text;
-    const waFab = document.getElementById('wa-fab');
-    if (waFab) waFab.href = 'https://wa.me/18097572184?text=' + T[lang].wa_fab_text;
+    // Update WhatsApp hero button href
+    const heroWaBtn = document.getElementById('hero-wa-btn');
+    if (heroWaBtn && t.hero_wa_msg) {
+      heroWaBtn.href = 'https://wa.me/18097572184?text=' + t.hero_wa_msg;
+    }
 
-    // Update active button state — desktop
+    // Update WhatsApp FAB href
+    const fabLink = document.getElementById('whatsapp-fab-link');
+    if (fabLink && t.wa_fab_msg) {
+      fabLink.href = 'https://wa.me/18097572184?text=' + t.wa_fab_msg;
+    }
+
+    // Update active lang button state
     document.querySelectorAll('.lang-btn').forEach(btn => {
-      const active = btn.id === 'lang-' + lang;
-      btn.classList.toggle('bg-white/30', active);
-      btn.classList.toggle('text-white', active);
-      btn.classList.toggle('text-white/80', !active);
-    });
-    // Update active button state — mobile
-    document.querySelectorAll('.mob-lang-btn').forEach(btn => {
-      const active = btn.id === 'mob-lang-' + lang;
-      btn.classList.toggle('border-teal-500', active);
-      btn.classList.toggle('text-teal-600', active);
-      btn.classList.toggle('border-slate-200', !active);
-      btn.classList.toggle('text-slate-600', !active);
+      const isActive = btn.getAttribute('data-lang') === lang;
+      btn.classList.toggle('lang-active', isActive);
     });
   }
 
   // Init on page load
   (function() {
-    const saved = localStorage.getItem('lang') || 'es';
-    setLang(saved);
+    const saved = localStorage.getItem('villa_lang');
+    applyLang(saved && translations[saved] ? saved : 'es');
   })();
 </script>
 
