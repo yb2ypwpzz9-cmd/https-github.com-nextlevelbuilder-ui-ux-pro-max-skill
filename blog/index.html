@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Guías de viaje para Las Terrenas, República Dominicana. Qué hacer, dónde alojarse, playas, gastronomía y consejos para tu estancia perfecta en el Caribe." />
+  <title>Blog · Guías de Las Terrenas | Villa Vitao Garden</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600;1,700&family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ink:   { DEFAULT:'#07100e', 2:'#0d1a17', 3:'#122018' },
+            cream: { DEFAULT:'#f5f0e8', muted:'#c8c0b0' },
+            teal:  { 300:'#5eead4', 400:'#2dd4bf', 500:'#14b8a6', 600:'#0d9488', 700:'#0f766e', 900:'#134e4a' },
+          },
+          fontFamily: {
+            serif: ['Cormorant','Georgia','serif'],
+            sans:  ['Montserrat','system-ui','sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    html { scroll-behavior:smooth; }
+    body { font-family:'Montserrat',sans-serif; background:#07100e; color:#f5f0e8; overflow-x:hidden; }
+    *, *::before, *::after { box-sizing:border-box; }
+
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(32px); }
+      to   { opacity:1; transform:none; }
+    }
+    .fe1 { animation:fadeUp .9s cubic-bezier(.22,1,.36,1) .1s both; }
+    .fe2 { animation:fadeUp .9s cubic-bezier(.22,1,.36,1) .28s both; }
+    .fe3 { animation:fadeUp .9s cubic-bezier(.22,1,.36,1) .44s both; }
+
+    .rv    { opacity:0; transform:translateY(28px); transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1); }
+    .rv.on { opacity:1; transform:none; }
+
+    #hdr { transition:background .3s,border-color .3s; }
+    #hdr.scrolled { background:rgba(7,16,14,.96); backdrop-filter:blur(24px); border-bottom:1px solid rgba(255,255,255,.06); }
+
+    .card-article {
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.09);
+      border-radius:20px;
+      overflow:hidden;
+      transition:transform .3s cubic-bezier(.22,1,.36,1), border-color .3s, box-shadow .3s;
+      cursor:pointer;
+    }
+    .card-article:hover {
+      transform:translateY(-6px);
+      border-color:rgba(45,212,191,.35);
+      box-shadow:0 24px 60px rgba(0,0,0,.4);
+    }
+    .card-article img {
+      width:100%; height:220px; object-fit:cover;
+      transition:transform .6s cubic-bezier(.22,1,.36,1);
+    }
+    .card-article:hover img { transform:scale(1.05); }
+
+    .tag {
+      display:inline-block;
+      background:rgba(45,212,191,.15);
+      color:#2dd4bf;
+      font-size:.65rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+      padding:4px 10px; border-radius:100px;
+      border:1px solid rgba(45,212,191,.25);
+    }
+
+    .btn-teal {
+      display:inline-flex; align-items:center; gap:8px;
+      background:#2dd4bf; color:#07100e;
+      font-family:'Montserrat',sans-serif; font-weight:700; font-size:.76rem; letter-spacing:.09em; text-transform:uppercase;
+      padding:14px 28px; border-radius:100px; cursor:pointer; text-decoration:none;
+      transition:background .2s,transform .2s,box-shadow .2s; min-height:44px;
+    }
+    .btn-teal:hover { background:#5eead4; transform:translateY(-2px); box-shadow:0 12px 32px rgba(45,212,191,.28); }
+
+    .divider { height:1px; background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent); }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<header id="hdr" class="fixed top-0 left-0 right-0 z-50 px-6 py-4">
+  <div class="max-w-6xl mx-auto flex items-center justify-between">
+    <a href="../villa-las-terrenas-v5.html" class="font-serif text-xl text-cream tracking-wide hover:text-teal-400 transition-colors">
+      Villa Vitao Garden
+    </a>
+    <nav class="hidden md:flex items-center gap-8">
+      <a href="../villa-las-terrenas-v5.html#booking" class="text-cream-muted text-xs font-semibold uppercase tracking-widest hover:text-cream transition-colors">Reservar</a>
+      <a href="../villa-las-terrenas-v5.html#contact" class="text-cream-muted text-xs font-semibold uppercase tracking-widest hover:text-cream transition-colors">Contacto</a>
+      <a href="./index.html" class="text-teal-400 text-xs font-semibold uppercase tracking-widest">Blog</a>
+    </nav>
+    <a href="https://airbnb.com" target="_blank" rel="noopener" class="btn-teal text-xs py-3 px-5">
+      Reservar ahora
+    </a>
+  </div>
+</header>
+
+<!-- ── HERO ── -->
+<section class="pt-36 pb-20 px-6">
+  <div class="max-w-6xl mx-auto">
+    <div class="fe1">
+      <span class="tag mb-4 inline-block">Guías de viaje</span>
+    </div>
+    <h1 class="fe2 font-serif text-5xl md:text-7xl font-light leading-[1.1] text-cream mt-4 mb-6" style="text-wrap:balance">
+      Descubre<br/><em class="text-teal-400">Las Terrenas</em>
+    </h1>
+    <p class="fe3 text-cream-muted text-base md:text-lg max-w-xl leading-relaxed">
+      Todo lo que necesitas saber para vivir el Caribe auténtico. Playas, gastronomía, excursiones y los mejores consejos de quienes conocen Las Terrenas de verdad.
+    </p>
+  </div>
+</section>
+
+<div class="divider mx-6 mb-16"></div>
+
+<!-- ── ARTICLES GRID ── -->
+<section class="px-6 pb-24">
+  <div class="max-w-6xl mx-auto">
+
+    <!-- Artículo destacado -->
+    <div class="rv mb-12">
+      <a href="./que-hacer-las-terrenas.html" class="card-article grid md:grid-cols-2 gap-0 block">
+        <div style="overflow:hidden">
+          <img src="../galeria_01.webp" alt="Playa Las Terrenas, República Dominicana" style="height:360px" />
+        </div>
+        <div class="p-8 md:p-12 flex flex-col justify-center">
+          <span class="tag mb-4">Guía completa</span>
+          <h2 class="font-serif text-3xl md:text-4xl font-light text-cream leading-tight mb-4" style="text-wrap:balance">
+            Qué hacer en Las Terrenas en 7 días
+          </h2>
+          <p class="text-cream-muted text-sm leading-relaxed mb-6">
+            La guía definitiva para aprovechar al máximo tu semana en Las Terrenas: playas imprescindibles, excursiones, gastronomía local y los secretos que solo conocen los locales.
+          </p>
+          <div class="flex items-center gap-4 text-xs text-cream-muted">
+            <span>8 min lectura</span>
+            <span>·</span>
+            <span>Julio 2025</span>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <!-- Grid secundario -->
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+      <div class="rv card-article">
+        <a href="./las-terrenas-vs-punta-cana.html" class="block">
+          <img src="../galeria_02.webp" alt="Playa El Portillo Las Terrenas" />
+          <div class="p-6">
+            <span class="tag mb-3 inline-block">Comparativa</span>
+            <h3 class="font-serif text-xl font-light text-cream leading-tight mb-3" style="text-wrap:balance">
+              Las Terrenas vs Punta Cana: ¿Cuál elegir?
+            </h3>
+            <p class="text-cream-muted text-xs leading-relaxed mb-4">
+              Dos destinos, dos experiencias completamente distintas. Te ayudamos a decidir cuál encaja con lo que buscas.
+            </p>
+            <div class="flex items-center gap-3 text-xs text-cream-muted">
+              <span>6 min lectura</span>
+              <span>·</span>
+              <span>Julio 2025</span>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <div class="rv card-article">
+        <a href="./donde-alojarse-las-terrenas-familia.html" class="block">
+          <img src="../galeria_03.webp" alt="Villa familiar Las Terrenas con piscina" />
+          <div class="p-6">
+            <span class="tag mb-3 inline-block">Alojamiento</span>
+            <h3 class="font-serif text-xl font-light text-cream leading-tight mb-3" style="text-wrap:balance">
+              Dónde alojarse en Las Terrenas con familia
+            </h3>
+            <p class="text-cream-muted text-xs leading-relaxed mb-4">
+              Villas privadas, hoteles boutique o apart-hotel: analizamos cada opción para que elijas la mejor para tu familia.
+            </p>
+            <div class="flex items-center gap-3 text-xs text-cream-muted">
+              <span>5 min lectura</span>
+              <span>·</span>
+              <span>Próximamente</span>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <!-- Próximo artículo placeholder -->
+      <div class="rv card-article opacity-60">
+        <div style="height:220px; background:rgba(255,255,255,.04); display:flex; align-items:center; justify-content:center;">
+          <span class="text-cream-muted text-xs uppercase tracking-widest">Próximamente</span>
+        </div>
+        <div class="p-6">
+          <span class="tag mb-3 inline-block" style="opacity:.5">Gastronomía</span>
+          <h3 class="font-serif text-xl font-light text-cream leading-tight mb-3">
+            Los mejores restaurantes de Las Terrenas
+          </h3>
+          <p class="text-cream-muted text-xs leading-relaxed">
+            Desde el pescado fresco en la playa hasta la cocina fusión caribeña. Guía gastronómica completa.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA VILLA ── -->
+<section class="px-6 pb-24">
+  <div class="max-w-6xl mx-auto">
+    <div class="rv" style="background:rgba(45,212,191,.08); border:1px solid rgba(45,212,191,.2); border-radius:24px; padding:48px; text-align:center;">
+      <p class="text-teal-400 text-xs font-semibold uppercase tracking-widest mb-4">Tu base en Las Terrenas</p>
+      <h2 class="font-serif text-4xl md:text-5xl font-light text-cream mb-4" style="text-wrap:balance">
+        Villa Vitao Garden
+      </h2>
+      <p class="text-cream-muted text-sm leading-relaxed max-w-lg mx-auto mb-8">
+        3 habitaciones en suite, piscina privada y a 5 minutos de la playa. La base perfecta para explorar todo lo que Las Terrenas tiene que ofrecer.
+      </p>
+      <a href="../villa-las-terrenas-v5.html" class="btn-teal">
+        Ver la villa
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer class="px-6 py-10 border-t border-white/10">
+  <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+    <p class="font-serif text-lg text-cream">Villa Vitao Garden</p>
+    <p class="text-cream-muted text-xs">Las Terrenas, República Dominicana</p>
+    <a href="../villa-las-terrenas-v5.html" class="text-teal-400 text-xs hover:text-teal-300 transition-colors uppercase tracking-widest font-semibold">
+      Volver a la villa →
+    </a>
+  </div>
+</footer>
+
+<script>
+  // Nav scroll
+  const hdr = document.getElementById('hdr');
+  window.addEventListener('scroll', () => {
+    hdr.classList.toggle('scrolled', window.scrollY > 60);
+  }, { passive: true });
+
+  // Scroll reveal
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('on'); obs.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.rv').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
