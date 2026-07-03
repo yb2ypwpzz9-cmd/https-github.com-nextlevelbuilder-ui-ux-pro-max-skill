@@ -44,9 +44,9 @@
       theme: {
         extend: {
           colors: {
-            ink:   { DEFAULT:'#07100e', 2:'#0d1a17', 3:'#122018' },
-            cream: { DEFAULT:'#f5f0e8', muted:'#c8c0b0' },
-            teal:  { 300:'#5eead4', 400:'#2dd4bf', 500:'#14b8a6', 600:'#0d9488', 700:'#0f766e', 900:'#134e4a' },
+            forest: { DEFAULT:'#1A2E1A', 2:'#243C24', light:'#F7FBF5' },
+            sand:   { DEFAULT:'#F0EBE0', muted:'#8A9E8A' },
+            green:  { 300:'#86EFAC', 400:'#4ADE80', 500:'#2DA44E', 600:'#1A7A35', 700:'#155C28', 900:'#0D3B1A' },
           },
           fontFamily: {
             serif: ['Cormorant','Georgia','serif'],
@@ -58,7 +58,7 @@
   </script>
   <style>
     html { scroll-behavior:smooth; }
-    body { font-family:'Montserrat',sans-serif; background:#07100e; color:#f5f0e8; overflow-x:hidden; }
+    body { font-family:'Montserrat',sans-serif; background:#F7FBF5; color:#1A2E1A; overflow-x:hidden; }
     *, *::before, *::after { box-sizing:border-box; }
 
     @keyframes fadeUp {
@@ -74,44 +74,44 @@
     .rv.on { opacity:1; transform:none; }
 
     #hdr { transition:background .3s,border-color .3s; }
-    #hdr.scrolled { background:rgba(7,16,14,.96); backdrop-filter:blur(24px); border-bottom:1px solid rgba(255,255,255,.06); }
+    #hdr.scrolled { background:rgba(247,251,245,.97); backdrop-filter:blur(24px); border-bottom:1px solid rgba(26,46,26,.1); }
 
     /* Progreso de lectura */
-    #progress { position:fixed; top:0; left:0; height:2px; background:#2dd4bf; z-index:100; transition:width .1s linear; }
+    #progress { position:fixed; top:0; left:0; height:2px; background:#2DA44E; z-index:100; transition:width .1s linear; }
 
     /* Contenido del artículo */
     .prose h2 {
       font-family:'Cormorant',Georgia,serif;
       font-size:2rem; font-weight:400; line-height:1.2;
-      color:#f5f0e8; margin-top:3rem; margin-bottom:1rem;
+      color:#1A2E1A; margin-top:3rem; margin-bottom:1rem;
       text-wrap:balance;
     }
     .prose h3 {
       font-family:'Montserrat',sans-serif;
       font-size:.8rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
-      color:#2dd4bf; margin-top:2rem; margin-bottom:.6rem;
+      color:#2DA44E; margin-top:2rem; margin-bottom:.6rem;
     }
     .prose p {
-      font-size:.92rem; line-height:1.85; color:#c8c0b0;
+      font-size:.92rem; line-height:1.85; color:#5A7A5A;
       margin-bottom:1.25rem; max-width:68ch;
     }
-    .prose strong { color:#f5f0e8; font-weight:600; }
+    .prose strong { color:#1A2E1A; font-weight:600; }
     .prose ul { margin-bottom:1.25rem; }
     .prose ul li {
-      font-size:.88rem; line-height:1.75; color:#c8c0b0;
+      font-size:.88rem; line-height:1.75; color:#5A7A5A;
       padding-left:1.25rem; position:relative; margin-bottom:.4rem;
     }
     .prose ul li::before {
       content:''; position:absolute; left:0; top:.7em;
-      width:5px; height:5px; border-radius:50%; background:#2dd4bf;
+      width:5px; height:5px; border-radius:50%; background:#2DA44E;
     }
-    .prose a { color:#2dd4bf; text-decoration:underline; text-decoration-color:rgba(45,212,191,.4); }
-    .prose a:hover { color:#5eead4; }
+    .prose a { color:#2DA44E; text-decoration:underline; text-decoration-color:rgba(45,164,78,.4); }
+    .prose a:hover { color:#1A7A35; }
 
     .tip-box {
-      background:rgba(45,212,191,.08);
-      border:1px solid rgba(45,212,191,.2);
-      border-left:3px solid #2dd4bf;
+      background:rgba(45,164,78,.08);
+      border:1px solid rgba(45,164,78,.2);
+      border-left:3px solid #2DA44E;
       border-radius:12px;
       padding:20px 24px;
       margin:2rem 0;
@@ -119,50 +119,50 @@
     .tip-box p { margin-bottom:0; font-size:.85rem; }
     .tip-label {
       font-size:.65rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase;
-      color:#2dd4bf; margin-bottom:.5rem; display:block;
+      color:#2DA44E; margin-bottom:.5rem; display:block;
     }
 
     .day-card {
-      background:rgba(255,255,255,.04);
+      background:#FFFFFF;
       border:1px solid rgba(255,255,255,.08);
       border-radius:16px;
       padding:24px 28px;
       margin:1.5rem 0;
       transition:border-color .3s;
     }
-    .day-card:hover { border-color:rgba(45,212,191,.25); }
+    .day-card:hover { border-color:rgba(45,164,78,.4); }
     .day-label {
       font-size:.65rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase;
-      color:#2dd4bf; margin-bottom:.5rem; display:block;
+      color:#2DA44E; margin-bottom:.5rem; display:block;
     }
     .day-title {
       font-family:'Cormorant',Georgia,serif;
-      font-size:1.5rem; font-weight:400; color:#f5f0e8; margin-bottom:.75rem;
+      font-size:1.5rem; font-weight:400; color:#1A2E1A; margin-bottom:.75rem;
     }
-    .day-card p { font-size:.84rem; line-height:1.75; color:#c8c0b0; margin-bottom:0; max-width:none; }
+    .day-card p { font-size:.84rem; line-height:1.75; color:#5A7A5A; margin-bottom:0; max-width:none; }
 
     .tag {
       display:inline-block;
-      background:rgba(45,212,191,.15); color:#2dd4bf;
+      background:rgba(45,164,78,.15); color:#2DA44E;
       font-size:.65rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
-      padding:4px 10px; border-radius:100px; border:1px solid rgba(45,212,191,.25);
+      padding:4px 10px; border-radius:100px; border:1px solid rgba(45,164,78,.25);
     }
 
     .btn-teal {
       display:inline-flex; align-items:center; gap:8px;
-      background:#2dd4bf; color:#07100e;
+      background:#2DA44E; color:#FFFFFF;
       font-family:'Montserrat',sans-serif; font-weight:700; font-size:.76rem; letter-spacing:.09em; text-transform:uppercase;
       padding:14px 28px; border-radius:100px; cursor:pointer; text-decoration:none;
       transition:background .2s,transform .2s,box-shadow .2s; min-height:44px;
     }
-    .btn-teal:hover { background:#5eead4; transform:translateY(-2px); box-shadow:0 12px 32px rgba(45,212,191,.28); }
+    .btn-teal:hover { background:#4ADE80; transform:translateY(-2px); box-shadow:0 12px 32px rgba(45,164,78,.25); }
 
     /* TOC sticky */
     #toc { position:sticky; top:90px; }
-    #toc a { display:block; font-size:.78rem; color:#c8c0b0; padding:6px 0; border-left:2px solid rgba(255,255,255,.1); padding-left:12px; transition:color .2s,border-color .2s; text-decoration:none; }
-    #toc a:hover, #toc a.active { color:#2dd4bf; border-color:#2dd4bf; }
+    #toc a { display:block; font-size:.78rem; color:#5A7A5A; padding:6px 0; border-left:2px solid #D4E8D0; padding-left:12px; transition:color .2s,border-color .2s; text-decoration:none; }
+    #toc a:hover, #toc a.active { color:#2DA44E; border-color:#2DA44E; }
 
-    .divider { height:1px; background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent); }
+    .divider { height:1px; background:linear-gradient(90deg,transparent,rgba(26,46,26,.15),transparent); }
 
     /* Hero imagen */
     .hero-img { width:100%; height:420px; object-fit:cover; border-radius:0; }
@@ -176,12 +176,12 @@
 <!-- ── NAV ── -->
 <header id="hdr" class="fixed top-0 left-0 right-0 z-50 px-6 py-4">
   <div class="max-w-6xl mx-auto flex items-center justify-between">
-    <a href="../index.html" class="font-serif text-xl text-cream tracking-wide hover:text-teal-400 transition-colors">
+    <a href="../index.html" class="font-serif text-xl text-cream tracking-wide hover:text-green-600 transition-colors">
       Villa Vitao Garden
     </a>
     <nav class="hidden md:flex items-center gap-8">
-      <a href="./index.html" class="text-cream-muted text-xs font-semibold uppercase tracking-widest hover:text-cream transition-colors">Blog</a>
-      <a href="../index.html#booking" class="text-cream-muted text-xs font-semibold uppercase tracking-widest hover:text-cream transition-colors">Reservar</a>
+      <a href="./index.html" class="text-forest-2/60 text-xs font-semibold uppercase tracking-widest hover:text-forest transition-colors">Blog</a>
+      <a href="../index.html#booking" class="text-forest-2/60 text-xs font-semibold uppercase tracking-widest hover:text-forest transition-colors">Reservar</a>
     </nav>
     <a href="../index.html" class="btn-teal text-xs py-3 px-5">
       Ver la villa
@@ -204,9 +204,9 @@
 
     <!-- Breadcrumb -->
     <nav class="fe1 flex items-center gap-2 text-xs text-cream-muted mb-8" aria-label="Ruta de navegación">
-      <a href="../index.html" class="hover:text-cream transition-colors">Inicio</a>
+      <a href="../index.html" class="hover:text-forest transition-colors">Inicio</a>
       <span>/</span>
-      <a href="./index.html" class="hover:text-cream transition-colors">Blog</a>
+      <a href="./index.html" class="hover:text-forest transition-colors">Blog</a>
       <span>/</span>
       <span class="text-cream">Qué hacer en Las Terrenas</span>
     </nav>
@@ -399,11 +399,11 @@
         <div class="rv flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
           <div>
             <p class="text-xs text-cream-muted uppercase tracking-widest mb-2">Siguiente artículo</p>
-            <a href="./las-terrenas-vs-punta-cana.html" class="font-serif text-xl text-cream hover:text-teal-400 transition-colors">
+            <a href="./las-terrenas-vs-punta-cana.html" class="font-serif text-xl text-cream hover:text-green-600 transition-colors">
               Las Terrenas vs Punta Cana: ¿Cuál elegir? →
             </a>
           </div>
-          <a href="./index.html" class="text-cream-muted text-xs uppercase tracking-widest hover:text-cream transition-colors">
+          <a href="./index.html" class="text-forest-2/60 text-xs uppercase tracking-widest hover:text-forest transition-colors">
             ← Todos los artículos
           </a>
         </div>
@@ -422,7 +422,7 @@
           <a href="#dia7">Día 7 — Mañana libre</a>
           <a href="#practico">Información práctica</a>
 
-          <div class="mt-8 p-5 rounded-2xl" style="background:rgba(45,212,191,.08);border:1px solid rgba(45,212,191,.18)">
+          <div class="mt-8 p-5 rounded-2xl" style="background:rgba(45,164,78,.08);border:1px solid rgba(45,164,78,.18)">
             <p class="text-xs text-cream-muted mb-2">Tu base en Las Terrenas</p>
             <p class="font-serif text-lg text-cream mb-3">Villa Vitao Garden</p>
             <p class="text-xs text-cream-muted leading-relaxed mb-4">3 habitaciones · Piscina privada · 5 min playa</p>
@@ -439,12 +439,12 @@
 
 <!-- ── CTA FINAL ── -->
 <section class="px-6 pb-24">
-  <div class="max-w-4xl mx-auto rv text-center" style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:24px;padding:56px 40px">
-    <p class="text-teal-400 text-xs font-semibold uppercase tracking-widest mb-4">¿Listo para vivirlo?</p>
+  <div class="max-w-4xl mx-auto rv text-center" style="background:#FFFFFF;border:1px solid #D4E8D0;border-radius:24px;padding:56px 40px">
+    <p class="text-green-500 text-xs font-semibold uppercase tracking-widest mb-4">¿Listo para vivirlo?</p>
     <h2 class="font-serif text-4xl md:text-5xl font-light text-cream mb-4" style="text-wrap:balance">
       Reserva tu estancia en Villa Vitao Garden
     </h2>
-    <p class="text-cream-muted text-sm leading-relaxed max-w-md mx-auto mb-8">
+    <p class="text-forest-2/60 text-sm leading-relaxed max-w-md mx-auto mb-8">
       La base perfecta para este itinerario. Piscina privada, 3 habitaciones en suite y a 5 minutos de Playa Las Terrenas.
     </p>
     <a href="../index.html" class="btn-teal">
@@ -455,11 +455,11 @@
 </section>
 
 <!-- ── FOOTER ── -->
-<footer class="px-6 py-10 border-t border-white/10">
+<footer class="px-6 py-10 border-t border-green-100">
   <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
     <p class="font-serif text-lg text-cream">Villa Vitao Garden</p>
-    <p class="text-cream-muted text-xs">Las Terrenas, República Dominicana</p>
-    <a href="./index.html" class="text-teal-400 text-xs hover:text-teal-300 transition-colors uppercase tracking-widest font-semibold">
+    <p class="text-forest-2/60 text-xs">Las Terrenas, República Dominicana</p>
+    <a href="./index.html" class="text-green-500 text-xs hover:text-green-600 transition-colors uppercase tracking-widest font-semibold">
       ← Blog
     </a>
   </div>

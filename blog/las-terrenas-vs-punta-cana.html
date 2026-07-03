@@ -42,9 +42,9 @@
       theme: {
         extend: {
           colors: {
-            ink:   { DEFAULT:'#07100e', 2:'#0d1a17', 3:'#122018' },
-            cream: { DEFAULT:'#f5f0e8', muted:'#c8c0b0' },
-            teal:  { 300:'#5eead4', 400:'#2dd4bf', 500:'#14b8a6', 600:'#0d9488', 700:'#0f766e', 900:'#134e4a' },
+            forest: { DEFAULT:'#1A2E1A', 2:'#243C24', light:'#F7FBF5' },
+            sand:   { DEFAULT:'#F0EBE0', muted:'#8A9E8A' },
+            green:  { 300:'#86EFAC', 400:'#4ADE80', 500:'#2DA44E', 600:'#1A7A35', 700:'#155C28', 900:'#0D3B1A' },
           },
           fontFamily: {
             serif: ['Cormorant','Georgia','serif'],
@@ -56,7 +56,7 @@
   </script>
   <style>
     html { scroll-behavior:smooth; }
-    body { font-family:'Montserrat',sans-serif; background:#07100e; color:#f5f0e8; overflow-x:hidden; }
+    body { font-family:'Montserrat',sans-serif; background:#F7FBF5; color:#1A2E1A; overflow-x:hidden; }
     *, *::before, *::after { box-sizing:border-box; }
 
     @keyframes fadeUp {
@@ -71,86 +71,86 @@
     .rv.on { opacity:1; transform:none; }
 
     #hdr { transition:background .3s,border-color .3s; }
-    #hdr.scrolled { background:rgba(7,16,14,.96); backdrop-filter:blur(24px); border-bottom:1px solid rgba(255,255,255,.06); }
+    #hdr.scrolled { background:rgba(247,251,245,.97); backdrop-filter:blur(24px); border-bottom:1px solid rgba(26,46,26,.1); }
 
-    #progress { position:fixed; top:0; left:0; height:2px; background:#2dd4bf; z-index:100; transition:width .1s linear; }
+    #progress { position:fixed; top:0; left:0; height:2px; background:#2DA44E; z-index:100; transition:width .1s linear; }
 
     .prose h2 {
       font-family:'Cormorant',Georgia,serif;
       font-size:2rem; font-weight:400; line-height:1.2;
-      color:#f5f0e8; margin-top:3rem; margin-bottom:1rem;
+      color:#1A2E1A; margin-top:3rem; margin-bottom:1rem;
       text-wrap:balance;
     }
-    .prose p { font-size:.92rem; line-height:1.85; color:#c8c0b0; margin-bottom:1.25rem; max-width:68ch; }
-    .prose strong { color:#f5f0e8; font-weight:600; }
+    .prose p { font-size:.92rem; line-height:1.85; color:#5A7A5A; margin-bottom:1.25rem; max-width:68ch; }
+    .prose strong { color:#1A2E1A; font-weight:600; }
     .prose ul { margin-bottom:1.25rem; }
     .prose ul li {
-      font-size:.88rem; line-height:1.75; color:#c8c0b0;
+      font-size:.88rem; line-height:1.75; color:#5A7A5A;
       padding-left:1.25rem; position:relative; margin-bottom:.4rem;
     }
     .prose ul li::before {
       content:''; position:absolute; left:0; top:.7em;
-      width:5px; height:5px; border-radius:50%; background:#2dd4bf;
+      width:5px; height:5px; border-radius:50%; background:#2DA44E;
     }
-    .prose a { color:#2dd4bf; text-decoration:underline; text-decoration-color:rgba(45,212,191,.4); }
-    .prose a:hover { color:#5eead4; }
+    .prose a { color:#2DA44E; text-decoration:underline; text-decoration-color:rgba(45,164,78,.4); }
+    .prose a:hover { color:#1A7A35; }
 
     /* Tabla comparativa */
     .comp-table { width:100%; border-collapse:collapse; margin:2rem 0; overflow-x:auto; display:block; }
     .comp-table th {
       font-size:.72rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
-      color:#2dd4bf; padding:12px 16px; text-align:left;
-      border-bottom:1px solid rgba(45,212,191,.3);
+      color:#2DA44E; padding:12px 16px; text-align:left;
+      border-bottom:1px solid rgba(45,164,78,.3);
     }
-    .comp-table th:first-child { color:#c8c0b0; }
+    .comp-table th:first-child { color:#5A7A5A; }
     .comp-table td {
-      font-size:.84rem; color:#c8c0b0; padding:12px 16px;
-      border-bottom:1px solid rgba(255,255,255,.06);
+      font-size:.84rem; color:#5A7A5A; padding:12px 16px;
+      border-bottom:1px solid rgba(26,46,26,.1);
       vertical-align:top;
     }
     .comp-table tr:hover td { background:rgba(255,255,255,.03); }
-    .comp-table td:first-child { font-weight:600; color:#f5f0e8; font-size:.78rem; }
-    .win { color:#2dd4bf; font-weight:600; }
-    .neutral { color:#c8c0b0; }
+    .comp-table td:first-child { font-weight:600; color:#1A2E1A; font-size:.78rem; }
+    .win { color:#2DA44E; font-weight:600; }
+    .neutral { color:#5A7A5A; }
 
     /* Veredicto cards */
     .veredicto {
       border-radius:16px; padding:28px;
-      border:1px solid rgba(255,255,255,.1);
+      border:1px solid #D4E8D0;
       margin:1.5rem 0;
     }
-    .v-lt { background:rgba(45,212,191,.07); border-color:rgba(45,212,191,.2); }
-    .v-pc { background:rgba(255,255,255,.04); }
-    .v-title { font-family:'Cormorant',Georgia,serif; font-size:1.5rem; font-weight:400; color:#f5f0e8; margin-bottom:.75rem; }
+    .v-lt { background:rgba(45,212,191,.07); border-color:rgba(45,164,78,.2); }
+    .v-pc { background:#FFFFFF; }
+    .v-title { font-family:'Cormorant',Georgia,serif; font-size:1.5rem; font-weight:400; color:#1A2E1A; margin-bottom:.75rem; }
     .v-tag { font-size:.65rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; padding:3px 9px; border-radius:100px; margin-bottom:.75rem; display:inline-block; }
-    .v-tag-lt { background:rgba(45,212,191,.2); color:#2dd4bf; border:1px solid rgba(45,212,191,.3); }
-    .v-tag-pc { background:rgba(255,255,255,.08); color:#c8c0b0; border:1px solid rgba(255,255,255,.1); }
-    .v-desc { font-size:.84rem; line-height:1.75; color:#c8c0b0; }
+    .v-tag-lt { background:rgba(45,164,78,.2); color:#2DA44E; border:1px solid rgba(45,164,78,.3); }
+    .v-tag-pc { background:rgba(26,46,26,.06); color:#5A7A5A; border:1px solid #D4E8D0; }
+    .v-desc { font-size:.84rem; line-height:1.75; color:#5A7A5A; }
 
     .tip-box {
-      background:rgba(45,212,191,.08); border:1px solid rgba(45,212,191,.2);
-      border-left:3px solid #2dd4bf; border-radius:12px;
+      background:rgba(45,164,78,.08); border:1px solid rgba(45,164,78,.2);
+      border-left:3px solid #2DA44E; border-radius:12px;
       padding:20px 24px; margin:2rem 0;
     }
     .tip-box p { margin-bottom:0; font-size:.85rem; }
-    .tip-label { font-size:.65rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:#2dd4bf; margin-bottom:.5rem; display:block; }
+    .tip-label { font-size:.65rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:#2DA44E; margin-bottom:.5rem; display:block; }
 
-    .tag { display:inline-block; background:rgba(45,212,191,.15); color:#2dd4bf; font-size:.65rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; padding:4px 10px; border-radius:100px; border:1px solid rgba(45,212,191,.25); }
+    .tag { display:inline-block; background:rgba(45,164,78,.15); color:#2DA44E; font-size:.65rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; padding:4px 10px; border-radius:100px; border:1px solid rgba(45,164,78,.25); }
 
     .btn-teal {
       display:inline-flex; align-items:center; gap:8px;
-      background:#2dd4bf; color:#07100e;
+      background:#2DA44E; color:#FFFFFF;
       font-family:'Montserrat',sans-serif; font-weight:700; font-size:.76rem; letter-spacing:.09em; text-transform:uppercase;
       padding:14px 28px; border-radius:100px; cursor:pointer; text-decoration:none;
       transition:background .2s,transform .2s,box-shadow .2s; min-height:44px;
     }
-    .btn-teal:hover { background:#5eead4; transform:translateY(-2px); box-shadow:0 12px 32px rgba(45,212,191,.28); }
+    .btn-teal:hover { background:#4ADE80; transform:translateY(-2px); box-shadow:0 12px 32px rgba(45,164,78,.25); }
 
     #toc { position:sticky; top:90px; }
-    #toc a { display:block; font-size:.78rem; color:#c8c0b0; padding:6px 0; border-left:2px solid rgba(255,255,255,.1); padding-left:12px; transition:color .2s,border-color .2s; text-decoration:none; }
-    #toc a:hover, #toc a.active { color:#2dd4bf; border-color:#2dd4bf; }
+    #toc a { display:block; font-size:.78rem; color:#5A7A5A; padding:6px 0; border-left:2px solid #D4E8D0; padding-left:12px; transition:color .2s,border-color .2s; text-decoration:none; }
+    #toc a:hover, #toc a.active { color:#2DA44E; border-color:#2DA44E; }
 
-    .divider { height:1px; background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent); }
+    .divider { height:1px; background:linear-gradient(90deg,transparent,rgba(26,46,26,.15),transparent); }
     .hero-img { width:100%; height:420px; object-fit:cover; }
     @media(min-width:768px) { .hero-img { height:520px; } }
   </style>
@@ -162,10 +162,10 @@
 <!-- ── NAV ── -->
 <header id="hdr" class="fixed top-0 left-0 right-0 z-50 px-6 py-4">
   <div class="max-w-6xl mx-auto flex items-center justify-between">
-    <a href="../index.html" class="font-serif text-xl text-cream tracking-wide hover:text-teal-400 transition-colors">Villa Vitao Garden</a>
+    <a href="../index.html" class="font-serif text-xl text-cream tracking-wide hover:text-green-600 transition-colors">Villa Vitao Garden</a>
     <nav class="hidden md:flex items-center gap-8">
-      <a href="./index.html" class="text-cream-muted text-xs font-semibold uppercase tracking-widest hover:text-cream transition-colors">Blog</a>
-      <a href="../index.html#booking" class="text-cream-muted text-xs font-semibold uppercase tracking-widest hover:text-cream transition-colors">Reservar</a>
+      <a href="./index.html" class="text-forest-2/60 text-xs font-semibold uppercase tracking-widest hover:text-forest transition-colors">Blog</a>
+      <a href="../index.html#booking" class="text-forest-2/60 text-xs font-semibold uppercase tracking-widest hover:text-forest transition-colors">Reservar</a>
     </nav>
     <a href="../index.html" class="btn-teal text-xs py-3 px-5">Ver la villa</a>
   </div>
@@ -181,9 +181,9 @@
   <div class="max-w-6xl mx-auto">
 
     <nav class="fe1 flex items-center gap-2 text-xs text-cream-muted mb-8" aria-label="Ruta de navegación">
-      <a href="../index.html" class="hover:text-cream transition-colors">Inicio</a>
+      <a href="../index.html" class="hover:text-forest transition-colors">Inicio</a>
       <span>/</span>
-      <a href="./index.html" class="hover:text-cream transition-colors">Blog</a>
+      <a href="./index.html" class="hover:text-forest transition-colors">Blog</a>
       <span>/</span>
       <span class="text-cream">Las Terrenas vs Punta Cana</span>
     </nav>
@@ -303,21 +303,21 @@
             <div class="veredicto v-lt">
               <span class="v-tag v-tag-lt">Elige Las Terrenas si...</span>
               <ul style="margin-top:.75rem">
-                <li style="font-size:.84rem;color:#c8c0b0;padding-left:1.25rem;position:relative;margin-bottom:.4rem">Quieres descubrir la RD auténtica, no la versión resort</li>
-                <li style="font-size:.84rem;color:#c8c0b0;padding-left:1.25rem;position:relative;margin-bottom:.4rem">Viajas en pareja, con amigos o familia con niños mayores</li>
-                <li style="font-size:.84rem;color:#c8c0b0;padding-left:1.25rem;position:relative;margin-bottom:.4rem">Buscas libertad para explorar a tu ritmo</li>
-                <li style="font-size:.84rem;color:#c8c0b0;padding-left:1.25rem;position:relative;margin-bottom:.4rem">Quieres combinarlo con naturaleza (ballenas, cascadas, Los Haitises)</li>
-                <li style="font-size:.84rem;color:#c8c0b0;padding-left:1.25rem;position:relative;margin-bottom:.4rem">Prefieres privacidad (villa propia) sobre animación de resort</li>
+                <li style="font-size:.84rem;color:#5A7A5A;padding-left:1.25rem;position:relative;margin-bottom:.4rem">Quieres descubrir la RD auténtica, no la versión resort</li>
+                <li style="font-size:.84rem;color:#5A7A5A;padding-left:1.25rem;position:relative;margin-bottom:.4rem">Viajas en pareja, con amigos o familia con niños mayores</li>
+                <li style="font-size:.84rem;color:#5A7A5A;padding-left:1.25rem;position:relative;margin-bottom:.4rem">Buscas libertad para explorar a tu ritmo</li>
+                <li style="font-size:.84rem;color:#5A7A5A;padding-left:1.25rem;position:relative;margin-bottom:.4rem">Quieres combinarlo con naturaleza (ballenas, cascadas, Los Haitises)</li>
+                <li style="font-size:.84rem;color:#5A7A5A;padding-left:1.25rem;position:relative;margin-bottom:.4rem">Prefieres privacidad (villa propia) sobre animación de resort</li>
               </ul>
             </div>
             <div class="veredicto v-pc">
               <span class="v-tag v-tag-pc">Elige Punta Cana si...</span>
               <ul style="margin-top:.75rem">
-                <li style="font-size:.84rem;color:#c8c0b0;padding-left:1.25rem;position:relative;margin-bottom:.4rem">Es tu primer viaje largo y quieres todo organizado</li>
-                <li style="font-size:.84rem;color:#c8c0b0;padding-left:1.25rem;position:relative;margin-bottom:.4rem">Viajas con niños pequeños que necesitan instalaciones del resort</li>
-                <li style="font-size:.84rem;color:#c8c0b0;padding-left:1.25rem;position:relative;margin-bottom:.4rem">No quieres preocuparte de nada (comida, transporte, actividades)</li>
-                <li style="font-size:.84rem;color:#c8c0b0;padding-left:1.25rem;position:relative;margin-bottom:.4rem">El vuelo directo y barato desde tu ciudad es solo a PUJ</li>
-                <li style="font-size:.84rem;color:#c8c0b0;padding-left:1.25rem;position:relative;margin-bottom:.4rem">Buscas una semana de playa sin explorar ni moverte</li>
+                <li style="font-size:.84rem;color:#5A7A5A;padding-left:1.25rem;position:relative;margin-bottom:.4rem">Es tu primer viaje largo y quieres todo organizado</li>
+                <li style="font-size:.84rem;color:#5A7A5A;padding-left:1.25rem;position:relative;margin-bottom:.4rem">Viajas con niños pequeños que necesitan instalaciones del resort</li>
+                <li style="font-size:.84rem;color:#5A7A5A;padding-left:1.25rem;position:relative;margin-bottom:.4rem">No quieres preocuparte de nada (comida, transporte, actividades)</li>
+                <li style="font-size:.84rem;color:#5A7A5A;padding-left:1.25rem;position:relative;margin-bottom:.4rem">El vuelo directo y barato desde tu ciudad es solo a PUJ</li>
+                <li style="font-size:.84rem;color:#5A7A5A;padding-left:1.25rem;position:relative;margin-bottom:.4rem">Buscas una semana de playa sin explorar ni moverte</li>
               </ul>
             </div>
           </div>
@@ -343,11 +343,11 @@
         <div class="rv flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
           <div>
             <p class="text-xs text-cream-muted uppercase tracking-widest mb-2">Siguiente artículo</p>
-            <a href="./que-hacer-las-terrenas.html" class="font-serif text-xl text-cream hover:text-teal-400 transition-colors">
+            <a href="./que-hacer-las-terrenas.html" class="font-serif text-xl text-cream hover:text-green-600 transition-colors">
               Qué hacer en Las Terrenas en 7 días →
             </a>
           </div>
-          <a href="./index.html" class="text-cream-muted text-xs uppercase tracking-widest hover:text-cream transition-colors">← Todos los artículos</a>
+          <a href="./index.html" class="text-forest-2/60 text-xs uppercase tracking-widest hover:text-forest transition-colors">← Todos los artículos</a>
         </div>
 
       </article>
@@ -362,7 +362,7 @@
           <a href="#quien">¿Para quién?</a>
           <a href="#conclusion">Conclusión</a>
 
-          <div class="mt-8 p-5 rounded-2xl" style="background:rgba(45,212,191,.08);border:1px solid rgba(45,212,191,.18)">
+          <div class="mt-8 p-5 rounded-2xl" style="background:rgba(45,164,78,.08);border:1px solid rgba(45,164,78,.18)">
             <p class="text-xs text-cream-muted mb-2">Tu base en Las Terrenas</p>
             <p class="font-serif text-lg text-cream mb-3">Villa Vitao Garden</p>
             <p class="text-xs text-cream-muted leading-relaxed mb-4">3 habitaciones · Piscina privada · 5 min playa</p>
@@ -377,10 +377,10 @@
 
 <!-- ── CTA ── -->
 <section class="px-6 pb-24">
-  <div class="max-w-4xl mx-auto rv text-center" style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.09);border-radius:24px;padding:56px 40px">
-    <p class="text-teal-400 text-xs font-semibold uppercase tracking-widest mb-4">Ya tienes tu destino</p>
+  <div class="max-w-4xl mx-auto rv text-center" style="background:#FFFFFF;border:1px solid #D4E8D0;border-radius:24px;padding:56px 40px">
+    <p class="text-green-500 text-xs font-semibold uppercase tracking-widest mb-4">Ya tienes tu destino</p>
     <h2 class="font-serif text-4xl md:text-5xl font-light text-cream mb-4" style="text-wrap:balance">Reserva Villa Vitao Garden</h2>
-    <p class="text-cream-muted text-sm leading-relaxed max-w-md mx-auto mb-8">La experiencia opuesta al resort: villa privada, piscina, 3 habitaciones en suite y Las Terrenas al completo a tu alcance.</p>
+    <p class="text-forest-2/60 text-sm leading-relaxed max-w-md mx-auto mb-8">La experiencia opuesta al resort: villa privada, piscina, 3 habitaciones en suite y Las Terrenas al completo a tu alcance.</p>
     <a href="../index.html" class="btn-teal">
       Ver disponibilidad
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -389,11 +389,11 @@
 </section>
 
 <!-- ── FOOTER ── -->
-<footer class="px-6 py-10 border-t border-white/10">
+<footer class="px-6 py-10 border-t border-green-100">
   <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
     <p class="font-serif text-lg text-cream">Villa Vitao Garden</p>
-    <p class="text-cream-muted text-xs">Las Terrenas, República Dominicana</p>
-    <a href="./index.html" class="text-teal-400 text-xs hover:text-teal-300 transition-colors uppercase tracking-widest font-semibold">← Blog</a>
+    <p class="text-forest-2/60 text-xs">Las Terrenas, República Dominicana</p>
+    <a href="./index.html" class="text-green-500 text-xs hover:text-green-600 transition-colors uppercase tracking-widest font-semibold">← Blog</a>
   </div>
 </footer>
 

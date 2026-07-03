@@ -14,9 +14,9 @@
       theme: {
         extend: {
           colors: {
-            ink:   { DEFAULT:'#07100e', 2:'#0d1a17', 3:'#122018' },
-            cream: { DEFAULT:'#f5f0e8', muted:'#c8c0b0' },
-            teal:  { 300:'#5eead4', 400:'#2dd4bf', 500:'#14b8a6', 600:'#0d9488', 700:'#0f766e', 900:'#134e4a' },
+            forest: { DEFAULT:'#1A2E1A', 2:'#243C24', light:'#F7FBF5' },
+            sand:   { DEFAULT:'#F0EBE0', muted:'#8A9E8A' },
+            green:  { 300:'#86EFAC', 400:'#4ADE80', 500:'#2DA44E', 600:'#1A7A35', 700:'#155C28', 900:'#0D3B1A' },
           },
           fontFamily: {
             serif: ['Cormorant','Georgia','serif'],
@@ -28,7 +28,7 @@
   </script>
   <style>
     html { scroll-behavior:smooth; }
-    body { font-family:'Montserrat',sans-serif; background:#07100e; color:#f5f0e8; overflow-x:hidden; }
+    body { font-family:'Montserrat',sans-serif; background:#F7FBF5; color:#1A2E1A; overflow-x:hidden; }
     *, *::before, *::after { box-sizing:border-box; }
 
     @keyframes fadeUp {
@@ -43,11 +43,11 @@
     .rv.on { opacity:1; transform:none; }
 
     #hdr { transition:background .3s,border-color .3s; }
-    #hdr.scrolled { background:rgba(7,16,14,.96); backdrop-filter:blur(24px); border-bottom:1px solid rgba(255,255,255,.06); }
+    #hdr.scrolled { background:rgba(247,251,245,.97); backdrop-filter:blur(24px); border-bottom:1px solid rgba(26,46,26,.1); }
 
     .card-article {
-      background:rgba(255,255,255,.05);
-      border:1px solid rgba(255,255,255,.09);
+      background:#FFFFFF;
+      border:1px solid #D4E8D0;
       border-radius:20px;
       overflow:hidden;
       transition:transform .3s cubic-bezier(.22,1,.36,1), border-color .3s, box-shadow .3s;
@@ -55,8 +55,8 @@
     }
     .card-article:hover {
       transform:translateY(-6px);
-      border-color:rgba(45,212,191,.35);
-      box-shadow:0 24px 60px rgba(0,0,0,.4);
+      border-color:rgba(45,164,78,.35);
+      box-shadow:0 24px 60px rgba(26,46,26,.12);
     }
     .card-article img {
       width:100%; height:220px; object-fit:cover;
@@ -66,23 +66,23 @@
 
     .tag {
       display:inline-block;
-      background:rgba(45,212,191,.15);
-      color:#2dd4bf;
+      background:rgba(45,164,78,.15);
+      color:#2DA44E;
       font-size:.65rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
       padding:4px 10px; border-radius:100px;
-      border:1px solid rgba(45,212,191,.25);
+      border:1px solid rgba(45,164,78,.25);
     }
 
     .btn-teal {
       display:inline-flex; align-items:center; gap:8px;
-      background:#2dd4bf; color:#07100e;
+      background:#2DA44E; color:#FFFFFF;
       font-family:'Montserrat',sans-serif; font-weight:700; font-size:.76rem; letter-spacing:.09em; text-transform:uppercase;
       padding:14px 28px; border-radius:100px; cursor:pointer; text-decoration:none;
       transition:background .2s,transform .2s,box-shadow .2s; min-height:44px;
     }
-    .btn-teal:hover { background:#5eead4; transform:translateY(-2px); box-shadow:0 12px 32px rgba(45,212,191,.28); }
+    .btn-teal:hover { background:#4ADE80; transform:translateY(-2px); box-shadow:0 12px 32px rgba(45,164,78,.25); }
 
-    .divider { height:1px; background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent); }
+    .divider { height:1px; background:linear-gradient(90deg,transparent,rgba(26,46,26,.15),transparent); }
   </style>
 </head>
 <body>
@@ -90,13 +90,13 @@
 <!-- ── NAV ── -->
 <header id="hdr" class="fixed top-0 left-0 right-0 z-50 px-6 py-4">
   <div class="max-w-6xl mx-auto flex items-center justify-between">
-    <a href="../index.html" class="font-serif text-xl text-cream tracking-wide hover:text-teal-400 transition-colors">
+    <a href="../index.html" class="font-serif text-xl text-cream tracking-wide hover:text-green-600 transition-colors">
       Villa Vitao Garden
     </a>
     <nav class="hidden md:flex items-center gap-8">
-      <a href="../index.html#booking" class="text-cream-muted text-xs font-semibold uppercase tracking-widest hover:text-cream transition-colors">Reservar</a>
-      <a href="../index.html#contact" class="text-cream-muted text-xs font-semibold uppercase tracking-widest hover:text-cream transition-colors">Contacto</a>
-      <a href="./index.html" class="text-teal-400 text-xs font-semibold uppercase tracking-widest">Blog</a>
+      <a href="../index.html#booking" class="text-forest-2/60 text-xs font-semibold uppercase tracking-widest hover:text-forest transition-colors">Reservar</a>
+      <a href="../index.html#contact" class="text-forest-2/60 text-xs font-semibold uppercase tracking-widest hover:text-forest transition-colors">Contacto</a>
+      <a href="./index.html" class="text-green-500 text-xs font-semibold uppercase tracking-widest">Blog</a>
     </nav>
     <a href="https://airbnb.com" target="_blank" rel="noopener" class="btn-teal text-xs py-3 px-5">
       Reservar ahora
@@ -111,7 +111,7 @@
       <span class="tag mb-4 inline-block">Guías de viaje</span>
     </div>
     <h1 class="fe2 font-serif text-5xl md:text-7xl font-light leading-[1.1] text-cream mt-4 mb-6" style="text-wrap:balance">
-      Descubre<br/><em class="text-teal-400">Las Terrenas</em>
+      Descubre<br/><em class="text-green-500">Las Terrenas</em>
     </h1>
     <p class="fe3 text-cream-muted text-base md:text-lg max-w-xl leading-relaxed">
       Todo lo que necesitas saber para vivir el Caribe auténtico. Playas, gastronomía, excursiones y los mejores consejos de quienes conocen Las Terrenas de verdad.
@@ -136,7 +136,7 @@
           <h2 class="font-serif text-3xl md:text-4xl font-light text-cream leading-tight mb-4" style="text-wrap:balance">
             Qué hacer en Las Terrenas en 7 días
           </h2>
-          <p class="text-cream-muted text-sm leading-relaxed mb-6">
+          <p class="text-forest-2/60 text-sm leading-relaxed mb-6">
             La guía definitiva para aprovechar al máximo tu semana en Las Terrenas: playas imprescindibles, excursiones, gastronomía local y los secretos que solo conocen los locales.
           </p>
           <div class="flex items-center gap-4 text-xs text-cream-muted">
@@ -159,7 +159,7 @@
             <h3 class="font-serif text-xl font-light text-cream leading-tight mb-3" style="text-wrap:balance">
               Las Terrenas vs Punta Cana: ¿Cuál elegir?
             </h3>
-            <p class="text-cream-muted text-xs leading-relaxed mb-4">
+            <p class="text-forest-2/60 text-xs leading-relaxed mb-4">
               Dos destinos, dos experiencias completamente distintas. Te ayudamos a decidir cuál encaja con lo que buscas.
             </p>
             <div class="flex items-center gap-3 text-xs text-cream-muted">
@@ -179,7 +179,7 @@
             <h3 class="font-serif text-xl font-light text-cream leading-tight mb-3" style="text-wrap:balance">
               Dónde alojarse en Las Terrenas con familia
             </h3>
-            <p class="text-cream-muted text-xs leading-relaxed mb-4">
+            <p class="text-forest-2/60 text-xs leading-relaxed mb-4">
               Villas privadas, hoteles boutique o apart-hotel: analizamos cada opción para que elijas la mejor para tu familia.
             </p>
             <div class="flex items-center gap-3 text-xs text-cream-muted">
@@ -193,15 +193,15 @@
 
       <!-- Próximo artículo placeholder -->
       <div class="rv card-article opacity-60">
-        <div style="height:220px; background:rgba(255,255,255,.04); display:flex; align-items:center; justify-content:center;">
-          <span class="text-cream-muted text-xs uppercase tracking-widest">Próximamente</span>
+        <div style="height:220px; background:#FFFFFF; display:flex; align-items:center; justify-content:center;">
+          <span class="text-forest-2/60 text-xs uppercase tracking-widest">Próximamente</span>
         </div>
         <div class="p-6">
           <span class="tag mb-3 inline-block" style="opacity:.5">Gastronomía</span>
           <h3 class="font-serif text-xl font-light text-cream leading-tight mb-3">
             Los mejores restaurantes de Las Terrenas
           </h3>
-          <p class="text-cream-muted text-xs leading-relaxed">
+          <p class="text-forest-2/60 text-xs leading-relaxed">
             Desde el pescado fresco en la playa hasta la cocina fusión caribeña. Guía gastronómica completa.
           </p>
         </div>
@@ -214,12 +214,12 @@
 <!-- ── CTA VILLA ── -->
 <section class="px-6 pb-24">
   <div class="max-w-6xl mx-auto">
-    <div class="rv" style="background:rgba(45,212,191,.08); border:1px solid rgba(45,212,191,.2); border-radius:24px; padding:48px; text-align:center;">
-      <p class="text-teal-400 text-xs font-semibold uppercase tracking-widest mb-4">Tu base en Las Terrenas</p>
+    <div class="rv" style="background:rgba(45,164,78,.08); border:1px solid rgba(45,164,78,.2); border-radius:24px; padding:48px; text-align:center;">
+      <p class="text-green-500 text-xs font-semibold uppercase tracking-widest mb-4">Tu base en Las Terrenas</p>
       <h2 class="font-serif text-4xl md:text-5xl font-light text-cream mb-4" style="text-wrap:balance">
         Villa Vitao Garden
       </h2>
-      <p class="text-cream-muted text-sm leading-relaxed max-w-lg mx-auto mb-8">
+      <p class="text-forest-2/60 text-sm leading-relaxed max-w-lg mx-auto mb-8">
         3 habitaciones en suite, piscina privada y a 5 minutos de la playa. La base perfecta para explorar todo lo que Las Terrenas tiene que ofrecer.
       </p>
       <a href="../index.html" class="btn-teal">
@@ -231,11 +231,11 @@
 </section>
 
 <!-- ── FOOTER ── -->
-<footer class="px-6 py-10 border-t border-white/10">
+<footer class="px-6 py-10 border-t border-green-100">
   <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
     <p class="font-serif text-lg text-cream">Villa Vitao Garden</p>
-    <p class="text-cream-muted text-xs">Las Terrenas, República Dominicana</p>
-    <a href="../index.html" class="text-teal-400 text-xs hover:text-teal-300 transition-colors uppercase tracking-widest font-semibold">
+    <p class="text-forest-2/60 text-xs">Las Terrenas, República Dominicana</p>
+    <a href="../index.html" class="text-green-500 text-xs hover:text-green-600 transition-colors uppercase tracking-widest font-semibold">
       Volver a la villa →
     </a>
   </div>
