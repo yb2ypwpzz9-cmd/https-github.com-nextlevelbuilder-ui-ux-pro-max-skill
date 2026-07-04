@@ -151,8 +151,10 @@
     #toc a:hover, #toc a.active { color:#2DA44E; border-color:#2DA44E; }
 
     .divider { height:1px; background:linear-gradient(90deg,transparent,rgba(26,46,26,.15),transparent); }
-    .hero-img { width:100%; height:420px; object-fit:cover; }
-    @media(min-width:768px) { .hero-img { height:520px; } }
+    @media(max-width:640px) {
+      .hero-split { grid-template-columns:1fr !important; height:480px !important; }
+      .hero-split .split-divider { display:none; }
+    }
   </style>
 </head>
 <body>
@@ -171,9 +173,24 @@
   </div>
 </header>
 
-<!-- ── HERO ── -->
-<div class="pt-20">
-  <img src="pueblo-terrenas.jpg" alt="Pueblo de Las Terrenas — ambiente auténtico frente al turismo masivo de Punta Cana" class="hero-img" />
+<!-- ── HERO SPLIT ── -->
+<div class="pt-20" style="display:grid;grid-template-columns:1fr 1fr;height:420px;overflow:hidden;position:relative;">
+  <!-- Las Terrenas -->
+  <div style="position:relative;overflow:hidden;">
+    <img src="playa-coson.jpg" alt="Playa Cosón, Las Terrenas — naturaleza virgen" style="width:100%;height:100%;object-fit:cover;display:block;" />
+    <div style="position:absolute;bottom:0;left:0;right:0;padding:20px 24px;background:linear-gradient(transparent,rgba(26,46,26,.7));">
+      <span style="font-family:'Montserrat',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#fff;background:rgba(45,164,78,.75);padding:4px 12px;border-radius:100px;">Las Terrenas</span>
+    </div>
+  </div>
+  <!-- Divisor -->
+  <div style="position:absolute;left:50%;top:0;bottom:0;width:3px;background:#fff;z-index:10;transform:translateX(-50%);"></div>
+  <!-- Punta Cana -->
+  <div style="position:relative;overflow:hidden;">
+    <img src="pueblo-terrenas.jpg" alt="Punta Cana — turismo organizado y resorts" style="width:100%;height:100%;object-fit:cover;display:block;" />
+    <div style="position:absolute;bottom:0;left:0;right:0;padding:20px 24px;background:linear-gradient(transparent,rgba(26,46,26,.7));">
+      <span style="font-family:'Montserrat',sans-serif;font-size:.65rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#fff;background:rgba(26,46,26,.6);padding:4px 12px;border-radius:100px;">Punta Cana</span>
+    </div>
+  </div>
 </div>
 
 <!-- ── ARTÍCULO ── -->
