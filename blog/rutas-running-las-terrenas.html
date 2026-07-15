@@ -167,6 +167,19 @@
     .editorial-img img { width:100%; height:240px; object-fit:cover; display:block; }
     .img-caption { font-size:.72rem; color:#8A9E8A; padding:6px 10px; margin:0; background:#fff; border-top:1px solid #D4E8D0; }
 
+    /* Galería de fotos por ruta */
+    .route-gallery {
+      display:grid; grid-template-columns:repeat(3,1fr); gap:.75rem; margin:1.5rem 0 2rem;
+    }
+    .route-gallery img {
+      width:100%; height:160px; object-fit:cover; display:block;
+      border-radius:12px; border:1px solid #D4E8D0;
+    }
+    @media(max-width:640px) {
+      .route-gallery { grid-template-columns:1fr; }
+      .route-gallery img { height:200px; }
+    }
+
     @media(max-width:640px) {
       .route-card { grid-template-columns:1fr 1fr; }
       .route-card .route-stat:last-child { grid-column:1/-1; }
@@ -273,9 +286,15 @@
               </div>
             </div>
             <div class="editorial-img">
-              <img src="playa-bonita.jpg" alt="Playa Bonita al amanecer, punto de giro de la ruta de running" />
-              <p class="img-caption">Playa Bonita — punto de giro a los 2,66 km</p>
+              <img src="mapa-ruta-playa-bonita.png" alt="Mapa de la ruta circular de running a Playa Bonita desde Las Terrenas" style="object-fit:contain;background:#fff" />
+              <p class="img-caption">Recorrido circular · 6,32 km · salida desde Las Terrenas</p>
             </div>
+          </div>
+
+          <div class="route-gallery rv">
+            <img src="running-playa-bonita-1.png" alt="Running por Playa Bonita, Las Terrenas" />
+            <img src="running-playa-bonita-2.png" alt="Camino costero de la ruta de running a Playa Bonita" />
+            <img src="running-playa-bonita-3.png" alt="Playa Bonita, punto de giro de la ruta de running" />
           </div>
 
           <h2 id="ruta2">Ruta 2 · Circular Playa Portillo</h2>
@@ -313,9 +332,15 @@
               </div>
             </div>
             <div class="editorial-img">
-              <img src="playa-coson.jpg" alt="Costa de Las Terrenas — zona de Playa Portillo" />
-              <p class="img-caption">Costa este de Las Terrenas, dirección Playa Portillo</p>
+              <img src="mapa-ruta-playa-portillo.png" alt="Mapa de la ruta circular de running a Playa Portillo desde Las Terrenas" style="object-fit:contain;background:#fff" />
+              <p class="img-caption">Recorrido circular · 6,26 km · salida desde Las Terrenas</p>
             </div>
+          </div>
+
+          <div class="route-gallery rv">
+            <img src="running-playa-portillo-1.png" alt="Running hacia Playa Portillo, Las Terrenas" />
+            <img src="running-playa-portillo-2.png" alt="Carretera costera de la ruta de running a Playa Portillo" />
+            <img src="running-playa-portillo-3.png" alt="Playa Portillo, punto de giro de la ruta de running" />
           </div>
 
           <h2 id="ruta3">Ruta 3 · Playa Bonita Larga</h2>
@@ -353,9 +378,15 @@
               </div>
             </div>
             <div class="editorial-img">
-              <img src="pueblo-terrenas.jpg" alt="Salida desde el pueblo de Las Terrenas hacia Playa Bonita" />
-              <p class="img-caption">Salida desde el pueblo hacia Playa Bonita</p>
+              <img src="mapa-ruta-playa-bonita-larga.png" alt="Mapa de la ruta larga de running a Playa Bonita, 8,79 km" style="object-fit:contain;background:#fff" />
+              <p class="img-caption">Recorrido circular · 8,79 km · superficies mixtas</p>
             </div>
+          </div>
+
+          <div class="route-gallery rv">
+            <img src="running-bonita-larga-1.png" alt="Sendero tropical de la ruta larga de running en Las Terrenas" />
+            <img src="running-bonita-larga-2.png" alt="Tramo urbano de la ruta larga de running por Las Terrenas" />
+            <img src="running-bonita-larga-3.png" alt="Llegada a Playa Bonita en la ruta larga de running" />
           </div>
 
           <h2 id="consejos">Consejos para correr en Las Terrenas</h2>
