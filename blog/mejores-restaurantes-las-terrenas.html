@@ -147,6 +147,19 @@
     .divider { height:1px; background:linear-gradient(90deg,transparent,rgba(26,46,26,.15),transparent); }
     .hero-img { width:100%; height:420px; object-fit:cover; }
     @media(min-width:768px) { .hero-img { height:520px; } }
+
+    /* Galería de fotos por restaurante */
+    .resto-gallery {
+      display:grid; grid-template-columns:repeat(3,1fr); gap:.75rem; margin:1.5rem 0 2rem;
+    }
+    .resto-gallery img {
+      width:100%; height:160px; object-fit:cover; display:block;
+      border-radius:12px; border:1px solid #D4E8D0;
+    }
+    @media(max-width:640px) {
+      .resto-gallery { grid-template-columns:1fr; }
+      .resto-gallery img { height:200px; }
+    }
   </style>
 </head>
 <body>
@@ -233,6 +246,12 @@
             <p>Llega 45 minutos antes de la puesta de sol, pide en la terraza y deja que el atardecer haga el resto. Es el broche perfecto para un día de playa o después de una de nuestras <a href="./rutas-running-las-terrenas.html">rutas de running</a>.</p>
           </div>
 
+          <div class="resto-gallery rv">
+            <img src="restaurante-casa-azul-1.jpg" alt="Casa Azul, Las Terrenas — terraza frente al mar" />
+            <img src="restaurante-casa-azul-2.jpg" alt="Pizza casera de Casa Azul, Las Terrenas" />
+            <img src="restaurante-casa-azul-3.jpg" alt="Atardecer sobre el océano desde Casa Azul" />
+          </div>
+
           <h2 id="al-pasito">2 · Al Pasito</h2>
           <div class="resto-meta">
             <span class="resto-chip star">★ Favorito de la casa</span>
@@ -247,6 +266,12 @@
             El ambiente acompaña: una velada tranquila, rodeada de naturaleza, ideal para una cena en pareja o para celebrar algo sin el bullicio de la zona de playa. De esos sitios donde la sobremesa se alarga sin darte cuenta.
           </p>
 
+          <div class="resto-gallery rv">
+            <img src="restaurante-al-pasito-1.jpg" alt="Al Pasito, Las Terrenas — bistró de cocina fusión" />
+            <img src="restaurante-al-pasito-2.jpg" alt="Tartar, especialidad de Al Pasito" />
+            <img src="restaurante-al-pasito-3.jpg" alt="Ambiente entre naturaleza en Al Pasito, Las Terrenas" />
+          </div>
+
           <h2 id="porto">3 · Porto by Mosquito</h2>
           <div class="resto-meta">
             <span class="resto-chip star">★ Favorito de la casa</span>
@@ -260,6 +285,12 @@
           <p>
             Es el plan completo: llegas para comer, te quedas en las tumbonas, y cuando quieres darte cuenta estás viendo caer la tarde con un cóctel en la mano. Perfecto para un día entero de "beach chic" sin coger el coche.
           </p>
+
+          <div class="resto-gallery rv">
+            <img src="restaurante-porto-mosquito-1.jpg" alt="Porto by Mosquito, beach club de Las Terrenas" />
+            <img src="restaurante-porto-mosquito-2.jpg" alt="Ambiente beach chic en Porto by Mosquito" />
+            <img src="restaurante-porto-mosquito-3.jpg" alt="Mesas frente al mar en Porto by Mosquito, Las Terrenas" />
+          </div>
 
           <h2 id="la-terrasse">4 · La Terrasse</h2>
           <div class="resto-meta">
