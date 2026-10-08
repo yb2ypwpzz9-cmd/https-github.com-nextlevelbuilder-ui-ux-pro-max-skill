@@ -3,7 +3,7 @@
 Cómo cambiar textos, precios, fechas o teléfonos de la landing **sin programar**, y que la web se actualice sola.
 
 - **Archivo que se edita:** `spatech-travel-team/index.html`
-- **Rama de GitHub que publica la web:** `claude/funny-ramanujan-kcqcjf`
+- **Rama de GitHub que publica la web:** `produccion-spatech`
 - **Tiempo de un cambio:** unos 2 minutos, más 1–2 minutos hasta que Netlify publica.
 
 ---
@@ -22,7 +22,7 @@ Así, cada vez que guardes un cambio en GitHub, Netlify publica la web sola. Ya 
 
    | Campo | Valor |
    |---|---|
-   | Branch to deploy | `claude/funny-ramanujan-kcqcjf` |
+   | Branch to deploy | `produccion-spatech` |
    | Base directory | `spatech-travel-team` |
    | Build command | *(dejar vacío)* |
    | Publish directory | *(dejar vacío o `spatech-travel-team`; lo decide el archivo `netlify.toml`)* |
@@ -46,12 +46,12 @@ Haz un cambio pequeño siguiendo la Parte 2. En Netlify → **Deploys** debe apa
 ## Parte 2 · Cambiar un texto
 
 1. Entra en el repositorio en GitHub.
-2. Arriba a la izquierda, en el selector de rama (suele poner el nombre de una rama), elige **`claude/funny-ramanujan-kcqcjf`**. **Importante:** si editas en otra rama, la web no cambia.
+2. Arriba a la izquierda, en el selector de rama (suele poner el nombre de una rama), elige **`produccion-spatech`**. **Importante:** si editas en otra rama, la web no cambia.
 3. Abre la carpeta `spatech-travel-team` y luego el archivo `index.html`.
 4. Pulsa el **lápiz ✎** (*Edit this file*), arriba a la derecha del archivo.
 5. Pulsa **Ctrl + F** (en Mac, **Cmd + F**) y busca **`✏️`** o la palabra que quieras cambiar (por ejemplo `2650`).
 6. Cambia **solo el texto**.
-7. Pulsa **Commit changes…**. En el mensaje, describe el cambio (por ejemplo *"Cambio precio jugador"*), deja marcado **Commit directly to the `claude/funny-ramanujan-kcqcjf` branch** y confirma.
+7. Pulsa **Commit changes…**. En el mensaje, describe el cambio (por ejemplo *"Cambio precio jugador"*), deja marcado **Commit directly to the `produccion-spatech` branch** y confirma.
 8. Espera 1–2 minutos y recarga la web.
 
 ### La regla de oro
@@ -158,4 +158,4 @@ Al final del archivo, busca `WA_TEXT`. Cambia solo lo que está entre las comill
 - Analítica (Meta Pixel, Google Analytics).
 - Cualquier cosa en la que, tras editar, algo se vea descuadrado.
 
-Al pedirlo, indica que la landing está en la rama `claude/funny-ramanujan-kcqcjf`, carpeta `spatech-travel-team`, para que el cambio se haga sobre la versión publicada.
+Al pedirlo, indica que la landing publicada está en la rama **`produccion-spatech`**, carpeta `spatech-travel-team`. Así el cambio se hace sobre la versión actual (incluidas tus ediciones) y se sube a esa misma rama para que Netlify la publique.
