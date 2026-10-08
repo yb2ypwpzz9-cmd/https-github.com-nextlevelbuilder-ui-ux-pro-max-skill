@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Travel Team Madrid – Lisboa 2027 | SPATECH Rising Stars</title>
+<meta name="description" content="Travel Team SPATECH Rising Stars: del 2 al 9 de enero de 2027. Entrena con el Real Madrid, Atlético de Madrid, Sporting de Portugal y Benfica. 4 partidos amistosos internacionales. Jugadores de 11 a 13 años.">
+<meta name="theme-color" content="#2E5E00">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Travel Team Madrid – Lisboa 2027 | SPATECH Rising Stars">
+<meta property="og:description" content="1 continente, 2 países, 4 clubes. Entrena con Real Madrid, Atlético de Madrid, Sporting de Portugal y Benfica. Del 2 al 9 de enero de 2027.">
+<meta property="og:image" content="assets/og-image.jpg">
+<meta property="og:locale" content="es_ES">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="preload" as="image" href="assets/hero.webp">
+<style>
+:root{
+  --green-950:#152E00; --green-900:#1F4200; --green:#2E5E00; --green-700:#3B730A; --green-100:#E9F1DF; --green-50:#F4F8EE;
+  --navy:#252F63; --red:#E3211F; --red-700:#C21A18;
+  --ink:#16200E; --ink-soft:#4A5541; --line:#D9E2CF; --paper:#FFFFFF; --wa:#25D366;
+  --radius:14px; --maxw:1200px;
+  --display:'Anton',Impact,'Arial Narrow',sans-serif; --body:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --z-header:40; --z-float:50; --z-pop:60;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:84px;-webkit-text-size-adjust:100%}
+body{margin:0;font-family:var(--body);font-size:17px;line-height:1.6;color:var(--ink);background:var(--paper);overflow-x:hidden}
+img{max-width:100%;display:block}
+a{color:inherit}
+h1,h2,h3,.display{font-family:var(--display);font-weight:400;font-style:italic;text-transform:uppercase;letter-spacing:.01em;line-height:.95;margin:0}
+p{margin:0 0 1em}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 20px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+:focus-visible{outline:3px solid var(--red);outline-offset:3px;border-radius:4px}
+.skip{position:absolute;left:-999px;top:8px;background:var(--navy);color:#fff;padding:10px 16px;border-radius:8px;z-index:100}
+.skip:focus{left:8px}
+
+/* ---------- Buttons ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:52px;padding:0 26px;border-radius:999px;border:2px solid transparent;font:700 16px/1 var(--body);text-decoration:none;cursor:pointer;transition:background-color .2s,color .2s,border-color .2s,box-shadow .2s}
+.btn svg{width:22px;height:22px;flex-shrink:0}
+.btn-red{background:var(--red);color:#fff;box-shadow:0 8px 24px -8px rgba(227,33,31,.6)}
+.btn-red:hover{background:var(--red-700)}
+.btn-ghost{background:transparent;color:#fff;border-color:rgba(255,255,255,.7)}
+.btn-ghost:hover{background:#fff;color:var(--green)}
+.btn-white{background:#fff;color:var(--green)}
+.btn-white:hover{background:var(--green-100)}
+.btn-outline{background:transparent;color:var(--green);border-color:var(--green)}
+.btn-outline:hover{background:var(--green);color:#fff}
+
+/* ---------- Header ---------- */
+.header{position:sticky;top:0;z-index:var(--z-header);background:rgba(255,255,255,.96);backdrop-filter:saturate(1.4) blur(8px);border-bottom:1px solid var(--line)}
+.header .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;height:68px}
+.header-logo img{height:34px;width:auto}
+.nav{display:none;gap:26px}
+.nav a{font-weight:600;font-size:15px;text-decoration:none;color:var(--ink-soft);transition:color .2s}
+.nav a:hover{color:var(--green)}
+.header .btn{min-height:44px;padding:0 18px;font-size:14px}
+@media(min-width:960px){.nav{display:flex}.header-logo img{height:40px}}
+
+/* ---------- Hero ---------- */
+.hero{position:relative;color:#fff;overflow:hidden;background:var(--green-900)}
+.hero-bg{position:absolute;inset:0;background:url(assets/hero.webp) 70% center/cover no-repeat}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(21,46,0,.92) 0%,rgba(31,66,0,.78) 45%,rgba(31,66,0,.15) 100%)}
+@media(max-width:759px){.hero::after{background:linear-gradient(180deg,rgba(21,46,0,.55) 0%,rgba(21,46,0,.88) 55%,rgba(21,46,0,.96) 100%)}}
+.hero .wrap{position:relative;z-index:1;padding-top:56px;padding-bottom:64px}
+.hero-chips{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:28px}
+.chip{display:inline-flex;align-items:center;gap:8px;background:#fff;color:var(--green);font:700 14px/1 var(--body);padding:10px 16px;transform:skewX(-12deg)}
+.chip>span{transform:skewX(12deg);display:inline-flex;align-items:center;gap:8px}
+.chip svg{width:16px;height:16px}
+.route{display:grid;grid-template-columns:auto auto auto;align-items:center;justify-content:start;gap:8px 18px}
+.route .country{font-size:clamp(44px,9vw,104px)}
+.route .city{font-size:clamp(26px,4.6vw,52px);opacity:.95;margin-top:4px}
+.route .arrow{width:clamp(36px,8vw,120px);height:2px;background:#fff;position:relative;align-self:center;margin-top:-30px}
+.route .arrow::after{content:"";position:absolute;right:-2px;top:-5px;border:6px solid transparent;border-left:10px solid #fff}
+.crests{display:flex;gap:10px;margin-top:14px;align-items:center}
+.crests img{height:52px;width:auto;filter:drop-shadow(0 2px 6px rgba(0,0,0,.35))}
+.hero-title{font-size:clamp(56px,11vw,128px);margin:34px 0 10px}
+.hero-sub{font-size:clamp(17px,2vw,20px);max-width:560px;color:rgba(255,255,255,.92)}
+.hero-cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+.hero-note{margin-top:18px;font-size:14px;color:rgba(255,255,255,.85);display:flex;align-items:center;gap:8px}
+.hero-note svg{width:18px;height:18px;color:#fff}
+@media(max-width:520px){.route{grid-template-columns:1fr;gap:4px}.route .arrow{display:none}.route>div:last-child{margin-top:18px}.hero-cta .btn{width:100%}}
+.hero-logo{margin-top:40px;background:#fff;display:inline-block;padding:14px 22px;clip-path:polygon(6% 0,100% 0,94% 100%,0 100%)}
+.hero-logo img{height:48px;width:auto}
+
+/* ---------- Generic sections ---------- */
+section{position:relative}
+.sec{padding:84px 0}
+.sec-green{background:var(--green);color:#fff}
+.sec-tint{background:var(--green-50)}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font:800 13px/1 var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--green);margin-bottom:14px}
+.eyebrow::before{content:"";width:28px;height:4px;background:var(--red);transform:skewX(-20deg)}
+.sec-green .eyebrow{color:#fff}
+.h2{font-size:clamp(40px,6.4vw,76px);color:var(--green)}
+.sec-green .h2{color:#fff}
+.lead{font-size:18px;color:var(--ink-soft);max-width:640px}
+.sec-green .lead{color:rgba(255,255,255,.9)}
+.slant{clip-path:polygon(10% 0,100% 0,90% 100%,0 100%)}
+.photo{border-radius:0;object-fit:cover;width:100%;height:100%}
+.bar{position:absolute;background:var(--green);transform:skewX(-14deg)}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease}
+.reveal.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.reveal{opacity:1;transform:none;transition:none}*{animation:none!important;transition:none!important}}
+
+/* ---------- Intro / stats ---------- */
+.intro-grid{display:grid;gap:48px;align-items:center}
+@media(min-width:900px){.intro-grid{grid-template-columns:1.05fr .95fr}}
+.stats{display:grid;gap:4px;margin-bottom:36px}
+.stat{display:flex;align-items:baseline;gap:18px;font-family:var(--display);font-style:italic;text-transform:uppercase;color:var(--green);line-height:1}
+.stat b{font-weight:400;font-size:clamp(64px,10vw,104px);color:var(--red)}
+.stat span{font-size:clamp(34px,5.4vw,58px);letter-spacing:.12em}
+.intro-copy{border-left:4px solid var(--green);padding-left:22px}
+.intro-copy h2{font-size:clamp(30px,4.4vw,48px);color:var(--green);margin-bottom:16px}
+.intro-copy strong{color:var(--green)}
+.intro-photo{position:relative;aspect-ratio:4/3.4}
+.intro-photo .bar{width:22%;height:24%;left:2%;top:-4%;z-index:-0}
+.intro-photo img{position:relative;z-index:1}
+
+/* ---------- Europa top ---------- */
+.top-head{display:grid;gap:28px;align-items:center;margin-bottom:56px}
+@media(min-width:900px){.top-head{grid-template-columns:.9fr 1.1fr}}
+.top-head .slant{aspect-ratio:16/9}
+.top-head h2{font-size:clamp(60px,11vw,140px)}
+.top-tag{font-family:var(--display);font-style:italic;text-transform:uppercase;font-size:clamp(20px,2.6vw,30px);line-height:1.15;border-left:8px solid #fff;padding-left:14px;margin-top:14px}
+.top-grid{display:grid;gap:24px;align-items:stretch}
+@media(min-width:900px){.top-grid{grid-template-columns:1.1fr 1fr}}
+.top-grid .slant{min-height:280px}
+.cards-col{display:grid;gap:18px}
+.pcard{border:1px solid rgba(255,255,255,.55);padding:26px 28px;position:relative;background:rgba(255,255,255,.04)}
+.pcard h3{font-size:30px;margin-bottom:10px;display:flex;align-items:center;gap:12px}
+.pcard h3 svg{width:28px;height:28px;flex-shrink:0}
+.pcard p{margin:0;color:rgba(255,255,255,.92)}
+
+/* ---------- Clubs strip ---------- */
+.clubs{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.clubs .wrap{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;padding-top:30px;padding-bottom:30px}
+@media(min-width:760px){.clubs .wrap{grid-template-columns:repeat(4,1fr)}}
+.club{display:flex;align-items:center;gap:14px}
+.club img{height:58px;width:58px;object-fit:contain}
+.club b{display:block;font-size:15px;line-height:1.25}
+.club small{color:var(--ink-soft);font-size:13px}
+
+/* ---------- Program info ---------- */
+.info-grid{display:grid;gap:40px;align-items:start}
+@media(min-width:960px){.info-grid{grid-template-columns:1.25fr .75fr}}
+.info-cards{display:grid;gap:18px}
+@media(min-width:640px){.info-cards{grid-template-columns:1fr 1fr}}
+.icard{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:26px;box-shadow:0 1px 2px rgba(22,32,14,.04)}
+.icard .ico{width:46px;height:46px;border-radius:12px;background:var(--green-100);color:var(--green);display:grid;place-items:center;margin-bottom:16px}
+.icard .ico svg{width:24px;height:24px}
+.icard h3{font-size:24px;color:var(--green);margin-bottom:10px}
+.icard p{margin:0;color:var(--ink-soft);font-size:16px}
+.icard strong{color:var(--ink)}
+.info-photos{display:grid;gap:14px}
+.info-photos .slant{aspect-ratio:4/3}
+.info-photos .slant:first-child{aspect-ratio:3/3.4}
+.big-word{font-size:clamp(64px,12vw,150px);color:var(--green);margin-top:52px;display:flex;align-items:center;gap:22px}
+.big-word::before{content:"";width:clamp(40px,8vw,120px);height:.62em;background:linear-gradient(90deg,var(--green-100),var(--green));transform:skewX(-14deg);flex-shrink:0}
+
+/* ---------- Inspire ---------- */
+.inspire{display:grid;gap:40px;align-items:center}
+@media(min-width:900px){.inspire{grid-template-columns:1fr 1fr}}
+.inspire-box{border:1px solid rgba(255,255,255,.55);padding:34px 30px}
+.inspire-box h2{font-size:clamp(32px,4.6vw,52px);margin-bottom:22px}
+.inspire-box p{color:rgba(255,255,255,.92)}
+.inspire-box .gift{font-weight:700;color:#fff;border-top:1px solid rgba(255,255,255,.35);padding-top:18px;margin:22px 0 0}
+.inspire .slant{aspect-ratio:3/3.6;max-height:620px}
+
+/* ---------- Activities ---------- */
+.act-grid{display:grid;gap:22px;margin-top:40px}
+@media(min-width:900px){.act-grid{grid-template-columns:1.15fr .85fr}}
+.list-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:30px}
+.list-card h3{font-size:28px;margin-bottom:18px;display:flex;align-items:center;gap:12px}
+.list-card.yes h3{color:var(--green)}
+.list-card.no h3{color:var(--red-700)}
+.checklist{list-style:none;margin:0;padding:0;display:grid;gap:14px}
+.checklist li{display:grid;grid-template-columns:28px 1fr;gap:12px;align-items:start}
+.checklist .mk{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;margin-top:1px}
+.checklist .mk svg{width:16px;height:16px}
+.yes .mk{background:var(--green-100);color:var(--green)}
+.no .mk{background:#FDE7E6;color:var(--red-700)}
+.note{margin-top:22px;background:var(--green-50);border-left:4px solid var(--red);padding:18px 20px;border-radius:0 10px 10px 0;font-size:15px;color:var(--ink-soft)}
+.note b{color:var(--ink)}
+
+/* ---------- Itinerary ---------- */
+.it-head{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:20px;margin-bottom:28px}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:14px;color:var(--ink-soft)}
+.legend span{display:inline-flex;align-items:center;gap:8px}
+.legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.tabs{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 12px;scroll-snap-type:x mandatory;scrollbar-width:thin;margin:0 -20px;padding-left:20px;padding-right:20px}
+.tab{flex:0 0 auto;scroll-snap-align:start;min-width:92px;min-height:64px;border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:10px 14px;text-align:left;cursor:pointer;font-family:var(--body);color:var(--ink);transition:border-color .2s,background-color .2s,color .2s}
+.tab small{display:block;font-size:12px;font-weight:600;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.06em}
+.tab b{display:block;font-family:var(--display);font-style:italic;font-weight:400;font-size:24px;line-height:1.1}
+.tab:hover{border-color:var(--green)}
+.tab[aria-selected="true"]{background:var(--green);border-color:var(--green);color:#fff}
+.tab[aria-selected="true"] small{color:rgba(255,255,255,.85)}
+.panel{background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;display:grid}
+@media(min-width:900px){.panel{grid-template-columns:1fr 380px}}
+.panel[hidden]{display:none}
+.panel-body{padding:30px 28px}
+.panel-photo{min-height:240px;background:var(--green-50)}
+.panel-photo img{width:100%;height:100%;object-fit:cover}
+.day-title{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px;margin-bottom:6px}
+.day-title h3{font-size:clamp(30px,4vw,42px);color:var(--green)}
+.day-place{display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:14px;color:var(--navy);background:#EEF0F8;border-radius:999px;padding:6px 12px;margin-bottom:22px}
+.day-place svg{width:16px;height:16px}
+.tl{list-style:none;margin:0;padding:0;position:relative}
+.tl::before{content:"";position:absolute;left:83px;top:8px;bottom:8px;width:2px;background:var(--line)}
+.tl li{display:grid;grid-template-columns:72px 1fr;gap:24px;padding:9px 0;position:relative}
+.tl li::before{content:"";position:absolute;left:78px;top:16px;width:12px;height:12px;border-radius:50%;background:#fff;border:3px solid var(--green)}
+.tl time{font-weight:800;font-size:14px;color:var(--green);white-space:nowrap;padding-top:2px;text-align:right}
+.tl p{margin:0;font-size:16px}
+.tl li.key::before{background:var(--red);border-color:var(--red)}
+.tl li.key p strong{color:var(--red-700)}
+.tl .tag{display:inline-block;font-size:12px;font-weight:700;border-radius:6px;padding:2px 8px;margin-left:6px;vertical-align:1px}
+.tag-in{background:var(--green-100);color:var(--green)}
+.tag-out{background:#FDE7E6;color:var(--red-700)}
+.tag-opt{background:#EEF0F8;color:var(--navy)}
+.tracks{display:grid;gap:16px;margin:12px 0}
+@media(min-width:700px){.tracks{grid-template-columns:1fr 1fr}}
+.track{border-radius:14px;padding:18px 18px 10px;border:1.5px solid var(--line)}
+.track h4{margin:0 0 6px;font:800 13px/1 var(--body);letter-spacing:.12em;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.track h4 svg{width:18px;height:18px}
+.track.players{background:var(--green-50);border-color:#C9DBB4}
+.track.players h4{color:var(--green)}
+.track.families{background:#F3F4FA;border-color:#D3D7EA}
+.track.families h4{color:var(--navy)}
+.track .tl::before{left:71px}
+.track .tl li{grid-template-columns:60px 1fr;gap:24px}
+.track .tl li::before{left:66px}
+.track.families .tl li::before{border-color:var(--navy)}
+.track.families .tl time{color:var(--navy)}
+.group-label{font:800 12px/1 var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);margin:14px 0 2px}
+.tz{font-size:14px;color:var(--ink-soft);margin-top:16px;display:flex;align-items:center;gap:8px}
+.tz svg{width:16px;height:16px}
+.day-nav{display:flex;justify-content:space-between;gap:12px;margin-top:24px;padding-top:20px;border-top:1px solid var(--line)}
+.day-nav button{min-height:44px;border:0;background:none;font:700 15px var(--body);color:var(--green);cursor:pointer;display:inline-flex;align-items:center;gap:6px;padding:0 6px}
+.day-nav button:disabled{color:#B5BEAA;cursor:default}
+.day-nav svg{width:18px;height:18px}
+@media(max-width:520px){.tl::before{left:74px}.tl li{grid-template-columns:64px 1fr;gap:22px}.tl li::before{left:69px}.tl time{font-size:13px}.panel-body{padding:24px 16px}.track{padding:16px 12px 8px}.track .tl::before{left:73px}.track .tl li{grid-template-columns:64px 1fr;gap:20px}.track .tl li::before{left:68px}}
+
+/* ---------- Pricing ---------- */
+.price-grid{display:grid;gap:26px;margin-top:44px}
+@media(min-width:900px){.price-grid{grid-template-columns:1fr 1fr}}
+.price{background:var(--green-900);border:1px solid rgba(255,255,255,.35);display:flex;flex-direction:column;overflow:hidden}
+.price-img{aspect-ratio:16/8.5;overflow:hidden}
+.price-img img{width:100%;height:100%;object-fit:cover}
+.price-body{padding:30px 28px;display:flex;flex-direction:column;flex:1}
+.price-label{font:800 13px/1 var(--body);letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.8)}
+.price h3{font-size:clamp(34px,4.2vw,46px);margin:10px 0 18px}
+.amount{display:flex;align-items:baseline;gap:10px;margin-bottom:22px}
+.amount b{font-family:var(--display);font-style:italic;font-weight:400;font-size:clamp(56px,8vw,80px);line-height:1}
+.amount span{font-weight:700;font-size:18px}
+.price ul{list-style:none;margin:0 0 26px;padding:0;display:grid;gap:12px}
+.price li{display:grid;grid-template-columns:22px 1fr;gap:12px;font-size:16px;color:rgba(255,255,255,.95)}
+.price li svg{width:20px;height:20px;margin-top:2px;color:#9BD35A}
+.price .btn{margin-top:auto;align-self:flex-start}
+@media(max-width:520px){.price .btn{width:100%}}
+
+/* ---------- Payment ---------- */
+.pay-grid{display:grid;gap:30px;margin-top:44px}
+@media(min-width:960px){.pay-grid{grid-template-columns:.85fr 1.15fr}}
+.pay-total{border:2px solid var(--green);padding:30px;position:relative;background:#fff}
+.pay-total h3{font-size:36px;color:var(--green)}
+.pay-total .date{font-family:var(--display);font-style:italic;text-transform:uppercase;font-size:24px;color:var(--ink);margin-top:10px}
+.pay-total .flag{position:absolute;top:-14px;left:24px;background:var(--red);color:#fff;font:800 12px/1 var(--body);letter-spacing:.1em;text-transform:uppercase;padding:8px 12px}
+.methods{margin-top:26px;display:grid;gap:12px}
+.method{display:flex;align-items:center;gap:14px;padding:16px 18px;border:1px solid var(--line);border-radius:12px;background:#fff}
+.method svg{width:26px;height:26px;color:var(--green);flex-shrink:0}
+.method b{display:block}
+.method small{color:var(--ink-soft)}
+.steps-title{font-size:36px;color:var(--green);margin-bottom:22px}
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:14px;counter-reset:s}
+.step{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:18px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 22px}
+.step .pct{font-family:var(--display);font-style:italic;font-size:44px;color:var(--red);line-height:1;min-width:92px}
+.step b{display:block;font-size:17px}
+.step small{color:var(--ink-soft)}
+.step .n{font:800 12px/1 var(--body);letter-spacing:.12em;color:var(--green);text-transform:uppercase;background:var(--green-100);padding:6px 10px;border-radius:6px}
+.progress{display:flex;height:10px;border-radius:99px;overflow:hidden;margin:6px 0 18px;gap:3px}
+.progress i:nth-child(1){flex:50;background:var(--green)}
+.progress i:nth-child(2){flex:25;background:var(--green-700)}
+.progress i:nth-child(3){flex:25;background:#7FAE4E}
+@media(max-width:520px){.step{grid-template-columns:auto 1fr;padding:16px}.step .n{display:none}.step .pct{font-size:38px;min-width:78px}}
+
+/* ---------- Conditions ---------- */
+.acc{border:1px solid var(--line);border-radius:14px;background:#fff;overflow:hidden;margin-top:36px}
+.acc summary{list-style:none;cursor:pointer;padding:22px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;font-weight:700;font-size:18px;min-height:64px}
+.acc summary::-webkit-details-marker{display:none}
+.acc summary svg{width:22px;height:22px;transition:transform .2s;color:var(--green);flex-shrink:0}
+.acc[open] summary svg{transform:rotate(180deg)}
+.acc summary:hover{background:var(--green-50)}
+.acc-body{padding:4px 24px 26px}
+.acc-body ul{margin:0;padding-left:20px;display:grid;gap:12px;color:var(--ink-soft);font-size:16px}
+.cond-grid{display:grid;gap:36px;align-items:start}
+@media(min-width:960px){.cond-grid{grid-template-columns:1.3fr .7fr}}
+.cond-grid .slant{aspect-ratio:3/3.6}
+@media(max-width:959px){.cond-grid>img{display:none}}
+
+/* ---------- Contact ---------- */
+.contact{background:var(--green);color:#fff;overflow:hidden}
+.contact-grid{display:grid;gap:44px}
+@media(min-width:1000px){.contact-grid{grid-template-columns:.95fr 1.05fr}}
+.contact h2{font-size:clamp(64px,11vw,128px)}
+.contact .lead{color:rgba(255,255,255,.9)}
+.contact h2 small{display:block;font-size:.5em;margin-top:8px}
+.channels{display:grid;gap:12px;margin-top:30px}
+.channel{display:flex;align-items:center;gap:16px;padding:16px 18px;min-height:72px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.3);border-radius:14px;text-decoration:none;color:#fff;transition:background-color .2s,border-color .2s;cursor:pointer}
+.channel:hover{background:rgba(255,255,255,.16);border-color:#fff}
+.channel .ci{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:#fff;color:var(--green);flex-shrink:0}
+.channel .ci svg{width:24px;height:24px}
+.channel.wa .ci{background:var(--wa);color:#fff}
+.channel b{display:block;font-size:16px}
+.channel small{color:rgba(255,255,255,.85);font-size:14px}
+.channel .go{margin-left:auto;width:20px;height:20px;opacity:.8;flex-shrink:0}
+.social{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.social a{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 16px;border-radius:999px;border:1px solid rgba(255,255,255,.5);text-decoration:none;font-weight:600;font-size:15px;transition:background-color .2s,color .2s}
+.social a:hover{background:#fff;color:var(--green)}
+.social svg{width:20px;height:20px}
+
+.form-card{background:#fff;color:var(--ink);border-radius:20px;padding:32px 28px;box-shadow:0 30px 60px -20px rgba(0,0,0,.35)}
+.form-card h3{font-size:36px;color:var(--green)}
+.form-card .sub{color:var(--ink-soft);font-size:15px;margin:8px 0 22px}
+.fgrid{display:grid;gap:16px}
+@media(min-width:620px){.fgrid{grid-template-columns:1fr 1fr}.fgrid .full{grid-column:1/-1}}
+.field label,.field legend{display:block;font-weight:600;font-size:14px;margin-bottom:6px}
+.field .req{color:var(--red-700)}
+.field input,.field select,.field textarea{width:100%;min-height:50px;border:1.5px solid #C6CFBB;border-radius:10px;padding:12px 14px;font:16px var(--body);color:var(--ink);background:#fff;transition:border-color .2s,box-shadow .2s}
+.field textarea{min-height:96px;resize:vertical}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(46,94,0,.18)}
+.field input[aria-invalid="true"],.field select[aria-invalid="true"]{border-color:var(--red)}
+.field .err{color:var(--red-700);font-size:13px;margin-top:6px;display:none}
+.field .err.show{display:block}
+fieldset.field{border:0;padding:0;margin:0}
+.radios{display:flex;flex-wrap:wrap;gap:8px}
+.radios label{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 14px;border:1.5px solid #C6CFBB;border-radius:999px;font-weight:600;font-size:14px;cursor:pointer;margin:0}
+.radios input{width:18px;height:18px;min-height:0;accent-color:var(--green);margin:0}
+.radios label:has(input:checked){border-color:var(--green);background:var(--green-50);color:var(--green)}
+.field .consent{display:grid;grid-template-columns:22px 1fr;gap:10px;font-size:14px;font-weight:500;color:var(--ink-soft);align-items:start;cursor:pointer}
+.field .consent input{width:20px;height:20px;min-height:0;padding:0;accent-color:var(--green);margin:2px 0 0}
+.form-card .btn{width:100%;margin-top:6px}
+.form-card .btn[disabled]{opacity:.7;cursor:progress}
+.form-msg{display:none;border-radius:12px;padding:18px;margin-top:16px;font-size:15px}
+.form-msg.ok{display:block;background:var(--green-50);border:1px solid #C9DBB4}
+.form-msg.ko{display:block;background:#FDE7E6;border:1px solid #F5B7B5}
+.form-msg a{font-weight:700;color:var(--green)}
+.hp{display:none}
+
+/* ---------- Footer ---------- */
+.footer{background:var(--green-950);color:rgba(255,255,255,.8);padding:44px 0 110px;font-size:14px}
+.footer .wrap{display:grid;gap:26px}
+@media(min-width:820px){.footer .wrap{grid-template-columns:auto 1fr auto;align-items:center}}
+.footer-logo{background:#fff;padding:12px 18px;display:inline-block;clip-path:polygon(6% 0,100% 0,94% 100%,0 100%)}
+.footer-logo img{height:36px;width:auto}
+.footer .crests img{height:40px}
+.footer a{color:#fff}
+
+/* ---------- Floating WhatsApp ---------- */
+.fab{position:fixed;right:18px;bottom:18px;z-index:var(--z-float)}
+.fab-btn{width:62px;height:62px;border-radius:50%;border:0;background:var(--wa);color:#fff;display:grid;place-items:center;cursor:pointer;box-shadow:0 10px 28px -6px rgba(0,0,0,.45);transition:background-color .2s}
+.fab-btn:hover{background:#1EBE5A}
+.fab-btn svg{width:32px;height:32px}
+.fab-pop{position:absolute;right:0;bottom:76px;width:min(320px,calc(100vw - 36px));background:#fff;color:var(--ink);border-radius:18px;box-shadow:0 24px 60px -12px rgba(0,0,0,.4);padding:18px;z-index:var(--z-pop)}
+.fab-pop[hidden]{display:none}
+.fab-pop p{font-weight:700;margin:0 0 4px}
+.fab-pop small{color:var(--ink-soft);display:block;margin-bottom:12px}
+.fab-pop a{display:flex;align-items:center;gap:12px;padding:12px;min-height:56px;border-radius:12px;text-decoration:none;border:1px solid var(--line);margin-top:8px;transition:background-color .2s}
+.fab-pop a:hover{background:var(--green-50)}
+.fab-pop a .flag{font:800 12px/1 var(--body);background:var(--green-100);color:var(--green);border-radius:6px;padding:6px 7px}
+.fab-pop a b{display:block;font-size:15px}
+.fab-pop a small{margin:0}
+.mobile-bar{position:fixed;left:0;right:0;bottom:0;z-index:calc(var(--z-float) - 1);display:flex;gap:10px;padding:10px 92px 10px 14px;background:rgba(255,255,255,.97);border-top:1px solid var(--line);transform:translateY(110%);transition:transform .3s}
+.mobile-bar.show{transform:none}
+.mobile-bar .btn{flex:1;min-height:48px;padding:0 12px;font-size:15px}
+@media(min-width:900px){.mobile-bar{display:none}}
+</style>
+</head>
+<body>
+<a class="skip" href="#contenido">Saltar al contenido</a>
+
+<!-- Icon sprite -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-wa" viewBox="0 0 24 24"><path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></symbol>
+  <symbol id="i-ig" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></g></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></g></symbol>
+  <symbol id="i-cal" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></g></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></g></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></g></symbol>
+  <symbol id="i-city" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2M10 6h4M10 10h4M10 14h4M10 18h4"/></g></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M18 6 6 18M6 6l12 12"/></symbol>
+  <symbol id="i-ball" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m12 7 4.2 3-1.6 5H9.4l-1.6-5Z"/><path d="M12 2v5M21.5 9.5 16.2 10M18 20l-3.4-5M6 20l3.4-5M2.5 9.5 7.8 10"/></g></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="i-right" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" d="m9 18 6-6-6-6"/></symbol>
+  <symbol id="i-left" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" d="m15 18-6-6 6-6"/></symbol>
+  <symbol id="i-bank" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 22h18M6 18v-7M10 18v-7M14 18v-7M18 18v-7M12 2l9 5H3Z"/></g></symbol>
+  <symbol id="i-card" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></g></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></g></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></g></symbol>
+  <symbol id="i-form" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></g></symbol>
+</svg>
+
+<header class="header">
+  <div class="wrap">
+    <a href="#top" class="header-logo" aria-label="SPATECH Rising Stars, inicio"><img src="assets/logo-spatech.png" alt="SPATECH Rising Stars" width="800" height="172"></a>
+    <nav class="nav" aria-label="Secciones">
+      <a href="#programa">Programa</a>
+      <a href="#actividades">Actividades</a>
+      <a href="#itinerario">Itinerario</a>
+      <a href="#precios">Precios</a>
+      <a href="#pago">Formas de pago</a>
+      <a href="#contacto">Contacto</a>
+    </nav>
+    <a href="#contacto" class="btn btn-red">Reservar plaza</a>
+  </div>
+</header>
+
+<main id="contenido">
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="top" aria-labelledby="hero-title">
+  <div class="hero-bg" role="img" aria-label="Jugador de fútbol corriendo con el balón sobre césped"></div>
+  <div class="wrap">
+    <div class="hero-chips">
+      <span class="chip"><span><svg aria-hidden="true"><use href="#i-cal"/></svg>Del 2 al 9 de enero 2027</span></span>
+      <span class="chip"><span><svg aria-hidden="true"><use href="#i-users"/></svg>Edades: 11 - 12 - 13 años</span></span>
+    </div>
+
+    <div class="route">
+      <div>
+        <div class="display country">España</div>
+        <div class="display city">Madrid</div>
+        <div class="crests"><img src="assets/rm.png" alt="Real Madrid" width="161" height="222"><img src="assets/atm.png" alt="Atlético de Madrid" width="115" height="145"></div>
+      </div>
+      <span class="arrow" aria-hidden="true"></span>
+      <div>
+        <div class="display country">Portugal</div>
+        <div class="display city">Lisboa</div>
+        <div class="crests"><img src="assets/scp.png" alt="Sporting de Portugal" width="125" height="160"><img src="assets/slb.png" alt="SL Benfica" width="240" height="240"></div>
+      </div>
+    </div>
+
+    <h1 class="hero-title" id="hero-title">Travel Team</h1>
+    <p class="hero-sub">Entrena con el Real Madrid, el Atlético de Madrid, el Sporting de Portugal y el Benfica. 4 partidos amistosos internacionales en dos capitales del fútbol.</p>
+
+    <div class="hero-cta">
+      <a class="btn btn-red" data-wa href="https://wa.me/18296474457" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-wa"/></svg>Reservar por WhatsApp</a>
+      <a class="btn btn-ghost" href="#preinscripcion"><svg aria-hidden="true"><use href="#i-form"/></svg>Preinscripción online</a>
+    </div>
+    <p class="hero-note"><svg aria-hidden="true"><use href="#i-clock"/></svg>Pago aplazado: primer 50% antes del 30 de octubre de 2026.</p>
+
+    <div class="hero-logo"><img src="assets/logo-spatech.png" alt="SPATECH Rising Stars" width="800" height="172"></div>
+  </div>
+</section>
+
+<!-- ============ INTRO ============ -->
+<section class="sec" id="programa" aria-labelledby="intro-title">
+  <div class="wrap intro-grid">
+    <div class="reveal">
+      <div class="stats" aria-label="1 continente, 2 países, 4 clubes">
+        <div class="stat" aria-hidden="true"><b>1</b><span>Continente</span></div>
+        <div class="stat" aria-hidden="true"><b>2</b><span>Países</span></div>
+        <div class="stat" aria-hidden="true"><b>4</b><span>Clubes</span></div>
+      </div>
+      <div class="intro-copy">
+        <h2 id="intro-title">Fútbol total<br>Dos capitales del fútbol</h2>
+        <p><strong>SPATECH Rising Stars</strong>, a través de sus programas internacionales, lleva a los jugadores y a los padres a vivir una experiencia de fútbol inigualable donde entrenaremos en Madrid con el <strong>Real Madrid</strong> y el <strong>Atlético de Madrid</strong>, y en Lisboa con el <strong>Sporting de Portugal</strong> y el <strong>Benfica</strong>.</p>
+        <p>También se jugarán 4 partidos amistosos internacionales, tanto en <strong>España</strong> como en <strong>Portugal</strong>, y aprovecharemos para conocer <strong>Madrid, Toledo y Lisboa</strong>.</p>
+        <p style="margin:0;font-weight:700">Fútbol y familias en estado puro.</p>
+      </div>
+    </div>
+    <div class="intro-photo reveal">
+      <span class="bar" aria-hidden="true"></span>
+      <img class="photo slant" src="assets/ciudad-real-madrid.webp" alt="Jugadores del Travel Team frente a la entrada de la Ciudad Real Madrid" width="1400" height="1050" loading="lazy">
+    </div>
+  </div>
+</section>
+
+<!-- ============ CLUBS ============ -->
+<section class="clubs" aria-label="Clubes del programa">
+  <div class="wrap">
+    <div class="club"><img src="assets/rm.png" alt="" width="161" height="222" loading="lazy"><div><b>Real Madrid</b><small>Madrid · España</small></div></div>
+    <div class="club"><img src="assets/atm.png" alt="" width="115" height="145" loading="lazy"><div><b>Atlético de Madrid</b><small>Madrid · España</small></div></div>
+    <div class="club"><img src="assets/scp.png" alt="" width="125" height="160" loading="lazy"><div><b>Sporting de Portugal</b><small>Lisboa · Portugal</small></div></div>
+    <div class="club"><img src="assets/slb.png" alt="" width="240" height="240" loading="lazy"><div><b>SL Benfica</b><small>Lisboa · Portugal</small></div></div>
+  </div>
+</section>
+
+<!-- ============ EUROPA TOP ============ -->
+<section class="sec sec-green" aria-labelledby="top-title">
+  <div class="wrap">
+    <div class="top-head">
+      <img class="photo slant reveal" src="assets/atletico-alcala.webp" alt="Grupo del Travel Team en el Centro Deportivo del Atlético de Madrid en Alcalá de Henares" width="1148" height="591" loading="lazy">
+      <div class="reveal">
+        <h2 id="top-title">Europa Top!!</h2>
+        <p class="top-tag">Inmersión de primer nivel de fútbol<br>4 clubes premium - 2 capitales europeas</p>
+      </div>
+    </div>
+    <div class="top-grid">
+      <img class="photo slant reveal" src="assets/aereo-campo.webp" alt="Vista aérea de jugadoras en el círculo central de un campo de fútbol" width="1400" height="933" loading="lazy">
+      <div class="cards-col">
+        <article class="pcard reveal">
+          <h3><svg aria-hidden="true"><use href="#i-ball"/></svg>Jugadores</h3>
+          <p>La oportunidad única de entrenar con 4 de los clubes más grandes de Europa, y recibir metodologías distintas de entrenamientos. 4 partidos amistosos.</p>
+        </article>
+        <article class="pcard reveal">
+          <h3><svg aria-hidden="true"><use href="#i-heart"/></svg>Familias</h3>
+          <p>Acompañar a los jugadores a vivir una experiencia única de fútbol. Conocer Madrid y Lisboa, dos de las capitales más de moda en Europa.</p>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PROGRAM INFO ============ -->
+<section class="sec sec-tint" aria-labelledby="info-title">
+  <div class="wrap">
+    <span class="eyebrow">El programa</span>
+    <h2 class="h2 sr-only" id="info-title">Información del programa Travel Team</h2>
+    <div class="info-grid">
+      <div class="info-cards">
+        <article class="icard reveal">
+          <div class="ico"><svg aria-hidden="true"><use href="#i-city"/></svg></div>
+          <h3>Ciudades</h3>
+          <p>Madrid y Lisboa tienen una gran reputación en fútbol formativo, donde el fútbol crece de forma exponencial a nivel de alto rendimiento y formativo, sobre todo en clubes como Real Madrid, Atlético de Madrid, Sporting de Portugal y Benfica.</p>
+        </article>
+        <article class="icard reveal">
+          <div class="ico"><svg aria-hidden="true"><use href="#i-users"/></svg></div>
+          <h3>Participantes y plazas</h3>
+          <p>El programa de Travel Team diseñado por SPATECH está dirigido a <strong>jugadores y jugadoras de entre 11 y 13 años</strong>, dispuestos a desarrollar y potenciar sus talentos a través de partidos amistosos internacionales y training sessions "master class" con clubes de primer nivel.</p>
+        </article>
+        <article class="icard reveal">
+          <div class="ico"><svg aria-hidden="true"><use href="#i-cal"/></svg></div>
+          <h3>Fechas</h3>
+          <p>Este programa de Travel Team tendrá lugar <strong>del 2 al 9 de enero de 2027</strong>, con un total de 8 noches: (4) noches en España y (4) noches en Portugal. Regreso el domingo 10 de enero.</p>
+        </article>
+        <article class="icard reveal">
+          <div class="ico"><svg aria-hidden="true"><use href="#i-pin"/></svg></div>
+          <h3>Lugares</h3>
+          <p>Visitarán las instalaciones oficiales de los clubes más importantes de España y Portugal. Actividades recreativas y formativas, a la vez que visitas exclusivas a estadios y partidos amistosos.</p>
+        </article>
+      </div>
+      <div class="info-photos">
+        <img class="photo slant reveal" src="assets/estadio-luz-grupo.webp" alt="Grupo del Travel Team en las gradas del Estadio da Luz del Benfica" width="1080" height="1440" loading="lazy">
+        <img class="photo slant reveal" src="assets/sporting-bus.webp" alt="Jugadores del Travel Team junto al autobús del Sporting de Portugal" width="1400" height="1051" loading="lazy">
+      </div>
+    </div>
+    <p class="display big-word" aria-hidden="true">Travel Team</p>
+  </div>
+</section>
+
+<!-- ============ INSPIRE ============ -->
+<section class="sec sec-green" aria-labelledby="inspire-title">
+  <div class="wrap inspire">
+    <div class="inspire-box reveal">
+      <h2 id="inspire-title">Creciendo e inspirándonos de los mejores</h2>
+      <p>Aprovechando las vacaciones navideñas, esta experiencia de SPATECH Travel Team es una oportunidad única de viajar a Europa y formar parte de una experiencia que jamás se les olvidará a jugadores y acompañantes.</p>
+      <p class="gift">El mejor regalo navideño que podemos hacer a los jugadores, y que también podrán disfrutar sus acompañantes.</p>
+    </div>
+    <img class="photo slant reveal" src="assets/certificado-rm.webp" alt="Jugador recibiendo el certificado de la Fundación Real Madrid tras el clinic" width="1200" height="1600" loading="lazy">
+  </div>
+</section>
+
+<!-- ============ ACTIVITIES ============ -->
+<section class="sec" id="actividades" aria-labelledby="act-title">
+  <div class="wrap">
+    <span class="eyebrow">Travel Team</span>
+    <h2 class="h2" id="act-title">Actividades</h2>
+    <div class="act-grid">
+      <div class="list-card yes reveal">
+        <h3><svg width="28" height="28" aria-hidden="true"><use href="#i-check"/></svg>Incluido</h3>
+        <ul class="checklist">
+          <li><span class="mk"><svg aria-hidden="true"><use href="#i-check"/></svg></span><span>Pack 4 partidos amistosos internacionales en España y Portugal.</span></li>
+          <li><span class="mk"><svg aria-hidden="true"><use href="#i-check"/></svg></span><span>Training sessions "Master Class" con entrenadores profesionales de las categorías inferiores del Real Madrid, Atlético de Madrid, Sporting de Portugal y Benfica. A los entrenamientos de Sporting de Portugal, Benfica y Real Madrid*, solo pueden asistir jugadores y staff.</span></li>
+          <li><span class="mk"><svg aria-hidden="true"><use href="#i-check"/></svg></span><span>Tour por los estadios del Real Madrid, Benfica y/o Sporting de Portugal.</span></li>
+          <li><span class="mk"><svg aria-hidden="true"><use href="#i-check"/></svg></span><span>Visitas guiadas por Madrid, Lisboa y Toledo.</span></li>
+        </ul>
+      </div>
+      <div class="list-card no reveal">
+        <h3><svg width="28" height="28" aria-hidden="true"><use href="#i-x"/></svg>No incluido</h3>
+        <ul class="checklist">
+          <li><span class="mk"><svg aria-hidden="true"><use href="#i-x"/></svg></span><span>Billetes de avión.</span></li>
+          <li><span class="mk"><svg aria-hidden="true"><use href="#i-x"/></svg></span><span>Tickets partidos de La Liga española y portuguesa.</span></li>
+          <li><span class="mk"><svg aria-hidden="true"><use href="#i-x"/></svg></span><span>Seguro médico de viaje.</span></li>
+          <li><span class="mk"><svg aria-hidden="true"><use href="#i-x"/></svg></span><span>(5) almuerzos o cenas durante el tour.</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="note reveal">
+      <b>* Nota:</b> El Real Madrid ha incluido una cláusula para los clinics (sesiones de entrenamiento) enfocados a los equipos internacionales. Si los padres desean asistir al clinic en la Ciudad Real Madrid, para acompañar al equipo, deberán abonar la cantidad de <b>80 US$ por persona</b>. Esto incluye visita guiada exclusiva por la Ciudad Deportiva, una camiseta Adidas del Real Madrid (no la oficial del primer equipo) y el visionado del clinic del equipo en las gradas del campo asignado para la ocasión.
+    </div>
+  </div>
+</section>
+
+<!-- ============ ITINERARY ============ -->
+<section class="sec sec-tint" id="itinerario" aria-labelledby="it-title">
+  <div class="wrap">
+    <div class="it-head">
+      <div>
+        <span class="eyebrow">Día a día</span>
+        <h2 class="h2" id="it-title">Itinerario</h2>
+      </div>
+      <div class="legend" aria-hidden="true">
+        <span><i style="background:var(--red)"></i>Entrenamientos y partidos</span>
+        <span><i style="background:var(--green)"></i>Jugadores</span>
+        <span><i style="background:var(--navy)"></i>Familias</span>
+      </div>
+    </div>
+
+    <div class="tabs" role="tablist" aria-label="Días del itinerario">
+      <button class="tab" role="tab" id="t1" aria-controls="d1" aria-selected="true"><small>Sáb 2 ene</small><b>Día 1</b></button>
+      <button class="tab" role="tab" id="t2" aria-controls="d2" aria-selected="false" tabindex="-1"><small>Dom 3 ene</small><b>Día 2</b></button>
+      <button class="tab" role="tab" id="t3" aria-controls="d3" aria-selected="false" tabindex="-1"><small>Lun 4 ene</small><b>Día 3</b></button>
+      <button class="tab" role="tab" id="t4" aria-controls="d4" aria-selected="false" tabindex="-1"><small>Mar 5 ene</small><b>Día 4</b></button>
+      <button class="tab" role="tab" id="t5" aria-controls="d5" aria-selected="false" tabindex="-1"><small>Mié 6 ene</small><b>Día 5</b></button>
+      <button class="tab" role="tab" id="t6" aria-controls="d6" aria-selected="false" tabindex="-1"><small>Jue 7 ene</small><b>Día 6</b></button>
+      <button class="tab" role="tab" id="t7" aria-controls="d7" aria-selected="false" tabindex="-1"><small>Vie 8 ene</small><b>Día 7</b></button>
+      <button class="tab" role="tab" id="t8" aria-controls="d8" aria-selected="false" tabindex="-1"><small>Sáb 9 ene</small><b>Día 8</b></button>
+      <button class="tab" role="tab" id="t9" aria-controls="d9" aria-selected="false" tabindex="-1"><small>Dom 10 ene</small><b>Día 9</b></button>
+    </div>
+
+    <!-- Día 1 -->
+    <div class="panel" role="tabpanel" id="d1" aria-labelledby="t1">
+      <div class="panel-body">
+        <div class="day-title"><h3>Día 1 · Sábado 2 de enero</h3></div>
+        <span class="day-place"><svg aria-hidden="true"><use href="#i-pin"/></svg>Madrid</span>
+        <ol class="tl">
+          <li><time>9:00 AM</time><p>Recogida del grupo en el aeropuerto de Madrid.</p></li>
+          <li><time>11:00 AM</time><p>Panorámica en bus por Madrid.</p></li>
+          <li><time>12:30 PM</time><p>Visita Tour Estadio Real Madrid.</p></li>
+          <li><time>3:00 PM</time><p>Almuerzo en el hotel. <span class="tag tag-in">Incluido</span></p></li>
+          <li><time>4:00 PM</time><p>Check-in Hotel Madrid.</p></li>
+          <li><time>5:00 PM</time><p>Actividad por determinar (puede ser un partido de La Liga: Real Madrid vs Getafe CF, o Rayo Vallecano vs Atlético de Madrid) o tarde libre y de descanso.</p></li>
+        </ol>
+      </div>
+      <div class="panel-photo"><img src="assets/museo-rm.webp" alt="Familias y jugadores en el museo del Real Madrid" width="1080" height="1440" loading="lazy"></div>
+    </div>
+
+    <!-- Día 2 -->
+    <div class="panel" role="tabpanel" id="d2" aria-labelledby="t2" hidden>
+      <div class="panel-body">
+        <div class="day-title"><h3>Día 2 · Domingo 3 de enero</h3></div>
+        <span class="day-place"><svg aria-hidden="true"><use href="#i-pin"/></svg>Madrid</span>
+        <ol class="tl">
+          <li><time>8:30 AM</time><p>Desayuno en el hotel.</p></li>
+          <li class="key"><time>10:30 AM</time><p><strong>Training Session</strong> con técnicos profesionales del <strong>Atlético de Madrid</strong> en la Ciudad Deportiva del Atlético de Madrid. Fotos con el cuerpo técnico. Entrega de certificados para cada jugador.</p></li>
+          <li><time>1:30 PM</time><p>Almuerzo en el hotel. <span class="tag tag-in">Incluido</span></p></li>
+          <li><time>4:00 PM</time><p>Visita guiada turística por Madrid o partido de La Liga.</p></li>
+          <li><time>6:30 PM</time><p>Tiempo libre. <span class="tag tag-out">Cena no incluida</span></p></li>
+          <li><time>9:00 PM</time><p>Transfer al hotel.</p></li>
+        </ol>
+      </div>
+      <div class="panel-photo"><img src="assets/atletico-alcala.webp" alt="Grupo en el Centro Deportivo del Atlético de Madrid" width="1148" height="591" loading="lazy"></div>
+    </div>
+
+    <!-- Día 3 -->
+    <div class="panel" role="tabpanel" id="d3" aria-labelledby="t3" hidden>
+      <div class="panel-body">
+        <div class="day-title"><h3>Día 3 · Lunes 4 de enero</h3></div>
+        <span class="day-place"><svg aria-hidden="true"><use href="#i-pin"/></svg>Madrid</span>
+        <ol class="tl">
+          <li><time>8:30 AM</time><p>Desayuno en el hotel.</p></li>
+          <li class="key"><time>10:30 AM</time><p><strong>Training Session</strong> con técnicos profesionales del <strong>Real Madrid</strong> en la Ciudad Deportiva del Real Madrid. Fotos con el cuerpo técnico. Entrega de certificados para cada jugador.</p></li>
+          <li><time>1:30 PM</time><p>Almuerzo en el hotel. <span class="tag tag-in">Incluido</span></p></li>
+          <li class="key"><time>6:00 PM</time><p>Primer <strong>partido amistoso internacional</strong>.</p></li>
+          <li><time>9:00 PM</time><p>Cena en el hotel. <span class="tag tag-in">Incluida</span></p></li>
+        </ol>
+      </div>
+      <div class="panel-photo"><img src="assets/vestuario-rm.webp" alt="Jugadores del Travel Team en el vestuario del Real Madrid" width="1400" height="1050" loading="lazy"></div>
+    </div>
+
+    <!-- Día 4 -->
+    <div class="panel" role="tabpanel" id="d4" aria-labelledby="t4" hidden>
+      <div class="panel-body">
+        <div class="day-title"><h3>Día 4 · Martes 5 de enero</h3></div>
+        <span class="day-place"><svg aria-hidden="true"><use href="#i-pin"/></svg>Madrid · Toledo</span>
+        <ol class="tl">
+          <li><time>9:00 AM</time><p>Desayuno en el hotel.</p></li>
+          <li><time>10:00 AM</time><p>Transfer Madrid – Toledo.</p></li>
+          <li><time>11:30 AM</time><p>Panorámica y visita guiada de la ciudad de Toledo. <span class="tag tag-out">Almuerzo libre no incluido</span></p></li>
+          <li><time>5:30 PM</time><p>Transfer en bus Toledo – Madrid.</p></li>
+          <li><time>7:00 PM</time><p>Asistencia a la impresionante Cabalgata de Reyes Magos de Madrid. <span class="tag tag-opt">Opcional</span></p></li>
+          <li><time>9:00 PM</time><p>Cena en el hotel. <span class="tag tag-in">Incluida</span></p></li>
+        </ol>
+      </div>
+      <div class="panel-photo"><img src="assets/ciudad-real-madrid.webp" alt="Grupo del Travel Team en Madrid" width="1400" height="1050" loading="lazy"></div>
+    </div>
+
+    <!-- Día 5 -->
+    <div class="panel" role="tabpanel" id="d5" aria-labelledby="t5" hidden>
+      <div class="panel-body">
+        <div class="day-title"><h3>Día 5 · Miércoles 6 de enero</h3></div>
+        <span class="day-place"><svg aria-hidden="true"><use href="#i-pin"/></svg>Madrid · Mérida · Lisboa</span>
+        <ol class="tl">
+          <li><time>8:00 AM</time><p>Desayuno en el hotel y check-out.</p></li>
+          <li><time>9:00 AM</time><p>Transfer en bus Madrid – Mérida. <span class="tag tag-out">Almuerzo no incluido</span></p></li>
+          <li class="key"><time>4:00 PM</time><p>Segundo <strong>partido amistoso internacional</strong>.</p></li>
+          <li><time>6:00 PM</time><p>Continuamos viaje Mérida – Lisboa.</p></li>
+          <li><time>9:00 PM</time><p>Cena en el hotel. <span class="tag tag-in">Incluida</span></p></li>
+        </ol>
+        <p class="tz"><svg aria-hidden="true"><use href="#i-clock"/></svg>Desde la llegada a Lisboa, todos los horarios son en hora local de Portugal.</p>
+      </div>
+      <div class="panel-photo"><img src="assets/partido.webp" alt="Partido amistoso internacional" width="1200" height="1600" loading="lazy"></div>
+    </div>
+
+    <!-- Día 6 -->
+    <div class="panel" role="tabpanel" id="d6" aria-labelledby="t6" hidden>
+      <div class="panel-body">
+        <div class="day-title"><h3>Día 6 · Jueves 7 de enero</h3></div>
+        <span class="day-place"><svg aria-hidden="true"><use href="#i-pin"/></svg>Lisboa</span>
+        <p class="group-label">Todo el grupo</p>
+        <ol class="tl">
+          <li><time>7:30 AM</time><p>Desayuno en el hotel.</p></li>
+        </ol>
+        <div class="tracks">
+          <div class="track players">
+            <h4><svg aria-hidden="true"><use href="#i-ball"/></svg>Jugadores y staff</h4>
+            <ol class="tl">
+              <li class="key"><time>9:30 AM</time><p><strong>Training Session</strong> con técnicos profesionales de categorías inferiores del <strong>SL Benfica</strong> en la Ciudad Deportiva del SL Benfica. Fotos con el cuerpo técnico.</p></li>
+              <li><time>12:00 PM</time><p>Almuerzo incluido para jugadores y staff técnico del club en la Ciudad Deportiva del SLB. Visita guiada por la Ciudad Deportiva del SLB. Entrega de los certificados para cada jugador.</p></li>
+            </ol>
+          </div>
+          <div class="track families">
+            <h4><svg aria-hidden="true"><use href="#i-heart"/></svg>Familias</h4>
+            <ol class="tl">
+              <li><time>10:00 AM</time><p>Visita guiada por Lisboa, sólo para los padres y familiares. <span class="tag tag-out">Almuerzo libre no incluido</span></p></li>
+            </ol>
+          </div>
+        </div>
+        <p class="group-label">Todo el grupo</p>
+        <ol class="tl">
+          <li class="key"><time>6:00 PM</time><p>Tercer <strong>partido amistoso internacional</strong>.</p></li>
+          <li><time>9:00 PM</time><p>Cena en el hotel. <span class="tag tag-in">Incluida</span></p></li>
+        </ol>
+      </div>
+      <div class="panel-photo"><img src="assets/benfica-campus.webp" alt="Jugadores del Travel Team en el Benfica Campus" width="1400" height="1050" loading="lazy"></div>
+    </div>
+
+    <!-- Día 7 -->
+    <div class="panel" role="tabpanel" id="d7" aria-labelledby="t7" hidden>
+      <div class="panel-body">
+        <div class="day-title"><h3>Día 7 · Viernes 8 de enero</h3></div>
+        <span class="day-place"><svg aria-hidden="true"><use href="#i-pin"/></svg>Lisboa</span>
+        <p class="group-label">Todo el grupo</p>
+        <ol class="tl">
+          <li><time>7:30 AM</time><p>Desayuno en el hotel.</p></li>
+        </ol>
+        <div class="tracks">
+          <div class="track players">
+            <h4><svg aria-hidden="true"><use href="#i-ball"/></svg>Jugadores y staff</h4>
+            <ol class="tl">
+              <li class="key"><time>10:00 AM</time><p><strong>Training Session</strong> con técnicos de categorías inferiores del <strong>Sporting de Portugal</strong> en la Ciudad Deportiva del Sporting de Portugal. Fotos con el cuerpo técnico. Entrega de certificado para cada jugador.</p></li>
+              <li><time>12:00 PM</time><p>Almuerzo incluido para jugadores y staff en el restaurante de la Ciudad Deportiva del SCP.</p></li>
+              <li><time>1:00 PM</time><p>Visita de la Ciudad Deportiva del SCP.</p></li>
+            </ol>
+          </div>
+          <div class="track families">
+            <h4><svg aria-hidden="true"><use href="#i-heart"/></svg>Familias</h4>
+            <ol class="tl">
+              <li><time>10:00 AM</time><p>Visita para padres por el barrio lisboeta de Belém. <span class="tag tag-out">Comida no incluida</span></p></li>
+            </ol>
+          </div>
+        </div>
+        <p class="group-label">Todo el grupo</p>
+        <ol class="tl">
+          <li><time>4:00 PM</time><p>Visita guiada Estadio da Luz, SL Benfica, o Estadio José Alvalade, Sporting de Portugal.</p></li>
+          <li class="key"><time>7:30 PM</time><p>Cuarto <strong>partido amistoso internacional</strong>.</p></li>
+          <li><time>9:30 PM</time><p>Cena en el hotel. <span class="tag tag-in">Incluida</span></p></li>
+        </ol>
+      </div>
+      <div class="panel-photo"><img src="assets/sporting-tecnicos.webp" alt="Jugador recibiendo su certificado con técnicos del Sporting de Portugal" width="1400" height="1050" loading="lazy"></div>
+    </div>
+
+    <!-- Día 8 -->
+    <div class="panel" role="tabpanel" id="d8" aria-labelledby="t8" hidden>
+      <div class="panel-body">
+        <div class="day-title"><h3>Día 8 · Sábado 9 de enero</h3></div>
+        <span class="day-place"><svg aria-hidden="true"><use href="#i-pin"/></svg>Lisboa</span>
+        <ol class="tl">
+          <li><time>9:30 AM</time><p>Desayuno en el hotel.</p></li>
+          <li><time>11:00 AM</time><p>Día libre en Lisboa. <span class="tag tag-out">Almuerzo y cena no incluidos</span></p></li>
+          <li><time>8:00 PM</time><p>Transfer de regreso al hotel.</p></li>
+        </ol>
+      </div>
+      <div class="panel-photo"><img src="assets/estadio-luz.webp" alt="Estadio da Luz del SL Benfica" width="1200" height="1600" loading="lazy"></div>
+    </div>
+
+    <!-- Día 9 -->
+    <div class="panel" role="tabpanel" id="d9" aria-labelledby="t9" hidden>
+      <div class="panel-body">
+        <div class="day-title"><h3>Día 9 · Domingo 10 de enero</h3></div>
+        <span class="day-place"><svg aria-hidden="true"><use href="#i-pin"/></svg>Lisboa</span>
+        <ol class="tl">
+          <li><time>6:30 AM</time><p>Check-out y transfer del hotel al aeropuerto de Lisboa o regreso a Madrid.</p></li>
+          <li class="key"><time>&nbsp;</time><p><strong>Final de viaje.</strong></p></li>
+        </ol>
+      </div>
+      <div class="panel-photo"><img src="assets/grupo-sporting.webp" alt="Equipo del Travel Team en la Ciudad Deportiva del Sporting de Portugal" width="1200" height="1600" loading="lazy"></div>
+    </div>
+
+    <div class="day-nav" aria-label="Navegación entre días">
+      <button type="button" id="prevDay"><svg aria-hidden="true"><use href="#i-left"/></svg>Día anterior</button>
+      <button type="button" id="nextDay">Día siguiente<svg aria-hidden="true"><use href="#i-right"/></svg></button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PRICING ============ -->
+<section class="sec sec-green" id="precios" aria-labelledby="price-title">
+  <div class="wrap">
+    <span class="eyebrow">Inversión</span>
+    <h2 class="h2" id="price-title">Precios</h2>
+    <div class="price-grid">
+      <article class="price reveal">
+        <div class="price-img"><img src="assets/jugadores-benfica.webp" alt="Jugadores del Travel Team en las instalaciones del Benfica" width="1280" height="960" loading="lazy"></div>
+        <div class="price-body">
+          <span class="price-label">Jugadores</span>
+          <h3>Costo por jugador</h3>
+          <div class="amount"><b>2650</b><span>US$</span></div>
+          <ul>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>Plan de alojamiento, comidas y actividades del programa.</li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>Entrenamientos con Real Madrid, Atlético de Madrid, Sporting de Portugal y Benfica.</li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>4 partidos amistosos internacionales.</li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>2 equipaciones de entrenamiento y juego completo.</li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>1 chándal.</li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>1 abrigo.</li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>1 mochila premium.</li>
+          </ul>
+          <a class="btn btn-white" href="#preinscripcion" data-pick="jugador">Reservar plaza de jugador</a>
+        </div>
+      </article>
+      <article class="price reveal">
+        <div class="price-img"><img src="assets/familias-atletico.webp" alt="Familias animando desde la grada del Centro Deportivo del Atlético de Madrid" width="1170" height="858" loading="lazy"></div>
+        <div class="price-body">
+          <span class="price-label">Acompañantes</span>
+          <h3>Costo por acompañante</h3>
+          <div class="amount"><b>2500</b><span>US$</span></div>
+          <ul>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>Plan de alojamiento, comidas y actividades del programa.</li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>1 hoodie invernal de Travel Team.</li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>2 t-shirts oficiales de Travel Team.</li>
+            <li><svg aria-hidden="true"><use href="#i-check"/></svg>1 mochila premium.</li>
+          </ul>
+          <a class="btn btn-white" href="#preinscripcion" data-pick="acompanante">Reservar plaza de acompañante</a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PAYMENT ============ -->
+<section class="sec" id="pago" aria-labelledby="pay-title">
+  <div class="wrap">
+    <span class="eyebrow">Reserva</span>
+    <h2 class="h2" id="pay-title">Formas de pago</h2>
+    <div class="pay-grid">
+      <div class="reveal">
+        <div class="pay-total">
+          <span class="flag">Opción 1</span>
+          <h3>Pago totalidad</h3>
+          <p class="date">Antes del 20 de noviembre 2026</p>
+        </div>
+        <div class="methods">
+          <h3 class="display" style="font-size:28px;color:var(--green);margin:10px 0 4px">Métodos de pago</h3>
+          <div class="method"><svg aria-hidden="true"><use href="#i-bank"/></svg><div><b>Transferencia bancaria</b></div></div>
+          <div class="method"><svg aria-hidden="true"><use href="#i-card"/></svg><div><b>Link de pago con tarjeta</b><small>(+ 8%)</small></div></div>
+        </div>
+      </div>
+      <div class="reveal">
+        <h3 class="display steps-title">Opción 2 · Pago aplazado</h3>
+        <div class="progress" aria-hidden="true"><i></i><i></i><i></i></div>
+        <ol class="steps">
+          <li class="step"><span class="pct">50%</span><div><b>Antes del 30 de octubre 2026</b><small>Primer pago</small></div><span class="n">Plazo 1</span></li>
+          <li class="step"><span class="pct">25%</span><div><b>Antes del 15 de noviembre 2026</b><small>Segundo pago</small></div><span class="n">Plazo 2</span></li>
+          <li class="step"><span class="pct">25%</span><div><b>Antes del 2 de diciembre 2026</b><small>Tercer pago</small></div><span class="n">Plazo 3</span></li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONDITIONS ============ -->
+<section class="sec sec-tint" id="condiciones" aria-labelledby="cond-title">
+  <div class="wrap cond-grid">
+    <div>
+      <span class="eyebrow">Travel Team</span>
+      <h2 class="h2" id="cond-title">Condiciones generales</h2>
+      <details class="acc">
+        <summary>Leer las condiciones generales del programa <svg aria-hidden="true"><use href="#i-chev"/></svg></summary>
+        <div class="acc-body">
+          <ul>
+            <li>El costo de la gira Travel Team incluye únicamente aquello recogido expresamente en el programa de viaje descrito, así como sus excepciones o particularidades.</li>
+            <li>SPATECH no gestiona la obtención de visados, aunque proporcionará la documentación necesaria para la obtención de los mismos.</li>
+            <li>No están incluidos los vuelos, ni otros gastos de transporte más allá de los recogidos en el programa.</li>
+            <li>Cada persona (jugador o acompañante) que participe en el tour debe contar con su propio seguro médico de viaje internacional. SPATECH no se responsabilizará de las lesiones o enfermedades que se produzcan durante el tour. El seguro debe incluir repatriación en caso de fallecimiento, y cobertura médica y de hospital por lesión.</li>
+            <li>Para participar en las sesiones de entrenamiento del Real Madrid y Atlético de Madrid, cada jugador deberá proporcionar a SPATECH una copia de su póliza de seguro médico de viaje.</li>
+            <li>SPATECH firmará, con los padres y/o tutores de los menores así como con los adultos acompañantes, un descargo de responsabilidad con la misma, donde relevará de toda demanda, responsabilidad o reclamación administrativa, o de cualquier otra naturaleza, que pueda surgir en el tour. Asimismo, relevará a SPATECH de cualquier resultado adverso que pudiese producirse como consecuencia de las actividades que se celebren, tipo lesiones y/o accidentes en entrenamientos o partidos, o cualquier actividad que se celebre.</li>
+            <li>El itinerario marcado, los horarios y algunas actividades puntuales pueden sufrir cambios por circunstancias ajenas a la organización.</li>
+          </ul>
+        </div>
+      </details>
+    </div>
+    <img class="photo slant reveal" src="assets/sporting-muro.webp" alt="Escudo del Sporting de Portugal en la pared de su Ciudad Deportiva" width="1400" height="1050" loading="lazy">
+  </div>
+</section>
+
+<!-- ============ CONTACT ============ -->
+<section class="sec contact" id="contacto" aria-labelledby="contact-title">
+  <div class="wrap contact-grid">
+    <div>
+      <h2 id="contact-title">Gracias<small>Ven con nosotros</small></h2>
+      <p class="lead" style="margin-top:18px">Elige el canal que prefieras. Te respondemos con toda la información y los pasos para reservar.</p>
+      <div class="channels">
+        <a class="channel wa" data-wa href="https://wa.me/18296474457" target="_blank" rel="noopener">
+          <span class="ci"><svg aria-hidden="true"><use href="#i-wa"/></svg></span>
+          <span><b>WhatsApp · República Dominicana</b><small>+1 829 647 4457</small></span>
+          <svg class="go" aria-hidden="true"><use href="#i-right"/></svg>
+        </a>
+        <a class="channel wa" data-wa href="https://wa.me/34609218406" target="_blank" rel="noopener">
+          <span class="ci"><svg aria-hidden="true"><use href="#i-wa"/></svg></span>
+          <span><b>WhatsApp · España</b><small>+34 609 218 406</small></span>
+          <svg class="go" aria-hidden="true"><use href="#i-right"/></svg>
+        </a>
+        <a class="channel" href="mailto:alfonso@mongogroupsport.com?subject=Travel%20Team%20Madrid%20-%20Lisboa%202027">
+          <span class="ci"><svg aria-hidden="true"><use href="#i-mail"/></svg></span>
+          <span><b>Email</b><small>alfonso@mongogroupsport.com</small></span>
+          <svg class="go" aria-hidden="true"><use href="#i-right"/></svg>
+        </a>
+        <a class="channel" href="tel:+18296474457">
+          <span class="ci"><svg aria-hidden="true"><use href="#i-phone"/></svg></span>
+          <span><b>Llamar</b><small>+1 829 647 4457</small></span>
+          <svg class="go" aria-hidden="true"><use href="#i-right"/></svg>
+        </a>
+      </div>
+      <div class="social">
+        <a href="https://www.instagram.com/spatech_rising_stars/" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-ig"/></svg>@spatech_rising_stars</a>
+        <a href="https://www.instagram.com/spadosportpuntacana/" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-ig"/></svg>@spadosportpuntacana</a>
+      </div>
+    </div>
+
+    <div class="form-card" id="preinscripcion">
+      <h3>Preinscripción</h3>
+      <p class="sub">Déjanos tus datos y te contactamos para confirmar plazas y forma de pago. Sin compromiso.</p>
+      <form name="preinscripcion-travel-team" method="POST" action="/gracias.html" data-netlify="true" netlify-honeypot="bot-field" novalidate>
+        <input type="hidden" name="form-name" value="preinscripcion-travel-team">
+        <p class="hp"><label>No rellenar: <input name="bot-field" tabindex="-1" autocomplete="off"></label></p>
+        <div class="fgrid">
+          <div class="field full">
+            <label for="f-nombre">Nombre y apellidos (padre, madre o tutor) <span class="req">*</span></label>
+            <input id="f-nombre" name="nombre" type="text" autocomplete="name" required>
+            <p class="err" id="e-nombre">Indica tu nombre.</p>
+          </div>
+          <div class="field">
+            <label for="f-tel">WhatsApp / teléfono <span class="req">*</span></label>
+            <input id="f-tel" name="whatsapp" type="tel" autocomplete="tel" inputmode="tel" placeholder="+1 809 000 0000" required>
+            <p class="err" id="e-tel">Indica un teléfono válido con prefijo.</p>
+          </div>
+          <div class="field">
+            <label for="f-email">Email <span class="req">*</span></label>
+            <input id="f-email" name="email" type="email" autocomplete="email" required>
+            <p class="err" id="e-email">Indica un email válido.</p>
+          </div>
+          <div class="field">
+            <label for="f-pais">País de residencia</label>
+            <select id="f-pais" name="pais" autocomplete="country-name">
+              <option>República Dominicana</option>
+              <option>Puerto Rico</option>
+              <option>Estados Unidos</option>
+              <option>España</option>
+              <option>Otro</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="f-club">Club o academia</label>
+            <input id="f-club" name="club" type="text" autocomplete="organization">
+          </div>
+          <div class="field">
+            <label for="f-jug">Nº de jugadores</label>
+            <input id="f-jug" name="jugadores" type="number" min="0" max="30" value="1" inputmode="numeric">
+          </div>
+          <div class="field">
+            <label for="f-aco">Nº de acompañantes</label>
+            <input id="f-aco" name="acompanantes" type="number" min="0" max="30" value="0" inputmode="numeric">
+          </div>
+          <div class="field full">
+            <label for="f-edad">Edad o año de nacimiento del jugador/es</label>
+            <input id="f-edad" name="edades" type="text" placeholder="Ej.: 12 años (2014)">
+          </div>
+          <fieldset class="field full">
+            <legend>¿Cómo prefieres que te contactemos?</legend>
+            <div class="radios">
+              <label><input type="radio" name="contacto_preferido" value="WhatsApp" checked>WhatsApp</label>
+              <label><input type="radio" name="contacto_preferido" value="Llamada">Llamada</label>
+              <label><input type="radio" name="contacto_preferido" value="Email">Email</label>
+            </div>
+          </fieldset>
+          <div class="field full">
+            <label for="f-msg">Mensaje o dudas</label>
+            <textarea id="f-msg" name="mensaje"></textarea>
+          </div>
+          <div class="field full">
+            <label class="consent"><input type="checkbox" name="consentimiento" value="si" required id="f-ok"><span>Acepto que SPATECH Rising Stars utilice estos datos únicamente para contactarme sobre el programa Travel Team. <span class="req">*</span></span></label>
+            <p class="err" id="e-ok">Necesitamos tu consentimiento para contactarte.</p>
+          </div>
+        </div>
+        <button class="btn btn-red" type="submit"><svg aria-hidden="true"><use href="#i-send"/></svg><span>Enviar preinscripción</span></button>
+        <div class="form-msg" id="form-msg" role="status" aria-live="polite"></div>
+      </form>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <span class="footer-logo"><img src="assets/logo-spatech.png" alt="SPATECH Rising Stars" width="800" height="172" loading="lazy"></span>
+    <div class="crests" aria-label="Clubes del programa">
+      <img src="assets/rm.png" alt="Real Madrid" width="161" height="222" loading="lazy">
+      <img src="assets/atm.png" alt="Atlético de Madrid" width="115" height="145" loading="lazy">
+      <img src="assets/scp.png" alt="Sporting de Portugal" width="125" height="160" loading="lazy">
+      <img src="assets/slb.png" alt="SL Benfica" width="240" height="240" loading="lazy">
+    </div>
+    <p style="margin:0">© 2026 SPATECH Rising Stars · Travel Team Madrid – Lisboa 2027<br><a href="#condiciones">Condiciones generales</a> · <a href="mailto:alfonso@mongogroupsport.com">alfonso@mongogroupsport.com</a></p>
+  </div>
+</footer>
+
+<!-- Floating WhatsApp -->
+<div class="fab">
+  <div class="fab-pop" id="fab-pop" hidden role="dialog" aria-label="Elige un número de WhatsApp">
+    <p>¿Hablamos por WhatsApp?</p>
+    <small>Elige el número más cercano a ti.</small>
+    <a data-wa href="https://wa.me/18296474457" target="_blank" rel="noopener"><span class="flag">RD</span><span><b>República Dominicana</b><small>+1 829 647 4457</small></span></a>
+    <a data-wa href="https://wa.me/34609218406" target="_blank" rel="noopener"><span class="flag">ES</span><span><b>España</b><small>+34 609 218 406</small></span></a>
+  </div>
+  <button class="fab-btn" id="fab-btn" aria-expanded="false" aria-controls="fab-pop" aria-label="Contactar por WhatsApp"><svg aria-hidden="true"><use href="#i-wa"/></svg></button>
+</div>
+
+<div class="mobile-bar" id="mobile-bar">
+  <a class="btn btn-red" href="#preinscripcion">Preinscripción</a>
+  <a class="btn btn-outline" href="#precios">Precios</a>
+</div>
+
+<script>
+(function(){
+  // WhatsApp: pre-filled message so leads arrive with context
+  var WA_TEXT = 'Hola, me interesa el Travel Team Madrid – Lisboa 2027 (2 al 9 de enero). ¿Me pueden dar más información?';
+  document.querySelectorAll('a[data-wa]').forEach(function(a){
+    a.href = a.href.split('?')[0] + '?text=' + encodeURIComponent(WA_TEXT);
+  });
+
+  // Floating WhatsApp chooser
+  var fabBtn = document.getElementById('fab-btn'), fabPop = document.getElementById('fab-pop');
+  function setFab(open){ fabPop.hidden = !open; fabBtn.setAttribute('aria-expanded', open); }
+  fabBtn.addEventListener('click', function(e){ e.stopPropagation(); setFab(fabPop.hidden); });
+  document.addEventListener('click', function(e){ if(!fabPop.hidden && !fabPop.contains(e.target)) setFab(false); });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && !fabPop.hidden){ setFab(false); fabBtn.focus(); } });
+
+  // Itinerary tabs
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+  var prev = document.getElementById('prevDay'), next = document.getElementById('nextDay');
+  var current = 0;
+  function select(i, focus){
+    current = i;
+    tabs.forEach(function(t, k){
+      var on = k === i;
+      t.setAttribute('aria-selected', on);
+      t.tabIndex = on ? 0 : -1;
+      document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+    });
+    if(focus) tabs[i].focus();
+    tabs[i].scrollIntoView({block:'nearest', inline:'center', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'});
+    prev.disabled = i === 0; next.disabled = i === tabs.length - 1;
+  }
+  tabs.forEach(function(t, i){
+    t.addEventListener('click', function(){ select(i); });
+    t.addEventListener('keydown', function(e){
+      if(e.key === 'ArrowRight'){ e.preventDefault(); select((i + 1) % tabs.length, true); }
+      if(e.key === 'ArrowLeft'){ e.preventDefault(); select((i - 1 + tabs.length) % tabs.length, true); }
+      if(e.key === 'Home'){ e.preventDefault(); select(0, true); }
+      if(e.key === 'End'){ e.preventDefault(); select(tabs.length - 1, true); }
+    });
+  });
+  prev.addEventListener('click', function(){ if(current > 0) select(current - 1); });
+  next.addEventListener('click', function(){ if(current < tabs.length - 1) select(current + 1); });
+  prev.disabled = true;
+
+  // Price buttons preselect players/companions
+  document.querySelectorAll('[data-pick]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var aco = document.getElementById('f-aco');
+      if(b.dataset.pick === 'acompanante' && aco.value === '0') aco.value = '1';
+      setTimeout(function(){ document.getElementById('f-nombre').focus({preventScroll:true}); }, 500);
+    });
+  });
+
+  // Reveal on scroll
+  var els = document.querySelectorAll('.reveal');
+  if('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); } });
+    }, {rootMargin:'0px 0px -8% 0px'});
+    els.forEach(function(el){ io.observe(el); });
+  } else { els.forEach(function(el){ el.classList.add('in'); }); }
+
+  // Mobile sticky bar after hero, hidden over contact
+  var bar = document.getElementById('mobile-bar'), hero = document.querySelector('.hero'), contact = document.getElementById('contacto');
+  function onScroll(){
+    var y = window.scrollY, past = y > hero.offsetHeight - 80, atContact = contact.getBoundingClientRect().top < window.innerHeight * .6;
+    bar.classList.toggle('show', past && !atContact);
+  }
+  window.addEventListener('scroll', onScroll, {passive:true}); onScroll();
+
+  // Form: validation + Netlify AJAX submit
+  var form = document.querySelector('form[name="preinscripcion-travel-team"]'), msg = document.getElementById('form-msg');
+  var rules = [
+    ['f-nombre','e-nombre', function(v){ return v.trim().length > 1; }],
+    ['f-tel','e-tel', function(v){ return v.replace(/[^\d]/g,'').length >= 8; }],
+    ['f-email','e-email', function(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()); }],
+    ['f-ok','e-ok', function(v, el){ return el.checked; }]
+  ];
+  function validate(){
+    var first = null;
+    rules.forEach(function(r){
+      var el = document.getElementById(r[0]), ok = r[2](el.value, el);
+      el.setAttribute('aria-invalid', !ok);
+      if(!ok) el.setAttribute('aria-describedby', r[1]); else el.removeAttribute('aria-describedby');
+      document.getElementById(r[1]).classList.toggle('show', !ok);
+      if(!ok && !first) first = el;
+    });
+    if(first) first.focus();
+    return !first;
+  }
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    if(!validate()) return;
+    var btn = form.querySelector('button[type="submit"]'), label = btn.querySelector('span');
+    btn.disabled = true; label.textContent = 'Enviando…'; msg.className = 'form-msg';
+    fetch('/', {method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:new URLSearchParams(new FormData(form)).toString()})
+      .then(function(r){ if(!r.ok) throw new Error(r.status);
+        form.reset();
+        msg.className = 'form-msg ok';
+        msg.innerHTML = '<b>¡Preinscripción recibida!</b> Te contactaremos muy pronto. Si quieres adelantar, <a href="https://wa.me/18296474457?text=' + encodeURIComponent(WA_TEXT) + '" target="_blank" rel="noopener">escríbenos por WhatsApp</a>.';
+      })
+      .catch(function(){
+        msg.className = 'form-msg ko';
+        msg.innerHTML = 'No hemos podido enviar el formulario. Por favor, inténtalo de nuevo o <a href="https://wa.me/18296474457?text=' + encodeURIComponent(WA_TEXT) + '" target="_blank" rel="noopener">escríbenos por WhatsApp</a>.';
+      })
+      .finally(function(){ btn.disabled = false; label.textContent = 'Enviar preinscripción'; });
+  });
+})();
+</script>
+</body>
+</html>

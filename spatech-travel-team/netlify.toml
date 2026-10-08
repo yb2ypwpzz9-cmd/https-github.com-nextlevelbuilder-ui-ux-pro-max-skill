@@ -1,0 +1,8 @@
+# Netlify: publicar esta carpeta tal cual (sin build)
+[build]
+  publish = "."
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=2592000"
