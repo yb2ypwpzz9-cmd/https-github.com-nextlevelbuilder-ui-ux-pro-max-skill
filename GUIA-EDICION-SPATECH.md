@@ -79,7 +79,7 @@ Busca `2650` (jugador) o `2500` (acompañante) y cambia solo el número:
 ```
 
 ### Fechas del viaje
-Las fechas aparecen en varios sitios. Si cambian, **revisa todos**. Buscando `ene` los encontrarás todos (también las pestañas abreviadas):
+Las fechas aparecen en varios sitios. Si cambian, **revisa todos**. Búscalas con `enero` y, para las pestañas abreviadas, con `ene</small>`:
 
 | Dónde | Qué buscar |
 |---|---|
