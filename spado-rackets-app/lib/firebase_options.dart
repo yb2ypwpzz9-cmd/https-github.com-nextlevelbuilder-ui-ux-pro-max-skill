@@ -1,14 +1,6 @@
 // Configuración del proyecto de Firebase de Spado Rackets.
 //
-// PLANTILLA. Se rellena una sola vez de cualquiera de estas dos formas:
-//
-//   a) Automática (recomendada):
-//        dart pub global activate flutterfire_cli
-//        flutterfire configure --project=<id-del-proyecto> --platforms=web
-//      Sobrescribe este archivo entero.
-//
-//   b) A mano: consola de Firebase → Configuración del proyecto → Tus apps →
-//      app web → "Configuración del SDK" y copiar aquí los valores.
+// Proyecto `spado-rackets` (separado del de Spado Soccer).
 //
 // Estos valores NO son secretos: van dentro de cualquier web que use Firebase.
 // Lo que protege los datos son las reglas (firestore.rules y storage.rules).
@@ -19,12 +11,12 @@ class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform => web;
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'PENDIENTE',
-    appId: 'PENDIENTE',
-    messagingSenderId: 'PENDIENTE',
-    projectId: 'PENDIENTE',
-    authDomain: 'PENDIENTE.firebaseapp.com',
-    storageBucket: 'PENDIENTE.firebasestorage.app',
+    apiKey: 'AIzaSyAeGfQbsUsFAqJ8v7LkEcUqAkHcT4fg_WE',
+    appId: '1:928554561378:web:b44544610fe04fcf37463b',
+    messagingSenderId: '928554561378',
+    projectId: 'spado-rackets',
+    authDomain: 'spado-rackets.firebaseapp.com',
+    storageBucket: 'spado-rackets.firebasestorage.app',
   );
 
   /// Proyecto ficticio para los emuladores locales (el prefijo `demo-` hace
@@ -38,7 +30,7 @@ class DefaultFirebaseOptions {
     storageBucket: 'demo-spado-rackets.appspot.com',
   );
 
-  /// Mientras sea la plantilla, la app lo dice al arrancar en vez de fallar
-  /// con un error ilegible de Firebase.
+  /// Si alguien vuelve a dejar la plantilla sin rellenar, la app lo dice al
+  /// arrancar en vez de fallar con un error ilegible de Firebase.
   static bool get configurado => web.projectId != 'PENDIENTE';
 }
