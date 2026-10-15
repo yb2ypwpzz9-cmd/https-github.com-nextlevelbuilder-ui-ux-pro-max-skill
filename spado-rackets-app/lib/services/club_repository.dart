@@ -23,6 +23,10 @@ import 'ubicacion_service.dart';
 /// Toda consulta va acotada a lo que el usuario puede leer: las reglas de
 /// Firestore no filtran resultados, rechazan la consulta entera si alguno no
 /// se puede leer.
+class GrupoConAlumnasException implements Exception {
+  const GrupoConAlumnasException();
+}
+
 class ClubRepository {
   const ClubRepository();
 
@@ -39,7 +43,38 @@ class ClubRepository {
     return ref.set(grupo.toMap(), SetOptions(merge: true));
   }
 
+  /// Elimina un grupo. Si aún tiene alumnas se rechaza: quedarían sin grupo
+  /// y fuera de las listas. El chat del grupo y su vínculo con el staff los
+  /// limpia el servidor (`sincronizarGrupo`).
+  Future<void> eliminarGrupo(String id) async {
+    final con = await Refs.alumnas.where('grupo', isEqualTo: id).limit(1).get();
+    if (con.docs.isNotEmpty) {
+      throw const GrupoConAlumnasException();
+    }
+    await Refs.grupos.doc(id).delete();
+  }
+
   // ------------------------------------------------------------- alumnas
+
+  /// Elimina una alumna, su código y sus cuotas sin cobrar. Las cuotas ya
+  /// pagadas y la asistencia se conservan: son el histórico contable del club.
+  Future<void> eliminarAlumna(String id) async {
+    final sinCobrar = await Refs.pagos
+        .where('alumnaId', isEqualTo: id)
+        .where('estado', whereIn: [
+      EstadoPago.pendiente.wire,
+      EstadoPago.rechazado.wire,
+      EstadoPago.enRevision.wire,
+    ]).get();
+    final batch = Refs.db.batch();
+    for (final d in sinCobrar.docs) {
+      batch.delete(d.reference);
+    }
+    batch
+      ..delete(Refs.codigos.doc(id))
+      ..delete(Refs.alumnas.doc(id));
+    await batch.commit();
+  }
 
   Stream<List<Alumna>> watchTodasLasAlumnas() => Refs.alumnas
       .orderBy('nombre')

@@ -99,6 +99,7 @@ class AlumnasScreen extends StatelessWidget {
     List<Grupo> grupos,
     Alumna? alumna,
   ) async {
+    final raiz = context;
     final repo = context.read<ClubRepository>();
     final nombre = TextEditingController(text: alumna?.nombre ?? '');
     final email = TextEditingController(text: alumna?.emailFamilia ?? '');
@@ -171,6 +172,40 @@ class AlumnasScreen extends StatelessWidget {
                 onPressed: () => Navigator.pop(context, true),
                 child: Text(alumna == null ? 'Crear y generar código' : 'Guardar'),
               ),
+              if (alumna != null)
+                TextButton.icon(
+                  style: TextButton.styleFrom(
+                    foregroundColor: AppColors.danger,
+                    minimumSize: const Size(0, 44),
+                  ),
+                  icon: const Icon(Icons.delete_outline),
+                  label: const Text('Eliminar alumna'),
+                  onPressed: () async {
+                    final ok = await confirmar(
+                      context,
+                      titulo: 'Eliminar a ${alumna.nombre}',
+                      mensaje: 'Se borran su ficha, su código y sus cuotas sin '
+                          'pagar. Las cuotas ya pagadas y la asistencia se '
+                          'conservan. Si solo deja el club, mejor márcala como '
+                          'no activa.',
+                      accion: 'Eliminar',
+                      peligrosa: true,
+                    );
+                    if (!ok) return;
+                    try {
+                      await repo.eliminarAlumna(alumna.id);
+                      if (context.mounted) Navigator.pop(context, false);
+                      if (raiz.mounted) {
+                        showAppSnackBar(raiz, 'Alumna eliminada.');
+                      }
+                    } catch (_) {
+                      if (context.mounted) {
+                        showAppSnackBar(context, 'No se pudo eliminar.',
+                            isError: true);
+                      }
+                    }
+                  },
+                ),
             ],
           ),
         ),

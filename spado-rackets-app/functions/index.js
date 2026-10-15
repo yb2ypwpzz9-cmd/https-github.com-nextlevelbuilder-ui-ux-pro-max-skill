@@ -325,6 +325,16 @@ export const sincronizarGrupo = onDocumentWritten('grupos/{id}', async (event) =
   const antes = event.data?.before?.data();
   const despues = event.data?.after?.data();
   if (antes && despues && antes.nombre === despues.nombre) return;
+
+  // Grupo eliminado: se borra su chat y se quita de las cuentas del staff.
+  if (antes && !despues) {
+    const { id } = event.params;
+    await db.recursiveDelete(db.doc(`conversaciones/g_${id}`));
+    const conEl = await db.collection('users').where('grupos', 'array-contains', id).get();
+    for (const u of conEl.docs) {
+      await u.ref.update({ grupos: FieldValue.arrayRemove(id) });
+    }
+  }
   await recalcularParticipantes();
 });
 

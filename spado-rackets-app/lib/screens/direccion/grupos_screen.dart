@@ -152,6 +152,38 @@ class _FormGrupoState extends State<_FormGrupo> {
     }
   }
 
+  Future<void> _eliminar() async {
+    final g = widget.grupo!;
+    final ok = await confirmar(
+      context,
+      titulo: 'Eliminar ${g.nombre}',
+      mensaje: 'Se borran el grupo, su horario y su chat. Solo se puede si no '
+          'tiene alumnas: muévelas o elimínalas antes.',
+      accion: 'Eliminar',
+      peligrosa: true,
+    );
+    if (!ok || !mounted) return;
+    try {
+      await context.read<ClubRepository>().eliminarGrupo(g.id);
+      if (!mounted) return;
+      Navigator.pop(context);
+      if (widget.raiz.mounted) showAppSnackBar(widget.raiz, 'Grupo eliminado.');
+    } on GrupoConAlumnasException {
+      if (mounted) {
+        showAppSnackBar(
+          context,
+          'El grupo aún tiene alumnas. Muévelas a otro grupo o elimínalas '
+          'primero.',
+          isError: true,
+        );
+      }
+    } catch (_) {
+      if (mounted) {
+        showAppSnackBar(context, 'No se pudo eliminar.', isError: true);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context).textTheme;
@@ -275,6 +307,16 @@ class _FormGrupoState extends State<_FormGrupo> {
                 onPressed: _guardando ? null : _guardar,
                 child: Text(_guardando ? 'Guardando…' : 'Guardar grupo'),
               ),
+              if (widget.grupo != null)
+                TextButton.icon(
+                  style: TextButton.styleFrom(
+                    foregroundColor: AppColors.danger,
+                    minimumSize: const Size(0, 44),
+                  ),
+                  icon: const Icon(Icons.delete_outline),
+                  label: const Text('Eliminar grupo'),
+                  onPressed: _guardando ? null : _eliminar,
+                ),
             ],
           ),
         ),
