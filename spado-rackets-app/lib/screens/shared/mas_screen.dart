@@ -112,7 +112,7 @@ class MasScreen extends StatelessWidget {
             ),
           ]),
           const SizedBox(height: AppSpacing.xl),
-          const Center(child: ClubLogo(height: 44)),
+          const Center(child: ClubLogo(height: 64)),
           const SizedBox(height: AppSpacing.sm),
           Text(
             'Tus datos están protegidos: cada perfil sólo accede a lo que le '

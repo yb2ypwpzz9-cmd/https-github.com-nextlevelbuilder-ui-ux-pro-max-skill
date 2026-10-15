@@ -33,7 +33,7 @@ class AuthFrame extends StatelessWidget {
                     child: Column(
                       children: [
                         const SizedBox(height: AppSpacing.md),
-                        const ClubLogo(height: 84),
+                        const ClubLogo(height: 130),
                         if (subtitulo != null) ...[
                           const SizedBox(height: AppSpacing.md),
                           Text(

@@ -177,7 +177,7 @@ class TabAppBar extends StatelessWidget implements PreferredSizeWidget {
       titleSpacing: AppSpacing.md,
       title: Row(
         children: [
-          Image.asset('assets/images/emblema_blanco.png', width: 26, height: 26),
+          Image.asset('assets/images/emblema_blanco.png', width: 32, height: 32),
           const SizedBox(width: 10),
           Flexible(child: Text(title, overflow: TextOverflow.ellipsis)),
         ],

@@ -154,7 +154,7 @@ class PantallaDeArranqueRoto extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const ClubLogo(height: 64, blanco: true),
+                const ClubLogo(height: 90, blanco: true),
                 const SizedBox(height: 28),
                 const Text(
                   'No se pudo iniciar la aplicación',
