@@ -1,0 +1,6 @@
+# Netlify compila la app con Flutter y publica la carpeta build/web.
+# Las cabeceras de seguridad y las redirecciones viven en web/_headers y
+# web/_redirects (Flutter las copia a build/web al compilar).
+[build]
+  command = "bash netlify_build.sh"
+  publish = "build/web"
