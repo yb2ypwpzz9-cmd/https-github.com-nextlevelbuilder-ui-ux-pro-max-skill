@@ -1,0 +1,414 @@
+rules_version = '2';
+
+// Reglas de seguridad de Firestore — Spado Rackets.
+//
+// Modelo de acceso (el mismo que Spado Soccer):
+//
+//   familia   → sus hijas, sus cuotas, sus marcas de asistencia, sus chats
+//   staff     → sólo los grupos que Dirección le ha asignado
+//   direccion → todo el club
+//
+// Ocultar un botón en la app no es seguridad: cada lectura y escritura se
+// vuelve a comprobar aquí, en el servidor. Probadas en test_rules/.
+//
+// Todos los accesos a campos usan `.get(campo, defecto)`: con la forma corta,
+// un documento sin ese campo provoca un error de evaluación y Firestore
+// deniega con un "permisos insuficientes" que en realidad es un dato ausente.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ------------------------------------------------------------ helpers
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function userExists() {
+      return isSignedIn()
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid));
+    }
+
+    function userDoc() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function rol() {
+      return userExists() ? userDoc().get('role', '') : '';
+    }
+
+    function isDireccion() {
+      return rol() == 'direccion';
+    }
+
+    function isStaff() {
+      return rol() == 'staff';
+    }
+
+    function esDelClub() {
+      return isStaff() || isDireccion();
+    }
+
+    function enMisGrupos(grupo) {
+      return userExists() && grupo in userDoc().get('grupos', []);
+    }
+
+    /// Dirección siempre; staff si el grupo es suyo.
+    function gestionaGrupo(grupo) {
+      return isDireccion() || (isStaff() && enMisGrupos(grupo));
+    }
+
+    function changedKeys() {
+      return request.resource.data.diff(resource.data).affectedKeys();
+    }
+
+    function textoValido(valor, maximo) {
+      return valor is string && valor.size() > 0 && valor.size() <= maximo;
+    }
+
+    function textoOpcional(datos, campo, maximo) {
+      return datos.get(campo, '') == null
+        || (datos.get(campo, '') is string && datos.get(campo, '').size() <= maximo);
+    }
+
+    function fechaValida(valor) {
+      return valor is string && valor.matches('[0-9]{4}-[0-9]{2}-[0-9]{2}');
+    }
+
+    function periodoValido(valor) {
+      return valor is string && valor.matches('[0-9]{4}-(0[1-9]|1[0-2])');
+    }
+
+    function alumna(id) {
+      return get(/databases/$(database)/documents/alumnas/$(id));
+    }
+
+    function existeAlumna(id) {
+      return exists(/databases/$(database)/documents/alumnas/$(id));
+    }
+
+    function directorio(uid) {
+      return /databases/$(database)/documents/directorio/$(uid);
+    }
+
+    // -------------------------------------------------------------- users
+
+    match /users/{userId} {
+      allow read: if isSignedIn()
+        && (request.auth.uid == userId || isDireccion());
+
+      // Una familia sólo se crea a sí misma, como familia y SIN grupos: los
+      // grupos deciden qué datos ve, y los calcula el servidor a partir de
+      // las alumnas vinculadas. Staff y Dirección los crea `crearCuentaClub`.
+      allow create: if isSignedIn()
+        && request.auth.uid == userId
+        && request.resource.data.get('role', '') == 'familia'
+        && request.resource.data.get('grupos', []).size() == 0
+        && request.resource.data.keys().hasOnly(
+             ['uid', 'email', 'role', 'grupos', 'displayName', 'phone', 'createdAt'])
+        && textoOpcional(request.resource.data, 'displayName', 80)
+        && textoOpcional(request.resource.data, 'phone', 30);
+
+      // Cada uno cambia su nombre, teléfono y tokens de aviso. NUNCA su rol
+      // ni sus grupos.
+      allow update: if isSignedIn() && (
+        isDireccion()
+        || (request.auth.uid == userId
+            && changedKeys().hasOnly(['fcmTokens', 'displayName', 'phone'])
+            && textoOpcional(request.resource.data, 'displayName', 80)
+            && textoOpcional(request.resource.data, 'phone', 30))
+      );
+
+      allow delete: if isDireccion();
+    }
+
+    // Nombre y rol de cada persona, para el chat. Lo escribe el servidor.
+    // Una familia sólo puede pedir al club (`where rol in [staff, direccion]`):
+    // las reglas no filtran, rechazan la consulta entera si no cuadra.
+    match /directorio/{uid} {
+      allow read: if isSignedIn() && (
+        resource == null
+        || resource.data.get('rol', '') in ['staff', 'direccion']
+        || esDelClub()
+      );
+      allow write: if false;
+    }
+
+    // ------------------------------------------------------------- grupos
+
+    match /grupos/{grupoId} {
+      allow read: if isSignedIn();
+      allow write: if isDireccion()
+        && textoValido(request.resource.data.get('nombre', ''), 80)
+        && request.resource.data.get('cuotaMensual', 0) is number
+        && request.resource.data.get('cuotaMensual', 0) >= 0
+        && request.resource.data.get('cuotaMensual', 0) <= 1000000
+        && request.resource.data.get('moneda', 'DOP') in ['DOP', 'USD']
+        && request.resource.data.get('dias', []) is list
+        && request.resource.data.get('dias', []).size() <= 7;
+      allow delete: if isDireccion();
+    }
+
+    // ------------------------------------------------------------ alumnas
+
+    match /alumnas/{alumnaId} {
+      allow read: if isSignedIn() && (
+        resource == null
+        || isDireccion()
+        || (isStaff() && enMisGrupos(resource.data.get('grupo', '')))
+        || resource.data.get('familiaUid', '') == request.auth.uid
+      );
+
+      // `familiaUid` sólo lo escribe `vincularAlumna`, que comprueba el
+      // código. Si Dirección pudiera tocarlo desde la app por error, una
+      // familia perdería el acceso a su hija.
+      allow create: if isDireccion()
+        && textoValido(request.resource.data.get('nombre', ''), 120)
+        && textoValido(request.resource.data.get('grupo', ''), 60)
+        && !request.resource.data.keys().hasAny(['familiaUid']);
+
+      allow update: if isDireccion()
+        && !changedKeys().hasAny(['familiaUid'])
+        && textoValido(request.resource.data.get('nombre', ''), 120);
+
+      allow delete: if isDireccion();
+    }
+
+    // Nadie más que Dirección ve los códigos: con la lista entera se podría
+    // vincular a cualquier alumna.
+    match /codigosVinculacion/{codigoId} {
+      allow read, write: if isDireccion();
+    }
+
+    // ---------------------------------------------------- jornadas (fichaje)
+
+    match /jornadas/{jornadaId} {
+      allow read: if isSignedIn() && (
+        resource == null
+        || isDireccion()
+        || resource.data.get('staffUid', '') == request.auth.uid
+      );
+
+      // Cada uno ficha por sí mismo y con la hora DEL SERVIDOR. Con la hora
+      // del móvil bastaría adelantar el reloj para fichar antes de llegar.
+      allow create: if esDelClub()
+        && request.resource.data.get('staffUid', '') == request.auth.uid
+        && request.resource.data.get('entrada', null) == request.time
+        && request.resource.data.get('salida', 0) == null
+        && textoValido(request.resource.data.get('staffNombre', ''), 120)
+        && request.resource.data.keys().hasOnly([
+             'staffUid', 'staffNombre', 'entrada', 'salida',
+             'entradaLat', 'entradaLng', 'entradaPrecision']);
+
+      // Sólo se cierra la propia jornada, una vez, y con la hora del servidor.
+      // Después ya no se edita: es un registro de control.
+      allow update: if isSignedIn()
+        && resource.data.get('staffUid', '') == request.auth.uid
+        && resource.data.get('salida', 0) == null
+        && request.resource.data.get('salida', null) == request.time
+        && changedKeys().hasOnly(
+             ['salida', 'salidaLat', 'salidaLng', 'salidaPrecision']);
+
+      allow delete: if false;
+    }
+
+    // ------------------------------------------------------- asistencias
+
+    match /asistencias/{asistenciaId} {
+      // La familia sólo ve las marcas de SUS hijas: saber qué días falta la
+      // hija de otra familia no es asunto suyo.
+      allow read: if isSignedIn() && (
+        resource == null
+        || isDireccion()
+        || (isStaff() && enMisGrupos(resource.data.get('grupo', '')))
+        || (resource.data.get('familiaUid', '') != ''
+            && resource.data.get('familiaUid', '') == request.auth.uid)
+      );
+
+      // El id ata la marca a grupo, fecha y alumna; la alumna tiene que ser
+      // de ese grupo, y `familiaUid` el de su ficha. Así no se puede colar
+      // una marca en otro grupo ni enseñársela a otra familia.
+      allow create, update: if isSignedIn()
+        && gestionaGrupo(request.resource.data.get('grupo', ''))
+        && fechaValida(request.resource.data.get('fecha', ''))
+        && asistenciaId == request.resource.data.get('grupo', '') + '_'
+             + request.resource.data.get('fecha', '') + '_'
+             + request.resource.data.get('alumnaId', '')
+        && existeAlumna(request.resource.data.get('alumnaId', ''))
+        && alumna(request.resource.data.get('alumnaId', '')).data.get('grupo', '')
+             == request.resource.data.get('grupo', '')
+        && request.resource.data.get('familiaUid', '')
+             == alumna(request.resource.data.get('alumnaId', '')).data.get('familiaUid', '')
+        && request.resource.data.get('estado', '') in ['presente', 'falta', 'justificada']
+        && request.resource.data.get('marcadoPor', '') == request.auth.uid;
+
+      allow delete: if isDireccion();
+    }
+
+    // Faltas avisadas por la familia.
+    match /ausencias/{ausenciaId} {
+      allow read: if isSignedIn() && (
+        resource == null
+        || isDireccion()
+        || (isStaff() && enMisGrupos(resource.data.get('grupo', '')))
+        || resource.data.get('familiaUid', '') == request.auth.uid
+      );
+
+      allow create, update: if isSignedIn()
+        && request.resource.data.get('familiaUid', '') == request.auth.uid
+        && existeAlumna(request.resource.data.get('alumnaId', ''))
+        && alumna(request.resource.data.get('alumnaId', '')).data.get('familiaUid', '')
+             == request.auth.uid
+        && alumna(request.resource.data.get('alumnaId', '')).data.get('grupo', '')
+             == request.resource.data.get('grupo', '')
+        && fechaValida(request.resource.data.get('fecha', ''))
+        && ausenciaId == request.resource.data.get('alumnaId', '') + '_'
+             + request.resource.data.get('fecha', '')
+        && textoOpcional(request.resource.data, 'motivo', 200);
+
+      allow delete: if isDireccion()
+        || (isSignedIn() && resource.data.get('familiaUid', '') == request.auth.uid);
+    }
+
+    // -------------------------------------------------------------- pagos
+
+    function pagoValido(d) {
+      return periodoValido(d.get('periodo', ''))
+        && d.get('importe', -1) is number
+        && d.get('importe', -1) >= 0
+        && d.get('importe', -1) <= 1000000
+        && d.get('moneda', '') in ['DOP', 'USD']
+        && d.get('estado', '') in ['pendiente', 'en_revision', 'pagado', 'rechazado']
+        && textoOpcional(d, 'motivoRechazo', 300);
+    }
+
+    match /pagos/{pagoId} {
+      allow read: if isSignedIn() && (
+        resource == null
+        || isDireccion()
+        || resource.data.get('familiaUid', '') == request.auth.uid
+      );
+
+      // Las cuotas las genera el club, no la familia.
+      allow create: if isDireccion() && pagoValido(request.resource.data);
+
+      allow update: if isSignedIn() && (
+        (isDireccion() && pagoValido(request.resource.data))
+        || (
+          // La familia sólo adjunta SU justificante y pasa la cuota a
+          // revisión. No puede marcarla pagada, ni cambiar el importe, ni
+          // tocar una ya pagada.
+          resource.data.get('familiaUid', '') == request.auth.uid
+          && resource.data.get('estado', '') in ['pendiente', 'rechazado']
+          && changedKeys().hasOnly(
+               ['comprobantePath', 'comprobanteNombre', 'estado', 'subidoEn', 'motivoRechazo'])
+          && request.resource.data.get('estado', '') == 'en_revision'
+          && request.resource.data.get('comprobantePath', '') is string
+          && request.resource.data.get('comprobantePath', '')
+               .matches('comprobantes/' + request.auth.uid + '/.+')
+          && request.resource.data.get('subidoEn', null) == request.time
+          && request.resource.data.get('motivoRechazo', null) == null
+        )
+      );
+
+      allow delete: if isDireccion();
+    }
+
+    // Cuentas bancarias del club.
+    match /ajustes/{doc} {
+      allow read: if isSignedIn();
+      allow write: if isDireccion();
+    }
+
+    // --------------------------------------------------------------- chat
+
+    function convDe(id) {
+      return get(/databases/$(database)/documents/conversaciones/$(id));
+    }
+
+    function convTras(id) {
+      return getAfter(/databases/$(database)/documents/conversaciones/$(id));
+    }
+
+    function participa(conv) {
+      return request.auth.uid in conv.get('participantes', []);
+    }
+
+    match /conversaciones/{conversacionId} {
+      // `participantes` de avisos y grupos lo mantiene el servidor; en una
+      // directa son las dos personas. Dirección lee todo (moderación).
+      allow read: if isSignedIn() && (
+        resource == null
+        || participa(resource.data)
+        || isDireccion()
+      );
+
+      // Desde la app sólo nacen conversaciones directas. El id tiene que ser
+      // `d_{uidA}_{uidB}` con los dos ordenados, quien la crea tiene que estar
+      // dentro, y una familia sólo puede abrirla con alguien del club —
+      // comprobado contra el directorio, que escribe el servidor.
+      allow create: if isSignedIn()
+        && request.resource.data.get('tipo', '') == 'directa'
+        && request.resource.data.get('participantes', []).size() == 2
+        && request.resource.data.participantes[0] < request.resource.data.participantes[1]
+        && conversacionId == 'd_' + request.resource.data.participantes[0]
+             + '_' + request.resource.data.participantes[1]
+        && request.auth.uid in request.resource.data.participantes
+        && request.resource.data.keys().hasOnly(
+             ['tipo', 'participantes', 'nombres', 'sinLeer', 'creadaEn'])
+        && (
+          esDelClub()
+          || get(directorio(
+               request.resource.data.participantes[0] == request.auth.uid
+                 ? request.resource.data.participantes[1]
+                 : request.resource.data.participantes[0]
+             )).data.get('rol', '') in ['staff', 'direccion']
+        );
+
+      // Lo único que toca la app es poner a cero SU contador de no leídos.
+      // El último mensaje y los contadores de los demás los lleva el servidor.
+      allow update: if isSignedIn()
+        && participa(resource.data)
+        && changedKeys().hasOnly(['sinLeer'])
+        && request.resource.data.get('sinLeer', {})
+             .diff(resource.data.get('sinLeer', {}))
+             .affectedKeys().hasOnly([request.auth.uid])
+        && request.resource.data.get('sinLeer', {}).get(request.auth.uid, 0) == 0;
+
+      allow delete: if isDireccion();
+
+      match /mensajes/{mensajeId} {
+        // Un hilo directo que aún no existe se puede abrir (sale vacío) sólo
+        // si el id dice que es tuyo. Los uid de Firebase no llevan "_".
+        allow read: if isSignedIn() && (
+          convDe(conversacionId) == null
+            ? request.auth.uid in conversacionId.split('_')
+            : (participa(convDe(conversacionId).data) || isDireccion())
+        );
+
+        // Firmado con el uid, el rol y el NOMBRE reales de quien escribe
+        // (el nombre se compara con el directorio): nadie puede publicar
+        // haciéndose pasar por Dirección. En avisos sólo publica el club.
+        allow create: if isSignedIn()
+          && request.resource.data.get('autorUid', '') == request.auth.uid
+          && request.resource.data.get('autorRol', '') == rol()
+          && (
+            !exists(directorio(request.auth.uid))
+              ? textoValido(request.resource.data.get('autorNombre', ''), 120)
+              : request.resource.data.get('autorNombre', '')
+                  == get(directorio(request.auth.uid)).data.get('nombre', '')
+          )
+          && textoValido(request.resource.data.get('texto', ''), 2000)
+          && request.resource.data.get('creadoEn', null) == request.time
+          && request.resource.data.keys().hasOnly(
+               ['texto', 'autorUid', 'autorNombre', 'autorRol', 'creadoEn'])
+          && convTras(conversacionId) != null
+          && participa(convTras(conversacionId).data)
+          && (convTras(conversacionId).data.get('tipo', '') != 'avisos' || esDelClub());
+
+        // Los mensajes no se editan. Dirección sólo puede retirar uno.
+        allow update: if isDireccion() && changedKeys().hasOnly(['oculto']);
+        allow delete: if isDireccion();
+      }
+    }
+  }
+}

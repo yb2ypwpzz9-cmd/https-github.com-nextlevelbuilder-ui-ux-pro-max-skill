@@ -1,0 +1,17 @@
+{
+  "name": "spado-rackets-scripts",
+  "private": true,
+  "type": "module",
+  "description": "Scripts de mantenimiento y pruebas de Spado Rackets (no forman parte de la app).",
+  "scripts": {
+    "crear-direccion": "node scripts/crear_direccion.mjs",
+    "cargar-datos": "node scripts/cargar_datos.mjs",
+    "demo-emulador": "node scripts/demo_emulador.mjs",
+    "test:reglas": "firebase emulators:exec --only firestore,storage --project demo-spado-rackets \"node --test test_rules/*.test.mjs\""
+  },
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "^4.0.1",
+    "firebase": "^11.0.0",
+    "firebase-admin": "^13.0.0"
+  }
+}

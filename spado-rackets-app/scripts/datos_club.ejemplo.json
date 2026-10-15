@@ -1,0 +1,40 @@
+{
+  "_instrucciones": "Copia este archivo como datos_club.json, rellena los grupos y alumnas reales y ejecuta: npm run cargar-datos -- scripts/datos_club.json. dias: 1=lunes ... 7=domingo. moneda: DOP o USD.",
+  "grupos": [
+    {
+      "id": "tenis-iniciacion",
+      "nombre": "Tenis Iniciación",
+      "deporte": "Tenis",
+      "dias": [1, 3],
+      "horaInicio": "16:30",
+      "duracionMinutos": 60,
+      "pista": "Pista 1",
+      "cuotaMensual": 3500,
+      "moneda": "DOP",
+      "alumnas": ["Nombre Apellido", "Nombre Apellido"]
+    },
+    {
+      "id": "tenis-avanzado",
+      "nombre": "Tenis Avanzado",
+      "deporte": "Tenis",
+      "dias": [2, 4],
+      "horaInicio": "17:30",
+      "duracionMinutos": 90,
+      "pista": "Pista 2",
+      "cuotaMensual": 4500,
+      "moneda": "DOP",
+      "alumnas": ["Nombre Apellido"]
+    }
+  ],
+  "cuentasBancarias": [
+    {
+      "banco": "Banco Popular Dominicano",
+      "numero": "000000000",
+      "tipo": "Corriente",
+      "titular": "Spado Rackets SRL",
+      "documento": "RNC 0-00-00000-0",
+      "moneda": "DOP"
+    }
+  ],
+  "instruccionesPago": "En el concepto de la transferencia pon el nombre de la alumna y el mes."
+}

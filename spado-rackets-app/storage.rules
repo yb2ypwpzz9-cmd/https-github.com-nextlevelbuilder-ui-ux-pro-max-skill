@@ -1,0 +1,40 @@
+rules_version = '2';
+
+// Reglas de Firebase Storage — Spado Rackets.
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function rol() {
+      return firestore.get(
+        /databases/(default)/documents/users/$(request.auth.uid)
+      ).data.get('role', '');
+    }
+
+    // Justificantes de pago. La carpeta lleva el uid de quien sube y la regla
+    // lo comprueba: cada familia sólo escribe en la suya, así que nadie puede
+    // sustituir el justificante de otra. Se crean y no se sobrescriben.
+    //
+    // Los lee la familia que lo subió y Dirección. Nadie más: un justificante
+    // lleva datos bancarios de la familia.
+    match /comprobantes/{uid}/{archivo} {
+      allow read: if isSignedIn()
+        && (request.auth.uid == uid || rol() == 'direccion');
+
+      allow create: if isSignedIn()
+        && request.auth.uid == uid
+        && request.resource.size < 8 * 1024 * 1024
+        && (request.resource.contentType.matches('image/.*')
+            || request.resource.contentType == 'application/pdf');
+
+      allow update, delete: if false;
+    }
+
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

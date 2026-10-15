@@ -1,0 +1,37 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "jornadas",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "staffUid", "order": "ASCENDING" },
+        { "fieldPath": "entrada", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "asistencias",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "grupo", "order": "ASCENDING" },
+        { "fieldPath": "fecha", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "asistencias",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "familiaUid", "order": "ASCENDING" },
+        { "fieldPath": "fecha", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "pagos",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "familiaUid", "order": "ASCENDING" },
+        { "fieldPath": "periodo", "order": "DESCENDING" }
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}

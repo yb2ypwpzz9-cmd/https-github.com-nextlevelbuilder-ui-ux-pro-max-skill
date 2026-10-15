@@ -1,0 +1,32 @@
+# Cabeceras de seguridad para Netlify. Netlify lee este archivo desde la
+# carpeta publicada; Flutter lo copia de web/ a build/web al compilar.
+
+/*
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  # La ubicación se permite sólo a esta web: el fichaje del staff la usa.
+  Permissions-Policy: camera=(), microphone=(), payment=(), usb=(), geolocation=(self)
+  Cross-Origin-Opener-Policy: same-origin
+  # CSP. Orígenes imprescindibles (si se quita uno, la app sale en blanco):
+  #   'wasm-unsafe-eval'  CanvasKit es WebAssembly
+  #   www.gstatic.com     SDK de Firebase para web y el service worker de push
+  #   fonts.*             tipografías (Flutter las pide con fetch)
+  #   *.googleapis.com    Firestore, Auth, Storage, Functions, FCM
+  #   *.cloudfunctions.net / *.run.app  Cloud Functions
+  #   'unsafe-inline'     los plugins web de Firebase inyectan scripts en línea
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https://firebasestorage.googleapis.com; connect-src 'self' blob: data: https://*.googleapis.com https://*.cloudfunctions.net https://*.run.app https://www.gstatic.com https://fonts.gstatic.com https://fonts.googleapis.com; frame-src 'self' https://*.firebaseapp.com; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'
+
+# Los archivos de arranque siempre se revalidan: si el navegador mezcla un
+# service worker viejo con código nuevo, la app no arranca.
+/index.html
+  Cache-Control: no-cache
+/flutter_bootstrap.js
+  Cache-Control: no-cache
+/flutter_service_worker.js
+  Cache-Control: no-cache
+/firebase-messaging-sw.js
+  Cache-Control: no-cache
+/version.json
+  Cache-Control: no-cache
