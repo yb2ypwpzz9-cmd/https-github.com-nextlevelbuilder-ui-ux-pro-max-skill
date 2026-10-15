@@ -30,3 +30,15 @@
   Cache-Control: no-cache
 /version.json
   Cache-Control: no-cache
+
+# Motor gráfico y recursos pesados: se guardan en el móvil y no se vuelven a
+# descargar en cada visita (un día; el motor va ligado a la versión de Flutter
+# fijada en netlify_build.sh).
+/canvaskit/*
+  Cache-Control: public, max-age=86400
+/assets/*
+  Cache-Control: public, max-age=86400
+/icons/*
+  Cache-Control: public, max-age=604800
+/main.dart.js
+  Cache-Control: no-cache

@@ -58,6 +58,10 @@ Future<void> main() async {
     FirebaseFirestore.instance.settings = const Settings(
       persistenceEnabled: true,
       cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
+      // Redes móviles, wifis de hotel/club y algunos operadores bloquean el
+      // canal de streaming de Firestore y la app se queda cargando para
+      // siempre: con esto detecta el bloqueo y cambia sola a long-polling.
+      webExperimentalAutoDetectLongPolling: true,
     );
   } catch (_) {}
 

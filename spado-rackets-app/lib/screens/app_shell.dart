@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -36,6 +38,9 @@ class AppShell extends StatefulWidget {
 
 class _AppShellState extends State<AppShell> {
   int _index = 0;
+  // Pestañas ya visitadas: las demás no se construyen (ni abren sus
+  // consultas a Firestore) hasta que se pulsan. Acelera el arranque en móvil.
+  final Set<int> _visitadas = {0};
 
   static final _chat = _Tab('Mensajes', Icons.forum_outlined, Icons.forum,
       () => const ChatsScreen(),
@@ -78,7 +83,7 @@ class _AppShellState extends State<AppShell> {
     final user = session.appUser;
 
     if (session.loading) {
-      return const Scaffold(body: LoadingView(message: 'Cargando tu perfil…'));
+      return const Scaffold(body: _CargandoPerfil());
     }
 
     if (user == null) {
@@ -103,16 +108,30 @@ class _AppShellState extends State<AppShell> {
     return Provider<IrATab>.value(
       value: IrATab((label) {
         final i = tabs.indexWhere((t) => t.label == label);
-        if (i >= 0) setState(() => _index = i);
+        if (i >= 0) {
+          setState(() {
+            _index = i;
+            _visitadas.add(i);
+          });
+        }
       }),
       child: Scaffold(
       body: IndexedStack(
         index: index,
-        children: [for (final t in tabs) t.builder()],
+        children: [
+          for (var i = 0; i < tabs.length; i++)
+            if (i == index || _visitadas.contains(i))
+              tabs[i].builder()
+            else
+              const SizedBox.shrink(),
+        ],
       ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: index,
-        onDestinationSelected: (v) => setState(() => _index = v),
+        onDestinationSelected: (v) => setState(() {
+          _index = v;
+          _visitadas.add(v);
+        }),
         destinations: [
           for (final t in tabs)
             NavigationDestination(
@@ -183,6 +202,50 @@ class TabAppBar extends StatelessWidget implements PreferredSizeWidget {
         ],
       ),
       actions: actions,
+    );
+  }
+}
+
+/// Carga del perfil. Si tarda demasiado (mala red) deja de girar sin fin:
+/// avisa y ofrece reintentar o salir.
+class _CargandoPerfil extends StatefulWidget {
+  const _CargandoPerfil();
+
+  @override
+  State<_CargandoPerfil> createState() => _CargandoPerfilState();
+}
+
+class _CargandoPerfilState extends State<_CargandoPerfil> {
+  bool _lento = false;
+  late final Timer _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer(const Duration(seconds: 10), () {
+      if (mounted) setState(() => _lento = true);
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!_lento) return const LoadingView(message: 'Cargando tu perfil…');
+    return EmptyState(
+      icon: Icons.wifi_off_outlined,
+      title: 'Está tardando más de lo normal',
+      message: 'Revisa tu conexión. Si estás en una wifi con restricciones, '
+          'prueba con datos móviles.',
+      action: OutlinedButton.icon(
+        onPressed: () => context.read<SessionController>().signOut(),
+        icon: const Icon(Icons.logout),
+        label: const Text('Cerrar sesión y reintentar'),
+      ),
     );
   }
 }
