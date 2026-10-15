@@ -104,7 +104,7 @@ class CuentaBancariaCard extends StatelessWidget {
             fila('Cuenta', cuenta.numero, copiable: true),
             fila('Tipo', cuenta.tipo),
             fila('Titular', cuenta.titular),
-            fila('RNC/Cédula', cuenta.documento, copiable: true),
+            fila('Documento', cuenta.documento, copiable: true),
           ],
         ),
       ),

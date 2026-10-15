@@ -34,7 +34,7 @@ const datos = JSON.parse(readFileSync(archivo, 'utf8'));
 const letras = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
 const nuevoCodigo = () => Array.from({ length: 6 }, () => letras[randomInt(letras.length)]).join('');
 
-const filas = [['alumna', 'grupo', 'codigo']];
+const filas = [['alumna', 'grupo', 'codigo', 'email_familia']];
 
 for (const g of datos.grupos ?? []) {
   const grupoRef = g.id ? db.doc(`grupos/${g.id}`) : db.collection('grupos').doc();
@@ -53,7 +53,10 @@ for (const g of datos.grupos ?? []) {
   const existentes = await db.collection('alumnas').where('grupo', '==', grupoRef.id).get();
   const nombres = new Set(existentes.docs.map((d) => String(d.get('nombre')).toLowerCase()));
 
-  for (const nombre of g.alumnas ?? []) {
+  for (const entrada of g.alumnas ?? []) {
+    // Una alumna puede ser un nombre, o { "nombre": "...", "email": "familia@correo.com" }.
+    const nombre = typeof entrada === 'string' ? entrada : entrada.nombre;
+    const emailFamilia = typeof entrada === 'string' ? '' : String(entrada.email ?? '').trim().toLowerCase();
     if (nombres.has(nombre.toLowerCase())) {
       console.log(`= ${nombre} ya existe en ${g.nombre}`);
       continue;
@@ -61,12 +64,12 @@ for (const g of datos.grupos ?? []) {
     const alumna = db.collection('alumnas').doc();
     const codigo = nuevoCodigo();
     await db.batch()
-      .set(alumna, { nombre, grupo: grupoRef.id, activa: true, creadaEn: FieldValue.serverTimestamp() })
+      .set(alumna, { nombre, grupo: grupoRef.id, activa: true, ...(emailFamilia ? { emailFamilia } : {}), creadaEn: FieldValue.serverTimestamp() })
       .set(db.doc(`codigosVinculacion/${alumna.id}`), {
         codigo, alumnaId: alumna.id, grupo: grupoRef.id, creadoEn: FieldValue.serverTimestamp(),
       })
       .commit();
-    filas.push([nombre, g.nombre, codigo]);
+    filas.push([nombre, g.nombre, codigo, emailFamilia]);
     console.log(`+ ${nombre} (${g.nombre}) → ${codigo}`);
   }
 }

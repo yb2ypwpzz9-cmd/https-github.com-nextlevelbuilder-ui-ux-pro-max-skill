@@ -14,6 +14,7 @@ class Alumna {
     required this.grupo,
     this.familiaUid,
     this.fechaNacimiento,
+    this.emailFamilia,
     this.activa = true,
   });
 
@@ -22,6 +23,10 @@ class Alumna {
   final String grupo;
   final String? familiaUid;
   final DateTime? fechaNacimiento;
+
+  /// Correo que Dirección ha dado de alta para esta familia. Si existe, sólo
+  /// ese correo puede usar el código de vinculación.
+  final String? emailFamilia;
   final bool activa;
 
   factory Alumna.fromDoc(DocumentSnapshot<Json> doc) {
@@ -35,6 +40,9 @@ class Alumna {
       grupo: (data['grupo'] as String?) ?? '',
       familiaUid: familia == null || familia.isEmpty ? null : familia,
       fechaNacimiento: fechaDe(data['fechaNacimiento']),
+      emailFamilia: (data['emailFamilia'] as String?)?.trim().isEmpty ?? true
+          ? null
+          : (data['emailFamilia'] as String).trim(),
       activa: (data['activa'] as bool?) ?? true,
     );
   }

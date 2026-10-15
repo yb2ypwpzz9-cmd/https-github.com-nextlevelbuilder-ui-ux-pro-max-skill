@@ -46,7 +46,7 @@ class DireccionHomeScreen extends StatelessWidget {
                     user: user,
                     grupos: grupos.where((g) => g.activo).toList(),
                     staff: cuentas.where((c) => c.role.isStaff).toList(),
-                    abiertas: jornadas.where((j) => j.abierta).toList(),
+                    abiertas: jornadas.where((j) => _esHoy(j.entrada)).toList(),
                     marcas: marcas,
                     vencidas:
                         sinCobrar.where((p) => p.vencidaEn(hoy)).toList(),
@@ -102,7 +102,7 @@ class _Contenido extends StatelessWidget {
         KpiGrid(children: [
           KpiTile(
             valor: '${abiertas.length}/${staff.length}',
-            etiqueta: 'Staff en jornada',
+            etiqueta: 'Entrenadores que han fichado hoy',
             icon: Icons.badge_outlined,
             onTap: () => irA('Fichajes'),
           ),
@@ -175,9 +175,9 @@ class _Contenido extends StatelessWidget {
                           color: AppColors.textSecondary,
                         )
                       : StatusChip(
-                          label: 'Desde ${horaFormat.format(j.entrada)}',
+                          label: 'Llegó ${horaFormat.format(j.entrada)}',
                           color: AppColors.success,
-                          icon: Icons.circle,
+                          icon: Icons.check,
                         ),
                 );
               }),
@@ -241,4 +241,9 @@ class _Enlace extends StatelessWidget {
         trailing: const Icon(Icons.chevron_right),
         onTap: () => context.push(ruta),
       );
+}
+
+bool _esHoy(DateTime f) {
+  final h = DateTime.now();
+  return f.year == h.year && f.month == h.month && f.day == h.day;
 }

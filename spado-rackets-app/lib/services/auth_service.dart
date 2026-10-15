@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 
 import '../config/club_config.dart';
+import '../config/textos_legales.dart';
 import '../models/app_user.dart';
 import 'firestore_refs.dart';
 
@@ -139,7 +140,12 @@ class SessionController extends ChangeNotifier {
         displayName: nombre.trim(),
         phone: (telefono?.trim().isEmpty ?? true) ? null : telefono!.trim(),
       );
-      await Refs.user(uid).set(nuevo.toCreateMap());
+      await Refs.user(uid).set({
+        ...nuevo.toCreateMap(),
+        // Constancia del consentimiento: cuándo y con qué versión del texto.
+        'consentimientoEn': FieldValue.serverTimestamp(),
+        'consentimientoVersion': TextosLegales.version,
+      });
       await vincular(codigoLimpio);
     } catch (error) {
       try {

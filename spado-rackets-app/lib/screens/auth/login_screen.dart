@@ -19,42 +19,64 @@ class AuthFrame extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.navyDeep,
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(AppSpacing.md),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 420),
-              child: Column(
-                children: [
-                  const SizedBox(height: AppSpacing.lg),
-                  const ClubLogo(height: 74, blanco: true),
-                  if (subtitulo != null) ...[
-                    const SizedBox(height: AppSpacing.md),
-                    Text(
-                      subtitulo!,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        color: Colors.white70,
-                        fontSize: 14,
-                        height: 1.4,
-                      ),
-                    ),
-                  ],
-                  const SizedBox(height: AppSpacing.lg),
-                  Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(AppSpacing.lg),
-                      child: child,
+      backgroundColor: AppColors.bg,
+      body: Column(
+        children: [
+          Expanded(
+            child: SafeArea(
+              bottom: false,
+              child: Center(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(AppSpacing.md),
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 420),
+                    child: Column(
+                      children: [
+                        const SizedBox(height: AppSpacing.md),
+                        const ClubLogo(height: 84),
+                        if (subtitulo != null) ...[
+                          const SizedBox(height: AppSpacing.md),
+                          Text(
+                            subtitulo!,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              color: AppColors.textSecondary,
+                              fontSize: 14,
+                              height: 1.4,
+                            ),
+                          ),
+                        ],
+                        const SizedBox(height: AppSpacing.lg),
+                        Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(AppSpacing.lg),
+                            child: child,
+                          ),
+                        ),
+                        const SizedBox(height: AppSpacing.md),
+                        Wrap(
+                          alignment: WrapAlignment.center,
+                          children: [
+                            TextButton(
+                              onPressed: () => context.push('/privacidad'),
+                              child: const Text('Política de privacidad'),
+                            ),
+                            TextButton(
+                              onPressed: () => context.push('/terminos'),
+                              child: const Text('Condiciones de uso'),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: AppSpacing.lg),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: AppSpacing.lg),
-                ],
+                ),
               ),
             ),
           ),
-        ),
+          Container(height: 6, color: AppColors.navy),
+        ],
       ),
     );
   }

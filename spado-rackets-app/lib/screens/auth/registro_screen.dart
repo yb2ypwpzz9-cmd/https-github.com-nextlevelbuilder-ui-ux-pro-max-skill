@@ -24,6 +24,7 @@ class _RegistroScreenState extends State<RegistroScreen> {
   final _password = TextEditingController();
   final _codigo = TextEditingController();
   bool _cargando = false;
+  bool _acepta = false;
   String? _error;
 
   @override
@@ -36,6 +37,11 @@ class _RegistroScreenState extends State<RegistroScreen> {
 
   Future<void> _registrar() async {
     if (!_form.currentState!.validate()) return;
+    if (!_acepta) {
+      setState(() => _error =
+          'Para crear la cuenta tienes que aceptar la política de privacidad.');
+      return;
+    }
     setState(() {
       _cargando = true;
       _error = null;
@@ -125,7 +131,54 @@ class _RegistroScreenState extends State<RegistroScreen> {
                   ? 'La contraseña debe tener al menos 8 caracteres'
                   : null,
             ),
-            const SizedBox(height: AppSpacing.lg),
+            const SizedBox(height: AppSpacing.md),
+            CheckboxListTile(
+              contentPadding: EdgeInsets.zero,
+              controlAffinity: ListTileControlAffinity.leading,
+              value: _acepta,
+              onChanged: (v) => setState(() => _acepta = v ?? false),
+              title: Text.rich(
+                TextSpan(
+                  style: t.bodySmall,
+                  children: [
+                    const TextSpan(text: 'He leído y acepto la '),
+                    WidgetSpan(
+                      alignment: PlaceholderAlignment.baseline,
+                      baseline: TextBaseline.alphabetic,
+                      child: InkWell(
+                        onTap: () => context.push('/privacidad'),
+                        child: Text(
+                          'política de privacidad',
+                          style: t.bodySmall?.copyWith(
+                            color: AppColors.navy,
+                            fontWeight: FontWeight.w700,
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const TextSpan(text: ' y las '),
+                    WidgetSpan(
+                      alignment: PlaceholderAlignment.baseline,
+                      baseline: TextBaseline.alphabetic,
+                      child: InkWell(
+                        onTap: () => context.push('/terminos'),
+                        child: Text(
+                          'condiciones de uso',
+                          style: t.bodySmall?.copyWith(
+                            color: AppColors.navy,
+                            fontWeight: FontWeight.w700,
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const TextSpan(text: '.'),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: AppSpacing.sm),
             if (_error != null) ...[
               InlineNotice(
                 message: _error!,

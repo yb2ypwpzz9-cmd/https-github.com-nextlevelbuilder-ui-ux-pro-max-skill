@@ -207,6 +207,31 @@ class CuentaBancaria {
 class AjustesClub {
   const AjustesClub({this.cuentas = const [], this.instrucciones = ''});
 
+  /// Cuentas oficiales del club. Se muestran mientras Dirección no haya
+  /// guardado otras desde la app (Más → Datos bancarios).
+  static const cuentasOficiales = [
+    CuentaBancaria(
+      banco: 'Banco Popular',
+      numero: '9602246400',
+      titular: 'Alfonso José García Gama',
+      tipo: 'Cuenta de ahorro',
+      documento: 'Pasaporte PAQ896638',
+      moneda: Moneda.dop,
+    ),
+    CuentaBancaria(
+      banco: 'Banreservas',
+      numero: '9602257772',
+      titular: 'Alfonso José García Gama',
+      tipo: 'Cuenta de ahorro',
+      documento: 'Pasaporte PAQ896638',
+      moneda: Moneda.usd,
+    ),
+  ];
+
+  static const instruccionesOficiales =
+      'El pago debe realizarse dentro de los 5 primeros días de cada mes. '
+      'En el concepto indica el nombre de la alumna y el mes.';
+
   final List<CuentaBancaria> cuentas;
 
   /// Texto libre que ve la familia junto a las cuentas, por ejemplo qué poner
@@ -217,12 +242,15 @@ class AjustesClub {
 
   factory AjustesClub.fromDoc(DocumentSnapshot<Json> doc) {
     final data = doc.data() ?? const <String, dynamic>{};
+    final cuentas = [
+      for (final c in (data['cuentas'] as List<dynamic>? ?? const []))
+        if (c is Map) CuentaBancaria.fromMap(c),
+    ];
     return AjustesClub(
-      cuentas: [
-        for (final c in (data['cuentas'] as List<dynamic>? ?? const []))
-          if (c is Map) CuentaBancaria.fromMap(c),
-      ],
-      instrucciones: (data['instrucciones'] as String?) ?? '',
+      cuentas: cuentas.isEmpty ? cuentasOficiales : cuentas,
+      instrucciones: cuentas.isEmpty
+          ? instruccionesOficiales
+          : (data['instrucciones'] as String?) ?? '',
     );
   }
 }

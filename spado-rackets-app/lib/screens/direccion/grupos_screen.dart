@@ -102,7 +102,6 @@ class _FormGrupoState extends State<_FormGrupo> {
   late final Set<int> _dias = {...?widget.grupo?.dias};
   late TimeOfDay? _hora = _parseHora(widget.grupo?.horaInicio);
   late int _duracion = widget.grupo?.duracionMinutos ?? 60;
-  late Moneda _moneda = widget.grupo?.moneda ?? ClubConfig.monedaPorDefecto;
   late bool _activo = widget.grupo?.activo ?? true;
   bool _guardando = false;
 
@@ -135,7 +134,7 @@ class _FormGrupoState extends State<_FormGrupo> {
       duracionMinutos: _duracion,
       pista: _pista.text.trim(),
       cuotaMensual: double.tryParse(_cuota.text.replaceAll(',', '')) ?? 0,
-      moneda: _moneda,
+      moneda: Moneda.dop,
       activo: _activo,
     );
     try {
@@ -252,36 +251,17 @@ class _FormGrupoState extends State<_FormGrupo> {
                 ),
               ),
               const SizedBox(height: AppSpacing.md),
-              Row(
-                children: [
-                  Expanded(
-                    flex: 3,
-                    child: TextFormField(
-                      controller: _cuota,
-                      keyboardType: TextInputType.number,
-                      decoration:
-                          const InputDecoration(labelText: 'Cuota mensual'),
-                      validator: (v) {
-                        final n =
-                            double.tryParse((v ?? '').replaceAll(',', ''));
-                        return n == null || n < 0 ? 'Importe no válido' : null;
-                      },
-                    ),
-                  ),
-                  const SizedBox(width: AppSpacing.sm),
-                  Expanded(
-                    flex: 2,
-                    child: DropdownButtonFormField<Moneda>(
-                      initialValue: _moneda,
-                      decoration: const InputDecoration(labelText: 'Moneda'),
-                      items: [
-                        for (final m in Moneda.values)
-                          DropdownMenuItem(value: m, child: Text(m.simbolo)),
-                      ],
-                      onChanged: (v) => setState(() => _moneda = v ?? _moneda),
-                    ),
-                  ),
-                ],
+              TextFormField(
+                controller: _cuota,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  labelText: 'Cuota mensual',
+                  prefixText: 'RD\$ ',
+                ),
+                validator: (v) {
+                  final n = double.tryParse((v ?? '').replaceAll(',', ''));
+                  return n == null || n < 0 ? 'Importe no válido' : null;
+                },
               ),
               if (widget.grupo != null)
                 SwitchListTile(

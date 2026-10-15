@@ -88,6 +88,16 @@ class MasScreen extends StatelessWidget {
               onTap: () => _instalar(context),
             ),
             ListTile(
+              leading: const Icon(Icons.privacy_tip_outlined, color: AppColors.navy),
+              title: const Text('Política de privacidad'),
+              onTap: () => context.push('/privacidad'),
+            ),
+            ListTile(
+              leading: const Icon(Icons.description_outlined, color: AppColors.navy),
+              title: const Text('Condiciones de uso'),
+              onTap: () => context.push('/terminos'),
+            ),
+            ListTile(
               leading: const Icon(Icons.logout, color: AppColors.danger),
               title: const Text(
                 'Cerrar sesión',

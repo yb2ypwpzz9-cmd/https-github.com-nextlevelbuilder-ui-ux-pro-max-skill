@@ -69,7 +69,7 @@ class StaffHomeScreen extends StatelessWidget {
               );
             },
           ),
-          const SectionHeader('Mis horas'),
+          const SectionHeader('Mis fichajes'),
           StreamView<List<Jornada>>(
             stream: repo.watchMisJornadas(
               user.uid,
@@ -78,7 +78,6 @@ class StaffHomeScreen extends StatelessWidget {
                   : lunes,
             ),
             builder: (context, jornadas) {
-              final ahora = DateTime.now();
               final semana = jornadas.where((j) => !j.entrada.isBefore(lunes));
               final mes = jornadas.where((j) =>
                   j.entrada.month == hoy.month && j.entrada.year == hoy.year);
@@ -86,13 +85,13 @@ class StaffHomeScreen extends StatelessWidget {
                 children: [
                   KpiGrid(children: [
                     KpiTile(
-                      valor: formatoDuracion(totalTrabajado(semana, ahora)),
-                      etiqueta: 'Esta semana',
+                      valor: '${semana.length}',
+                      etiqueta: 'Días fichados esta semana',
                       icon: Icons.date_range_outlined,
                     ),
                     KpiTile(
-                      valor: formatoDuracion(totalTrabajado(mes, ahora)),
-                      etiqueta: 'Este mes',
+                      valor: '${mes.length}',
+                      etiqueta: 'Días fichados este mes',
                       icon: Icons.calendar_month_outlined,
                     ),
                   ]),
@@ -190,12 +189,8 @@ class _FilaJornada extends StatelessWidget {
     return ListTile(
       dense: true,
       title: Text(capitalizar(fechaCortaFormat.format(j.entrada))),
-      subtitle: Text(
-        '${horaFormat.format(j.entrada)} → '
-        '${j.salida == null ? 'en curso' : horaFormat.format(j.salida!)}',
-      ),
       trailing: Text(
-        formatoDuracion(j.duracionHasta(DateTime.now())),
+        'Llegada ${horaFormat.format(j.entrada)}',
         style: const TextStyle(
           fontWeight: FontWeight.w700,
           fontFeatures: [FontFeature.tabularFigures()],

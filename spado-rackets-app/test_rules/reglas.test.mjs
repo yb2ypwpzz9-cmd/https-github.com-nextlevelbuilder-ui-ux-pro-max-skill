@@ -136,31 +136,31 @@ describe('asistencia', () => {
 });
 
 describe('fichaje', () => {
-  const entrada = (uid, hora) => ({ staffUid: uid, staffNombre: 'Laura', entrada: hora, salida: null });
+  const llegada = (uid, hora) => ({ staffUid: uid, staffNombre: 'Laura', fecha: '2026-10-15', entrada: hora });
 
   test('se ficha con la hora del servidor, no la del móvil', async () => {
     const db = como(STAFF);
-    await assertFails(setDoc(doc(db, 'jornadas/j1'), entrada(STAFF, Timestamp.fromDate(new Date('2026-10-01T08:00:00')))));
-    await assertSucceeds(setDoc(doc(db, 'jornadas/j1'), entrada(STAFF, serverTimestamp())));
+    await assertFails(setDoc(doc(db, `jornadas/${STAFF}_2026-10-15`), llegada(STAFF, Timestamp.fromDate(new Date('2026-10-01T08:00:00')))));
+    await assertSucceeds(setDoc(doc(db, `jornadas/${STAFF}_2026-10-15`), llegada(STAFF, serverTimestamp())));
   });
 
   test('nadie ficha por otro y una familia no ficha', async () => {
-    await assertFails(setDoc(doc(como(STAFF2), 'jornadas/j2'), entrada(STAFF, serverTimestamp())));
-    await assertFails(setDoc(doc(como(FAM), 'jornadas/j3'), entrada(FAM, serverTimestamp())));
+    await assertFails(setDoc(doc(como(STAFF2), `jornadas/${STAFF}_2026-10-15`), llegada(STAFF, serverTimestamp())));
+    await assertFails(setDoc(doc(como(STAFF2), `jornadas/${STAFF2}_2026-10-15`), llegada(STAFF, serverTimestamp())));
+    await assertFails(setDoc(doc(como(FAM), `jornadas/${FAM}_2026-10-15`), llegada(FAM, serverTimestamp())));
   });
 
-  test('la salida se registra una vez y no se edita después', async () => {
+  test('una sola llegada al día y el fichaje no se edita', async () => {
     const db = como(STAFF);
-    await assertSucceeds(setDoc(doc(db, 'jornadas/j1'), entrada(STAFF, serverTimestamp())));
-    await assertFails(updateDoc(doc(como(STAFF2), 'jornadas/j1'), { salida: serverTimestamp() }));
-    await assertSucceeds(updateDoc(doc(db, 'jornadas/j1'), { salida: serverTimestamp() }));
-    await assertFails(updateDoc(doc(db, 'jornadas/j1'), { salida: serverTimestamp() }));
-    await assertFails(updateDoc(doc(db, 'jornadas/j1'), { entrada: serverTimestamp() }));
+    await assertSucceeds(setDoc(doc(db, `jornadas/${STAFF}_2026-10-15`), llegada(STAFF, serverTimestamp())));
+    await assertFails(setDoc(doc(db, `jornadas/${STAFF}_2026-10-15`), llegada(STAFF, serverTimestamp())));
+    await assertFails(updateDoc(doc(db, `jornadas/${STAFF}_2026-10-15`), { entrada: serverTimestamp() }));
+    await assertFails(updateDoc(doc(db, `jornadas/${STAFF}_2026-10-15`), { salida: serverTimestamp() }));
   });
 
   test('un entrenador no ve los fichajes de otro; Dirección sí', async () => {
     await env.withSecurityRulesDisabled((ctx) =>
-      setDoc(doc(ctx.firestore(), 'jornadas/j9'), { staffUid: STAFF2, entrada: Timestamp.now(), salida: null }));
+      setDoc(doc(ctx.firestore(), 'jornadas/j9'), { staffUid: STAFF2, entrada: Timestamp.now() }));
     await assertFails(getDoc(doc(como(STAFF), 'jornadas/j9')));
     await assertSucceeds(getDoc(doc(como(DIR), 'jornadas/j9')));
   });

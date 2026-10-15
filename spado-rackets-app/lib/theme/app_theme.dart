@@ -79,6 +79,9 @@ abstract final class AppTheme {
   }
 
   static ThemeData light() {
+    // Las tipografías van incluidas en la app (assets/google_fonts): no se
+    // descargan en ejecución, así que funcionan sin red y bajo la CSP.
+    GoogleFonts.config.allowRuntimeFetching = false;
     final textTheme = _textTheme();
     final borde = OutlineInputBorder(
       borderRadius: BorderRadius.circular(AppRadius.field),

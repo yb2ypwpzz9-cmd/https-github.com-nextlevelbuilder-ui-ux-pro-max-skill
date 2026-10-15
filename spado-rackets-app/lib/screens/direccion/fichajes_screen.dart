@@ -47,11 +47,10 @@ class _FichajesScreenState extends State<FichajesScreen> {
     final (desde, hasta) = _rango;
     final t = Theme.of(context).textTheme;
     return Scaffold(
-      appBar: const TabAppBar(title: 'Fichajes del staff'),
+      appBar: const TabAppBar(title: 'Fichajes de entrenadores'),
       body: StreamView<List<Jornada>>(
         stream: context.read<ClubRepository>().watchJornadasDesde(desde),
         builder: (context, todas) {
-          final ahora = DateTime.now();
           final enRango =
               todas.where((j) => j.entrada.isBefore(hasta)).toList();
           final personas = <String, String>{
@@ -76,7 +75,7 @@ class _FichajesScreenState extends State<FichajesScreen> {
                 showSelectedIcon: false,
                 onSelectionChanged: (s) => setState(() => _periodo = s.first),
               ),
-              const SectionHeader('Horas por persona'),
+              const SectionHeader('Días fichados por persona'),
               if (personas.isEmpty)
                 const EmptyState(
                   compacto: true,
@@ -108,9 +107,9 @@ class _FichajesScreenState extends State<FichajesScreen> {
                                 .toUpperCase(),
                           ),
                           title: Text(e.value),
-                          subtitle: Text(dias == 1 ? '1 día' : '$dias días'),
+                          subtitle: const Text('Días fichados'),
                           trailing: Text(
-                            formatoDuracion(totalTrabajado(suyas, ahora)),
+                            '$dias',
                             style: t.titleMedium?.copyWith(
                               fontFeatures: const [
                                 FontFeature.tabularFigures(),
@@ -145,23 +144,17 @@ class _FilaFichaje extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final t = Theme.of(context).textTheme;
     return ListTile(
       title: Text(
         '${j.staffNombre} · ${capitalizar(fechaCortaFormat.format(j.entrada))}',
       ),
       subtitle: Text(
-        '${horaFormat.format(j.entrada)} → '
-        '${j.salida == null ? 'en curso' : horaFormat.format(j.salida!)}'
+        'Llegada ${horaFormat.format(j.entrada)}'
         '${j.entradaConUbicacion ? '' : ' · sin ubicación'}',
       ),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            formatoDuracion(j.duracionHasta(DateTime.now())),
-            style: t.labelLarge,
-          ),
           if (j.mapaEntrada != null)
             IconButton(
               tooltip: 'Ver ubicación de entrada',

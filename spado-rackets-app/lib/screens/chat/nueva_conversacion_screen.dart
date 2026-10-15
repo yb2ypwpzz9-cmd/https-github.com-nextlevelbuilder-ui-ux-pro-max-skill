@@ -32,14 +32,17 @@ class _NuevaConversacionScreenState extends State<NuevaConversacionScreen> {
           final lista = personas
               .where((p) => q.isEmpty || p.nombre.toLowerCase().contains(q))
               .toList()
-            // El club primero: es a quien más se escribe.
+            // Primero el entrenador de su grupo, luego Dirección, luego el resto.
             ..sort((a, b) {
-              int peso(UserRole r) => switch (r) {
-                    UserRole.direccion => 0,
-                    UserRole.staff => 1,
-                    UserRole.familia => 2,
-                  };
-              final c = peso(a.rol).compareTo(peso(b.rol));
+              int peso(EntradaDirectorio e) =>
+                  e.rol.isStaff && _esDeMiGrupo(yo, e)
+                      ? 0
+                      : switch (e.rol) {
+                          UserRole.direccion => 1,
+                          UserRole.staff => 2,
+                          UserRole.familia => 3,
+                        };
+              final c = peso(a).compareTo(peso(b));
               return c != 0 ? c : a.nombre.compareTo(b.nombre);
             });
           return PageBody(
@@ -65,7 +68,13 @@ class _NuevaConversacionScreenState extends State<NuevaConversacionScreen> {
                       ListTile(
                         leading: Avatar(inicialesDe(p.nombre)),
                         title: Text(p.nombre),
-                        subtitle: Text(p.rol.label),
+                        subtitle: Text(
+                          p.rol.isStaff && _esDeMiGrupo(yo, p)
+                              ? 'Entrenador de tu grupo'
+                              : p.rol.isStaff
+                                  ? 'Entrenador'
+                                  : p.rol.label,
+                        ),
                         trailing: const Icon(Icons.chevron_right),
                         onTap: () => context.pushReplacement(
                           '/chat/${Conversacion.idDirecta(yo.uid, p.uid)}',
@@ -80,3 +89,6 @@ class _NuevaConversacionScreenState extends State<NuevaConversacionScreen> {
     );
   }
 }
+
+bool _esDeMiGrupo(AppUser yo, EntradaDirectorio e) =>
+    yo.role.isFamilia && e.grupos.any(yo.grupos.contains);

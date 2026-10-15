@@ -109,8 +109,7 @@ class _FormularioState extends State<_Formulario> {
       children: [
         const InlineNotice(
           message: 'Las familias ven estas cuentas en su pestaña "Pagos", con '
-              'botón para copiar el número. Puedes tener una en RD\$ y otra '
-              'en US\$.',
+              'botón para copiar el número. Las cuotas se cobran en RD\$.',
         ),
         for (var i = 0; i < _cuentas.length; i++) ...[
           SectionHeader(
@@ -191,7 +190,7 @@ class _FormularioState extends State<_Formulario> {
                   TextField(
                     controller: _cuentas[i].documento,
                     decoration: const InputDecoration(
-                      labelText: 'RNC o cédula del titular (opcional)',
+                      labelText: 'Documento del titular (pasaporte, cédula o RNC)',
                     ),
                   ),
                 ],

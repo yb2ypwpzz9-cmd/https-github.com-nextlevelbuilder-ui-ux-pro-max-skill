@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 
 typedef Json = Map<String, dynamic>;
 typedef JsonCollection = CollectionReference<Json>;
@@ -25,8 +24,7 @@ abstract final class Refs {
 
   static FirebaseFirestore get db => _instancia ?? FirebaseFirestore.instance;
 
-  /// Sólo para pruebas contra una base de datos falsa.
-  @visibleForTesting
+  /// Sólo para pruebas contra una base de datos en memoria.
   static void usarInstancia(FirebaseFirestore? instancia) =>
       _instancia = instancia;
 

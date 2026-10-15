@@ -104,7 +104,8 @@ service cloud.firestore {
         && request.resource.data.get('role', '') == 'familia'
         && request.resource.data.get('grupos', []).size() == 0
         && request.resource.data.keys().hasOnly(
-             ['uid', 'email', 'role', 'grupos', 'displayName', 'phone', 'createdAt'])
+             ['uid', 'email', 'role', 'grupos', 'displayName', 'phone', 'createdAt',
+              'consentimientoEn', 'consentimientoVersion'])
         && textoOpcional(request.resource.data, 'displayName', 80)
         && textoOpcional(request.resource.data, 'phone', 30);
 
@@ -164,10 +165,12 @@ service cloud.firestore {
       allow create: if isDireccion()
         && textoValido(request.resource.data.get('nombre', ''), 120)
         && textoValido(request.resource.data.get('grupo', ''), 60)
+        && textoOpcional(request.resource.data, 'emailFamilia', 120)
         && !request.resource.data.keys().hasAny(['familiaUid']);
 
       allow update: if isDireccion()
         && !changedKeys().hasAny(['familiaUid'])
+        && textoOpcional(request.resource.data, 'emailFamilia', 120)
         && textoValido(request.resource.data.get('nombre', ''), 120);
 
       allow delete: if isDireccion();
@@ -188,26 +191,21 @@ service cloud.firestore {
         || resource.data.get('staffUid', '') == request.auth.uid
       );
 
-      // Cada uno ficha por sí mismo y con la hora DEL SERVIDOR. Con la hora
-      // del móvil bastaría adelantar el reloj para fichar antes de llegar.
+      // Sólo se ficha la LLEGADA del entrenador. Cada uno ficha por sí mismo,
+      // con la hora DEL SERVIDOR (con la del móvil bastaría adelantar el reloj)
+      // y una vez al día: el id es `{uid}_{fecha}`, así que una segunda
+      // escritura sería una edición, y las ediciones están prohibidas.
       allow create: if esDelClub()
         && request.resource.data.get('staffUid', '') == request.auth.uid
+        && jornadaId.matches(request.auth.uid + '_[0-9]{4}-[0-9]{2}-[0-9]{2}')
         && request.resource.data.get('entrada', null) == request.time
-        && request.resource.data.get('salida', 0) == null
         && textoValido(request.resource.data.get('staffNombre', ''), 120)
         && request.resource.data.keys().hasOnly([
-             'staffUid', 'staffNombre', 'entrada', 'salida',
+             'staffUid', 'staffNombre', 'fecha', 'entrada',
              'entradaLat', 'entradaLng', 'entradaPrecision']);
 
-      // Sólo se cierra la propia jornada, una vez, y con la hora del servidor.
-      // Después ya no se edita: es un registro de control.
-      allow update: if isSignedIn()
-        && resource.data.get('staffUid', '') == request.auth.uid
-        && resource.data.get('salida', 0) == null
-        && request.resource.data.get('salida', null) == request.time
-        && changedKeys().hasOnly(
-             ['salida', 'salidaLat', 'salidaLng', 'salidaPrecision']);
-
+      // Un fichaje es un registro de control: no se edita ni se borra.
+      allow update: if false;
       allow delete: if false;
     }
 

@@ -101,6 +101,7 @@ class AlumnasScreen extends StatelessWidget {
   ) async {
     final repo = context.read<ClubRepository>();
     final nombre = TextEditingController(text: alumna?.nombre ?? '');
+    final email = TextEditingController(text: alumna?.emailFamilia ?? '');
     var grupo = alumna?.grupo ?? grupos.first.id;
     if (!grupos.any((g) => g.id == grupo)) grupo = grupos.first.id;
     var activa = alumna?.activa ?? true;
@@ -131,6 +132,18 @@ class AlumnasScreen extends StatelessWidget {
                 textCapitalization: TextCapitalization.words,
                 decoration:
                     const InputDecoration(labelText: 'Nombre y apellidos'),
+              ),
+              const SizedBox(height: AppSpacing.md),
+              TextField(
+                controller: email,
+                keyboardType: TextInputType.emailAddress,
+                enabled: alumna?.vinculada != true,
+                decoration: const InputDecoration(
+                  labelText: 'Email de la familia (opcional)',
+                  helperText: 'Si lo pones, sólo ese correo podrá registrarse '
+                      'con el código de esta alumna.',
+                  helperMaxLines: 2,
+                ),
               ),
               const SizedBox(height: AppSpacing.md),
               DropdownButtonFormField<String>(
@@ -168,7 +181,8 @@ class AlumnasScreen extends StatelessWidget {
     try {
       if (alumna == null) {
         final codigo =
-            await repo.crearAlumna(nombre: nombre.text, grupo: grupo);
+            await repo.crearAlumna(
+                nombre: nombre.text, grupo: grupo, emailFamilia: email.text);
         if (context.mounted) {
           await showDialog<void>(
             context: context,
@@ -209,6 +223,7 @@ class AlumnasScreen extends StatelessWidget {
           nombre: nombre.text,
           grupo: grupo,
           activa: activa,
+          emailFamilia: alumna.vinculada ? null : email.text,
         );
         if (context.mounted) showAppSnackBar(context, 'Guardado.');
       }
@@ -254,6 +269,8 @@ class _ListaGrupo extends StatelessWidget {
                 : codigoDe[a.id] == null
                     ? const Text('Sin código')
                     : Text.rich(TextSpan(children: [
+                        if (a.emailFamilia != null)
+                          TextSpan(text: '${a.emailFamilia} · '),
                         const TextSpan(text: 'Código: '),
                         TextSpan(
                           text: codigoDe[a.id]!.codigo,

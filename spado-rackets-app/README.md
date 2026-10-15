@@ -1,34 +1,49 @@
 # Spado Rackets — app web
 
-App de gestión de la escuela de raquetas: **fichaje del staff, asistencia, chat interno y cuotas con justificante**. Flutter Web + Firebase, la misma arquitectura que Spado Soccer. Se publica en Netlify; no pasa por las tiendas.
+Gestión de la escuela de raquetas: **fichaje del entrenador, asistencia, chat interno y cuotas con justificante**. Flutter Web + Firebase, la misma arquitectura que Spado Soccer, con un proyecto de Firebase **propio y separado**. Se publica en Netlify; no pasa por las tiendas.
 
 | Perfil | Qué hace |
 |---|---|
-| **Dirección** | Panel (staff en jornada, asistencia, justificantes por revisar, cuotas vencidas) · fichajes y horas del staff con mapa · asistencia por grupo · generar cuotas del mes, validar o rechazar justificantes, registrar cobros en efectivo · alumnas y códigos · grupos, horarios y cuota (RD$ o US$) · cuentas del equipo · datos bancarios · todos los chats |
-| **Staff** | Fichar entrada y salida (hora del servidor + ubicación) · pasar lista (P / F / J) de sus grupos · sus horas · chat |
-| **Familias** | Su hija, asistencia y %, avisar de una falta · cuotas pagadas y pendientes · datos bancarios con copiar · adjuntar justificante (foto o PDF) · chat |
+| **Dirección** | Panel (entrenadores que han fichado hoy, asistencia, justificantes por revisar, cuotas vencidas) · fichajes con mapa · asistencia por grupo · **generar los avisos de cuota** (una alumna, varias o todas) · **validar o rechazar el justificante** que sube cada familia · alumnas y códigos · grupos y cuota en RD$ · cuentas del equipo · datos bancarios · todos los chats |
+| **Staff (entrenador)** | **Fichar llegada** (hora del servidor + ubicación, una vez al día) · pasar lista (P / F / J) de sus grupos · chat |
+| **Familias** | Su hija, asistencia y %, avisar de una falta · su cuota y su importe (solo ven la suya) · cuentas bancarias con botón de copiar · adjuntar el justificante de pago · chat con el entrenador o con Dirección |
 
-**Chat** (sustituye a los grupos de WhatsApp): *Avisos del club* (publican Dirección y staff), un chat por grupo (familias del grupo + su entrenador + Dirección) y mensajes privados con el club. Una familia nunca puede escribir a otra.
+## Cómo funciona el cobro
+
+1. Dirección **genera el aviso de cuota** del mes (Pagos → *Generar cuotas*): elige alumnas, un grupo entero, o todas; con la cuota de su grupo o un importe único. La familia lo ve en su pestaña Pagos y recibe un aviso.
+2. La familia **transfiere** a una de las cuentas del club (Banco Popular en RD$ o Banreservas en US$) **dentro de los 5 primeros días del mes** y **sube el justificante**.
+3. Dirección **valida** el justificante (la cuota pasa a *Pagada*) o lo **rechaza** con un motivo que ve la familia.
+
+No hay pago con tarjeta, ni recargos por mora, ni se envía ningún recibo: solo se valida el justificante que sube la familia. Las cuotas se cobran en RD$. Pasado el día 5, una cuota sin pagar se marca *Vencida* (solo es un aviso visual).
+
+## Asistencia
+
+El entrenador pasa lista; a la familia solo le llega la **confirmación** de que su hija está en el entrenamiento. Una familia puede avisar de una falta desde la app y el entrenador la ve ya marcada como justificada.
+
+## Registro de familias
+
+Las familias se registran ellas mismas con su email, con el **código de 6 caracteres** que Dirección genera al dar de alta a la alumna. Si Dirección anota el **email de la familia** en la ficha de la alumna, solo ese correo podrá usar el código. Una familia con dos hijas usa un segundo código en *Más → Vincular otra alumna*. Las cuentas de **staff** las crea Dirección (*Más → Equipo*) y se les entrega una contraseña provisional.
+*(Más adelante: un enlace para que las familias creen ellas la ficha de cada alumna.)*
 
 ## Seguridad
 
-Cada permiso se vuelve a comprobar en el servidor, no en la app:
+Cada permiso se comprueba también en el servidor, no solo en la app:
 
-- **Reglas de Firestore y Storage** (`firestore.rules`, `storage.rules`) con **29 pruebas** que intentan saltárselas: `npm run test:reglas`. Cubren, entre otras cosas: nadie se da otro rol ni grupos; el fichaje usa la hora del servidor y no se edita; una familia sólo ve sus hijas, sus cuotas y sus marcas; no se puede marcar una cuota como pagada desde la app; nadie firma un mensaje como otro; los justificantes sólo los abre quien los subió y Dirección.
-- **Cloud Functions** (`functions/index.js`): el código de vinculación se comprueba en servidor (uno por alumna, un solo uso), las cuentas del club sólo las crea Dirección, y los contadores de chat y avisos los lleva el servidor.
-- **Cabeceras de seguridad** para Netlify en `web/_headers`.
+- **Reglas de Firestore y Storage** con **29 pruebas** que intentan saltárselas: `npm run test:reglas`. Cubren que nadie se da otro rol ni grupos, que el fichaje usa la hora del servidor y no se edita, que cada familia solo ve sus hijas, cuotas y marcas, que no se puede marcar una cuota como pagada desde la app, que nadie firma un mensaje como otro y que un justificante solo lo abre quien lo subió y Dirección.
+- **Cloud Functions**: el código de vinculación se comprueba en servidor (uno por alumna, un solo uso, y solo con el correo reservado si lo hay), las cuentas del club solo las crea Dirección, y los contadores de chat y los avisos los lleva el servidor.
+- **Privacidad**: política y condiciones de uso accesibles sin cuenta, y consentimiento obligatorio al registrarse (se guarda cuándo y con qué versión). **Los textos son una base: los debe revisar un abogado** y hay que poner el correo del club (`lib/config/textos_legales.dart`).
+- Cabeceras de seguridad para Netlify en `web/_headers`.
 
 ## Puesta en marcha (una sola vez)
 
 Necesitas: Flutter, Node 22 y Firebase CLI (`npm i -g firebase-tools`).
 
-1. **Proyecto Firebase.** Crea uno nuevo en la consola (recomendado: separado de Soccer, para que los datos de cada negocio no se mezclen) en plan **Blaze** (hace falta para Functions; con 10 alumnas el coste real es ~0).
-   Activa **Authentication → Email/contraseña**, **Firestore** (modo producción, región `nam5` o `us-east1`) y **Storage**. Añade una **app web** y ejecuta:
+1. **Proyecto Firebase nuevo** (separado de Soccer) en plan **Blaze** (hace falta para Functions; con 10 alumnas el coste real es ~0). Activa **Authentication → Email/contraseña**, **Firestore** (producción) y **Storage**. Añade una **app web** y ejecuta:
    ```sh
    dart pub global activate flutterfire_cli
    flutterfire configure --project=<id-del-proyecto> --platforms=web
    ```
-   Eso rellena `lib/firebase_options.dart`. Pon el mismo id en `.firebaserc`.
+   Pon el mismo id en `.firebaserc`.
 2. **Desplegar reglas, índices y funciones:**
    ```sh
    firebase deploy --only firestore:rules,firestore:indexes,storage
@@ -41,22 +56,14 @@ Necesitas: Flutter, Node 22 y Firebase CLI (`npm i -g firebase-tools`).
    export GOOGLE_APPLICATION_CREDENTIALS=/ruta/serviceAccount.json
    npm run crear-direccion -- correo@spadorackets.com "Nombre Apellido"
    ```
-   El resto de cuentas (staff, otra dirección) se crean desde la app: **Más → Equipo**.
-4. **Cargar grupos, alumnas y datos bancarios**: copia `scripts/datos_club.ejemplo.json` a `scripts/datos_club.json`, rellénalo y `npm run cargar-datos -- scripts/datos_club.json`. Genera `codigos_generados.csv` con el código de cada familia. También se puede hacer desde la app (**Más → Alumnas y códigos**).
+4. **Cargar grupos, alumnas y datos bancarios** (o hacerlo a mano desde la app): copia `scripts/datos_club.ejemplo.json` a `scripts/datos_club.json`, rellénalo y `npm run cargar-datos -- scripts/datos_club.json`. Genera `codigos_generados.csv` con el código de cada familia. Las cuentas bancarias oficiales ya vienen precargadas en la app.
 5. **Compilar y publicar en Netlify:**
    ```sh
    flutter build web --release
    npx netlify-cli deploy --dir=build/web --prod
    ```
-   O arrastra la carpeta `build/web` en Netlify. `web/_headers` y `web/_redirects` ya van incluidos.
-6. **Avisos push (opcional):** consola de Firebase → Cloud Messaging → certificado web push → copia la clave pública en `ClubConfig.vapidKey` y la configuración en `web/firebase-messaging-sw.js`. En iPhone sólo llegan si la app está añadida a la pantalla de inicio.
-7. En **Authentication → Configuración → Dominios autorizados**, añade el dominio de Netlify.
-
-## Cómo lo usan las familias
-
-1. Dirección da de alta a la alumna → la app genera un **código de 6 caracteres**.
-2. La familia abre el enlace → **Crear cuenta con mi código**. Con dos hijas: segundo código en **Más → Vincular otra alumna**.
-3. En el móvil: *Compartir → Añadir a pantalla de inicio*.
+   `web/_headers` y `web/_redirects` ya van incluidos. En **Authentication → Configuración → Dominios autorizados** añade el dominio de Netlify.
+6. **Avisos push (opcional):** consola de Firebase → Cloud Messaging → certificado web push → clave pública en `ClubConfig.vapidKey` y configuración en `web/firebase-messaging-sw.js`. En iPhone solo llegan si la app está añadida a la pantalla de inicio.
 
 ## Probar en local sin tocar datos reales
 
@@ -67,11 +74,9 @@ flutter run -d chrome --dart-define=EMULADOR=true
 ```
 Cuentas de demostración (contraseña `spado1234`): `direccion@`, `laura@`, `carlos@`, `garcia@`, `lopez@demo.spado`.
 
-## Decisiones que conviene revisar
+## Pendiente
 
-- **Moneda**: cada grupo tiene su cuota en RD$ o US$; se pueden publicar varias cuentas bancarias.
-- **Pagos**: la familia transfiere y sube el justificante; Dirección lo valida a mano. No hay cobro con tarjeta.
-- **Vencimiento**: las cuotas pasan a "Vencida" a partir del día 11 (`ClubConfig.diaVencimientoCuota`). No hay recargos ni bloqueo automáticos como en Soccer; se pueden añadir.
-- **Ubicación**: fichar la exige (`ClubConfig.fichajeExigeUbicacion`). No se comprueba un radio: se guarda dónde fichó y Dirección lo ve en el mapa.
-- **Registro de jornada (España, art. 34.9 ET)**: los fichajes no se pueden editar desde la app. Si el negocio opera en RD esto no aplica; conviene confirmarlo.
-- **Datos de menores**: antes de abrir a las familias, publicar política de privacidad y recoger consentimiento (en Soccer hay textos base en `lib/config/textos_legales.dart`).
+- Conectar el proyecto de Firebase y publicar (pasos 1–5).
+- Cargar los listados reales de grupos, alumnas, horarios y días.
+- Revisión legal de los textos y correo de contacto del club.
+- Opcional más adelante: enlace para que las familias creen la ficha de cada alumna; avisos push.

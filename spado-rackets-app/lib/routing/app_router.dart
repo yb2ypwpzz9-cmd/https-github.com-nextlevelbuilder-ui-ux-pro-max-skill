@@ -10,8 +10,11 @@ import '../screens/direccion/alumnas_screen.dart';
 import '../screens/direccion/asistencia_resumen_screen.dart';
 import '../screens/direccion/datos_bancarios_screen.dart';
 import '../screens/direccion/equipo_screen.dart';
+import '../screens/direccion/nueva_cuota_screen.dart';
 import '../screens/direccion/grupos_screen.dart';
+import '../screens/shared/documentos_screen.dart';
 import '../screens/staff/pasar_lista_screen.dart';
+import '../models/pago.dart';
 import '../services/auth_service.dart';
 
 GoRouter buildRouter(SessionController session) {
@@ -22,7 +25,9 @@ GoRouter buildRouter(SessionController session) {
       if (session.loading) return null;
       final path = state.matchedLocation;
       final enAuth = path == '/login' || path == '/registro';
-      if (!session.isSignedIn && !enAuth) return '/login';
+      // Los textos legales se leen sin cuenta, antes de registrarse.
+      final legal = path == '/privacidad' || path == '/terminos';
+      if (!session.isSignedIn && !enAuth && !legal) return '/login';
       if (session.isSignedIn && enAuth) return '/';
       return null;
     },
@@ -30,6 +35,14 @@ GoRouter buildRouter(SessionController session) {
       GoRoute(path: '/', builder: (_, __) => const AppShell()),
       GoRoute(path: '/login', builder: (_, __) => const LoginScreen()),
       GoRoute(path: '/registro', builder: (_, __) => const RegistroScreen()),
+      GoRoute(
+        path: '/privacidad',
+        builder: (_, __) => DocumentosScreen.privacidad(),
+      ),
+      GoRoute(
+        path: '/terminos',
+        builder: (_, __) => DocumentosScreen.terminos(),
+      ),
       GoRoute(
         path: '/lista/:grupoId',
         builder: (_, s) => PasarListaScreen(
@@ -49,6 +62,12 @@ GoRouter buildRouter(SessionController session) {
       GoRoute(
         path: '/asistencia',
         builder: (_, __) => const AsistenciaResumenScreen(),
+      ),
+      GoRoute(
+        path: '/cuotas/nueva',
+        builder: (_, s) => NuevaCuotaScreen(
+          periodo: s.uri.queryParameters['periodo'] ?? periodoDe(DateTime.now()),
+        ),
       ),
       GoRoute(path: '/alumnas', builder: (_, __) => const AlumnasScreen()),
       GoRoute(path: '/grupos', builder: (_, __) => const GruposScreen()),

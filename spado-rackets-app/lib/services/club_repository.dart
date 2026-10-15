@@ -69,6 +69,7 @@ class ClubRepository {
   Future<String> crearAlumna({
     required String nombre,
     required String grupo,
+    String? emailFamilia,
   }) async {
     final alumna = Refs.alumnas.doc();
     final codigo = _generarCodigo();
@@ -77,6 +78,8 @@ class ClubRepository {
         'nombre': nombre.trim(),
         'grupo': grupo,
         'activa': true,
+        if ((emailFamilia ?? '').trim().isNotEmpty)
+          'emailFamilia': emailFamilia!.trim().toLowerCase(),
         'creadaEn': FieldValue.serverTimestamp(),
       })
       ..set(Refs.codigos.doc(alumna.id), {
@@ -94,8 +97,10 @@ class ClubRepository {
     String? nombre,
     String? grupo,
     bool? activa,
+    String? emailFamilia,
   }) =>
       Refs.alumnas.doc(id).update({
+        if (emailFamilia != null) 'emailFamilia': emailFamilia.trim().toLowerCase(),
         if (nombre != null) 'nombre': nombre.trim(),
         if (grupo != null) 'grupo': grupo,
         if (activa != null) 'activa': activa,
@@ -110,12 +115,17 @@ class ClubRepository {
 
   // ------------------------------------------------------------ jornadas
 
-  Stream<Jornada?> watchJornadaAbierta(String uid) => Refs.jornadas
-      .where('staffUid', isEqualTo: uid)
-      .where('salida', isNull: true)
-      .limit(1)
-      .snapshots()
-      .map((s) => s.docs.isEmpty ? null : Jornada.fromDoc(s.docs.first));
+  /// El fichaje de hoy, si ya lo hizo. Hay uno por persona y día.
+  Stream<Jornada?> watchFichajeHoy(String uid) {
+    final hoy = DateTime.now();
+    final inicio = DateTime(hoy.year, hoy.month, hoy.day);
+    return Refs.jornadas
+        .where('staffUid', isEqualTo: uid)
+        .where('entrada', isGreaterThanOrEqualTo: Timestamp.fromDate(inicio))
+        .limit(1)
+        .snapshots()
+        .map((s) => s.docs.isEmpty ? null : Jornada.fromDoc(s.docs.first));
+  }
 
   Stream<List<Jornada>> watchMisJornadas(String uid, DateTime desde) =>
       Refs.jornadas
@@ -132,28 +142,24 @@ class ClubRepository {
       .snapshots()
       .map((s) => mapearDocs(s.docs, Jornada.fromDoc));
 
-  Future<void> ficharEntrada(AppUser user, UbicacionObtenida? u) =>
-      Refs.jornadas.add({
-        'staffUid': user.uid,
-        'staffNombre': user.nombreVisible,
-        'entrada': FieldValue.serverTimestamp(),
-        'salida': null,
-        if (u != null) ...{
-          'entradaLat': u.latitud,
-          'entradaLng': u.longitud,
-          'entradaPrecision': u.precisionMetros,
-        },
-      });
-
-  Future<void> ficharSalida(Jornada jornada, UbicacionObtenida? u) =>
-      Refs.jornadas.doc(jornada.id).update({
-        'salida': FieldValue.serverTimestamp(),
-        if (u != null) ...{
-          'salidaLat': u.latitud,
-          'salidaLng': u.longitud,
-          'salidaPrecision': u.precisionMetros,
-        },
-      });
+  /// Fichaje de llegada del entrenador. El id lleva la fecha: fichar dos
+  /// veces el mismo día no crea un segundo registro (las reglas rechazan la
+  /// segunda escritura).
+  Future<void> ficharLlegada(AppUser user, UbicacionObtenida? u) {
+    final d = DateTime.now();
+    final fecha = claveFecha(d);
+    return Refs.jornadas.doc('${user.uid}_$fecha').set({
+      'staffUid': user.uid,
+      'staffNombre': user.nombreVisible,
+      'fecha': fecha,
+      'entrada': FieldValue.serverTimestamp(),
+      if (u != null) ...{
+        'entradaLat': u.latitud,
+        'entradaLng': u.longitud,
+        'entradaPrecision': u.precisionMetros,
+      },
+    });
+  }
 
   // ---------------------------------------------------------- asistencia
 
@@ -275,39 +281,36 @@ class ClubRepository {
       .snapshots()
       .map((s) => mapearDocs(s.docs, Pago.fromDoc));
 
-  /// Crea las cuotas del mes para las alumnas activas y vinculadas que aún no
-  /// la tengan. Nunca toca una cuota existente: volver a pulsar el botón no
-  /// pisa un pago ya cobrado. Devuelve cuántas se crearon.
+  /// Cuotas ya creadas de un mes (ids), para no duplicarlas.
+  Future<Set<String>> idsDeCuotas(String periodo) => Refs.pagos
+      .where('periodo', isEqualTo: periodo)
+      .get()
+      .then((s) => s.docs.map((d) => d.id).toSet());
+
+  /// Crea los avisos de cuota indicados. Nunca toca una cuota existente:
+  /// volver a pulsar el botón no pisa un pago ya cobrado. Si la alumna aún no
+  /// tiene cuenta de familia, la cuota se crea igualmente y se asocia a la
+  /// familia cuando esta se registre (función `sincronizarAlumna`).
+  /// Devuelve cuántas se crearon.
   Future<int> generarCuotas({
     required String periodo,
-    required List<Alumna> alumnas,
-    required List<Grupo> grupos,
+    required List<CuotaNueva> cuotas,
   }) async {
-    final existentes = await Refs.pagos
-        .where('periodo', isEqualTo: periodo)
-        .get()
-        .then((s) => s.docs.map((d) => d.id).toSet());
-
-    final porId = {for (final g in grupos) g.id: g};
+    final existentes = await idsDeCuotas(periodo);
     final batch = Refs.db.batch();
     var creadas = 0;
-
-    for (final a in alumnas) {
-      if (!a.activa || !a.vinculada) continue;
-      final grupo = porId[a.grupo];
-      if (grupo == null || grupo.cuotaMensual <= 0) continue;
-      final id = Pago.idPara(a.id, periodo);
-      if (existentes.contains(id)) continue;
-
+    for (final c in cuotas) {
+      final id = Pago.idPara(c.alumna.id, periodo);
+      if (existentes.contains(id) || c.importe <= 0) continue;
       batch.set(Refs.pagos.doc(id), {
-        'alumnaId': a.id,
-        'alumnaNombre': a.nombre,
-        'grupo': a.grupo,
-        'familiaUid': a.familiaUid,
+        'alumnaId': c.alumna.id,
+        'alumnaNombre': c.alumna.nombre,
+        'grupo': c.alumna.grupo,
+        'familiaUid': c.alumna.familiaUid ?? '',
         'periodo': periodo,
-        'concepto': 'Cuota ${grupo.nombre}',
-        'importe': grupo.cuotaMensual,
-        'moneda': grupo.moneda.wire,
+        'concepto': c.concepto,
+        'importe': c.importe,
+        'moneda': 'DOP',
         'estado': EstadoPago.pendiente.wire,
         'creadoEn': FieldValue.serverTimestamp(),
       });
@@ -474,10 +477,11 @@ class ClubRepository {
       }
     }
 
+    final recortado = limpio.length > Mensaje.maxCaracteres
+        ? limpio.substring(0, Mensaje.maxCaracteres)
+        : limpio;
     batch.set(Refs.mensajes(conversacionId).doc(), {
-      'texto': limpio.length > Mensaje.maxCaracteres
-          ? limpio.substring(0, Mensaje.maxCaracteres)
-          : limpio,
+      'texto': recortado,
       'autorUid': autor.uid,
       'autorNombre': autor.nombreVisible,
       'autorRol': autor.role.wire,
@@ -531,4 +535,17 @@ class ClubRepository {
       throw Exception(e.message ?? 'No se pudo crear la cuenta.');
     }
   }
+}
+
+/// Una cuota por crear: alumna, importe y concepto.
+class CuotaNueva {
+  const CuotaNueva({
+    required this.alumna,
+    required this.importe,
+    required this.concepto,
+  });
+
+  final Alumna alumna;
+  final double importe;
+  final String concepto;
 }

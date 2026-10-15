@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../config/club_config.dart';
@@ -23,47 +24,8 @@ class PagosDireccionScreen extends StatefulWidget {
 class _PagosDireccionScreenState extends State<PagosDireccionScreen> {
   DateTime _mes = DateTime(DateTime.now().year, DateTime.now().month);
   _Filtro _filtro = _Filtro.todas;
-  bool _generando = false;
 
   String get _periodo => periodoDe(_mes);
-
-  Future<void> _generar() async {
-    final repo = context.read<ClubRepository>();
-    final ok = await confirmar(
-      context,
-      titulo: 'Generar cuotas de ${etiquetaPeriodo(_periodo)}',
-      mensaje: 'Se crea la cuota de cada alumna activa con cuenta de familia, '
-          'con el importe de su grupo. Las cuotas que ya existan no se tocan.',
-      accion: 'Generar',
-    );
-    if (!ok || !mounted) return;
-    setState(() => _generando = true);
-    try {
-      final alumnas = await repo.watchTodasLasAlumnas().first;
-      final grupos = await repo.watchGrupos().first;
-      final n = await repo.generarCuotas(
-        periodo: _periodo,
-        alumnas: alumnas,
-        grupos: grupos,
-      );
-      if (mounted) {
-        showAppSnackBar(
-          context,
-          n == 0
-              ? 'No había cuotas nuevas que crear.'
-              : n == 1
-                  ? 'Se creó 1 cuota.'
-                  : 'Se crearon $n cuotas.',
-        );
-      }
-    } catch (_) {
-      if (mounted) {
-        showAppSnackBar(context, 'No se pudieron generar.', isError: true);
-      }
-    } finally {
-      if (mounted) setState(() => _generando = false);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -141,11 +103,10 @@ class _PagosDireccionScreenState extends State<PagosDireccionScreen> {
                   action: FilledButton.icon(
                     style:
                         FilledButton.styleFrom(minimumSize: const Size(0, 44)),
-                    onPressed: _generando ? null : _generar,
+                    onPressed: () =>
+                        context.push('/cuotas/nueva?periodo=$_periodo'),
                     icon: const Icon(Icons.playlist_add),
-                    label: Text(_generando
-                        ? 'Generando…'
-                        : 'Generar cuotas de ${etiquetaPeriodo(_periodo)}'),
+                    label: Text('Generar cuotas de ${etiquetaPeriodo(_periodo)}'),
                   ),
                 )
               else ...[
@@ -218,9 +179,9 @@ class _PagosDireccionScreenState extends State<PagosDireccionScreen> {
                   ),
                 const SizedBox(height: AppSpacing.md),
                 OutlinedButton.icon(
-                  onPressed: _generando ? null : _generar,
+                  onPressed: () => context.push('/cuotas/nueva?periodo=$_periodo'),
                   icon: const Icon(Icons.playlist_add),
-                  label: const Text('Añadir cuotas que falten'),
+                  label: const Text('Generar o añadir cuotas'),
                 ),
                 if (pagos.any((p) => p.vencidaEn(ahora))) ...[
                   const SizedBox(height: AppSpacing.md),

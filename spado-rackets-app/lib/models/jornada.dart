@@ -36,7 +36,6 @@ class Jornada {
   final double? salidaLng;
   final double? salidaPrecision;
 
-  bool get abierta => salida == null;
 
   Duration duracionHasta(DateTime ahora) =>
       (salida ?? ahora).difference(entrada);

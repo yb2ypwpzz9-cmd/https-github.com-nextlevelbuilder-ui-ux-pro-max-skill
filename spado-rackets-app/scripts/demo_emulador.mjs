@@ -52,7 +52,7 @@ const hoy = new Date();
 const grupos = [
   { id: 'tenis-ini', nombre: 'Tenis Iniciación', deporte: 'Tenis', dias: [1, 3, 5], horaInicio: '16:30', duracionMinutos: 60, pista: 'Pista 1', cuotaMensual: 3500, moneda: 'DOP', activo: true },
   { id: 'tenis-comp', nombre: 'Tenis Competición', deporte: 'Tenis', dias: [2, 4], horaInicio: '17:30', duracionMinutos: 90, pista: 'Pista central', cuotaMensual: 5000, moneda: 'DOP', activo: true },
-  { id: 'padel', nombre: 'Pádel Juvenil', deporte: 'Pádel', dias: [1, 2, 3, 4, 5, 6], horaInicio: '18:00', duracionMinutos: 60, pista: 'Pista de pádel', cuotaMensual: 80, moneda: 'USD', activo: true },
+  { id: 'padel', nombre: 'Pádel Juvenil', deporte: 'Pádel', dias: [1, 2, 3, 4, 5, 6], horaInicio: '18:00', duracionMinutos: 60, pista: 'Pista de pádel', cuotaMensual: 4000, moneda: 'DOP', activo: true },
 ];
 for (const { id, ...g } of grupos) await db.doc(`grupos/${id}`).set(g);
 
@@ -108,16 +108,15 @@ for (let i = 6; i >= 1; i--) {
   const d = new Date(hoy); d.setDate(d.getDate() - i);
   if (d.getDay() === 0) continue;
   const e = new Date(d); e.setHours(16, 5 + i, 0, 0);
-  const s = new Date(d); s.setHours(19, 40 + i, 0, 0);
-  await db.collection('jornadas').add({
-    staffUid: laura, staffNombre: 'Laura Martínez', entrada: Timestamp.fromDate(e), salida: Timestamp.fromDate(s),
+  await db.doc(`jornadas/${laura}_${clave(d)}`).set({
+    staffUid: laura, staffNombre: 'Laura Martínez', fecha: clave(d), entrada: Timestamp.fromDate(e),
     entradaLat: 18.4861, entradaLng: -69.9312, entradaPrecision: 12,
   });
 }
-// Carlos, en jornada ahora mismo
+// Carlos ya ha fichado hoy
 const ahora = new Date(hoy); ahora.setMinutes(ahora.getMinutes() - 75);
-await db.collection('jornadas').add({
-  staffUid: carlos, staffNombre: 'Carlos Peña', entrada: Timestamp.fromDate(ahora), salida: null,
+await db.doc(`jornadas/${carlos}_${clave(hoy)}`).set({
+  staffUid: carlos, staffNombre: 'Carlos Peña', fecha: clave(hoy), entrada: Timestamp.fromDate(ahora),
   entradaLat: 18.4855, entradaLng: -69.9301, entradaPrecision: 9,
 });
 
@@ -139,10 +138,10 @@ for (const [id, nombre, grupo, familiaUid] of alumnas) {
 
 await db.doc('ajustes/club').set({
   cuentas: [
-    { banco: 'Banco Popular Dominicano', numero: '812345678', tipo: 'Corriente', titular: 'Spado Rackets SRL', documento: 'RNC 1-32-00000-0', moneda: 'DOP' },
-    { banco: 'Banco Popular Dominicano', numero: '798765432', tipo: 'Ahorros', titular: 'Spado Rackets SRL', documento: '', moneda: 'USD' },
+    { banco: 'Banco Popular', numero: '9602246400', tipo: 'Cuenta de ahorro', titular: 'Alfonso José García Gama', documento: 'Pasaporte PAQ896638', moneda: 'DOP' },
+    { banco: 'Banreservas', numero: '9602257772', tipo: 'Cuenta de ahorro', titular: 'Alfonso José García Gama', documento: 'Pasaporte PAQ896638', moneda: 'USD' },
   ],
-  instrucciones: 'En el concepto de la transferencia pon el nombre de la alumna y el mes. Ejemplo: Lucía García octubre.',
+  instrucciones: 'El pago debe realizarse dentro de los 5 primeros días de cada mes. En el concepto indica el nombre de la alumna y el mes.',
 });
 
 // Chat (en producción, participantes y contadores los lleva el servidor)

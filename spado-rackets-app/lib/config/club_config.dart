@@ -4,12 +4,12 @@ abstract final class ClubConfig {
   static const nombre = 'Spado Rackets';
   static const nombreCorto = 'Spado Rackets';
 
-  /// Moneda por defecto de las cuotas. El club cobra en pesos y, como mucho,
-  /// en dólares: cada grupo elige una de las dos.
+  /// Las cuotas se cobran en pesos dominicanos.
   static const monedaPorDefecto = Moneda.dop;
 
-  /// Último día del mes para pagar la cuota sin que salga como vencida.
-  static const diaVencimientoCuota = 10;
+  /// Último día del mes para pagar la cuota (primeros 5 días del mes). Rackets
+  /// no aplica recargo por mora: pasado el día 5 sólo se marca como vencida.
+  static const diaVencimientoCuota = 5;
 
   /// Zona horaria del club. Se usa en las funciones de servidor; en la app
   /// manda la hora del dispositivo, que en RD es la misma.

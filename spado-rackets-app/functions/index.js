@@ -169,6 +169,18 @@ export const vincularAlumna = onCall(async (req) => {
       throw new HttpsError('already-exists', 'Esa alumna ya está vinculada a otra cuenta.');
     }
 
+    // Si Dirección dio de alta el correo de la familia, sólo ese correo puede
+    // usar el código. Es lo que impide que alguien con un código ajeno
+    // (fotografiado, reenviado) se registre con otro correo.
+    const previo = String(alumna.get('emailFamilia') ?? '').trim().toLowerCase();
+    const correo = String(req.auth?.token?.email ?? '').trim().toLowerCase();
+    if (previo && previo !== correo) {
+      throw new HttpsError(
+        'permission-denied',
+        'Este código está reservado a otro correo. Regístrate con el email que diste al club.',
+      );
+    }
+
     tx.update(alumnaRef, { familiaUid: uid });
     tx.update(codigoDoc.ref, { usadoPor: uid, usadoEn: FieldValue.serverTimestamp() });
     // Los grupos de la familia los recalcula `sincronizarAlumna`; se adelanta
@@ -283,6 +295,19 @@ export const sincronizarAlumna = onDocumentWritten('alumnas/{id}', async (event)
       antes?.grupo === despues?.grupo &&
       antes?.activa === despues?.activa) return;
 
+  // Cuotas generadas antes de que la familia se registrara: pasan a ser suyas.
+  if (despues?.familiaUid && antes?.familiaUid !== despues.familiaUid) {
+    const sueltas = await db.collection('pagos')
+      .where('alumnaId', '==', event.params.id)
+      .where('familiaUid', '==', '')
+      .get();
+    if (!sueltas.empty) {
+      const batch = db.batch();
+      sueltas.docs.forEach((d) => batch.update(d.ref, { familiaUid: despues.familiaUid }));
+      await batch.commit();
+    }
+  }
+
   for (const uid of new Set([antes?.familiaUid, despues?.familiaUid].filter(Boolean))) {
     const ref = db.doc(`users/${uid}`);
     const user = await ref.get();
@@ -343,6 +368,35 @@ export const alCrearMensaje = onDocumentCreated(
 );
 
 // ---------------------------------------------------------------- pagos
+
+/**
+ * Confirmación a la familia cuando el entrenador pasa lista y su hija está
+ * presente. Es lo único que reciben de la asistencia: ni fichajes ni listas.
+ */
+export const avisarAsistencia = onDocumentWritten('asistencias/{id}', async (event) => {
+  const antes = event.data?.before?.data();
+  const despues = event.data?.after?.data();
+  if (!despues || despues.estado !== 'presente' || antes?.estado === 'presente') return;
+  if (!despues.familiaUid) return;
+  const grupo = await db.doc(`grupos/${despues.grupo}`).get();
+  await notificar([despues.familiaUid], {
+    title: `${String(despues.alumnaNombre ?? 'Tu hija').split(' ')[0]} está en el entrenamiento`,
+    body: `El entrenador ha confirmado su asistencia${grupo.exists ? ` a ${grupo.get('nombre')}` : ''}.`,
+    data: { tipo: 'asistencia' },
+  });
+});
+
+/** Aviso a la familia cuando Dirección genera su cuota del mes. */
+export const avisarCuotaNueva = onDocumentCreated('pagos/{id}', async (event) => {
+  const p = event.data?.data();
+  if (!p?.familiaUid) return; // aún sin cuenta: se avisará al asociarla en la app
+  const importe = Number(p.importe ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2 });
+  await notificar([p.familiaUid], {
+    title: 'Nueva cuota',
+    body: `${String(p.alumnaNombre ?? '').split(' ')[0]} · ${p.periodo}: RD$ ${importe}. Plazo: hasta el día 5.`,
+    data: { tipo: 'cuota' },
+  });
+});
 
 /** Avisa a la familia cuando se valida o rechaza su pago, y a Dirección
  *  cuando llega un justificante nuevo. */
