@@ -15,13 +15,14 @@ import { initializeApp } from 'firebase-admin/app';
 import { getAuth } from 'firebase-admin/auth';
 import { getFirestore, FieldValue } from 'firebase-admin/firestore';
 import { getMessaging } from 'firebase-admin/messaging';
+import { getStorage } from 'firebase-admin/storage';
 import { onDocumentWritten, onDocumentCreated } from 'firebase-functions/v2/firestore';
 import { onCall, HttpsError } from 'firebase-functions/v2/https';
 import { setGlobalOptions } from 'firebase-functions/v2';
 import { logger } from 'firebase-functions';
 import { randomInt } from 'node:crypto';
 
-initializeApp();
+initializeApp({ storageBucket: `${process.env.GCLOUD_PROJECT}.firebasestorage.app` });
 const db = getFirestore();
 
 // Región más cercana a República Dominicana y tope de instancias para que un
@@ -359,6 +360,131 @@ export const restablecerPasswordCuentaClub = onCall(async (req) => {
   }
   logger.info(`Contraseña de ${destino} restablecida por ${uid}`);
   return { passwordProvisional: password };
+});
+
+// ------------------------------------------- derechos de la persona usuaria
+
+function aJson(doc) {
+  const limpiar = (v) => {
+    if (v && typeof v.toDate === 'function') return v.toDate().toISOString();
+    if (Array.isArray(v)) return v.map(limpiar);
+    if (v && typeof v === 'object') {
+      return Object.fromEntries(Object.entries(v).map(([k, x]) => [k, limpiar(x)]));
+    }
+    return v;
+  };
+  return { id: doc.id, ...limpiar(doc.data()) };
+}
+
+/**
+ * Devuelve todos los datos personales de quien llama, para que pueda
+ * descargarlos (derecho de acceso y portabilidad).
+ */
+export const exportarMisDatos = onCall(async (req) => {
+  const uid = req.auth?.uid;
+  if (!uid) throw new HttpsError('unauthenticated', 'Inicia sesión.');
+
+  const perfil = await db.doc(`users/${uid}`).get();
+  if (!perfil.exists) throw new HttpsError('not-found', 'No hay datos de tu cuenta.');
+  const datosPerfil = aJson(perfil);
+  delete datosPerfil.fcmTokens; // identificadores técnicos del dispositivo
+
+  const lista = async (coleccion, campo) =>
+    (await db.collection(coleccion).where(campo, '==', uid).get()).docs.map(aJson);
+
+  const [alumnas, pagos, asistencias, ausencias, jornadas] = await Promise.all([
+    lista('alumnas', 'familiaUid'),
+    lista('pagos', 'familiaUid'),
+    lista('asistencias', 'familiaUid'),
+    lista('ausencias', 'familiaUid'),
+    lista('jornadas', 'staffUid'),
+  ]);
+
+  const convs = await db.collection('conversaciones').where('participantes', 'array-contains', uid).get();
+  const mensajes = [];
+  for (const c of convs.docs) {
+    const propios = await c.ref.collection('mensajes').where('autorUid', '==', uid).get();
+    for (const m of propios.docs) mensajes.push({ conversacion: c.id, ...aJson(m) });
+  }
+
+  return {
+    generadoEn: new Date().toISOString(),
+    cuenta: datosPerfil,
+    alumnas, cuotas: pagos, asistencia: asistencias, ausenciasAvisadas: ausencias,
+    fichajes: jornadas, mensajesEscritos: mensajes,
+  };
+});
+
+/**
+ * Elimina la cuenta de quien llama y sus datos personales (derecho de
+ * supresión). Exige haber iniciado sesión hace poco. Se conserva lo que el
+ * club necesita por contabilidad y control (cuotas sin nombre de cuenta,
+ * asistencia y fichajes), desligado de la cuenta.
+ */
+export const eliminarMiCuenta = onCall(async (req) => {
+  const uid = req.auth?.uid;
+  if (!uid) throw new HttpsError('unauthenticated', 'Inicia sesión.');
+
+  const reciente = Date.now() / 1000 - Number(req.auth?.token?.auth_time ?? 0) < 600;
+  if (!reciente) {
+    throw new HttpsError('failed-precondition', 'Por seguridad, vuelve a escribir tu contraseña.');
+  }
+
+  const perfil = await db.doc(`users/${uid}`).get();
+  const rol = perfil.get('role');
+  if (rol === 'direccion') {
+    const dirs = await db.collection('users').where('role', '==', 'direccion').get();
+    if (dirs.size <= 1) {
+      throw new HttpsError('failed-precondition', 'Eres la única cuenta de Dirección: crea otra antes de eliminar esta.');
+    }
+  }
+
+  const w = db.bulkWriter();
+
+  // Familia: se desliga de sus hijas (la ficha queda para el club).
+  const alumnas = await db.collection('alumnas').where('familiaUid', '==', uid).get();
+  for (const a of alumnas.docs) {
+    w.update(a.ref, { familiaUid: FieldValue.delete(), emailFamilia: FieldValue.delete() });
+    w.update(db.doc(`codigosVinculacion/${a.id}`), { usadoPor: FieldValue.delete() })
+      .catch(() => {});
+  }
+  for (const [coleccion, borrar] of [['pagos', false], ['asistencias', false], ['ausencias', true]]) {
+    const docs = await db.collection(coleccion).where('familiaUid', '==', uid).get();
+    for (const d of docs.docs) {
+      if (borrar) w.delete(d.ref);
+      else w.update(d.ref, { familiaUid: '' });
+    }
+  }
+
+  // Chat: las conversaciones privadas se borran; en los grupos, el nombre se
+  // sustituye en sus mensajes.
+  const convs = await db.collection('conversaciones').where('participantes', 'array-contains', uid).get();
+  for (const c of convs.docs) {
+    if (c.get('tipo') === 'directa') {
+      await db.recursiveDelete(c.ref);
+      continue;
+    }
+    const propios = await c.ref.collection('mensajes').where('autorUid', '==', uid).get();
+    for (const m of propios.docs) {
+      w.update(m.ref, { autorNombre: 'Cuenta eliminada', autorUid: 'eliminada' });
+    }
+  }
+  await w.close();
+
+  try {
+    await getStorage().bucket().deleteFiles({ prefix: `comprobantes/${uid}/` });
+  } catch (e) {
+    logger.error(`No se pudieron borrar los justificantes de ${uid}: ${e.message}`);
+  }
+
+  await db.doc(`users/${uid}`).delete();
+  try {
+    await getAuth().deleteUser(uid);
+  } catch (e) {
+    if (e.code !== 'auth/user-not-found') throw new HttpsError('internal', 'No se pudo cerrar el acceso.');
+  }
+  logger.info(`Cuenta ${uid} (${rol}) eliminada por su titular`);
+  return { ok: true };
 });
 
 // --------------------------------------------------- sincronizaciones

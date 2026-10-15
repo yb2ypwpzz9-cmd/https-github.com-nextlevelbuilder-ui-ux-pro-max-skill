@@ -3,7 +3,7 @@
 abstract final class TextosLegales {
   /// Se sube la versión cuando cambia el texto; el consentimiento de cada
   /// familia guarda con qué versión se aceptó.
-  static const version = '2026-10-2';
+  static const version = '2026-10-3';
 
   static const privacidadTitulo = 'Política de privacidad';
 
@@ -76,7 +76,8 @@ abstract final class TextosLegales {
       'Tus derechos',
       'Puedes pedir en cualquier momento acceder a tus datos, rectificarlos, '
           'actualizarlos o solicitar que se eliminen, y retirar tu '
-          'consentimiento, escribiendo a info@mongogroupsport.com.',
+          'consentimiento, desde Más → Descargar mis datos / Eliminar mi cuenta, o escribiendo a '
+          'info@mongogroupsport.com.',
     ),
   ];
 

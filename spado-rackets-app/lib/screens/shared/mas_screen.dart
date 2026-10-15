@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../services/auth_service.dart';
+import '../../services/descarga.dart';
 import '../../services/push_service.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/club_logo.dart';
@@ -100,6 +101,20 @@ class MasScreen extends StatelessWidget {
               onTap: () => context.push('/terminos'),
             ),
             ListTile(
+              leading: const Icon(Icons.download_outlined, color: AppColors.navy),
+              title: const Text('Descargar mis datos'),
+              subtitle: const Text('Una copia de tu información en un archivo'),
+              onTap: () => _descargarDatos(context),
+            ),
+            ListTile(
+              leading: const Icon(Icons.person_remove_outlined,
+                  color: AppColors.danger),
+              title: const Text('Eliminar mi cuenta',
+                  style: TextStyle(color: AppColors.danger)),
+              subtitle: const Text('Borra tu acceso y tus datos personales'),
+              onTap: () => _eliminarCuenta(context),
+            ),
+            ListTile(
               leading: const Icon(Icons.logout, color: AppColors.danger),
               title: const Text(
                 'Cerrar sesión',
@@ -159,6 +174,76 @@ class MasScreen extends StatelessWidget {
       if (context.mounted) {
         showAppSnackBar(context, '$nombre ya está vinculada a tu cuenta.');
       }
+    } on RegistroException catch (e) {
+      if (context.mounted) showAppSnackBar(context, e.message, isError: true);
+    }
+  }
+
+  Future<void> _descargarDatos(BuildContext context) async {
+    final session = context.read<SessionController>();
+    try {
+      final json = await session.exportarMisDatos();
+      descargarTexto('mis-datos-spado-rackets.json', json,
+          tipo: 'application/json');
+      if (context.mounted) {
+        showAppSnackBar(context, 'Archivo descargado.');
+      }
+    } on RegistroException catch (e) {
+      if (context.mounted) showAppSnackBar(context, e.message, isError: true);
+    } catch (_) {
+      if (context.mounted) {
+        showAppSnackBar(context, 'No se pudieron preparar tus datos.',
+            isError: true);
+      }
+    }
+  }
+
+  Future<void> _eliminarCuenta(BuildContext context) async {
+    final session = context.read<SessionController>();
+    final password = TextEditingController();
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Eliminar mi cuenta'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Se borran tu acceso, tus justificantes y tus mensajes '
+              'privados, y dejas de estar vinculada a tus hijas. El club '
+              'conserva, sin tu nombre, la asistencia y las cuotas que debe '
+              'guardar por contabilidad. No se puede deshacer.',
+            ),
+            const SizedBox(height: AppSpacing.md),
+            TextField(
+              controller: password,
+              obscureText: true,
+              decoration: const InputDecoration(
+                labelText: 'Escribe tu contraseña para confirmar',
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancelar'),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(
+              backgroundColor: AppColors.danger,
+              minimumSize: const Size(0, 44),
+            ),
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Eliminar'),
+          ),
+        ],
+      ),
+    );
+    if (ok != true || password.text.isEmpty) return;
+    try {
+      await session.eliminarMiCuenta(password.text);
     } on RegistroException catch (e) {
       if (context.mounted) showAppSnackBar(context, e.message, isError: true);
     }

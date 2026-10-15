@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
@@ -167,6 +168,45 @@ class SessionController extends ChangeNotifier {
         'No se pudo completar el registro. Inténtalo de nuevo.',
       );
     }
+  }
+
+  /// Todos los datos personales de la cuenta, como texto JSON (derecho de
+  /// acceso y portabilidad).
+  Future<String> exportarMisDatos() async {
+    try {
+      final r = await FirebaseFunctions.instanceFor(
+        region: ClubConfig.regionFunciones,
+      ).httpsCallable('exportarMisDatos').call<Map<Object?, Object?>>();
+      return const JsonEncoder.withIndent('  ').convert(r.data);
+    } on FirebaseFunctionsException catch (e) {
+      throw RegistroException(e.message ?? 'No se pudieron preparar tus datos.');
+    }
+  }
+
+  /// Elimina la cuenta y sus datos personales (derecho de supresión). Pide la
+  /// contraseña de nuevo: es una acción que no se puede deshacer.
+  Future<void> eliminarMiCuenta(String password) async {
+    final user = _auth.currentUser;
+    final email = user?.email;
+    if (user == null || email == null) {
+      throw const RegistroException('No hay ninguna sesión activa.');
+    }
+    try {
+      await user.reauthenticateWithCredential(
+        EmailAuthProvider.credential(email: email, password: password),
+      );
+      await user.getIdToken(true);
+      await FirebaseFunctions.instanceFor(region: ClubConfig.regionFunciones)
+          .httpsCallable('eliminarMiCuenta')
+          .call<Map<String, dynamic>>();
+    } on FirebaseAuthException catch (e) {
+      throw RegistroException(mensajeAuth(e));
+    } on FirebaseFunctionsException catch (e) {
+      throw RegistroException(e.message ?? 'No se pudo eliminar la cuenta.');
+    }
+    try {
+      await _auth.signOut();
+    } catch (_) {}
   }
 
   String? _codigoPendiente;
