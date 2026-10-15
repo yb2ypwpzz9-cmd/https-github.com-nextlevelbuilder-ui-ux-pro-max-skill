@@ -17,6 +17,7 @@ typedef JsonDoc = DocumentReference<Json>;
 ///   asistencias/{id}          pase de lista: `{grupo}_{fecha}_{alumna}`
 ///   ausencias/{id}            faltas avisadas por la familia
 ///   pagos/{id}                cuotas: `{alumna}_{yyyy-MM}`
+///   gastos/{id}               gastos del club (sólo Dirección)
 ///   ajustes/club              cuentas bancarias del club
 ///   conversaciones/{id}       chat; mensajes en la subcolección `mensajes`
 abstract final class Refs {
@@ -37,6 +38,7 @@ abstract final class Refs {
   static JsonCollection get asistencias => db.collection('asistencias');
   static JsonCollection get ausencias => db.collection('ausencias');
   static JsonCollection get pagos => db.collection('pagos');
+  static JsonCollection get gastos => db.collection('gastos');
   static JsonCollection get conversaciones => db.collection('conversaciones');
 
   static JsonDoc user(String uid) => users.doc(uid);

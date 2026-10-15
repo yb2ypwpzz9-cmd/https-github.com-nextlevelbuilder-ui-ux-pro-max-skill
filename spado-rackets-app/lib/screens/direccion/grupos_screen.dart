@@ -134,7 +134,7 @@ class _FormGrupoState extends State<_FormGrupo> {
       duracionMinutos: _duracion,
       pista: _pista.text.trim(),
       cuotaMensual: double.tryParse(_cuota.text.replaceAll(',', '')) ?? 0,
-      moneda: Moneda.dop,
+      moneda: ClubConfig.monedaPorDefecto,
       activo: _activo,
     );
     try {
@@ -256,7 +256,7 @@ class _FormGrupoState extends State<_FormGrupo> {
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
                   labelText: 'Cuota mensual',
-                  prefixText: 'RD\$ ',
+                  prefixText: 'US\$ ',
                 ),
                 validator: (v) {
                   final n = double.tryParse((v ?? '').replaceAll(',', ''));

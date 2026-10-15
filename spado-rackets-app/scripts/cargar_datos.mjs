@@ -46,7 +46,7 @@ for (const g of datos.grupos ?? []) {
     duracionMinutos: g.duracionMinutos ?? 60,
     pista: g.pista ?? '',
     cuotaMensual: Number(g.cuotaMensual ?? 0),
-    moneda: (g.moneda ?? 'DOP').toUpperCase(),
+    moneda: (g.moneda ?? 'USD').toUpperCase(),
     activo: true,
   }, { merge: true });
 

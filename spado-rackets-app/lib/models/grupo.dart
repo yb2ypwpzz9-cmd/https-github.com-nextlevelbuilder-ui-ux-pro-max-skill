@@ -51,7 +51,7 @@ class Grupo {
       duracionMinutos: (data['duracionMinutos'] as num?)?.toInt() ?? 60,
       pista: (data['pista'] as String?) ?? '',
       cuotaMensual: (data['cuotaMensual'] as num?)?.toDouble() ?? 0,
-      moneda: Moneda.fromString(data['moneda'] as String?),
+      moneda: ClubConfig.monedaPorDefecto,
       activo: (data['activo'] as bool?) ?? true,
     );
   }

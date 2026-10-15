@@ -35,6 +35,7 @@ class MasScreen extends StatelessWidget {
           if (user.role.isDireccion) ...[
             const SectionHeader('Gestión del club'),
             const CardList(children: [
+              _Enlace(Icons.insights, 'Cuadro de mandos e informes', '/informes'),
               _Enlace(Icons.school_outlined, 'Alumnas y códigos', '/alumnas'),
               _Enlace(Icons.groups_outlined, 'Grupos, horarios y cuotas',
                   '/grupos'),

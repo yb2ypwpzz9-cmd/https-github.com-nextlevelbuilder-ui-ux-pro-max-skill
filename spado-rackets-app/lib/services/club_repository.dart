@@ -11,6 +11,7 @@ import '../models/alumna.dart';
 import '../models/app_user.dart';
 import '../models/asistencia.dart';
 import '../models/chat.dart';
+import '../models/gasto.dart';
 import '../models/grupo.dart';
 import '../models/jornada.dart';
 import '../models/pago.dart';
@@ -281,6 +282,39 @@ class ClubRepository {
       .snapshots()
       .map((s) => mapearDocs(s.docs, Pago.fromDoc));
 
+  /// Dirección: todas las cuotas desde un mes (`yyyy-MM`), para el cuadro de
+  /// mandos.
+  Stream<List<Pago>> watchPagosDesde(String periodo) => Refs.pagos
+      .where('periodo', isGreaterThanOrEqualTo: periodo)
+      .snapshots()
+      .map((s) => mapearDocs(s.docs, Pago.fromDoc));
+
+  // --------------------------------------------------------------- gastos
+
+  Stream<List<Gasto>> watchGastosDesde(String fecha) => Refs.gastos
+      .where('fecha', isGreaterThanOrEqualTo: fecha)
+      .snapshots()
+      .map((s) => mapearDocs(s.docs, Gasto.fromDoc)
+        ..sort((a, b) => b.fecha.compareTo(a.fecha)));
+
+  Future<void> registrarGasto({
+    required String concepto,
+    required CategoriaGasto categoria,
+    required double importe,
+    required String fecha,
+    required String porUid,
+  }) =>
+      Refs.gastos.add({
+        'concepto': concepto.trim(),
+        'categoria': categoria.name,
+        'importe': importe,
+        'fecha': fecha,
+        'creadoEn': FieldValue.serverTimestamp(),
+        'creadoPor': porUid,
+      });
+
+  Future<void> borrarGasto(String id) => Refs.gastos.doc(id).delete();
+
   /// Cuotas ya creadas de un mes (ids), para no duplicarlas.
   Future<Set<String>> idsDeCuotas(String periodo) => Refs.pagos
       .where('periodo', isEqualTo: periodo)
@@ -310,7 +344,7 @@ class ClubRepository {
         'periodo': periodo,
         'concepto': c.concepto,
         'importe': c.importe,
-        'moneda': 'DOP',
+        'moneda': ClubConfig.monedaPorDefecto.wire,
         'estado': EstadoPago.pendiente.wire,
         'creadoEn': FieldValue.serverTimestamp(),
       });
@@ -455,14 +489,17 @@ class ClubRepository {
     required AppUser autor,
     required String texto,
     EntradaDirectorio? directaCon,
+    bool conversacionExiste = true,
   }) async {
     final limpio = texto.trim();
     if (limpio.isEmpty) return;
     final batch = Refs.db.batch();
 
+    // `conversacionExiste` lo aporta la pantalla (ya escucha el documento):
+    // consultarlo aquí con un `get` obligaba a esperar al servidor antes de
+    // enviar y, con mala cobertura, el envío se quedaba "pensando".
     if (directaCon != null) {
-      final conv = await Refs.conversacion(conversacionId).get();
-      if (!conv.exists) {
+      if (!conversacionExiste) {
         final participantes = [autor.uid, directaCon.uid]..sort();
         batch.set(Refs.conversacion(conversacionId), {
           'tipo': TipoConversacion.directa.wire,

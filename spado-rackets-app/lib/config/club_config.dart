@@ -4,8 +4,9 @@ abstract final class ClubConfig {
   static const nombre = 'Spado Rackets';
   static const nombreCorto = 'Spado Rackets';
 
-  /// Las cuotas se cobran en pesos dominicanos.
-  static const monedaPorDefecto = Moneda.dop;
+  /// Las cuotas de Spado Rackets se fijan y se cobran en dólares: no deben
+  /// aparecer en pesos en ninguna pantalla.
+  static const monedaPorDefecto = Moneda.usd;
 
   /// Último día del mes para pagar la cuota (primeros 5 días del mes). Rackets
   /// no aplica recargo por mora: pasado el día 5 sólo se marca como vencida.

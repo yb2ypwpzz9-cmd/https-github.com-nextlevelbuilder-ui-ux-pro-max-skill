@@ -253,6 +253,30 @@ describe('chat', () => {
   });
 });
 
+describe('gastos', () => {
+  const gasto = (uid, extra = {}) => ({
+    concepto: 'Alquiler de pistas', categoria: 'pistas', importe: 15000,
+    fecha: '2026-10-01', creadoEn: serverTimestamp(), creadoPor: uid, ...extra,
+  });
+
+  test('sólo Dirección registra y lee gastos', async () => {
+    await assertSucceeds(setDoc(doc(como(DIR), 'gastos/g1'), gasto(DIR)));
+    await assertFails(setDoc(doc(como(FAM), 'gastos/g2'), gasto(FAM)));
+    await assertFails(setDoc(doc(como(STAFF), 'gastos/g3'), gasto(STAFF)));
+    await assertFails(getDoc(doc(como(FAM), 'gastos/g1')));
+    await assertFails(getDoc(doc(como(STAFF), 'gastos/g1')));
+    await assertSucceeds(getDoc(doc(como(DIR), 'gastos/g1')));
+  });
+
+  test('un gasto mal formado se rechaza', async () => {
+    const db = como(DIR);
+    await assertFails(setDoc(doc(db, 'gastos/m1'), gasto(DIR, { importe: -5 })));
+    await assertFails(setDoc(doc(db, 'gastos/m2'), gasto(DIR, { categoria: 'otra' })));
+    await assertFails(setDoc(doc(db, 'gastos/m3'), gasto(DIR, { fecha: 'ayer' })));
+    await assertFails(setDoc(doc(db, 'gastos/m4'), gasto(DIR, { extra: 'x' })));
+  });
+});
+
 describe('justificantes (Storage)', () => {
   const pdf = new Uint8Array([37, 80, 68, 70]);
 

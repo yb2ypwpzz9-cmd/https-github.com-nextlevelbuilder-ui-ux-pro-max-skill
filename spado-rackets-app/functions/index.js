@@ -393,7 +393,7 @@ export const avisarCuotaNueva = onDocumentCreated('pagos/{id}', async (event) =>
   const importe = Number(p.importe ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2 });
   await notificar([p.familiaUid], {
     title: 'Nueva cuota',
-    body: `${String(p.alumnaNombre ?? '').split(' ')[0]} · ${p.periodo}: RD$ ${importe}. Plazo: hasta el día 5.`,
+    body: `${String(p.alumnaNombre ?? '').split(' ')[0]} · ${p.periodo}: US$ ${importe}. Plazo: hasta el día 5.`,
     data: { tipo: 'cuota' },
   });
 });

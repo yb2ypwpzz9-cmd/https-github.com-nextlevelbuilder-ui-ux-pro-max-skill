@@ -109,7 +109,7 @@ class _FormularioState extends State<_Formulario> {
       children: [
         const InlineNotice(
           message: 'Las familias ven estas cuentas en su pestaña "Pagos", con '
-              'botón para copiar el número. Las cuotas se cobran en RD\$.',
+              'botón para copiar el número. Las cuotas se cobran en US\$.',
         ),
         for (var i = 0; i < _cuentas.length; i++) ...[
           SectionHeader(

@@ -12,8 +12,8 @@
       "horaInicio": "16:30",
       "duracionMinutos": 60,
       "pista": "Pista 1",
-      "cuotaMensual": 3500,
-      "moneda": "DOP",
+      "cuotaMensual": 80,
+      "moneda": "USD",
       "alumnas": [
         "Nombre Apellido",
         "Nombre Apellido"
@@ -30,8 +30,8 @@
       "horaInicio": "17:30",
       "duracionMinutos": 90,
       "pista": "Pista 2",
-      "cuotaMensual": 4500,
-      "moneda": "DOP",
+      "cuotaMensual": 100,
+      "moneda": "USD",
       "alumnas": [
         "Nombre Apellido"
       ]
@@ -44,7 +44,7 @@
       "tipo": "Cuenta de ahorro",
       "titular": "Alfonso José García Gama",
       "documento": "Pasaporte PAQ896638",
-      "moneda": "DOP"
+      "moneda": "USD"
     },
     {
       "banco": "Banreservas",

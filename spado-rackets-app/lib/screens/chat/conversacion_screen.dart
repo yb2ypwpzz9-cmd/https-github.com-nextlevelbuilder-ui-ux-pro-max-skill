@@ -19,7 +19,6 @@ class ConversacionScreen extends StatefulWidget {
 
 class _ConversacionScreenState extends State<ConversacionScreen> {
   final _texto = TextEditingController();
-  bool _enviando = false;
   EntradaDirectorio? _otro;
 
   late final ClubRepository _repo = context.read<ClubRepository>();
@@ -56,29 +55,31 @@ class _ConversacionScreenState extends State<ConversacionScreen> {
     super.dispose();
   }
 
-  Future<void> _enviar() async {
+  /// Envío optimista: el mensaje se pinta al instante desde la caché local y
+  /// el servidor lo confirma después. Esperar la confirmación dejaba el botón
+  /// girando mientras la red decidía.
+  void _enviar({required bool conversacionExiste}) {
     final texto = _texto.text.trim();
-    if (texto.isEmpty || _enviando) return;
-    setState(() => _enviando = true);
-    try {
-      await _repo.enviarMensaje(
-        conversacionId: widget.conversacionId,
-        autor: _yo,
-        texto: texto,
-        directaCon: _esDirecta ? _otro : null,
-      );
-      _texto.clear();
-    } catch (_) {
+    if (texto.isEmpty) return;
+    _texto.clear();
+    _repo
+        .enviarMensaje(
+      conversacionId: widget.conversacionId,
+      autor: _yo,
+      texto: texto,
+      directaCon: _esDirecta ? _otro : null,
+      conversacionExiste: conversacionExiste,
+    )
+        .catchError((Object _) {
       if (mounted) {
+        _texto.text = texto;
         showAppSnackBar(
           context,
           'No se pudo enviar. Revisa tu conexión.',
           isError: true,
         );
       }
-    } finally {
-      if (mounted) setState(() => _enviando = false);
-    }
+    });
   }
 
   Future<void> _opciones(Mensaje m) async {
@@ -185,10 +186,15 @@ class _ConversacionScreenState extends State<ConversacionScreen> {
               if (puedeEscribir)
                 _Compositor(
                   controller: _texto,
-                  enviando: _enviando,
-                  onEnviar: _enviar,
-                  // Una directa nueva necesita el directorio para crearse.
-                  listo: !_esDirecta || conv != null || _otro != null,
+                  enviando: false,
+                  onEnviar: () =>
+                      _enviar(conversacionExiste: conv != null || !_esDirecta),
+                  // Una directa nueva necesita saber si ya existe (el
+                  // documento ya ha llegado) y el directorio para crearse.
+                  listo: !_esDirecta ||
+                      conv != null ||
+                      (_otro != null &&
+                          snap.connectionState != ConnectionState.waiting),
                 )
               else
                 const SafeArea(

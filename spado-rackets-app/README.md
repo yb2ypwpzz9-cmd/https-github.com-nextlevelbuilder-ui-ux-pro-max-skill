@@ -4,7 +4,7 @@ Gestión de la escuela de raquetas: **fichaje del entrenador, asistencia, chat i
 
 | Perfil | Qué hace |
 |---|---|
-| **Dirección** | Panel (entrenadores que han fichado hoy, asistencia, justificantes por revisar, cuotas vencidas) · fichajes con mapa · asistencia por grupo · **generar los avisos de cuota** (una alumna, varias o todas) · **validar o rechazar el justificante** que sube cada familia · alumnas y códigos · grupos y cuota en RD$ · cuentas del equipo · datos bancarios · todos los chats |
+| **Dirección** | Panel (entrenadores que han fichado hoy, asistencia, justificantes por revisar, cuotas vencidas) · fichajes con mapa · asistencia por grupo · **generar los avisos de cuota** (una alumna, varias o todas) · **validar o rechazar el justificante** que sube cada familia · alumnas y códigos · grupos y cuota en US$ · cuentas del equipo · datos bancarios · todos los chats |
 | **Staff (entrenador)** | **Fichar llegada** (hora del servidor + ubicación, una vez al día) · pasar lista (P / F / J) de sus grupos · chat |
 | **Familias** | Su hija, asistencia y %, avisar de una falta · su cuota y su importe (solo ven la suya) · cuentas bancarias con botón de copiar · adjuntar el justificante de pago · chat con el entrenador o con Dirección |
 
@@ -14,7 +14,7 @@ Gestión de la escuela de raquetas: **fichaje del entrenador, asistencia, chat i
 2. La familia **transfiere** a una de las cuentas del club (Banco Popular en RD$ o Banreservas en US$) **dentro de los 5 primeros días del mes** y **sube el justificante**.
 3. Dirección **valida** el justificante (la cuota pasa a *Pagada*) o lo **rechaza** con un motivo que ve la familia.
 
-No hay pago con tarjeta, ni recargos por mora, ni se envía ningún recibo: solo se valida el justificante que sube la familia. Las cuotas se cobran en RD$. Pasado el día 5, una cuota sin pagar se marca *Vencida* (solo es un aviso visual).
+No hay pago con tarjeta, ni recargos por mora, ni se envía ningún recibo: solo se valida el justificante que sube la familia. Las cuotas se cobran en US$. Pasado el día 5, una cuota sin pagar se marca *Vencida* (solo es un aviso visual).
 
 ## Asistencia
 

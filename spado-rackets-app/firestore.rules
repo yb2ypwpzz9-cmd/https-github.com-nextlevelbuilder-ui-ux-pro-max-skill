@@ -279,6 +279,32 @@ service cloud.firestore {
         && textoOpcional(d, 'motivoRechazo', 300);
     }
 
+    // Gastos del club (alquiler de pistas, material, nóminas…): sólo
+    // Dirección los ve y los gestiona. Alimentan el balance del cuadro de
+    // mandos.
+    function gastoValido(d) {
+      return d.keys().hasOnly(
+          ['concepto', 'categoria', 'importe', 'fecha', 'creadoEn', 'creadoPor'])
+        && d.get('concepto', '') is string
+        && d.get('concepto', '').size() > 0
+        && d.get('concepto', '').size() <= 120
+        && d.get('categoria', '') in
+             ['pistas', 'material', 'personal', 'marketing', 'otros']
+        && d.get('importe', -1) is number
+        && d.get('importe', -1) > 0
+        && d.get('importe', -1) <= 100000000
+        && d.get('fecha', '') is string
+        && d.get('fecha', '').matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$')
+        && d.get('creadoEn', null) == request.time
+        && d.get('creadoPor', '') == request.auth.uid;
+    }
+
+    match /gastos/{gastoId} {
+      allow read: if isDireccion();
+      allow create: if isDireccion() && gastoValido(request.resource.data);
+      allow delete: if isDireccion();
+    }
+
     match /pagos/{pagoId} {
       allow read: if isSignedIn() && (
         resource == null

@@ -12,6 +12,7 @@ import '../screens/direccion/datos_bancarios_screen.dart';
 import '../screens/direccion/equipo_screen.dart';
 import '../screens/direccion/nueva_cuota_screen.dart';
 import '../screens/direccion/grupos_screen.dart';
+import '../screens/direccion/informes_screen.dart';
 import '../screens/shared/documentos_screen.dart';
 import '../screens/staff/pasar_lista_screen.dart';
 import '../models/pago.dart';
@@ -69,6 +70,7 @@ GoRouter buildRouter(SessionController session) {
           periodo: s.uri.queryParameters['periodo'] ?? periodoDe(DateTime.now()),
         ),
       ),
+      GoRoute(path: '/informes', builder: (_, __) => const InformesScreen()),
       GoRoute(path: '/alumnas', builder: (_, __) => const AlumnasScreen()),
       GoRoute(path: '/grupos', builder: (_, __) => const GruposScreen()),
       GoRoute(path: '/equipo', builder: (_, __) => const EquipoScreen()),

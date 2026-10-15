@@ -92,7 +92,8 @@ class Pago {
       familiaUid: (data['familiaUid'] as String?) ?? '',
       periodo: (data['periodo'] as String?) ?? '',
       importe: (data['importe'] as num?)?.toDouble() ?? 0,
-      moneda: Moneda.fromString(data['moneda'] as String?),
+      // Las cuotas son siempre en dólares, aunque un documento antiguo diga otra cosa.
+      moneda: ClubConfig.monedaPorDefecto,
       estado: EstadoPago.fromString(data['estado'] as String?),
       concepto: (data['concepto'] as String?) ?? 'Cuota mensual',
       comprobantePath: data['comprobantePath'] as String?,
@@ -155,7 +156,7 @@ String etiquetaPeriodo(String periodo) {
 String periodoDe(DateTime fecha) =>
     '${fecha.year}-${fecha.month.toString().padLeft(2, '0')}';
 
-/// `RD$ 3,500.00` — formato dominicano: coma de miles, punto decimal.
+/// `US$ 150.00` — coma de miles, punto decimal.
 String formatoImporte(double importe, Moneda moneda) {
   final f = NumberFormat('#,##0.00', 'en_US');
   return '${moneda.simbolo} ${f.format(importe)}';

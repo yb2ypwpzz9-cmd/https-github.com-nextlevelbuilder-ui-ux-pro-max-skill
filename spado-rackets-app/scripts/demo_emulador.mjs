@@ -50,9 +50,9 @@ const hoy = new Date();
 
 // Grupos
 const grupos = [
-  { id: 'tenis-ini', nombre: 'Tenis Iniciación', deporte: 'Tenis', dias: [1, 3, 5], horaInicio: '16:30', duracionMinutos: 60, pista: 'Pista 1', cuotaMensual: 3500, moneda: 'DOP', activo: true },
-  { id: 'tenis-comp', nombre: 'Tenis Competición', deporte: 'Tenis', dias: [2, 4], horaInicio: '17:30', duracionMinutos: 90, pista: 'Pista central', cuotaMensual: 5000, moneda: 'DOP', activo: true },
-  { id: 'padel', nombre: 'Pádel Juvenil', deporte: 'Pádel', dias: [1, 2, 3, 4, 5, 6], horaInicio: '18:00', duracionMinutos: 60, pista: 'Pista de pádel', cuotaMensual: 4000, moneda: 'DOP', activo: true },
+  { id: 'tenis-ini', nombre: 'Tenis Iniciación', deporte: 'Tenis', dias: [1, 3, 5], horaInicio: '16:30', duracionMinutos: 60, pista: 'Pista 1', cuotaMensual: 3500, moneda: 'USD', activo: true },
+  { id: 'tenis-comp', nombre: 'Tenis Competición', deporte: 'Tenis', dias: [2, 4], horaInicio: '17:30', duracionMinutos: 90, pista: 'Pista central', cuotaMensual: 5000, moneda: 'USD', activo: true },
+  { id: 'padel', nombre: 'Pádel Juvenil', deporte: 'Pádel', dias: [1, 2, 3, 4, 5, 6], horaInicio: '18:00', duracionMinutos: 60, pista: 'Pista de pádel', cuotaMensual: 4000, moneda: 'USD', activo: true },
 ];
 for (const { id, ...g } of grupos) await db.doc(`grupos/${id}`).set(g);
 

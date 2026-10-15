@@ -221,7 +221,7 @@ class _NuevaCuotaScreenState extends State<NuevaCuotaScreen> {
                                     keyboardType: TextInputType.number,
                                     decoration: const InputDecoration(
                                       labelText: 'Importe',
-                                      prefixText: 'RD\$ ',
+                                      prefixText: 'US\$ ',
                                     ),
                                   ),
                                 ),
