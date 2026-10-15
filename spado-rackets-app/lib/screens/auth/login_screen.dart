@@ -7,6 +7,7 @@ import '../../services/auth_service.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/club_logo.dart';
 import '../../widgets/common.dart';
+import '../../widgets/instalar_app.dart';
 
 /// Marco de las pantallas de acceso: logo blanco sobre azul y formulario en
 /// una tarjeta.
@@ -57,6 +58,11 @@ class AuthFrame extends StatelessWidget {
                         Wrap(
                           alignment: WrapAlignment.center,
                           children: [
+                            TextButton.icon(
+                              onPressed: () => mostrarInstalarApp(context),
+                              icon: const Icon(Icons.install_mobile, size: 18),
+                              label: const Text('Instalar en el móvil'),
+                            ),
                             TextButton(
                               onPressed: () => context.push('/privacidad'),
                               child: const Text('Política de privacidad'),

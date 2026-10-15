@@ -7,6 +7,7 @@ import '../../services/push_service.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/club_logo.dart';
 import '../../widgets/common.dart';
+import '../../widgets/instalar_app.dart';
 import '../app_shell.dart';
 
 /// Perfil, ajustes y accesos de gestión.
@@ -85,7 +86,7 @@ class MasScreen extends StatelessWidget {
               leading: const Icon(Icons.install_mobile, color: AppColors.navy),
               title: const Text('Instalar en el móvil'),
               subtitle: const Text('Cómo tener la app como un icono más'),
-              onTap: () => _instalar(context),
+              onTap: () => mostrarInstalarApp(context),
             ),
             ListTile(
               leading: const Icon(Icons.privacy_tip_outlined, color: AppColors.navy),
@@ -217,37 +218,6 @@ class MasScreen extends StatelessWidget {
     } on RegistroException catch (e) {
       if (context.mounted) showAppSnackBar(context, e.message, isError: true);
     }
-  }
-
-  void _instalar(BuildContext context) {
-    showModalBottomSheet<void>(
-      context: context,
-      builder: (context) => const Padding(
-        padding: EdgeInsets.fromLTRB(20, 0, 20, 28),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Instalar Spado Rackets',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-            ),
-            SizedBox(height: 14),
-            Text('iPhone (Safari): botón Compartir → "Añadir a pantalla de '
-                'inicio".'),
-            SizedBox(height: 8),
-            Text('Android (Chrome): menú ⋮ → "Instalar aplicación" o "Añadir '
-                'a pantalla de inicio".'),
-            SizedBox(height: 14),
-            Text(
-              'Se abre a pantalla completa, como una app, y siempre está '
-              'actualizada.',
-              style: TextStyle(color: AppColors.textSecondary),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 }
 
