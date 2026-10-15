@@ -25,6 +25,7 @@ class _RegistroScreenState extends State<RegistroScreen> {
   final _codigo = TextEditingController();
   bool _cargando = false;
   bool _acepta = false;
+  bool _tutor = false;
   String? _error;
 
   @override
@@ -37,6 +38,11 @@ class _RegistroScreenState extends State<RegistroScreen> {
 
   Future<void> _registrar() async {
     if (!_form.currentState!.validate()) return;
+    if (!_tutor) {
+      setState(() => _error = 'Para crear la cuenta tienes que confirmar que '
+          'eres madre, padre o tutor legal de la alumna.');
+      return;
+    }
     if (!_acepta) {
       setState(() => _error =
           'Para crear la cuenta tienes que aceptar la política de privacidad.');
@@ -132,6 +138,18 @@ class _RegistroScreenState extends State<RegistroScreen> {
                   : null,
             ),
             const SizedBox(height: AppSpacing.md),
+            CheckboxListTile(
+              contentPadding: EdgeInsets.zero,
+              controlAffinity: ListTileControlAffinity.leading,
+              value: _tutor,
+              onChanged: (v) => setState(() => _tutor = v ?? false),
+              title: Text(
+                'Soy la madre, el padre o el tutor legal de la alumna y '
+                'autorizo que el club trate sus datos para gestionar su '
+                'actividad.',
+                style: t.bodySmall,
+              ),
+            ),
             CheckboxListTile(
               contentPadding: EdgeInsets.zero,
               controlAffinity: ListTileControlAffinity.leading,

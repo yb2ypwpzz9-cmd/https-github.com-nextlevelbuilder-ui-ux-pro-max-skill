@@ -105,7 +105,7 @@ service cloud.firestore {
         && request.resource.data.get('grupos', []).size() == 0
         && request.resource.data.keys().hasOnly(
              ['uid', 'email', 'role', 'grupos', 'displayName', 'phone', 'createdAt',
-              'consentimientoEn', 'consentimientoVersion'])
+              'consentimientoEn', 'consentimientoVersion', 'consentimientoMenores'])
         && textoOpcional(request.resource.data, 'displayName', 80)
         && textoOpcional(request.resource.data, 'phone', 30);
 

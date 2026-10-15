@@ -145,6 +145,8 @@ class SessionController extends ChangeNotifier {
         // Constancia del consentimiento: cuándo y con qué versión del texto.
         'consentimientoEn': FieldValue.serverTimestamp(),
         'consentimientoVersion': TextosLegales.version,
+        // Declaración de que es madre, padre o tutor legal de las alumnas.
+        'consentimientoMenores': true,
       });
       await vincular(codigoLimpio);
     } catch (error) {
