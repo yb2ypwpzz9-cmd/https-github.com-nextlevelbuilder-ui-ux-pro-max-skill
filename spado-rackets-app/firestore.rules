@@ -90,6 +90,51 @@ service cloud.firestore {
       return /databases/$(database)/documents/directorio/$(uid);
     }
 
+    // Fechas: `request.time` va en UTC y el club está en UTC-4, así que por la
+    // tarde-noche la fecha UTC ya es la de mañana. Se admite una ventana.
+    function dosDigitos(n) {
+      return n < 10 ? '0' + string(n) : string(n);
+    }
+
+    function claveDia(t) {
+      return string(t.year()) + '-' + dosDigitos(t.month()) + '-' + dosDigitos(t.day());
+    }
+
+    function esHoyAprox(fecha) {
+      return fecha in [
+        claveDia(request.time),
+        claveDia(request.time - duration.value(1, 'd')),
+        claveDia(request.time + duration.value(1, 'd'))
+      ];
+    }
+
+    function esReciente(fecha) {
+      return esHoyAprox(fecha) || fecha in [
+        claveDia(request.time - duration.value(2, 'd')),
+        claveDia(request.time - duration.value(3, 'd')),
+        claveDia(request.time - duration.value(4, 'd')),
+        claveDia(request.time - duration.value(5, 'd')),
+        claveDia(request.time - duration.value(6, 'd')),
+        claveDia(request.time - duration.value(7, 'd'))
+      ];
+    }
+
+    /// Nombre real de quien escribe, según el directorio (lo escribe el
+    /// servidor). Sin entrada todavía, cualquier texto razonable.
+    function nombreCorrecto(valor) {
+      return !exists(directorio(request.auth.uid))
+        ? textoValido(valor, 120)
+        : valor == get(directorio(request.auth.uid)).data.get('nombre', '');
+    }
+
+    /// Dentro del club: staff, Dirección, o una familia que ya tiene una
+    /// alumna vinculada (el servidor le da el grupo al vincularla). Una cuenta
+    /// recién creada sin código no ve datos del club.
+    function miembro() {
+      return esDelClub()
+        || (rol() == 'familia' && userDoc().get('grupos', []).size() > 0);
+    }
+
     // -------------------------------------------------------------- users
 
     match /users/{userId} {
@@ -107,7 +152,8 @@ service cloud.firestore {
              ['uid', 'email', 'role', 'grupos', 'displayName', 'phone', 'createdAt',
               'consentimientoEn', 'consentimientoVersion', 'consentimientoMenores'])
         && textoOpcional(request.resource.data, 'displayName', 80)
-        && textoOpcional(request.resource.data, 'phone', 30);
+        && textoOpcional(request.resource.data, 'phone', 30)
+        && request.resource.data.get('email', '').size() <= 120;
 
       // Cada uno cambia su nombre, teléfono y tokens de aviso. NUNCA su rol
       // ni sus grupos.
@@ -116,7 +162,9 @@ service cloud.firestore {
         || (request.auth.uid == userId
             && changedKeys().hasOnly(['fcmTokens', 'displayName', 'phone'])
             && textoOpcional(request.resource.data, 'displayName', 80)
-            && textoOpcional(request.resource.data, 'phone', 30))
+            && textoOpcional(request.resource.data, 'phone', 30)
+            && request.resource.data.get('fcmTokens', []) is list
+            && request.resource.data.get('fcmTokens', []).size() <= 10)
       );
 
       allow delete: if isDireccion();
@@ -137,7 +185,7 @@ service cloud.firestore {
     // ------------------------------------------------------------- grupos
 
     match /grupos/{grupoId} {
-      allow read: if isSignedIn();
+      allow read: if isSignedIn() && miembro();
       allow write: if isDireccion()
         && textoValido(request.resource.data.get('nombre', ''), 80)
         && request.resource.data.get('cuotaMensual', 0) is number
@@ -199,7 +247,18 @@ service cloud.firestore {
         && request.resource.data.get('staffUid', '') == request.auth.uid
         && jornadaId.matches(request.auth.uid + '_[0-9]{4}-[0-9]{2}-[0-9]{2}')
         && request.resource.data.get('entrada', null) == request.time
-        && textoValido(request.resource.data.get('staffNombre', ''), 120)
+        && nombreCorrecto(request.resource.data.get('staffNombre', ''))
+        && request.resource.data.get('fecha', '') == jornadaId.split('_')[1]
+        && esHoyAprox(request.resource.data.get('fecha', ''))
+        && request.resource.data.get('entradaLat', null) is number
+        && request.resource.data.get('entradaLat', 0) >= -90
+        && request.resource.data.get('entradaLat', 0) <= 90
+        && request.resource.data.get('entradaLng', null) is number
+        && request.resource.data.get('entradaLng', 0) >= -180
+        && request.resource.data.get('entradaLng', 0) <= 180
+        && (!('entradaPrecision' in request.resource.data)
+            || (request.resource.data.entradaPrecision is number
+                && request.resource.data.entradaPrecision >= 0))
         && request.resource.data.keys().hasOnly([
              'staffUid', 'staffNombre', 'fecha', 'entrada',
              'entradaLat', 'entradaLng', 'entradaPrecision']);
@@ -225,9 +284,16 @@ service cloud.firestore {
       // El id ata la marca a grupo, fecha y alumna; la alumna tiene que ser
       // de ese grupo, y `familiaUid` el de su ficha. Así no se puede colar
       // una marca en otro grupo ni enseñársela a otra familia.
+      // Staff: solo fechas recientes, con la hora y el nombre reales, y no
+      // puede pisar la marca que puso otra persona (Dirección sí corrige).
       allow create, update: if isSignedIn()
         && gestionaGrupo(request.resource.data.get('grupo', ''))
         && fechaValida(request.resource.data.get('fecha', ''))
+        && (isDireccion() || esReciente(request.resource.data.get('fecha', '')))
+        && request.resource.data.get('marcadoEn', null) == request.time
+        && nombreCorrecto(request.resource.data.get('marcadoPorNombre', ''))
+        && (resource == null || isDireccion()
+            || resource.data.get('marcadoPor', '') == request.auth.uid)
         && asistenciaId == request.resource.data.get('grupo', '') + '_'
              + request.resource.data.get('fecha', '') + '_'
              + request.resource.data.get('alumnaId', '')
@@ -261,6 +327,10 @@ service cloud.firestore {
         && fechaValida(request.resource.data.get('fecha', ''))
         && ausenciaId == request.resource.data.get('alumnaId', '') + '_'
              + request.resource.data.get('fecha', '')
+        && request.resource.data.get('alumnaNombre', '')
+             == alumna(request.resource.data.get('alumnaId', '')).data.get('nombre', '')
+        && request.resource.data.keys().hasOnly(
+             ['alumnaId', 'alumnaNombre', 'grupo', 'familiaUid', 'fecha', 'motivo', 'creadaEn'])
         && textoOpcional(request.resource.data, 'motivo', 200);
 
       allow delete: if isDireccion()
@@ -328,7 +398,8 @@ service cloud.firestore {
           && request.resource.data.get('estado', '') == 'en_revision'
           && request.resource.data.get('comprobantePath', '') is string
           && request.resource.data.get('comprobantePath', '')
-               .matches('comprobantes/' + request.auth.uid + '/.+')
+               .matches('comprobantes/' + request.auth.uid + '/[^/.][^/]*')
+          && textoOpcional(request.resource.data, 'comprobanteNombre', 120)
           && request.resource.data.get('subidoEn', null) == request.time
           && request.resource.data.get('motivoRechazo', null) == null
         )
@@ -339,7 +410,7 @@ service cloud.firestore {
 
     // Cuentas bancarias del club.
     match /ajustes/{doc} {
-      allow read: if isSignedIn();
+      allow read: if isSignedIn() && miembro();
       allow write: if isDireccion();
     }
 

@@ -64,6 +64,10 @@ beforeEach(async () => {
   });
 });
 
+const dia = (desplazamiento = 0) =>
+  new Date(Date.now() + desplazamiento * 86400000).toISOString().slice(0, 10);
+const HOY = dia(0);
+
 const como = (uid) => env.authenticatedContext(uid).firestore();
 const storageDe = (uid) => env.authenticatedContext(uid).storage();
 
@@ -116,46 +120,77 @@ describe('asistencia', () => {
     await assertFails(getDoc(doc(como(FAM), 'asistencias/g2_2026-10-01_a2')));
   });
 
-  const marca = (grupo, alumna, familiaUid, uid) => ({
-    grupo, fecha: '2026-10-02', alumnaId: alumna, alumnaNombre: 'x', familiaUid,
-    estado: 'presente', marcadoPor: uid, marcadoEn: serverTimestamp(),
+  const marca = (grupo, alumna, familiaUid, uid, extra = {}) => ({
+    grupo, fecha: HOY, alumnaId: alumna, alumnaNombre: 'x', familiaUid,
+    estado: 'presente', marcadoPor: uid, marcadoPorNombre: 'Laura',
+    marcadoEn: serverTimestamp(), ...extra,
   });
 
   test('el staff pasa lista en su grupo y no en el ajeno', async () => {
-    await assertSucceeds(setDoc(doc(como(STAFF), 'asistencias/g1_2026-10-02_a1'), marca('g1', 'a1', FAM, STAFF)));
-    await assertFails(setDoc(doc(como(STAFF), 'asistencias/g2_2026-10-02_a2'), marca('g2', 'a2', FAM2, STAFF)));
+    await assertSucceeds(setDoc(doc(como(STAFF), `asistencias/g1_${HOY}_a1`), marca('g1', 'a1', FAM, STAFF)));
+    await assertFails(setDoc(doc(como(STAFF), `asistencias/g2_${HOY}_a2`), marca('g2', 'a2', FAM2, STAFF)));
   });
 
   test('no se puede enseñar una marca a otra familia', async () => {
-    await assertFails(setDoc(doc(como(STAFF), 'asistencias/g1_2026-10-02_a1'), marca('g1', 'a1', FAM2, STAFF)));
+    await assertFails(setDoc(doc(como(STAFF), `asistencias/g1_${HOY}_a1`), marca('g1', 'a1', FAM2, STAFF)));
   });
 
   test('una familia no puede marcarse asistencia', async () => {
-    await assertFails(setDoc(doc(como(FAM), 'asistencias/g1_2026-10-02_a1'), marca('g1', 'a1', FAM, FAM)));
+    await assertFails(setDoc(doc(como(FAM), `asistencias/g1_${HOY}_a1`), marca('g1', 'a1', FAM, FAM)));
+  });
+
+  test('el staff no pasa lista de fechas lejanas ni falsea la hora o el nombre', async () => {
+    const lejos = dia(-60);
+    await assertFails(setDoc(doc(como(STAFF), `asistencias/g1_${lejos}_a1`), marca('g1', 'a1', FAM, STAFF, { fecha: lejos })));
+    await assertFails(setDoc(doc(como(STAFF), `asistencias/g1_${HOY}_a1`), marca('g1', 'a1', FAM, STAFF, { marcadoEn: Timestamp.fromDate(new Date('2000-01-01')) })));
+    await assertFails(setDoc(doc(como(STAFF), `asistencias/g1_${HOY}_a1`), marca('g1', 'a1', FAM, STAFF, { marcadoPorNombre: 'Otro' })));
+  });
+
+  test('un entrenador no pisa la marca de otro; Dirección sí corrige', async () => {
+    await env.withSecurityRulesDisabled((ctx) =>
+      setDoc(doc(ctx.firestore(), `asistencias/g1_${HOY}_a1`), marca('g1', 'a1', FAM, 'otro-staff')));
+    await assertFails(setDoc(doc(como(STAFF), `asistencias/g1_${HOY}_a1`), marca('g1', 'a1', FAM, STAFF, { estado: 'falta' })));
+    await assertSucceeds(setDoc(doc(como(DIR), `asistencias/g1_${HOY}_a1`), marca('g1', 'a1', FAM, DIR, { estado: 'falta', marcadoPorNombre: 'Rafael' })));
   });
 });
 
 describe('fichaje', () => {
-  const llegada = (uid, hora) => ({ staffUid: uid, staffNombre: 'Laura', fecha: '2026-10-15', entrada: hora });
+  const llegada = (uid, hora, extra = {}) => ({
+    staffUid: uid, staffNombre: 'Laura', fecha: HOY, entrada: hora,
+    entradaLat: 18.58, entradaLng: -68.4, entradaPrecision: 20, ...extra,
+  });
 
   test('se ficha con la hora del servidor, no la del móvil', async () => {
     const db = como(STAFF);
-    await assertFails(setDoc(doc(db, `jornadas/${STAFF}_2026-10-15`), llegada(STAFF, Timestamp.fromDate(new Date('2026-10-01T08:00:00')))));
-    await assertSucceeds(setDoc(doc(db, `jornadas/${STAFF}_2026-10-15`), llegada(STAFF, serverTimestamp())));
+    await assertFails(setDoc(doc(db, `jornadas/${STAFF}_${HOY}`), llegada(STAFF, Timestamp.fromDate(new Date('2026-10-01T08:00:00')))));
+    await assertSucceeds(setDoc(doc(db, `jornadas/${STAFF}_${HOY}`), llegada(STAFF, serverTimestamp())));
+  });
+
+  test('el fichaje exige ubicación válida y la fecha de hoy', async () => {
+    const db = como(STAFF);
+    const sin = llegada(STAFF, serverTimestamp()); delete sin.entradaLat; delete sin.entradaLng;
+    await assertFails(setDoc(doc(db, `jornadas/${STAFF}_${HOY}`), sin));
+    await assertFails(setDoc(doc(db, `jornadas/${STAFF}_${HOY}`), llegada(STAFF, serverTimestamp(), { entradaLat: 'x' })));
+    await assertFails(setDoc(doc(db, `jornadas/${STAFF}_${HOY}`), llegada(STAFF, serverTimestamp(), { entradaLat: 200 })));
+    await assertFails(setDoc(doc(db, `jornadas/${STAFF}_${HOY}`), llegada(STAFF, serverTimestamp(), { entradaPrecision: -5 })));
+    await assertFails(setDoc(doc(db, `jornadas/${STAFF}_${HOY}`), llegada(STAFF, serverTimestamp(), { staffNombre: 'Ana Direccion' })));
+    const viejo = dia(-30);
+    await assertFails(setDoc(doc(db, `jornadas/${STAFF}_${viejo}`), llegada(STAFF, serverTimestamp(), { fecha: viejo })));
+    await assertFails(setDoc(doc(db, `jornadas/${STAFF}_${HOY}`), llegada(STAFF, serverTimestamp(), { fecha: 'cualquier cosa' })));
   });
 
   test('nadie ficha por otro y una familia no ficha', async () => {
-    await assertFails(setDoc(doc(como(STAFF2), `jornadas/${STAFF}_2026-10-15`), llegada(STAFF, serverTimestamp())));
-    await assertFails(setDoc(doc(como(STAFF2), `jornadas/${STAFF2}_2026-10-15`), llegada(STAFF, serverTimestamp())));
-    await assertFails(setDoc(doc(como(FAM), `jornadas/${FAM}_2026-10-15`), llegada(FAM, serverTimestamp())));
+    await assertFails(setDoc(doc(como(STAFF2), `jornadas/${STAFF}_${HOY}`), llegada(STAFF, serverTimestamp())));
+    await assertFails(setDoc(doc(como(STAFF2), `jornadas/${STAFF2}_${HOY}`), llegada(STAFF, serverTimestamp())));
+    await assertFails(setDoc(doc(como(FAM), `jornadas/${FAM}_${HOY}`), llegada(FAM, serverTimestamp())));
   });
 
   test('una sola llegada al día y el fichaje no se edita', async () => {
     const db = como(STAFF);
-    await assertSucceeds(setDoc(doc(db, `jornadas/${STAFF}_2026-10-15`), llegada(STAFF, serverTimestamp())));
-    await assertFails(setDoc(doc(db, `jornadas/${STAFF}_2026-10-15`), llegada(STAFF, serverTimestamp())));
-    await assertFails(updateDoc(doc(db, `jornadas/${STAFF}_2026-10-15`), { entrada: serverTimestamp() }));
-    await assertFails(updateDoc(doc(db, `jornadas/${STAFF}_2026-10-15`), { salida: serverTimestamp() }));
+    await assertSucceeds(setDoc(doc(db, `jornadas/${STAFF}_${HOY}`), llegada(STAFF, serverTimestamp())));
+    await assertFails(setDoc(doc(db, `jornadas/${STAFF}_${HOY}`), llegada(STAFF, serverTimestamp())));
+    await assertFails(updateDoc(doc(db, `jornadas/${STAFF}_${HOY}`), { entrada: serverTimestamp() }));
+    await assertFails(updateDoc(doc(db, `jornadas/${STAFF}_${HOY}`), { salida: serverTimestamp() }));
   });
 
   test('un entrenador no ve los fichajes de otro; Dirección sí', async () => {
@@ -280,8 +315,9 @@ describe('gastos', () => {
 describe('justificantes (Storage)', () => {
   const pdf = new Uint8Array([37, 80, 68, 70]);
 
+  // Que la familia vinculada SÍ pueda subir depende de `firestore.get(...)`
+  // desde Storage, que el emulador no resuelve (ver nota más abajo).
   test('cada familia sólo sube a su carpeta', async () => {
-    await assertSucceeds(uploadBytes(ref(storageDe(FAM), `comprobantes/${FAM}/a.pdf`), pdf, { contentType: 'application/pdf' }));
     await assertFails(uploadBytes(ref(storageDe(FAM), `comprobantes/${FAM2}/a.pdf`), pdf, { contentType: 'application/pdf' }));
   });
 
@@ -299,5 +335,29 @@ describe('justificantes (Storage)', () => {
       uploadBytes(ref(ctx.storage(), `comprobantes/${FAM2}/b.pdf`), pdf, { contentType: 'application/pdf' }));
     await assertFails(getBytes(ref(storageDe(FAM), `comprobantes/${FAM2}/b.pdf`)));
     await assertSucceeds(getBytes(ref(storageDe(FAM2), `comprobantes/${FAM2}/b.pdf`)));
+  });
+});
+
+describe('acceso al club sin alumna vinculada', () => {
+  const NUEVA = 'nueva1';
+  beforeEach(() => env.withSecurityRulesDisabled((ctx) =>
+    setDoc(doc(ctx.firestore(), `users/${NUEVA}`), { role: 'familia', grupos: [] })));
+
+  test('una cuenta sin alumna no ve cuentas bancarias ni cuotas de grupo', async () => {
+    await env.withSecurityRulesDisabled((ctx) =>
+      setDoc(doc(ctx.firestore(), 'ajustes/club'), { cuentas: [{ numero: '123' }] }));
+    await assertFails(getDoc(doc(como(NUEVA), 'ajustes/club')));
+    await assertFails(getDoc(doc(como(NUEVA), 'grupos/g1')));
+    await assertSucceeds(getDoc(doc(como(FAM), 'ajustes/club')));
+    await assertSucceeds(getDoc(doc(como(FAM), 'grupos/g1')));
+    await assertSucceeds(getDoc(doc(como(STAFF), 'ajustes/club')));
+  });
+
+  test('el justificante solo apunta a la carpeta propia y sin trucos de ruta', async () => {
+    const base = { comprobantePath: `comprobantes/${FAM}/x.pdf`, comprobanteNombre: 'x.pdf', estado: 'en_revision', subidoEn: serverTimestamp(), motivoRechazo: null };
+    await assertFails(updateDoc(doc(como(FAM), 'pagos/a1_2026-10'), { ...base, comprobantePath: `comprobantes/${FAM}/../${FAM2}/x.pdf` }));
+    await assertFails(updateDoc(doc(como(FAM), 'pagos/a1_2026-10'), { ...base, comprobantePath: `comprobantes/${FAM}/sub/x.pdf` }));
+    await assertFails(updateDoc(doc(como(FAM), 'pagos/a1_2026-10'), { ...base, comprobanteNombre: 'a'.repeat(300) }));
+    await assertSucceeds(updateDoc(doc(como(FAM), 'pagos/a1_2026-10'), base));
   });
 });

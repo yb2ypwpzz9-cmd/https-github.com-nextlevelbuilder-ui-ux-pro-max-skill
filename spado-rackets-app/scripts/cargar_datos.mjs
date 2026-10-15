@@ -32,7 +32,7 @@ const db = getFirestore();
 
 const datos = JSON.parse(readFileSync(archivo, 'utf8'));
 const letras = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
-const nuevoCodigo = () => Array.from({ length: 6 }, () => letras[randomInt(letras.length)]).join('');
+const nuevoCodigo = () => Array.from({ length: 8 }, () => letras[randomInt(letras.length)]).join('');
 
 const filas = [['alumna', 'grupo', 'codigo', 'email_familia']];
 

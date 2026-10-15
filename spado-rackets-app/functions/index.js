@@ -137,62 +137,118 @@ export const vincularAlumna = onCall(async (req) => {
   const uid = req.auth?.uid;
   if (!uid) throw new HttpsError('unauthenticated', 'Inicia sesión para vincular.');
 
+  // Sin correo verificado, cualquiera podría registrarse con el email de otra
+  // familia (o con uno inventado) y probar códigos.
+  if (req.auth?.token?.email_verified !== true) {
+    throw new HttpsError(
+      'failed-precondition',
+      'Verifica tu correo (te hemos enviado un enlace) antes de vincular a la alumna.',
+    );
+  }
+
   const codigo = String(req.data?.codigo ?? '').trim().toUpperCase();
   if (!codigo || codigo.length > 20) {
     throw new HttpsError('invalid-argument', 'Escribe el código que te dio el club.');
   }
 
+  // Tope de fallos: por cuenta y para todo el club. Con decenas de familias,
+  // pasar de aquí es un ataque, no un despiste.
+  const claveUsuario = `vincular_${uid}`;
+  const [porUsuario, global] = await Promise.all([
+    fallosRecientes(claveUsuario),
+    fallosRecientes('vincular_global'),
+  ]);
+  if (porUsuario >= MAX_FALLOS_USUARIO || global >= MAX_FALLOS_GLOBAL) {
+    logger.warn(`Vinculación bloqueada por exceso de fallos (uid ${uid})`);
+    throw new HttpsError(
+      'resource-exhausted',
+      'Demasiados intentos. Espera una hora o contacta con el club.',
+    );
+  }
+
   const usuario = await db.doc(`users/${uid}`).get();
-  if (usuario.exists && usuario.get('role') !== 'familia') {
+  if (!usuario.exists) {
+    throw new HttpsError('failed-precondition', 'Termina primero de crear tu cuenta.');
+  }
+  if (usuario.get('role') !== 'familia') {
     throw new HttpsError('permission-denied', 'Sólo las familias vinculan alumnas.');
   }
 
-  return db.runTransaction(async (tx) => {
-    const encontrados = await tx.get(
-      db.collection('codigosVinculacion').where('codigo', '==', codigo).limit(1),
-    );
-    if (encontrados.empty) {
-      throw new HttpsError('not-found', 'Código no válido. Revísalo o contacta con el club.');
-    }
-    const codigoDoc = encontrados.docs[0];
-    if (codigoDoc.get('usadoPor')) {
-      throw new HttpsError('already-exists', 'Ese código ya se usó. Contacta con el club.');
-    }
+  try {
+    return await db.runTransaction(async (tx) => {
+      const encontrados = await tx.get(
+        db.collection('codigosVinculacion').where('codigo', '==', codigo).limit(1),
+      );
+      if (encontrados.empty) throw new CodigoRechazado('no existe');
+      const codigoDoc = encontrados.docs[0];
+      if (codigoDoc.get('usadoPor') && codigoDoc.get('usadoPor') !== uid) {
+        throw new CodigoRechazado('ya usado');
+      }
 
-    const alumnaRef = db.doc(`alumnas/${codigoDoc.get('alumnaId')}`);
-    const alumna = await tx.get(alumnaRef);
-    if (!alumna.exists) {
-      throw new HttpsError('not-found', 'Esa alumna ya no está en el club.');
-    }
-    const actual = alumna.get('familiaUid');
-    if (actual && actual !== uid) {
-      throw new HttpsError('already-exists', 'Esa alumna ya está vinculada a otra cuenta.');
-    }
+      const alumnaRef = db.doc(`alumnas/${codigoDoc.get('alumnaId')}`);
+      const alumna = await tx.get(alumnaRef);
+      if (!alumna.exists) throw new CodigoRechazado('alumna eliminada');
+      const actual = alumna.get('familiaUid');
+      if (actual && actual !== uid) throw new CodigoRechazado('alumna de otra cuenta');
 
-    // Si Dirección dio de alta el correo de la familia, sólo ese correo puede
-    // usar el código. Es lo que impide que alguien con un código ajeno
-    // (fotografiado, reenviado) se registre con otro correo.
-    const previo = String(alumna.get('emailFamilia') ?? '').trim().toLowerCase();
-    const correo = String(req.auth?.token?.email ?? '').trim().toLowerCase();
-    if (previo && previo !== correo) {
+      // Si Dirección dio de alta el correo de la familia, sólo ese correo
+      // (ya verificado) puede usar el código.
+      const previo = String(alumna.get('emailFamilia') ?? '').trim().toLowerCase();
+      const correo = String(req.auth?.token?.email ?? '').trim().toLowerCase();
+      if (previo && previo !== correo) throw new CodigoRechazado('correo reservado');
+
+      tx.update(alumnaRef, { familiaUid: uid });
+      tx.update(codigoDoc.ref, { usadoPor: uid, usadoEn: FieldValue.serverTimestamp() });
+      // Los grupos de la familia los recalcula `sincronizarAlumna`; se adelanta
+      // aquí para que al terminar el registro ya vea a su hija.
+      tx.set(db.doc(`users/${uid}`), {
+        grupos: FieldValue.arrayUnion(alumna.get('grupo')),
+      }, { merge: true });
+
+      logger.info(`Alumna ${alumna.id} vinculada a ${uid}`);
+      return { nombre: alumna.get('nombre') ?? '' };
+    });
+  } catch (e) {
+    if (e instanceof CodigoRechazado) {
+      await Promise.all([anotarFallo(claveUsuario), anotarFallo('vincular_global')]);
+      logger.warn(`Código rechazado (${e.motivo}) para ${uid}`);
+      // Un único mensaje: distinguir "no existe" de "ya usado" o "reservado"
+      // permitiría averiguar qué códigos son reales.
       throw new HttpsError(
-        'permission-denied',
-        'Este código está reservado a otro correo. Regístrate con el email que diste al club.',
+        'not-found',
+        'Código no válido o no disponible. Revísalo o contacta con el club.',
       );
     }
-
-    tx.update(alumnaRef, { familiaUid: uid });
-    tx.update(codigoDoc.ref, { usadoPor: uid, usadoEn: FieldValue.serverTimestamp() });
-    // Los grupos de la familia los recalcula `sincronizarAlumna`; se adelanta
-    // aquí para que al terminar el registro ya vea a su hija.
-    tx.set(db.doc(`users/${uid}`), {
-      grupos: FieldValue.arrayUnion(alumna.get('grupo')),
-    }, { merge: true });
-
-    logger.info(`Alumna ${alumna.id} vinculada a ${uid}`);
-    return { nombre: alumna.get('nombre') ?? '' };
-  });
+    throw e;
+  }
 });
+
+class CodigoRechazado extends Error {
+  constructor(motivo) {
+    super(motivo);
+    this.motivo = motivo;
+  }
+}
+
+const VENTANA_MS = 60 * 60 * 1000;
+const MAX_FALLOS_USUARIO = 5;
+const MAX_FALLOS_GLOBAL = 40;
+
+async function fallosRecientes(clave) {
+  const d = await db.doc(`limites/${clave}`).get();
+  const ahora = Date.now();
+  return (d.get('fallos') ?? []).filter((t) => ahora - t < VENTANA_MS).length;
+}
+
+async function anotarFallo(clave) {
+  const ref = db.doc(`limites/${clave}`);
+  await db.runTransaction(async (tx) => {
+    const d = await tx.get(ref);
+    const ahora = Date.now();
+    const fallos = [...(d.get('fallos') ?? []).filter((t) => ahora - t < VENTANA_MS), ahora];
+    tx.set(ref, { fallos: fallos.slice(-100) });
+  });
+}
 
 // --------------------------------------------------- cuentas del club
 
@@ -244,7 +300,64 @@ export const crearCuentaClub = onCall(async (req) => {
     creadoPor: uid,
   });
 
-  logger.info(`Cuenta ${rol} creada para ${email} por ${uid}`);
+  logger.info(`Cuenta ${rol} creada (${nuevo.uid}) por ${uid}`);
+  return { passwordProvisional: password };
+});
+
+/** Comprueba que quien llama es Dirección y que el destino es una cuenta del club. */
+async function cuentaDelClubParaGestionar(req) {
+  const uid = req.auth?.uid;
+  if (!uid) throw new HttpsError('unauthenticated', 'Inicia sesión.');
+  const quien = await db.doc(`users/${uid}`).get();
+  if (quien.get('role') !== 'direccion') {
+    throw new HttpsError('permission-denied', 'Sólo Dirección puede gestionar cuentas.');
+  }
+  const destino = String(req.data?.uid ?? '');
+  if (!destino || destino.length > 128) {
+    throw new HttpsError('invalid-argument', 'Falta la cuenta.');
+  }
+  const doc = await db.doc(`users/${destino}`).get();
+  if (!doc.exists || !ROLES_CLUB.includes(doc.get('role'))) {
+    throw new HttpsError('not-found', 'Esa cuenta no es del equipo del club.');
+  }
+  return { uid, destino, doc };
+}
+
+/** Elimina una cuenta de staff o Dirección (acceso incluido). */
+export const eliminarCuentaClub = onCall(async (req) => {
+  const { uid, destino, doc } = await cuentaDelClubParaGestionar(req);
+  if (destino === uid) {
+    throw new HttpsError('failed-precondition', 'No puedes eliminar tu propia cuenta desde aquí.');
+  }
+  if (doc.get('role') === 'direccion') {
+    const dirs = await db.collection('users').where('role', '==', 'direccion').get();
+    if (dirs.size <= 1) {
+      throw new HttpsError('failed-precondition', 'Tiene que quedar al menos una cuenta de Dirección.');
+    }
+  }
+  try {
+    await getAuth().deleteUser(destino);
+  } catch (e) {
+    if (e.code !== 'auth/user-not-found') {
+      throw new HttpsError('internal', 'No se pudo eliminar el acceso de esa cuenta.');
+    }
+  }
+  await db.doc(`users/${destino}`).delete();
+  logger.info(`Cuenta ${destino} eliminada por ${uid}`);
+  return { ok: true };
+});
+
+/** Genera una contraseña provisional nueva para una cuenta del club. */
+export const restablecerPasswordCuentaClub = onCall(async (req) => {
+  const { uid, destino } = await cuentaDelClubParaGestionar(req);
+  const letras = 'ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
+  const password = Array.from({ length: 10 }, () => letras[randomInt(letras.length)]).join('');
+  try {
+    await getAuth().updateUser(destino, { password });
+  } catch (e) {
+    throw new HttpsError('internal', 'No se pudo cambiar la contraseña.');
+  }
+  logger.info(`Contraseña de ${destino} restablecida por ${uid}`);
   return { passwordProvisional: password };
 });
 

@@ -148,7 +148,14 @@ class SessionController extends ChangeNotifier {
         // Declaración de que es madre, padre o tutor legal de las alumnas.
         'consentimientoMenores': true,
       });
-      await vincular(codigoLimpio);
+      // El servidor solo vincula con el correo verificado: se envía el enlace
+      // y el código queda en memoria hasta que la familia lo confirme.
+      _codigoPendiente = codigoLimpio;
+      try {
+        await cred.user?.sendEmailVerification();
+      } catch (_) {
+        // Se puede reenviar desde la pantalla de verificación.
+      }
     } catch (error) {
       try {
         await cred.user?.delete();
@@ -162,11 +169,55 @@ class SessionController extends ChangeNotifier {
     }
   }
 
+  String? _codigoPendiente;
+
+  /// Una familia con la cuenta creada pero sin el correo verificado.
+  bool get necesitaVerificarCorreo =>
+      !_sinFirebase &&
+      _firebaseUser != null &&
+      !_firebaseUser!.emailVerified &&
+      _appUser?.role == UserRole.familia;
+
+  Future<void> reenviarVerificacion() async {
+    try {
+      await _auth.currentUser?.sendEmailVerification();
+    } on FirebaseAuthException catch (e) {
+      throw RegistroException(mensajeAuth(e));
+    }
+  }
+
+  /// Vuelve a consultar si ya verificó el correo. Si es así y quedó un código
+  /// pendiente del registro, vincula a la alumna. Devuelve `true` si ya está
+  /// verificado.
+  Future<bool> comprobarVerificacion() async {
+    final user = _auth.currentUser;
+    if (user == null) return false;
+    await user.reload();
+    final actual = _auth.currentUser;
+    if (actual == null || !actual.emailVerified) return false;
+    await actual.getIdToken(true);
+    _firebaseUser = actual;
+    final codigo = _codigoPendiente;
+    _codigoPendiente = null;
+    notifyListeners();
+    if (codigo != null) {
+      try {
+        await vincular(codigo);
+      } on RegistroException {
+        // El código no era válido: la familia lo reintenta desde Más.
+        rethrow;
+      }
+    }
+    return true;
+  }
+
   /// Vincula una alumna a la cuenta con su código. Devuelve su nombre.
   ///
   /// Sirve también para una familia con dos hijas: un código por alumna.
   Future<String> vincular(String codigo) async {
     try {
+      // El servidor mira `email_verified` en el token: se renueva antes.
+      await _auth.currentUser?.getIdToken(true);
       final r = await FirebaseFunctions.instanceFor(
         region: ClubConfig.regionFunciones,
       ).httpsCallable('vincularAlumna').call<Map<String, dynamic>>({

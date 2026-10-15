@@ -8,6 +8,7 @@ import '../services/auth_service.dart';
 import '../services/club_repository.dart';
 import '../theme/app_theme.dart';
 import '../widgets/common.dart';
+import 'auth/verificar_correo_screen.dart';
 import 'chat/chats_screen.dart';
 import 'direccion/direccion_home_screen.dart';
 import 'direccion/fichajes_screen.dart';
@@ -100,6 +101,10 @@ class _AppShellState extends State<AppShell> {
           ),
         ),
       );
+    }
+
+    if (session.necesitaVerificarCorreo) {
+      return const VerificarCorreoScreen();
     }
 
     final tabs = _tabsFor(user.role);

@@ -146,7 +146,7 @@ class ClubRepository {
   static String _generarCodigo() {
     const letras = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
     final r = Random.secure();
-    return List.generate(6, (_) => letras[r.nextInt(letras.length)]).join();
+    return List.generate(8, (_) => letras[r.nextInt(letras.length)]).join();
   }
 
   // ------------------------------------------------------------ jornadas
@@ -401,9 +401,14 @@ class ClubRepository {
     required String nombreArchivo,
     required String contentType,
   }) async {
-    final extension = nombreArchivo.contains('.')
+    final extensionBruta = nombreArchivo.contains('.')
         ? nombreArchivo.split('.').last.toLowerCase()
-        : (contentType == 'application/pdf' ? 'pdf' : 'jpg');
+        : '';
+    // Solo letras y números: el nombre del archivo viaja dentro de la ruta.
+    final extensionLimpia = extensionBruta.replaceAll(RegExp(r'[^a-z0-9]'), '');
+    final extension = extensionLimpia.isEmpty || extensionLimpia.length > 5
+        ? (contentType == 'application/pdf' ? 'pdf' : 'jpg')
+        : extensionLimpia;
     final ruta =
         'comprobantes/$uid/${pago.id}_${DateTime.now().millisecondsSinceEpoch}.$extension';
 
@@ -413,7 +418,9 @@ class ClubRepository {
 
     await Refs.pagos.doc(pago.id).update({
       'comprobantePath': ruta,
-      'comprobanteNombre': nombreArchivo,
+      'comprobanteNombre': nombreArchivo.length > 120
+          ? nombreArchivo.substring(0, 120)
+          : nombreArchivo,
       'estado': EstadoPago.enRevision.wire,
       'subidoEn': FieldValue.serverTimestamp(),
       'motivoRechazo': null,
@@ -584,6 +591,43 @@ class ClubRepository {
 
   Future<void> asignarGrupos(String uid, List<String> grupos) =>
       Refs.user(uid).update({'grupos': grupos});
+
+  /// Dirección: cambia nombre, rol y grupos de una cuenta del club.
+  Future<void> actualizarCuentaClub(
+    String uid, {
+    required String nombre,
+    required UserRole rol,
+    required List<String> grupos,
+  }) =>
+      Refs.user(uid).update({
+        'displayName': nombre.trim(),
+        'role': rol.wire,
+        'grupos': rol.isStaff ? grupos : <String>[],
+      });
+
+  Future<void> eliminarCuentaClub(String uid) async {
+    try {
+      await FirebaseFunctions.instanceFor(region: ClubConfig.regionFunciones)
+          .httpsCallable('eliminarCuentaClub')
+          .call<Map<String, dynamic>>({'uid': uid});
+    } on FirebaseFunctionsException catch (e) {
+      throw Exception(e.message ?? 'No se pudo eliminar la cuenta.');
+    }
+  }
+
+  /// Devuelve la nueva contraseña provisional.
+  Future<String> restablecerPasswordCuentaClub(String uid) async {
+    try {
+      final r = await FirebaseFunctions.instanceFor(
+        region: ClubConfig.regionFunciones,
+      ).httpsCallable('restablecerPasswordCuentaClub').call<Map<String, dynamic>>({
+        'uid': uid,
+      });
+      return (r.data['passwordProvisional'] as String?) ?? '';
+    } on FirebaseFunctionsException catch (e) {
+      throw Exception(e.message ?? 'No se pudo cambiar la contraseña.');
+    }
+  }
 
   /// Crea una cuenta de staff o dirección. Sólo Dirección; lo comprueba el
   /// servidor. Devuelve la contraseña provisional para entregarla en mano.

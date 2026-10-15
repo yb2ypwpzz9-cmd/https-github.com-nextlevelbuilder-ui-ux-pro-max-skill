@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../models/app_user.dart';
 import '../../models/grupo.dart';
+import '../../services/auth_service.dart';
 import '../../services/club_repository.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/common.dart';
@@ -50,12 +51,8 @@ class EquipoScreen extends StatelessWidget {
                                 ? 'Staff · sin grupos'
                                 : 'Staff · ${grupos.where((g) => c.grupos.contains(g.id)).map((g) => g.nombre).join(', ')}',
                       ),
-                      trailing: c.role.isStaff
-                          ? const Icon(Icons.edit_outlined, size: 20)
-                          : null,
-                      onTap: c.role.isStaff
-                          ? () => _asignar(context, c, grupos)
-                          : null,
+                      trailing: const Icon(Icons.edit_outlined, size: 20),
+                      onTap: () => _editar(context, c, grupos),
                     ),
                 ],
               ),
@@ -66,54 +63,188 @@ class EquipoScreen extends StatelessWidget {
     );
   }
 
-  Future<void> _asignar(
+  Future<void> _editar(
     BuildContext context,
-    AppUser staff,
+    AppUser cuenta,
     List<Grupo> grupos,
   ) async {
     final repo = context.read<ClubRepository>();
-    final elegidos = {...staff.grupos};
+    final yo = context.read<SessionController>().appUser!;
+    final esYo = cuenta.uid == yo.uid;
+    final nombre = TextEditingController(text: cuenta.nombreVisible);
+    var rol = cuenta.role;
+    final elegidos = {...cuenta.grupos};
+    final raiz = context;
+
     final ok = await showModalBottomSheet<bool>(
       context: context,
+      isScrollControlled: true,
       builder: (context) => StatefulBuilder(
         builder: (context, setSheet) => Padding(
-          padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                'Grupos de ${staff.nombreVisible}',
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-              const SizedBox(height: AppSpacing.sm),
-              for (final g in grupos)
-                CheckboxListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: Text(g.nombre),
-                  subtitle: Text(g.horarioTexto),
-                  value: elegidos.contains(g.id),
-                  onChanged: (v) => setSheet(
-                    () => v == true ? elegidos.add(g.id) : elegidos.remove(g.id),
-                  ),
+          padding: EdgeInsets.fromLTRB(
+            16,
+            0,
+            16,
+            MediaQuery.viewInsetsOf(context).bottom + 24,
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text('Editar cuenta',
+                    style: Theme.of(context).textTheme.titleLarge),
+                Text(cuenta.email, style: Theme.of(context).textTheme.bodySmall),
+                const SizedBox(height: AppSpacing.md),
+                TextField(
+                  controller: nombre,
+                  textCapitalization: TextCapitalization.words,
+                  decoration:
+                      const InputDecoration(labelText: 'Nombre y apellido'),
                 ),
-              const SizedBox(height: AppSpacing.md),
-              FilledButton(
-                onPressed: () => Navigator.pop(context, true),
-                child: const Text('Guardar'),
-              ),
-            ],
+                const SizedBox(height: AppSpacing.md),
+                SegmentedButton<UserRole>(
+                  segments: const [
+                    ButtonSegment(value: UserRole.staff, label: Text('Staff')),
+                    ButtonSegment(
+                        value: UserRole.direccion, label: Text('Dirección')),
+                  ],
+                  selected: {rol},
+                  showSelectedIcon: false,
+                  // Cambiarte el rol a ti mismo te dejaría sin acceso.
+                  onSelectionChanged:
+                      esYo ? null : (s) => setSheet(() => rol = s.first),
+                ),
+                if (rol.isStaff) ...[
+                  const SizedBox(height: AppSpacing.md),
+                  Text('Grupos', style: Theme.of(context).textTheme.labelLarge),
+                  for (final g in grupos)
+                    CheckboxListTile(
+                      contentPadding: EdgeInsets.zero,
+                      title: Text(g.nombre),
+                      subtitle: Text(g.horarioTexto),
+                      value: elegidos.contains(g.id),
+                      onChanged: (v) => setSheet(
+                        () => v == true
+                            ? elegidos.add(g.id)
+                            : elegidos.remove(g.id),
+                      ),
+                    ),
+                ],
+                const SizedBox(height: AppSpacing.md),
+                FilledButton(
+                  onPressed: () => Navigator.pop(context, true),
+                  child: const Text('Guardar'),
+                ),
+                if (!esYo) ...[
+                  TextButton.icon(
+                    style: TextButton.styleFrom(minimumSize: const Size(0, 44)),
+                    icon: const Icon(Icons.key_outlined),
+                    label: const Text('Restablecer contraseña'),
+                    onPressed: () async {
+                      final ok = await confirmar(
+                        context,
+                        titulo: 'Restablecer contraseña',
+                        mensaje: 'Se crea una contraseña provisional nueva '
+                            'para ${cuenta.nombreVisible}. La anterior deja '
+                            'de valer.',
+                        accion: 'Restablecer',
+                      );
+                      if (!ok || !context.mounted) return;
+                      try {
+                        final pass =
+                            await repo.restablecerPasswordCuentaClub(cuenta.uid);
+                        if (!context.mounted) return;
+                        await showDialog<void>(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: const Text('Contraseña nueva'),
+                            content: SelectableText(
+                              'Email: ${cuenta.email}\nContraseña: $pass\n\n'
+                              'No se vuelve a mostrar.',
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Clipboard.setData(
+                                    ClipboardData(text: pass)),
+                                child: const Text('Copiar'),
+                              ),
+                              FilledButton(
+                                onPressed: () => Navigator.pop(context),
+                                child: const Text('Hecho'),
+                              ),
+                            ],
+                          ),
+                        );
+                      } catch (e) {
+                        if (context.mounted) {
+                          showAppSnackBar(
+                            context,
+                            '$e'.replaceFirst('Exception: ', ''),
+                            isError: true,
+                          );
+                        }
+                      }
+                    },
+                  ),
+                  TextButton.icon(
+                    style: TextButton.styleFrom(
+                      foregroundColor: AppColors.danger,
+                      minimumSize: const Size(0, 44),
+                    ),
+                    icon: const Icon(Icons.delete_outline),
+                    label: const Text('Eliminar cuenta'),
+                    onPressed: () async {
+                      final ok = await confirmar(
+                        context,
+                        titulo: 'Eliminar a ${cuenta.nombreVisible}',
+                        mensaje: 'Pierde el acceso a la app de inmediato. Sus '
+                            'fichajes y mensajes anteriores se conservan.',
+                        accion: 'Eliminar',
+                        peligrosa: true,
+                      );
+                      if (!ok) return;
+                      try {
+                        await repo.eliminarCuentaClub(cuenta.uid);
+                        if (context.mounted) Navigator.pop(context, false);
+                        if (raiz.mounted) {
+                          showAppSnackBar(raiz, 'Cuenta eliminada.');
+                        }
+                      } catch (e) {
+                        if (context.mounted) {
+                          showAppSnackBar(
+                            context,
+                            '$e'.replaceFirst('Exception: ', ''),
+                            isError: true,
+                          );
+                        }
+                      }
+                    },
+                  ),
+                ],
+              ],
+            ),
           ),
         ),
       ),
     );
     if (ok != true) return;
+    if (nombre.text.trim().length < 2) {
+      if (raiz.mounted) {
+        showAppSnackBar(raiz, 'Pon un nombre.', isError: true);
+      }
+      return;
+    }
     try {
-      await repo.asignarGrupos(staff.uid, elegidos.toList());
-      if (context.mounted) showAppSnackBar(context, 'Grupos actualizados.');
+      await repo.actualizarCuentaClub(
+        cuenta.uid,
+        nombre: nombre.text,
+        rol: rol,
+        grupos: elegidos.toList(),
+      );
+      if (raiz.mounted) showAppSnackBar(raiz, 'Cuenta actualizada.');
     } catch (_) {
-      if (context.mounted) {
-        showAppSnackBar(context, 'No se pudo guardar.', isError: true);
+      if (raiz.mounted) {
+        showAppSnackBar(raiz, 'No se pudo guardar.', isError: true);
       }
     }
   }

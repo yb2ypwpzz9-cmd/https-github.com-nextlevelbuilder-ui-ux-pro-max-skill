@@ -14,6 +14,13 @@ service firebase.storage {
       ).data.get('role', '');
     }
 
+    function esFamiliaVinculada() {
+      let u = firestore.get(
+        /databases/(default)/documents/users/$(request.auth.uid)
+      ).data;
+      return u.get('role', '') == 'familia' && u.get('grupos', []).size() > 0;
+    }
+
     // Justificantes de pago. La carpeta lleva el uid de quien sube y la regla
     // lo comprueba: cada familia sólo escribe en la suya, así que nadie puede
     // sustituir el justificante de otra. Se crean y no se sobrescriben.
@@ -26,9 +33,11 @@ service firebase.storage {
 
       allow create: if isSignedIn()
         && request.auth.uid == uid
+        && esFamiliaVinculada()
         && request.resource.size < 8 * 1024 * 1024
-        && (request.resource.contentType.matches('image/.*')
-            || request.resource.contentType == 'application/pdf');
+        && request.resource.contentType in
+             ['image/jpeg', 'image/png', 'image/webp', 'image/heic',
+              'image/heif', 'application/pdf'];
 
       allow update, delete: if false;
     }
