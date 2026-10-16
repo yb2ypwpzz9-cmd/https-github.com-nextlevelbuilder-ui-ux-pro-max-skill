@@ -40,6 +40,7 @@ class AppUser {
     this.debeCambiarPassword = false,
     this.avisoUbicacionVersion,
     this.codigoPendiente,
+    this.todosLosGrupos = false,
   });
 
   final String uid;
@@ -64,6 +65,9 @@ class AppUser {
   /// verifique su correo para vincularla.
   final String? codigoPendiente;
 
+  /// Staff con acceso a todos los grupos, también a los que se creen luego.
+  final bool todosLosGrupos;
+
   factory AppUser.fromDoc(DocumentSnapshot<Json> doc) {
     final data = doc.data() ?? const <String, dynamic>{};
     return AppUser(
@@ -75,6 +79,7 @@ class AppUser {
       phone: data['phone'] as String?,
       debeCambiarPassword: (data['debeCambiarPassword'] as bool?) ?? false,
       avisoUbicacionVersion: data['avisoUbicacionVersion'] as String?,
+      todosLosGrupos: (data['todosLosGrupos'] as bool?) ?? false,
       codigoPendiente: (data['codigoPendiente'] as String?)?.trim().isEmpty ?? true
           ? null
           : (data['codigoPendiente'] as String).trim(),

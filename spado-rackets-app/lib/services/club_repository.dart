@@ -174,7 +174,7 @@ class ClubRepository {
 
   /// Reduce la foto (480 px, JPEG) y la guarda en `fotos/{alumna}/…`.
   Future<String> subirFotoAlumna(String alumnaId, Uint8List original) async {
-    final jpg = prepararFoto(original);
+    final jpg = await prepararFoto(original);
     if (jpg == null) {
       throw Exception('No se pudo leer la imagen. Prueba con un JPG o PNG.');
     }
@@ -697,11 +697,13 @@ class ClubRepository {
     required String nombre,
     required UserRole rol,
     required List<String> grupos,
+    bool todosLosGrupos = false,
   }) =>
       Refs.user(uid).update({
         'displayName': nombre.trim(),
         'role': rol.wire,
         'grupos': rol.isStaff ? grupos : <String>[],
+        'todosLosGrupos': rol.isStaff && todosLosGrupos,
       });
 
   Future<void> eliminarCuentaClub(String uid) async {
@@ -735,6 +737,7 @@ class ClubRepository {
     required String nombre,
     required UserRole rol,
     required List<String> grupos,
+    bool todosLosGrupos = false,
   }) async {
     try {
       final r = await FirebaseFunctions.instanceFor(
@@ -744,6 +747,7 @@ class ClubRepository {
         'nombre': nombre.trim(),
         'rol': rol.wire,
         'grupos': grupos,
+        'todosLosGrupos': todosLosGrupos,
       });
       return (r.data['passwordProvisional'] as String?) ?? '';
     } on FirebaseFunctionsException catch (e) {

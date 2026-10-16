@@ -196,10 +196,10 @@ class AlumnasScreen extends StatelessWidget {
                             );
                             final f = r?.files.single;
                             if (f?.bytes == null) return;
-                            if (f!.size > 15 * 1024 * 1024) {
+                            if (f!.size > 40 * 1024 * 1024) {
                               if (context.mounted) {
                                 showAppSnackBar(context,
-                                    'La foto pesa demasiado (máx. 15 MB).',
+                                    'La foto pesa demasiado (máx. 40 MB).',
                                     isError: true);
                               }
                               return;

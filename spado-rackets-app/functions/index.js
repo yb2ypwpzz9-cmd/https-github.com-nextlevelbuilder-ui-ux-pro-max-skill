@@ -270,9 +270,12 @@ export const crearCuentaClub = onCall(async (req) => {
   const email = String(req.data?.email ?? '').trim().toLowerCase();
   const nombre = String(req.data?.nombre ?? '').trim().slice(0, 80);
   const rol = String(req.data?.rol ?? '');
-  const grupos = Array.isArray(req.data?.grupos)
-    ? req.data.grupos.filter((g) => typeof g === 'string' && g).slice(0, 30)
-    : [];
+  const todosLosGrupos = req.data?.todosLosGrupos === true;
+  const grupos = todosLosGrupos
+    ? (await db.collection('grupos').get()).docs.map((g) => g.id)
+    : Array.isArray(req.data?.grupos)
+      ? req.data.grupos.filter((g) => typeof g === 'string' && g).slice(0, 30)
+      : [];
 
   if (!email.includes('@') || nombre.length < 2 || !ROLES_CLUB.includes(rol)) {
     throw new HttpsError('invalid-argument', 'Revisa el nombre, el email y el rol.');
@@ -298,6 +301,7 @@ export const crearCuentaClub = onCall(async (req) => {
     role: rol,
     displayName: nombre,
     grupos: rol === 'staff' ? grupos : [],
+    todosLosGrupos: rol === 'staff' && todosLosGrupos,
     createdAt: FieldValue.serverTimestamp(),
     creadoPor: uid,
     // La contraseña provisional la conoce quien la entregó: se cambia al entrar.
@@ -565,10 +569,29 @@ export const sincronizarAlumna = onDocumentWritten('alumnas/{id}', async (event)
   }
 });
 
+/** Staff con acceso a todos los grupos: su lista sigue a la de grupos. */
+async function sincronizarStaffTodosLosGrupos() {
+  const [todos, staff] = await Promise.all([
+    db.collection('grupos').get(),
+    db.collection('users').where('todosLosGrupos', '==', true).get(),
+  ]);
+  const ids = todos.docs.map((g) => g.id).sort();
+  for (const u of staff.docs) {
+    if (u.get('role') !== 'staff') continue;
+    const actuales = [...new Set(u.get('grupos') ?? [])].sort();
+    if (JSON.stringify(actuales) !== JSON.stringify(ids)) {
+      await u.ref.update({ grupos: ids });
+    }
+  }
+}
+
 export const sincronizarGrupo = onDocumentWritten('grupos/{id}', async (event) => {
   const antes = event.data?.before?.data();
   const despues = event.data?.after?.data();
   if (antes && despues && antes.nombre === despues.nombre) return;
+
+  // Grupo nuevo o eliminado: el staff con "todos los grupos" se mantiene al día.
+  if (!antes || !despues) await sincronizarStaffTodosLosGrupos();
 
   // Grupo eliminado: se borra su chat y se quita de las cuentas del staff.
   if (antes && !despues) {

@@ -74,6 +74,7 @@ class EquipoScreen extends StatelessWidget {
     final nombre = TextEditingController(text: cuenta.nombreVisible);
     var rol = cuenta.role;
     final elegidos = {...cuenta.grupos};
+    var todos = cuenta.todosLosGrupos;
     final raiz = context;
 
     final ok = await showModalBottomSheet<bool>(
@@ -93,7 +94,8 @@ class EquipoScreen extends StatelessWidget {
               children: [
                 Text('Editar cuenta',
                     style: Theme.of(context).textTheme.titleLarge),
-                Text(cuenta.email, style: Theme.of(context).textTheme.bodySmall),
+                Text(cuenta.email,
+                    style: Theme.of(context).textTheme.bodySmall),
                 const SizedBox(height: AppSpacing.md),
                 TextField(
                   controller: nombre,
@@ -115,9 +117,21 @@ class EquipoScreen extends StatelessWidget {
                       esYo ? null : (s) => setSheet(() => rol = s.first),
                 ),
                 if (rol.isStaff) ...[
-                  const SizedBox(height: AppSpacing.md),
-                  Text('Grupos', style: Theme.of(context).textTheme.labelLarge),
-                  for (final g in grupos)
+                  const SizedBox(height: AppSpacing.sm),
+                  SwitchListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: const Text('Todos los grupos'),
+                    subtitle: const Text(
+                      'Ve a todas las alumnas, también las de los grupos que '
+                      'crees más adelante.',
+                    ),
+                    value: todos,
+                    onChanged: (v) => setSheet(() => todos = v),
+                  ),
+                  if (!todos)
+                    Text('Grupos',
+                        style: Theme.of(context).textTheme.labelLarge),
+                  for (final g in todos ? const <Grupo>[] : grupos)
                     CheckboxListTile(
                       contentPadding: EdgeInsets.zero,
                       title: Text(g.nombre),
@@ -151,8 +165,8 @@ class EquipoScreen extends StatelessWidget {
                       );
                       if (!ok || !context.mounted) return;
                       try {
-                        final pass =
-                            await repo.restablecerPasswordCuentaClub(cuenta.uid);
+                        final pass = await repo
+                            .restablecerPasswordCuentaClub(cuenta.uid);
                         if (!context.mounted) return;
                         await showDialog<void>(
                           context: context,
@@ -239,7 +253,8 @@ class EquipoScreen extends StatelessWidget {
         cuenta.uid,
         nombre: nombre.text,
         rol: rol,
-        grupos: elegidos.toList(),
+        grupos: todos ? grupos.map((g) => g.id).toList() : elegidos.toList(),
+        todosLosGrupos: todos,
       );
       if (raiz.mounted) showAppSnackBar(raiz, 'Cuenta actualizada.');
     } catch (_) {
@@ -254,6 +269,7 @@ class EquipoScreen extends StatelessWidget {
     final nombre = TextEditingController();
     final email = TextEditingController();
     var rol = UserRole.staff;
+    var todos = false;
     final elegidos = <String>{};
 
     final ok = await showModalBottomSheet<bool>(
@@ -305,21 +321,36 @@ class EquipoScreen extends StatelessWidget {
                   onSelectionChanged: (s) => setSheet(() => rol = s.first),
                 ),
                 if (rol.isStaff) ...[
-                  const SizedBox(height: AppSpacing.md),
-                  Text('Grupos', style: Theme.of(context).textTheme.labelLarge),
-                  Wrap(
-                    spacing: 6,
-                    children: [
-                      for (final g in grupos)
-                        FilterChip(
-                          label: Text(g.nombre),
-                          selected: elegidos.contains(g.id),
-                          onSelected: (v) => setSheet(
-                            () => v ? elegidos.add(g.id) : elegidos.remove(g.id),
-                          ),
-                        ),
-                    ],
+                  const SizedBox(height: AppSpacing.sm),
+                  SwitchListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: const Text('Todos los grupos'),
+                    subtitle: const Text(
+                      'Ve a todas las alumnas, también las de los grupos que '
+                      'crees más adelante.',
+                    ),
+                    value: todos,
+                    onChanged: (v) => setSheet(() => todos = v),
                   ),
+                  if (!todos)
+                    Text('Grupos',
+                        style: Theme.of(context).textTheme.labelLarge),
+                  if (!todos)
+                    Wrap(
+                      spacing: 6,
+                      children: [
+                        for (final g in grupos)
+                          FilterChip(
+                            label: Text(g.nombre),
+                            selected: elegidos.contains(g.id),
+                            onSelected: (v) => setSheet(
+                              () => v
+                                  ? elegidos.add(g.id)
+                                  : elegidos.remove(g.id),
+                            ),
+                          ),
+                      ],
+                    ),
                 ],
                 const SizedBox(height: AppSpacing.lg),
                 FilledButton(
@@ -345,7 +376,8 @@ class EquipoScreen extends StatelessWidget {
         email: email.text,
         nombre: nombre.text,
         rol: rol,
-        grupos: rol.isStaff ? elegidos.toList() : const [],
+        grupos: rol.isStaff && !todos ? elegidos.toList() : const [],
+        todosLosGrupos: rol.isStaff && todos,
       );
       if (!context.mounted) return;
       await showDialog<void>(
