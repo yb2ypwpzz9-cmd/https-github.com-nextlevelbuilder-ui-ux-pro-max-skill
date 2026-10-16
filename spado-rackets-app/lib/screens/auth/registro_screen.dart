@@ -114,9 +114,14 @@ class _RegistroScreenState extends State<RegistroScreen> {
               controller: _telefono,
               keyboardType: TextInputType.phone,
               decoration: const InputDecoration(
-                labelText: 'Teléfono (opcional)',
+                labelText: 'Teléfono de contacto',
                 hintText: '809 000 0000',
+                helperText: 'Para que el club pueda avisarte si hace falta',
               ),
+              validator: (v) =>
+                  (v ?? '').replaceAll(RegExp(r'[^0-9]'), '').length < 7
+                      ? 'Escribe un teléfono de contacto'
+                      : null,
             ),
             const SizedBox(height: AppSpacing.md),
             TextFormField(

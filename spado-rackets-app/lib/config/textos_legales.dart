@@ -3,7 +3,7 @@
 abstract final class TextosLegales {
   /// Se sube la versión cuando cambia el texto; el consentimiento de cada
   /// familia guarda con qué versión se aceptó.
-  static const version = '2026-10-5';
+  static const version = '2026-10-6';
 
   /// Versión del aviso que se enseña al staff antes de fichar.
   static const avisoStaffVersion = '2026-10';
@@ -48,7 +48,7 @@ abstract final class TextosLegales {
     ),
     (
       '¿Qué datos tratamos?',
-      '• De las familias: nombre, correo electrónico y teléfono (opcional).\n'
+      '• De las familias: nombre, correo electrónico y teléfono de contacto, para poder avisarte si hace falta.\n'
           '• Del alumnado (niñas, niños y personas adultas): nombre, fecha de nacimiento, '
           'nivel de tenis, fotografía, días y hora de clase, asistencia y '
           'cuotas. En el caso de menores de edad los facilita y autoriza su '

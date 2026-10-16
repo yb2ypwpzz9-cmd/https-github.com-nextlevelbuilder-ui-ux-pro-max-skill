@@ -12,6 +12,7 @@ import '../../services/club_repository.dart';
 import '../../services/descarga.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/common.dart';
+import '../../widgets/contacto.dart';
 import '../../widgets/foto_alumna.dart';
 
 /// Alumnado, con el horario y la cuota de cada persona y el código que se
@@ -57,6 +58,8 @@ class AlumnasScreen extends StatelessWidget {
                           'Días de clase',
                           'Hora',
                           'Cuota mensual (US\$)',
+                          'Contacto',
+                          'Teléfono',
                           'Email de la familia',
                           'Familia con cuenta',
                           'Activo',
@@ -74,6 +77,8 @@ class AlumnasScreen extends StatelessWidget {
                             a.dias.map((d) => Grupo.nombresDias[d - 1]).join(' '),
                             a.horaInicio,
                             a.cuotaMensual,
+                            a.contactoNombre,
+                            a.contactoTelefono,
                             a.emailFamilia,
                             a.vinculada ? 'Sí' : 'No',
                             a.activa ? 'Sí' : 'No',
@@ -119,6 +124,10 @@ class AlumnasScreen extends StatelessWidget {
     final repo = context.read<ClubRepository>();
     final nombre = TextEditingController(text: alumna?.nombre ?? '');
     final email = TextEditingController(text: alumna?.emailFamilia ?? '');
+    final contactoNombre =
+        TextEditingController(text: alumna?.contactoNombre ?? '');
+    final contactoTelefono =
+        TextEditingController(text: alumna?.contactoTelefono ?? '');
 
     // Un alumno de antes (con grupo) hereda al editarlo el horario y la cuota
     // de su grupo, para no empezar de cero.
@@ -336,6 +345,25 @@ class AlumnasScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: AppSpacing.md),
+                const SectionHeader('Contacto'),
+                TextField(
+                  controller: contactoNombre,
+                  textCapitalization: TextCapitalization.words,
+                  decoration: const InputDecoration(
+                    labelText: 'Nombre de la persona de contacto (opcional)',
+                    helperText: 'Madre, padre, tutor o la propia persona',
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.md),
+                TextField(
+                  controller: contactoTelefono,
+                  keyboardType: TextInputType.phone,
+                  decoration: const InputDecoration(
+                    labelText: 'Teléfono de contacto (opcional)',
+                    hintText: '809 000 0000',
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.md),
                 TextField(
                   controller: email,
                   keyboardType: TextInputType.emailAddress,
@@ -423,6 +451,8 @@ class AlumnasScreen extends StatelessWidget {
           horaInicio: horaTexto,
           duracionMinutos: duracion,
           cuotaMensual: importe,
+          contactoNombre: contactoNombre.text,
+          contactoTelefono: contactoTelefono.text,
           foto: fotoNueva,
         );
         if (context.mounted) {
@@ -481,6 +511,8 @@ class AlumnasScreen extends StatelessWidget {
           horaInicio: horaTexto,
           duracionMinutos: duracion,
           cuotaMensual: importe,
+          contactoNombre: contactoNombre.text,
+          contactoTelefono: contactoTelefono.text,
           fotoNueva: fotoNueva,
           fotoAnterior: alumna.fotoPath,
           quitarFoto: quitarFoto,
@@ -540,6 +572,7 @@ class _ListaGrupo extends StatelessWidget {
             subtitle: a.vinculada
                 ? Text([
                     a.horarioTexto,
+                    if (a.contactoNombre != null) a.contactoNombre!,
                     if (a.cuotaMensual > 0)
                       formatoImporte(a.cuotaMensual, ClubConfig.monedaPorDefecto),
                     if (a.edad != null) '${a.edad} años',
@@ -563,6 +596,8 @@ class _ListaGrupo extends StatelessWidget {
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
+                if (a.contactoTelefono != null)
+                  BotonesContacto(a.contactoTelefono!),
                 if (!a.activa)
                   const StatusChip(
                     label: 'Baja',

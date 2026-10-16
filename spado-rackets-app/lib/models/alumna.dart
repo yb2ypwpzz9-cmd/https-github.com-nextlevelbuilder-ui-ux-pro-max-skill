@@ -59,6 +59,8 @@ class Alumna {
     this.horaInicio = '',
     this.duracionMinutos = 60,
     this.cuotaMensual = 0,
+    this.contactoNombre,
+    this.contactoTelefono,
     this.activa = true,
   });
 
@@ -84,6 +86,12 @@ class Alumna {
 
   /// Cuota mensual propia, en dólares.
   final double cuotaMensual;
+
+  /// Persona de contacto (madre, padre, tutor o la propia persona) y su
+  /// teléfono, para avisar a la familia. Son opcionales: si la familia se
+  /// registra, se rellenan con los datos de su cuenta.
+  final String? contactoNombre;
+  final String? contactoTelefono;
 
   /// Ruta de la foto en Storage (`fotos/{alumna}/…`). La ven la familia, el
   /// staff del grupo y Dirección, nadie más.
@@ -112,6 +120,13 @@ class Alumna {
       horaInicio: (data['horaInicio'] as String?) ?? '',
       duracionMinutos: (data['duracionMinutos'] as num?)?.toInt() ?? 60,
       cuotaMensual: (data['cuotaMensual'] as num?)?.toDouble() ?? 0,
+      contactoNombre: (data['contactoNombre'] as String?)?.trim().isEmpty ?? true
+          ? null
+          : (data['contactoNombre'] as String).trim(),
+      contactoTelefono:
+          (data['contactoTelefono'] as String?)?.trim().isEmpty ?? true
+              ? null
+              : (data['contactoTelefono'] as String).trim(),
       fotoPath: (data['fotoPath'] as String?)?.trim().isEmpty ?? true
           ? null
           : (data['fotoPath'] as String).trim(),

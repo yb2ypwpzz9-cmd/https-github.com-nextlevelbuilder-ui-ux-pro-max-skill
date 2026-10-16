@@ -8,6 +8,7 @@ import '../../services/auth_service.dart';
 import '../../services/club_repository.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/common.dart';
+import '../../widgets/contacto.dart';
 import '../../widgets/foto_alumna.dart';
 import '../app_shell.dart';
 
@@ -98,10 +99,18 @@ class _FilaResumen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(alumna.nombre, style: t.titleSmall),
-                Text(alumna.horarioTexto, style: t.bodySmall),
+                Text(
+                  [
+                    alumna.horarioTexto,
+                    if (alumna.contactoNombre != null) alumna.contactoNombre!,
+                  ].join(' · '),
+                  style: t.bodySmall,
+                ),
               ],
             ),
           ),
+          if (alumna.contactoTelefono != null)
+            BotonesContacto(alumna.contactoTelefono!),
           for (final m in ultimas) MarcaAsistencia(m.estado),
           const SizedBox(width: 8),
           SizedBox(

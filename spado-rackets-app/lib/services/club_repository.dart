@@ -114,6 +114,8 @@ class ClubRepository {
     String horaInicio = '',
     int duracionMinutos = 60,
     double cuotaMensual = 0,
+    String? contactoNombre,
+    String? contactoTelefono,
     Uint8List? foto,
   }) async {
     const grupo = ClubConfig.grupoGeneral;
@@ -131,6 +133,10 @@ class ClubRepository {
         'horaInicio': horaInicio,
         'duracionMinutos': duracionMinutos,
         'cuotaMensual': cuotaMensual,
+        if ((contactoNombre ?? '').trim().isNotEmpty)
+          'contactoNombre': contactoNombre!.trim(),
+        if ((contactoTelefono ?? '').trim().isNotEmpty)
+          'contactoTelefono': contactoTelefono!.trim(),
         if (fechaNacimiento != null)
           'fechaNacimiento': Timestamp.fromDate(fechaNacimiento),
         if (nivel != null) 'nivel': nivel.name,
@@ -187,6 +193,8 @@ class ClubRepository {
     String? horaInicio,
     int? duracionMinutos,
     double? cuotaMensual,
+    String? contactoNombre,
+    String? contactoTelefono,
   }) async {
     String? fotoPath;
     if (fotoNueva != null) fotoPath = await subirFotoAlumna(id, fotoNueva);
@@ -196,6 +204,14 @@ class ClubRepository {
         if (horaInicio != null) 'horaInicio': horaInicio,
         if (duracionMinutos != null) 'duracionMinutos': duracionMinutos,
         if (cuotaMensual != null) 'cuotaMensual': cuotaMensual,
+        if (contactoNombre != null)
+          'contactoNombre': contactoNombre.trim().isEmpty
+              ? FieldValue.delete()
+              : contactoNombre.trim(),
+        if (contactoTelefono != null)
+          'contactoTelefono': contactoTelefono.trim().isEmpty
+              ? FieldValue.delete()
+              : contactoTelefono.trim(),
         if (fechaNacimiento != null)
           'fechaNacimiento': Timestamp.fromDate(fechaNacimiento),
         if (quitarFecha) 'fechaNacimiento': FieldValue.delete(),

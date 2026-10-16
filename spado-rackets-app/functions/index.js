@@ -200,7 +200,15 @@ export const vincularAlumna = onCall(async (req) => {
       const correo = String(req.auth?.token?.email ?? '').trim().toLowerCase();
       if (previo && previo !== correo) throw new CodigoRechazado('correo reservado');
 
-      tx.update(alumnaRef, { familiaUid: uid });
+      // Si la ficha no tenía contacto, se rellena con los datos de la cuenta.
+      const contacto = {};
+      if (!alumna.get('contactoNombre') && usuario.get('displayName')) {
+        contacto.contactoNombre = String(usuario.get('displayName')).slice(0, 120);
+      }
+      if (!alumna.get('contactoTelefono') && usuario.get('phone')) {
+        contacto.contactoTelefono = String(usuario.get('phone')).slice(0, 30);
+      }
+      tx.update(alumnaRef, { familiaUid: uid, ...contacto });
       tx.update(codigoDoc.ref, { usadoPor: uid, usadoEn: FieldValue.serverTimestamp() });
       // Los grupos de la familia los recalcula `sincronizarAlumna`; se adelanta
       // aquí para que al terminar el registro ya vea a su hija.

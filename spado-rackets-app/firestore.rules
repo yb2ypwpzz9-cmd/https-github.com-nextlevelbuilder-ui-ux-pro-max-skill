@@ -220,6 +220,8 @@ service cloud.firestore {
     function datosAlumnaValidos(id, d) {
       return d.get('nivel', null) in
                [null, 'iniciacion', 'basico', 'intermedio', 'avanzado', 'competicion']
+        && textoOpcional(d, 'contactoNombre', 120)
+        && textoOpcional(d, 'contactoTelefono', 30)
         && d.get('tipo', null) in [null, 'nina', 'nino', 'adulto']
         && d.get('dias', []) is list
         && d.get('dias', []).size() <= 7
