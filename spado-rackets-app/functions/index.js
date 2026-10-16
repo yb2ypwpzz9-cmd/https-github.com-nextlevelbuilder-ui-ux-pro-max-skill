@@ -281,9 +281,10 @@ export const crearCuentaClub = onCall(async (req) => {
     throw new HttpsError('invalid-argument', 'Revisa el nombre, el email y el rol.');
   }
 
-  // Sin caracteres que se confundan al dictarla.
-  const letras = 'ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
-  const password = Array.from({ length: 10 }, () => letras[randomInt(letras.length)]).join('');
+  // La persona elige su contraseña al activar la cuenta con el código; hasta
+  // entonces la cuenta tiene una clave aleatoria que nadie conoce.
+  const password = Array.from({ length: 24 }, () => ALFABETO_CLAVE[randomInt(ALFABETO_CLAVE.length)]).join('');
+  const codigo = generarCodigoActivacion();
 
   let nuevo;
   try {
@@ -304,12 +305,77 @@ export const crearCuentaClub = onCall(async (req) => {
     todosLosGrupos: rol === 'staff' && todosLosGrupos,
     createdAt: FieldValue.serverTimestamp(),
     creadoPor: uid,
-    // La contraseña provisional la conoce quien la entregó: se cambia al entrar.
-    debeCambiarPassword: true,
+    pendienteActivacion: true,
   });
+  await guardarCodigoActivacion(nuevo.uid, email, codigo);
 
   logger.info(`Cuenta ${rol} creada (${nuevo.uid}) por ${uid}`);
-  return { passwordProvisional: password };
+  return { codigoActivacion: codigo };
+});
+
+// ------------------------------------------------- activación de cuentas
+
+const ALFABETO_CLAVE = 'ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
+const ALFABETO_CODIGO = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+const VIGENCIA_CODIGO_MS = 14 * 24 * 60 * 60 * 1000;
+
+function generarCodigoActivacion() {
+  return Array.from({ length: 8 }, () => ALFABETO_CODIGO[randomInt(ALFABETO_CODIGO.length)]).join('');
+}
+
+async function guardarCodigoActivacion(uid, email, codigo) {
+  await db.doc(`activaciones/${uid}`).set({
+    email: String(email ?? '').toLowerCase(),
+    codigo,
+    expiraEn: Date.now() + VIGENCIA_CODIGO_MS,
+  });
+}
+
+/**
+ * Primer acceso del equipo: con el correo que dio de alta Dirección y el
+ * código que le entregó, la persona elige su contraseña. No requiere sesión,
+ * así que tiene tope de fallos por correo y para todo el club, y siempre
+ * responde lo mismo si algo no cuadra.
+ */
+export const activarCuenta = onCall(async (req) => {
+  const email = String(req.data?.email ?? '').trim().toLowerCase();
+  const codigo = String(req.data?.codigo ?? '').trim().toUpperCase();
+  const password = String(req.data?.password ?? '');
+  if (!email.includes('@') || email.length > 120 || !codigo || codigo.length > 20) {
+    throw new HttpsError('invalid-argument', 'Escribe tu correo y el código.');
+  }
+  if (password.length < 8 || password.length > 128) {
+    throw new HttpsError('invalid-argument', 'La contraseña debe tener al menos 8 caracteres.');
+  }
+
+  const claveCorreo = `activar_${email}`;
+  const [porCorreo, global] = await Promise.all([
+    fallosRecientes(claveCorreo),
+    fallosRecientes('activar_global'),
+  ]);
+  if (porCorreo >= MAX_FALLOS_USUARIO || global >= MAX_FALLOS_GLOBAL) {
+    throw new HttpsError('resource-exhausted', 'Demasiados intentos. Espera una hora o avisa a Dirección.');
+  }
+
+  const rechazar = async () => {
+    await Promise.all([anotarFallo(claveCorreo), anotarFallo('activar_global')]);
+    throw new HttpsError('not-found', 'Código no válido o caducado. Pídele uno nuevo a Dirección.');
+  };
+
+  const encontrado = await db.collection('activaciones').where('email', '==', email).limit(1).get();
+  if (encontrado.empty) return rechazar();
+  const act = encontrado.docs[0];
+  if (act.get('codigo') !== codigo || Date.now() > Number(act.get('expiraEn') ?? 0)) return rechazar();
+
+  try {
+    await getAuth().updateUser(act.id, { password, emailVerified: true });
+  } catch (e) {
+    throw new HttpsError('internal', 'No se pudo activar la cuenta.');
+  }
+  await db.doc(`users/${act.id}`).update({ pendienteActivacion: FieldValue.delete() });
+  await act.ref.delete();
+  logger.info(`Cuenta ${act.id} activada`);
+  return { ok: true };
 });
 
 /** Comprueba que quien llama es Dirección y que el destino es una cuenta del club. */
@@ -350,7 +416,15 @@ export const eliminarCuentaClub = onCall(async (req) => {
 
 /** Genera una contraseña provisional nueva para una cuenta del club. */
 export const restablecerPasswordCuentaClub = onCall(async (req) => {
-  const { uid, destino } = await cuentaDelClubParaGestionar(req);
+  const { uid, destino, doc } = await cuentaDelClubParaGestionar(req);
+
+  // Cuenta que aún no se ha activado: se genera un código nuevo.
+  if (doc.get('pendienteActivacion') === true) {
+    const codigo = generarCodigoActivacion();
+    await guardarCodigoActivacion(destino, doc.get('email'), codigo);
+    return { codigoActivacion: codigo };
+  }
+
   const letras = 'ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
   const password = Array.from({ length: 10 }, () => letras[randomInt(letras.length)]).join('');
   try {

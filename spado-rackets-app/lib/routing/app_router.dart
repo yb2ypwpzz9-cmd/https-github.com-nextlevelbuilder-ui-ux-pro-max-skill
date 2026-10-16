@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../screens/app_shell.dart';
+import '../screens/auth/activar_cuenta_screen.dart';
 import '../screens/auth/login_screen.dart';
 import '../screens/auth/registro_screen.dart';
 import '../screens/chat/conversacion_screen.dart';
@@ -26,7 +27,8 @@ GoRouter buildRouter(SessionController session) {
     redirect: (context, state) {
       if (session.loading) return null;
       final path = state.matchedLocation;
-      final enAuth = path == '/login' || path == '/registro';
+      final enAuth =
+          path == '/login' || path == '/registro' || path == '/activar';
       // Los textos legales se leen sin cuenta, antes de registrarse.
       final legal = path == '/privacidad' || path == '/terminos';
       if (!session.isSignedIn && !enAuth && !legal) return '/login';
@@ -36,6 +38,7 @@ GoRouter buildRouter(SessionController session) {
     routes: [
       GoRoute(path: '/', builder: (_, __) => const AppShell()),
       GoRoute(path: '/login', builder: (_, __) => const LoginScreen()),
+      GoRoute(path: '/activar', builder: (_, __) => const ActivarCuentaScreen()),
       GoRoute(path: '/registro', builder: (_, __) => const RegistroScreen()),
       GoRoute(
         path: '/privacidad',

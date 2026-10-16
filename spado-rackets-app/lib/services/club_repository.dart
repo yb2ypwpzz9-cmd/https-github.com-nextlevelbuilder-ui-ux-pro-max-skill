@@ -716,7 +716,8 @@ class ClubRepository {
     }
   }
 
-  /// Devuelve la nueva contraseña provisional.
+  /// Devuelve la contraseña provisional nueva, o el código de activación si la
+  /// cuenta aún no estaba activada.
   Future<String> restablecerPasswordCuentaClub(String uid) async {
     try {
       final r = await FirebaseFunctions.instanceFor(
@@ -724,7 +725,9 @@ class ClubRepository {
       ).httpsCallable('restablecerPasswordCuentaClub').call<Map<String, dynamic>>({
         'uid': uid,
       });
-      return (r.data['passwordProvisional'] as String?) ?? '';
+      return (r.data['codigoActivacion'] as String?) ??
+          (r.data['passwordProvisional'] as String?) ??
+          '';
     } on FirebaseFunctionsException catch (e) {
       throw Exception(e.message ?? 'No se pudo cambiar la contraseña.');
     }
@@ -749,7 +752,7 @@ class ClubRepository {
         'grupos': grupos,
         'todosLosGrupos': todosLosGrupos,
       });
-      return (r.data['passwordProvisional'] as String?) ?? '';
+      return (r.data['codigoActivacion'] as String?) ?? '';
     } on FirebaseFunctionsException catch (e) {
       throw Exception(e.message ?? 'No se pudo crear la cuenta.');
     }

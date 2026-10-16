@@ -45,11 +45,13 @@ class EquipoScreen extends StatelessWidget {
                       leading: Avatar(c.iniciales),
                       title: Text(c.nombreVisible),
                       subtitle: Text(
-                        c.role.isDireccion
-                            ? 'Dirección · acceso completo'
-                            : c.grupos.isEmpty
-                                ? 'Staff · sin grupos'
-                                : 'Staff · ${grupos.where((g) => c.grupos.contains(g.id)).map((g) => g.nombre).join(', ')}',
+                        c.pendienteActivacion
+                            ? 'Pendiente de activar · sin acceso todavía'
+                            : c.role.isDireccion
+                                ? 'Dirección · acceso completo'
+                                : c.grupos.isEmpty
+                                    ? 'Staff · sin grupos'
+                                    : 'Staff · ${grupos.where((g) => c.grupos.contains(g.id)).map((g) => g.nombre).join(', ')}',
                       ),
                       trailing: const Icon(Icons.edit_outlined, size: 20),
                       onTap: () => _editar(context, c, grupos),
@@ -153,7 +155,9 @@ class EquipoScreen extends StatelessWidget {
                   TextButton.icon(
                     style: TextButton.styleFrom(minimumSize: const Size(0, 44)),
                     icon: const Icon(Icons.key_outlined),
-                    label: const Text('Restablecer contraseña'),
+                    label: Text(cuenta.pendienteActivacion
+                        ? 'Nuevo código de activación'
+                        : 'Restablecer contraseña'),
                     onPressed: () async {
                       final ok = await confirmar(
                         context,
@@ -171,9 +175,11 @@ class EquipoScreen extends StatelessWidget {
                         await showDialog<void>(
                           context: context,
                           builder: (context) => AlertDialog(
-                            title: const Text('Contraseña nueva'),
+                            title: Text(cuenta.pendienteActivacion
+                                ? 'Código de activación'
+                                : 'Contraseña nueva'),
                             content: SelectableText(
-                              'Email: ${cuenta.email}\nContraseña: $pass\n\n'
+                              'Email: ${cuenta.email}\n${cuenta.pendienteActivacion ? 'Código' : 'Contraseña'}: $pass\n\n'
                               'No se vuelve a mostrar.',
                             ),
                             actions: [
@@ -388,22 +394,26 @@ class EquipoScreen extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Entrega estos datos a ${nombre.text.trim()}. La '
-                  'contraseña no se vuelve a mostrar; podrá cambiarla desde '
-                  '"Más".'),
+              Text('Entrega a ${nombre.text.trim()} el código de activación. '
+                  'En la pantalla de acceso pulsa "Soy del equipo: primer '
+                  'acceso", escribe su email y el código, y elige su propia '
+                  'contraseña. El código vale 14 días y no se vuelve a '
+                  'mostrar (puedes generar otro desde su ficha).'),
               const SizedBox(height: AppSpacing.md),
               SelectableText('Email: ${email.text.trim()}'),
               SelectableText(
-                'Contraseña: $password',
-                style: const TextStyle(fontWeight: FontWeight.w800),
+                'Código: $password',
+                style: const TextStyle(
+                    fontWeight: FontWeight.w800, letterSpacing: 2),
               ),
             ],
           ),
           actions: [
             TextButton(
               onPressed: () => Clipboard.setData(ClipboardData(
-                text: 'Spado Rackets\nEmail: ${email.text.trim()}\n'
-                    'Contraseña: $password',
+                text: 'Spado Rackets - spado-rackets.netlify.app\n'
+                    'Primer acceso del equipo\nEmail: ${email.text.trim()}\n'
+                    'Código de activación: $password',
               )),
               child: const Text('Copiar'),
             ),

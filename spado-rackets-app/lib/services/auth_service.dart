@@ -212,6 +212,31 @@ class SessionController extends ChangeNotifier {
     } catch (_) {}
   }
 
+  /// Primer acceso del equipo: correo + código de activación + contraseña
+  /// propia. Después inicia sesión con ella.
+  Future<void> activarCuenta({
+    required String email,
+    required String codigo,
+    required String password,
+  }) async {
+    try {
+      await FirebaseFunctions.instanceFor(region: ClubConfig.regionFunciones)
+          .httpsCallable('activarCuenta')
+          .call<Map<String, dynamic>>({
+        'email': email.trim(),
+        'codigo': codigo.trim(),
+        'password': password,
+      });
+    } on FirebaseFunctionsException catch (e) {
+      throw RegistroException(
+        (e.message?.trim().isNotEmpty ?? false)
+            ? e.message!.trim()
+            : 'No se pudo activar la cuenta.',
+      );
+    }
+    await signIn(email: email, password: password);
+  }
+
   /// Cambio de la contraseña provisional que entregó Dirección.
   Future<void> cambiarPasswordObligatorio({
     required String actual,

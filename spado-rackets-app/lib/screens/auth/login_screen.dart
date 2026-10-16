@@ -233,6 +233,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 onPressed: () => context.go('/registro'),
                 child: const Text('Crear cuenta con mi código'),
               ),
+              TextButton(
+                onPressed: () => context.go('/activar'),
+                child: const Text('Soy del equipo: primer acceso'),
+              ),
             ],
           ),
         ),
