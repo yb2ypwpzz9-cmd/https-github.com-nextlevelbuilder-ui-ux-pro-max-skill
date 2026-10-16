@@ -65,13 +65,20 @@ service firebase.storage {
             && alumnaDoc(alumnaId).get('grupo', '') in usuarioDoc().get('grupos', []))
       );
 
+      // La sube Dirección o la familia de esa alumna (al registrarse o desde
+      // su perfil).
       allow create: if isSignedIn()
-        && rol() == 'direccion'
+        && (rol() == 'direccion'
+            || (rol() == 'familia'
+                && alumnaDoc(alumnaId).get('familiaUid', '') == request.auth.uid))
         && request.resource.size < 3 * 1024 * 1024
         && request.resource.contentType == 'image/jpeg';
 
       allow update: if false;
-      allow delete: if isSignedIn() && rol() == 'direccion';
+      allow delete: if isSignedIn()
+        && (rol() == 'direccion'
+            || (rol() == 'familia'
+                && alumnaDoc(alumnaId).get('familiaUid', '') == request.auth.uid));
     }
 
     match /{allPaths=**} {

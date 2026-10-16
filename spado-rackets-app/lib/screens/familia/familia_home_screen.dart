@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -69,8 +70,7 @@ class _FamiliaHomeScreenState extends State<FamiliaHomeScreen> {
                           ChoiceChip(
                             label: Text(a.nombreCorto),
                             selected: a.id == alumna.id,
-                            onSelected: (_) =>
-                                setState(() => _alumnaId = a.id),
+                            onSelected: (_) => setState(() => _alumnaId = a.id),
                           ),
                       ],
                     ),
@@ -78,6 +78,10 @@ class _FamiliaHomeScreenState extends State<FamiliaHomeScreen> {
                   ],
                   _Cabecera(alumna: alumna, grupo: grupo, familia: user),
                   const SizedBox(height: AppSpacing.md),
+                  if (alumna.fotoPath == null) ...[
+                    _AvisoFoto(alumna: alumna),
+                    const SizedBox(height: AppSpacing.md),
+                  ],
                   _EstadoCuotas(uid: user.uid),
                   _Asistencia(alumna: alumna, uid: user.uid),
                   const _UltimoAviso(),
@@ -125,7 +129,28 @@ class _Cabecera extends StatelessWidget {
           const SizedBox(height: 6),
           Row(
             children: [
-              FotoAlumna(alumna, size: 64),
+              GestureDetector(
+                onTap: () => cambiarFotoAlumna(context, alumna),
+                child: Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    FotoAlumna(alumna, size: 64),
+                    Positioned(
+                      right: -4,
+                      bottom: -4,
+                      child: Container(
+                        padding: const EdgeInsets.all(5),
+                        decoration: const BoxDecoration(
+                          color: AppColors.ball,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(Icons.photo_camera,
+                            size: 14, color: AppColors.navyDeep),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
               const SizedBox(width: AppSpacing.md),
               Expanded(
                 child: Column(
@@ -222,8 +247,8 @@ class _Cabecera extends StatelessWidget {
                     final f = await showDatePicker(
                       context: context,
                       initialDate: fecha,
-                      firstDate: DateTime.now()
-                          .subtract(const Duration(days: 1)),
+                      firstDate:
+                          DateTime.now().subtract(const Duration(days: 1)),
                       lastDate: DateTime.now().add(const Duration(days: 60)),
                     );
                     if (f != null) setSheet(() => fecha = f);
@@ -439,5 +464,65 @@ class _UltimoAviso extends StatelessWidget {
         );
       },
     );
+  }
+}
+
+/// Invita a la familia a poner la foto de su hija (ayuda a identificarla en
+/// clase). Se quita sola cuando ya hay foto.
+class _AvisoFoto extends StatelessWidget {
+  const _AvisoFoto({required this.alumna});
+  final Alumna alumna;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: ListTile(
+        contentPadding: const EdgeInsets.all(AppSpacing.md),
+        leading: const Icon(Icons.photo_camera_outlined, color: AppColors.navy),
+        title: Text('Añade la foto de ${alumna.nombreCorto}'),
+        subtitle: const Text(
+          'Ayuda al entrenador a conocerla. La ven solo tu familia, su '
+          'entrenador y la dirección.',
+        ),
+        trailing: const Icon(Icons.chevron_right),
+        onTap: () => cambiarFotoAlumna(context, alumna),
+      ),
+    );
+  }
+}
+
+/// La familia pone o cambia la foto de su hija.
+Future<void> cambiarFotoAlumna(BuildContext context, Alumna alumna) async {
+  final repo = context.read<ClubRepository>();
+  final r = await FilePicker.platform.pickFiles(
+    type: FileType.image,
+    withData: true,
+  );
+  final f = r?.files.single;
+  if (f?.bytes == null) return;
+  if (f!.size > 15 * 1024 * 1024) {
+    if (context.mounted) {
+      showAppSnackBar(context, 'La foto pesa demasiado (máx. 15 MB).',
+          isError: true);
+    }
+    return;
+  }
+  try {
+    await repo.actualizarAlumna(
+      alumna.id,
+      fotoNueva: f.bytes,
+      fotoAnterior: alumna.fotoPath,
+    );
+    if (context.mounted) showAppSnackBar(context, 'Foto actualizada.');
+  } catch (e) {
+    if (context.mounted) {
+      showAppSnackBar(
+        context,
+        '$e'.contains('No se pudo leer')
+            ? 'No se pudo leer la imagen. Prueba con otra foto (JPG o PNG).'
+            : 'No se pudo subir la foto. Inténtalo de nuevo.',
+        isError: true,
+      );
+    }
   }
 }

@@ -251,6 +251,13 @@ service cloud.firestore {
         && datosAlumnaValidos(alumnaId, request.resource.data)
         && textoValido(request.resource.data.get('nombre', ''), 120);
 
+      // La familia solo puede poner o cambiar la FOTO de su hija; nada más de
+      // la ficha.
+      allow update: if isSignedIn()
+        && resource.data.get('familiaUid', '') == request.auth.uid
+        && changedKeys().hasOnly(['fotoPath'])
+        && datosAlumnaValidos(alumnaId, request.resource.data);
+
       allow delete: if isDireccion();
     }
 

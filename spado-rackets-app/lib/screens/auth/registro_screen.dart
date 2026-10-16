@@ -80,7 +80,7 @@ class _RegistroScreenState extends State<RegistroScreen> {
             Text('Crear cuenta de familia', style: t.headlineSmall),
             const SizedBox(height: AppSpacing.xs),
             Text(
-              'Necesitas el código de 6 caracteres que te entregó el club. '
+              'Necesitas el código que te entregó el club (uno por hija). '
               'Si tienes dos hijas en la escuela, usa uno ahora y añade el otro '
               'después desde "Más".',
               style: t.bodySmall,
@@ -91,7 +91,7 @@ class _RegistroScreenState extends State<RegistroScreen> {
               textCapitalization: TextCapitalization.characters,
               decoration: const InputDecoration(
                 labelText: 'Código del club',
-                hintText: 'Ej. K7M2QX',
+                hintText: 'Ej. K7M2QX4P',
               ),
               validator: (v) => (v ?? '').trim().length < 4
                   ? 'Escribe el código que te dio el club'
@@ -102,7 +102,8 @@ class _RegistroScreenState extends State<RegistroScreen> {
               controller: _nombre,
               textCapitalization: TextCapitalization.words,
               decoration: const InputDecoration(
-                labelText: 'Tu nombre y apellido',
+                labelText: 'Nombre y apellidos del padre, madre o tutor',
+                helperText: 'Los tuyos, no los de tu hija',
                 hintText: 'Así te verá el club en los mensajes',
               ),
               validator: (v) =>

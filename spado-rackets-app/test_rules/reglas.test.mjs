@@ -396,6 +396,13 @@ describe('ficha de la alumna: nivel, nacimiento y foto', () => {
     await assertFails(setDoc(doc(como(DIR), 'alumnas/n5'), ficha({ fechaNacimiento: '2016-05-02' })));
   });
 
+  test('la familia solo cambia la foto de SU hija', async () => {
+    await assertSucceeds(updateDoc(doc(como(FAM), 'alumnas/a1'), { fotoPath: 'fotos/a1/1.jpg' }));
+    await assertFails(updateDoc(doc(como(FAM), 'alumnas/a1'), { fotoPath: 'fotos/a2/1.jpg' }));
+    await assertFails(updateDoc(doc(como(FAM), 'alumnas/a1'), { fotoPath: 'fotos/a1/1.jpg', nombre: 'Otra' }));
+    await assertFails(updateDoc(doc(como(FAM), 'alumnas/a2'), { fotoPath: 'fotos/a2/1.jpg' }));
+  });
+
   test('una familia o el staff no editan la ficha', async () => {
     await assertFails(updateDoc(doc(como(FAM), 'alumnas/a1'), { nivel: 'avanzado' }));
     await assertFails(updateDoc(doc(como(STAFF), 'alumnas/a1'), { nivel: 'avanzado' }));
