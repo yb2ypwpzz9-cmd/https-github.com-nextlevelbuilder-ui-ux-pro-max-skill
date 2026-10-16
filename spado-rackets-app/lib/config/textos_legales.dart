@@ -3,7 +3,7 @@
 abstract final class TextosLegales {
   /// Se sube la versión cuando cambia el texto; el consentimiento de cada
   /// familia guarda con qué versión se aceptó.
-  static const version = '2026-10-3';
+  static const version = '2026-10-4';
 
   /// Versión del aviso que se enseña al staff antes de fichar.
   static const avisoStaffVersion = '2026-10';
@@ -58,7 +58,8 @@ abstract final class TextosLegales {
           '• De los entrenadores: día y hora de su llegada y la ubicación '
           'del dispositivo en ese momento (solo al fichar).\n'
           '• Si activas los avisos: un identificador del dispositivo para '
-          'enviarte notificaciones.',
+          'enviarte notificaciones, que pueden mostrar el nombre de pila de la '
+          'alumna al confirmar su asistencia.',
     ),
     (
       '¿Para qué los usamos?',

@@ -629,8 +629,9 @@ export const avisarAsistencia = onDocumentWritten('asistencias/{id}', async (eve
   if (!despues || despues.estado !== 'presente' || antes?.estado === 'presente') return;
   if (!despues.familiaUid) return;
   await notificar([despues.familiaUid], {
-    title: 'Asistencia confirmada',
-    body: 'Tu hija está en el entrenamiento. Abre la app para verlo.',
+    // Solo el nombre de pila: se ve en la pantalla bloqueada.
+    title: `${String(despues.alumnaNombre ?? '').trim().split(' ')[0] || 'Tu hija'} ya está en el entrenamiento`,
+    body: 'El entrenador ha confirmado su asistencia.',
     data: { tipo: 'asistencia' },
   });
 });
