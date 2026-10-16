@@ -55,7 +55,7 @@ class AuthFrame extends StatelessWidget {
                           )
                         else
                           const SizedBox(height: AppSpacing.md),
-                        const ClubLogo(height: 130),
+                        const ClubLogo(height: 88),
                         if (subtitulo != null) ...[
                           const SizedBox(height: AppSpacing.md),
                           Text(
@@ -94,7 +94,10 @@ class AuthFrame extends StatelessWidget {
                             ),
                           ],
                         ),
-                        const SizedBox(height: AppSpacing.lg),
+                        // Margen inferior: el borde de abajo del móvil lo
+                        // reserva el sistema para sus gestos y los botones
+                        // pegados a él no responden bien.
+                        const SizedBox(height: 56),
                       ],
                     ),
                   ),
@@ -240,20 +243,15 @@ class _LoginScreenState extends State<LoginScreen> {
                       )
                     : const Text('Entrar'),
               ),
-              const SizedBox(height: AppSpacing.lg),
+              const SizedBox(height: AppSpacing.md),
               const Divider(),
               const SizedBox(height: AppSpacing.md),
-              Text(
-                '¿Eres familia y es tu primera vez?',
-                textAlign: TextAlign.center,
-                style: t.bodySmall,
-              ),
-              const SizedBox(height: AppSpacing.sm),
               OutlinedButton(
                 onPressed: () => context.go('/registro'),
                 child: const Text('Crear cuenta con mi código'),
               ),
-              TextButton(
+              const SizedBox(height: AppSpacing.sm),
+              OutlinedButton(
                 onPressed: () => context.go('/activar'),
                 child: const Text('Soy del equipo: primer acceso'),
               ),
