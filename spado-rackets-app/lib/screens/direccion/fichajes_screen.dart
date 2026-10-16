@@ -194,6 +194,34 @@ class _FilaFichaje extends StatelessWidget {
               onPressed: () =>
                   launchUrl(j.mapaEntrada!, webOnlyWindowName: '_blank'),
             ),
+          IconButton(
+            tooltip: 'Eliminar fichaje',
+            icon: const Icon(Icons.delete_outline, color: AppColors.danger),
+            onPressed: () async {
+              final repo = context.read<ClubRepository>();
+              final ok = await confirmar(
+                context,
+                titulo: 'Eliminar fichaje',
+                mensaje: 'Se borra el fichaje de ${j.staffNombre} del '
+                    '${fechaCortaFormat.format(j.entrada)}. Esa persona '
+                    'podrá volver a fichar ese día. No se puede deshacer.',
+                accion: 'Eliminar',
+                peligrosa: true,
+              );
+              if (!ok) return;
+              try {
+                await repo.eliminarFichaje(j.id);
+                if (context.mounted) {
+                  showAppSnackBar(context, 'Fichaje eliminado.');
+                }
+              } catch (_) {
+                if (context.mounted) {
+                  showAppSnackBar(context, 'No se pudo eliminar.',
+                      isError: true);
+                }
+              }
+            },
+          ),
         ],
       ),
     );

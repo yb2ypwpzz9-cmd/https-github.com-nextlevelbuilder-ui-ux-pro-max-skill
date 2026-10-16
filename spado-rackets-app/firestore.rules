@@ -311,9 +311,10 @@ service cloud.firestore {
              'staffUid', 'staffNombre', 'fecha', 'entrada',
              'entradaLat', 'entradaLng', 'entradaPrecision']);
 
-      // Un fichaje es un registro de control: no se edita ni se borra.
+      // Un fichaje es un registro de control: nadie lo edita. Solo Dirección
+      // puede eliminarlo (pruebas, fichajes erróneos); quien ficha, no.
       allow update: if false;
-      allow delete: if false;
+      allow delete: if isDireccion();
     }
 
     // ------------------------------------------------------- asistencias

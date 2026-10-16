@@ -14,7 +14,7 @@ import {
   initializeTestEnvironment,
 } from '@firebase/rules-unit-testing';
 import {
-  doc, getDoc, setDoc, updateDoc, collection, getDocs, query, where,
+  doc, getDoc, setDoc, updateDoc, deleteDoc, collection, getDocs, query, where,
   serverTimestamp, writeBatch, Timestamp,
 } from 'firebase/firestore';
 import { ref, uploadBytes, getBytes } from 'firebase/storage';
@@ -191,6 +191,16 @@ describe('fichaje', () => {
     await assertFails(setDoc(doc(db, `jornadas/${STAFF}_${HOY}`), llegada(STAFF, serverTimestamp())));
     await assertFails(updateDoc(doc(db, `jornadas/${STAFF}_${HOY}`), { entrada: serverTimestamp() }));
     await assertFails(updateDoc(doc(db, `jornadas/${STAFF}_${HOY}`), { salida: serverTimestamp() }));
+  });
+
+  test('solo Dirección elimina un fichaje', async () => {
+    const db = como(STAFF);
+    await assertSucceeds(setDoc(doc(db, `jornadas/${STAFF}_${HOY}`), llegada(STAFF, serverTimestamp())));
+    await assertFails(deleteDoc(doc(db, `jornadas/${STAFF}_${HOY}`)));
+    await assertFails(deleteDoc(doc(como(FAM), `jornadas/${STAFF}_${HOY}`)));
+    await assertSucceeds(deleteDoc(doc(como(DIR), `jornadas/${STAFF}_${HOY}`)));
+    // Y quien fichó puede volver a fichar ese día.
+    await assertSucceeds(setDoc(doc(db, `jornadas/${STAFF}_${HOY}`), llegada(STAFF, serverTimestamp())));
   });
 
   test('un entrenador no ve los fichajes de otro; Dirección sí', async () => {

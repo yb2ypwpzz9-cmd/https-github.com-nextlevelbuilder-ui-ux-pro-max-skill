@@ -296,6 +296,10 @@ class ClubRepository {
           .snapshots()
           .map((s) => mapearDocs(s.docs, Jornada.fromDoc));
 
+  /// Dirección: elimina un fichaje (una prueba, un error). Quien fichó vuelve
+  /// a poder fichar ese día.
+  Future<void> eliminarFichaje(String id) => Refs.jornadas.doc(id).delete();
+
   /// Dirección: todas las jornadas desde una fecha.
   Stream<List<Jornada>> watchJornadasDesde(DateTime desde) => Refs.jornadas
       .where('entrada', isGreaterThanOrEqualTo: Timestamp.fromDate(desde))
