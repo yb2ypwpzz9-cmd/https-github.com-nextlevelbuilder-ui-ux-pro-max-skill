@@ -67,30 +67,73 @@ class _PasarListaScreenState extends State<PasarListaScreen> {
     });
   }
 
-  Future<void> _guardar(Grupo grupo, List<Alumna> alumnas) async {
-    final faltan = alumnas.where((a) => _marcas[a.id] == null).length;
-    if (faltan > 0) {
-      showAppSnackBar(
-        context,
-        faltan == 1
-            ? 'Falta marcar a 1 alumna.'
-            : 'Faltan $faltan alumnas por marcar.',
-        isError: true,
-      );
-      return;
-    }
-    final user = context.read<SessionController>().appUser!;
-    setState(() => _guardando = true);
+  /// Marca o desmarca a UNA alumna y guarda al instante: al marcarla presente,
+  /// su familia recibe el aviso de que está en el entrenamiento.
+  Future<void> _marcar(Grupo grupo, Alumna alumna, bool presente) async {
+    final anterior = _marcas[alumna.id];
+    setState(() => _marcas[alumna.id] =
+        presente ? EstadoAsistencia.presente : EstadoAsistencia.falta);
     try {
+      final user = context.read<SessionController>().appUser!;
       await _repo.guardarLista(
         grupo: grupo,
         fecha: claveFecha(_fecha),
-        alumnas: alumnas,
-        marcas: _marcas,
+        alumnas: [alumna],
+        marcas: {alumna.id: _marcas[alumna.id]!},
         quien: user,
       );
+    } catch (_) {
       if (!mounted) return;
-      showAppSnackBar(context, 'Lista guardada.');
+      setState(() {
+        if (anterior == null) {
+          _marcas.remove(alumna.id);
+        } else {
+          _marcas[alumna.id] = anterior;
+        }
+      });
+      showAppSnackBar(
+        context,
+        'No se pudo guardar. Revisa tu conexión e inténtalo de nuevo.',
+        isError: true,
+      );
+    }
+  }
+
+  /// Todas las alumnas sin marcar quedan como falta (o falta justificada si la
+  /// familia avisó) y se cierra la lista.
+  Future<void> _terminar(
+    Grupo grupo,
+    List<Alumna> alumnas,
+    Map<String, Ausencia> avisos,
+  ) async {
+    final user = context.read<SessionController>().appUser!;
+    final pendientes = alumnas
+        .where((a) => _marcas[a.id] != EstadoAsistencia.presente)
+        .toList();
+    setState(() => _guardando = true);
+    try {
+      final marcas = {
+        for (final a in pendientes)
+          a.id: avisos.containsKey(a.id)
+              ? EstadoAsistencia.justificada
+              : EstadoAsistencia.falta,
+      };
+      if (pendientes.isNotEmpty) {
+        await _repo.guardarLista(
+          grupo: grupo,
+          fecha: claveFecha(_fecha),
+          alumnas: pendientes,
+          marcas: marcas,
+          quien: user,
+        );
+      }
+      if (!mounted) return;
+      showAppSnackBar(
+        context,
+        pendientes.isEmpty
+            ? 'Lista guardada: asisten todas.'
+            : 'Lista guardada. No han venido ${pendientes.length}.',
+      );
       Navigator.of(context).maybePop();
     } catch (_) {
       if (mounted) {
@@ -150,26 +193,15 @@ class _PasarListaScreenState extends State<PasarListaScreen> {
   ) {
     final avisos = {for (final a in ausencias) a.alumnaId: a};
     if (!_cargadas) {
-      // Primera vez: lo ya guardado, y si no, las faltas avisadas.
+      // Primera vez: lo ya guardado.
       for (final g in guardadas) {
         _marcas[g.alumnaId] = g.estado;
-      }
-      for (final a in alumnas) {
-        if (_marcas[a.id] == null && avisos.containsKey(a.id)) {
-          _marcas[a.id] = EstadoAsistencia.justificada;
-        }
       }
       _cargadas = true;
     }
 
-    final t = Theme.of(context).textTheme;
-    final cuenta = {
-      for (final e in EstadoAsistencia.values)
-        e: _marcas.entries
-            .where((m) => m.value == e && alumnas.any((a) => a.id == m.key))
-            .length,
-    };
-    final marcadas = alumnas.where((a) => _marcas[a.id] != null).length;
+    final presentes =
+        alumnas.where((a) => _marcas[a.id] == EstadoAsistencia.presente).length;
     final yaGuardada = guardadas.isNotEmpty;
 
     return Column(
@@ -194,34 +226,44 @@ class _PasarListaScreenState extends State<PasarListaScreen> {
               Row(
                 children: [
                   Expanded(
-                    child: Wrap(
-                      spacing: 6,
-                      runSpacing: 6,
-                      children: [
-                        StatusChip(
-                          label: '${cuenta[EstadoAsistencia.presente]} asisten',
-                          color: AppColors.success,
-                        ),
-                        StatusChip(
-                          label: '${cuenta[EstadoAsistencia.falta]} faltas',
-                          color: AppColors.danger,
-                        ),
-                        StatusChip(
-                          label:
-                              '${cuenta[EstadoAsistencia.justificada]} justificadas',
-                          color: AppColors.warning,
-                        ),
-                      ],
+                    child: StatusChip(
+                      label: '$presentes de ${alumnas.length} en la pista',
+                      color: AppColors.success,
+                      icon: Icons.check,
                     ),
                   ),
                   TextButton.icon(
-                    onPressed: () => setState(() {
-                      for (final a in alumnas) {
-                        if (_marcas[a.id] != EstadoAsistencia.justificada) {
-                          _marcas[a.id] = EstadoAsistencia.presente;
-                        }
-                      }
-                    }),
+                    onPressed: alumnas.isEmpty
+                        ? null
+                        : () async {
+                            final user =
+                                context.read<SessionController>().appUser!;
+                            setState(() {
+                              for (final a in alumnas) {
+                                _marcas[a.id] = EstadoAsistencia.presente;
+                              }
+                            });
+                            try {
+                              await _repo.guardarLista(
+                                grupo: grupo,
+                                fecha: claveFecha(_fecha),
+                                alumnas: alumnas,
+                                marcas: {
+                                  for (final a in alumnas)
+                                    a.id: EstadoAsistencia.presente,
+                                },
+                                quien: user,
+                              );
+                            } catch (_) {
+                              if (mounted) {
+                                showAppSnackBar(
+                                  context,
+                                  'No se pudo guardar. Inténtalo de nuevo.',
+                                  isError: true,
+                                );
+                              }
+                            }
+                          },
                     icon: const Icon(Icons.done_all, size: 18),
                     label: const Text('Todas presentes'),
                   ),
@@ -241,16 +283,17 @@ class _PasarListaScreenState extends State<PasarListaScreen> {
                     for (final a in alumnas)
                       _FilaAlumna(
                         alumna: a,
-                        estado: _marcas[a.id],
+                        presente: _marcas[a.id] == EstadoAsistencia.presente,
                         aviso: avisos[a.id],
-                        onChanged: (e) => setState(() => _marcas[a.id] = e),
+                        onChanged: (v) => _marcar(grupo, a, v),
                       ),
                   ],
                 ),
               const SizedBox(height: AppSpacing.sm),
               Text(
-                'P = asistió · F = falta · J = falta justificada',
-                style: t.bodySmall,
+                'Marca a cada alumna al llegar: su familia recibe el aviso '
+                'al momento.',
+                style: Theme.of(context).textTheme.bodySmall,
                 textAlign: TextAlign.center,
               ),
             ],
@@ -259,7 +302,8 @@ class _PasarListaScreenState extends State<PasarListaScreen> {
         SafeArea(
           top: false,
           child: Container(
-            padding: const EdgeInsets.all(AppSpacing.md),
+            padding: const EdgeInsets.fromLTRB(
+                AppSpacing.md, AppSpacing.md, AppSpacing.md, AppSpacing.lg),
             decoration: const BoxDecoration(
               color: AppColors.surface,
               border: Border(top: BorderSide(color: AppColors.border)),
@@ -270,11 +314,8 @@ class _PasarListaScreenState extends State<PasarListaScreen> {
                 child: FilledButton(
                   onPressed: _guardando || alumnas.isEmpty
                       ? null
-                      : () => _guardar(grupo, alumnas),
-                  child: Text(_guardando
-                      ? 'Guardando…'
-                      : '${yaGuardada ? 'Actualizar' : 'Guardar'} lista '
-                          '($marcadas/${alumnas.length})'),
+                      : () => _terminar(grupo, alumnas, avisos),
+                  child: Text(_guardando ? 'Guardando…' : 'Terminar lista'),
                 ),
               ),
             ),
@@ -288,84 +329,69 @@ class _PasarListaScreenState extends State<PasarListaScreen> {
 class _FilaAlumna extends StatelessWidget {
   const _FilaAlumna({
     required this.alumna,
-    required this.estado,
+    required this.presente,
     required this.onChanged,
     this.aviso,
   });
 
   final Alumna alumna;
-  final EstadoAsistencia? estado;
+  final bool presente;
   final Ausencia? aviso;
-  final ValueChanged<EstadoAsistencia> onChanged;
-
-  static const _colores = {
-    EstadoAsistencia.presente: AppColors.success,
-    EstadoAsistencia.falta: AppColors.danger,
-    EstadoAsistencia.justificada: AppColors.warning,
-  };
+  final ValueChanged<bool> onChanged;
 
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context).textTheme;
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.md,
-        vertical: 10,
-      ),
-      child: Row(
-        children: [
-          FotoAlumna(alumna, size: 42),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(alumna.nombre, style: t.titleSmall),
-                if (aviso != null)
-                  Text(
-                    'Aviso de la familia: ${aviso!.motivo.isEmpty ? 'sin motivo' : aviso!.motivo}',
-                    style: t.bodySmall?.copyWith(color: AppColors.warning),
-                  ),
-              ],
-            ),
+    return Semantics(
+      button: true,
+      selected: presente,
+      label: '${alumna.nombre}, ${presente ? 'presente' : 'sin marcar'}',
+      child: InkWell(
+        onTap: () => onChanged(!presente),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.md,
+            vertical: 10,
           ),
-          for (final e in EstadoAsistencia.values)
-            Padding(
-              padding: const EdgeInsets.only(left: 6),
-              child: Semantics(
-                button: true,
-                selected: estado == e,
-                label: '${e.label} ${alumna.nombre}',
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(10),
-                  onTap: () => onChanged(e),
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 120),
-                    width: 42,
-                    height: 42,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: estado == e ? _colores[e] : AppColors.surface,
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                        color: estado == e ? _colores[e]! : AppColors.border,
-                        width: 1.4,
+          child: Row(
+            children: [
+              FotoAlumna(alumna, size: 44),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(alumna.nombre, style: t.titleSmall),
+                    if (aviso != null)
+                      Text(
+                        'Aviso de la familia: ${aviso!.motivo.isEmpty ? 'no vendrá' : aviso!.motivo}',
+                        style:
+                            t.bodySmall?.copyWith(color: AppColors.warning),
                       ),
-                    ),
-                    child: Text(
-                      e.letra,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w800,
-                        color: estado == e
-                            ? Colors.white
-                            : AppColors.textSecondary,
-                      ),
-                    ),
-                  ),
+                  ],
                 ),
               ),
-            ),
-        ],
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 120),
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  color: presente ? AppColors.success : AppColors.surface,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: presente ? AppColors.success : AppColors.border,
+                    width: 2,
+                  ),
+                ),
+                child: Icon(
+                  Icons.check,
+                  color: presente ? Colors.white : Colors.transparent,
+                  size: 26,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
