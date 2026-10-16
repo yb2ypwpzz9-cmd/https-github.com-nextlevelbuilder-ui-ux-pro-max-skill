@@ -8,6 +8,8 @@ import '../services/auth_service.dart';
 import '../services/club_repository.dart';
 import '../theme/app_theme.dart';
 import '../widgets/common.dart';
+import '../config/textos_legales.dart';
+import 'auth/pasos_obligatorios.dart';
 import 'auth/verificar_correo_screen.dart';
 import 'chat/chats_screen.dart';
 import 'direccion/direccion_home_screen.dart';
@@ -43,8 +45,8 @@ class _AppShellState extends State<AppShell> {
   // consultas a Firestore) hasta que se pulsan. Acelera el arranque en móvil.
   final Set<int> _visitadas = {0};
 
-  static final _chat = _Tab('Mensajes', Icons.forum_outlined, Icons.forum,
-      () => const ChatsScreen(),
+  static final _chat = _Tab(
+      'Mensajes', Icons.forum_outlined, Icons.forum, () => const ChatsScreen(),
       esChat: true);
   static final _mas =
       _Tab('Más', Icons.menu, Icons.menu, () => const MasScreen());
@@ -67,8 +69,8 @@ class _AppShellState extends State<AppShell> {
             _mas,
           ],
         UserRole.direccion => [
-            _Tab('Panel', Icons.space_dashboard_outlined,
-                Icons.space_dashboard, () => const DireccionHomeScreen()),
+            _Tab('Panel', Icons.space_dashboard_outlined, Icons.space_dashboard,
+                () => const DireccionHomeScreen()),
             _Tab('Fichajes', Icons.badge_outlined, Icons.badge,
                 () => const FichajesScreen()),
             _Tab('Pagos', Icons.receipt_long_outlined, Icons.receipt_long,
@@ -107,6 +109,14 @@ class _AppShellState extends State<AppShell> {
       return const VerificarCorreoScreen();
     }
 
+    if (user.debeCambiarPassword) {
+      return const CambiarPasswordObligatorioScreen();
+    }
+    if (user.role.isStaff &&
+        user.avisoUbicacionVersion != TextosLegales.avisoStaffVersion) {
+      return const AvisoUbicacionScreen();
+    }
+
     final tabs = _tabsFor(user.role);
     final index = _index.clamp(0, tabs.length - 1);
 
@@ -121,35 +131,37 @@ class _AppShellState extends State<AppShell> {
         }
       }),
       child: Scaffold(
-      body: IndexedStack(
-        index: index,
-        children: [
-          for (var i = 0; i < tabs.length; i++)
-            if (i == index || _visitadas.contains(i))
-              tabs[i].builder()
-            else
-              const SizedBox.shrink(),
-        ],
-      ),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: index,
-        onDestinationSelected: (v) => setState(() {
-          _index = v;
-          _visitadas.add(v);
-        }),
-        destinations: [
-          for (final t in tabs)
-            NavigationDestination(
-              icon: t.esChat
-                  ? _IconoConAviso(icono: t.icon, uid: user.uid)
-                  : Icon(t.icon),
-              selectedIcon: t.esChat
-                  ? _IconoConAviso(icono: t.selectedIcon, uid: user.uid)
-                  : Icon(t.selectedIcon),
-              label: t.label,
-            ),
-        ],
-      ),
+        body: IndexedStack(
+          index: index,
+          children: [
+            for (var i = 0; i < tabs.length; i++)
+              if (i == index || _visitadas.contains(i))
+                tabs[i].builder()
+              else
+                const SizedBox.shrink(),
+          ],
+        ),
+        bottomNavigationBar: _BarraInferior(
+          child: NavigationBar(
+            selectedIndex: index,
+            onDestinationSelected: (v) => setState(() {
+              _index = v;
+              _visitadas.add(v);
+            }),
+            destinations: [
+              for (final t in tabs)
+                NavigationDestination(
+                  icon: t.esChat
+                      ? _IconoConAviso(icono: t.icon, uid: user.uid)
+                      : Icon(t.icon),
+                  selectedIcon: t.esChat
+                      ? _IconoConAviso(icono: t.selectedIcon, uid: user.uid)
+                      : Icon(t.selectedIcon),
+                  label: t.label,
+                ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -169,7 +181,8 @@ class _IconoConAviso extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<int>(
+    return StreamBuilderEstable<int>(
+      streamKey: uid,
       stream: context.read<ClubRepository>().watchSinLeer(uid),
       builder: (context, snap) {
         final n = snap.data ?? 0;
@@ -201,7 +214,8 @@ class TabAppBar extends StatelessWidget implements PreferredSizeWidget {
       titleSpacing: AppSpacing.md,
       title: Row(
         children: [
-          Image.asset('assets/images/emblema_blanco.png', width: 32, height: 32),
+          Image.asset('assets/images/emblema_blanco.png',
+              width: 32, height: 32),
           const SizedBox(width: 10),
           Flexible(child: Text(title, overflow: TextOverflow.ellipsis)),
         ],
@@ -250,6 +264,28 @@ class _CargandoPerfilState extends State<_CargandoPerfil> {
         onPressed: () => context.read<SessionController>().signOut(),
         icon: const Icon(Icons.logout),
         label: const Text('Cerrar sesión y reintentar'),
+      ),
+    );
+  }
+}
+
+/// Barra inferior elevada: en el móvil (sobre todo en iPhone con la app en
+/// pantalla de inicio) el borde de abajo lo reserva el sistema para sus
+/// gestos, y los botones pegados a él no responden bien al toque. Se deja un
+/// margen extra para que queden en la zona que sí detecta el dedo.
+class _BarraInferior extends StatelessWidget {
+  const _BarraInferior({required this.child});
+  final Widget child;
+
+  static const margen = 14.0;
+
+  @override
+  Widget build(BuildContext context) {
+    return ColoredBox(
+      color: AppColors.navyDeep,
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: margen),
+        child: child,
       ),
     );
   }

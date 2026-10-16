@@ -361,3 +361,22 @@ describe('acceso al club sin alumna vinculada', () => {
     await assertSucceeds(updateDoc(doc(como(FAM), 'pagos/a1_2026-10'), base));
   });
 });
+
+describe('pasos obligatorios del primer acceso', () => {
+  test('quitar la marca de contraseña provisional, y solo eso', async () => {
+    await env.withSecurityRulesDisabled((ctx) =>
+      updateDoc(doc(ctx.firestore(), `users/${STAFF}`), { debeCambiarPassword: true }));
+    const db = como(STAFF);
+    await assertFails(updateDoc(doc(db, `users/${STAFF}`), { debeCambiarPassword: false, role: 'direccion' }));
+    await assertSucceeds(updateDoc(doc(db, `users/${STAFF}`), { debeCambiarPassword: false }));
+    // Ya sin la marca, no se puede volver a ponerla desde la app.
+    await assertFails(updateDoc(doc(db, `users/${STAFF}`), { debeCambiarPassword: true }));
+  });
+
+  test('el staff firma el aviso de ubicación con la hora del servidor', async () => {
+    const db = como(STAFF);
+    await assertFails(updateDoc(doc(db, `users/${STAFF}`), { avisoUbicacionVersion: '2026-10', avisoUbicacionEn: Timestamp.fromDate(new Date('2000-01-01')) }));
+    await assertSucceeds(updateDoc(doc(db, `users/${STAFF}`), { avisoUbicacionVersion: '2026-10', avisoUbicacionEn: serverTimestamp() }));
+    await assertFails(updateDoc(doc(como(FAM), `users/${FAM}`), { avisoUbicacionVersion: '2026-10', avisoUbicacionEn: serverTimestamp() }));
+  });
+});

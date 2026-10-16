@@ -35,6 +35,7 @@ class StaffGruposScreen extends StatelessWidget {
             );
           }
           return StreamView<List<Alumna>>(
+            streamKey: mios.map((g) => g.id).join(','),
             stream: repo.watchAlumnasDeGrupos(mios.map((g) => g.id).toList()),
             builder: (context, alumnas) => PageBody(
               children: [
@@ -68,7 +69,8 @@ class _TarjetaGrupo extends StatelessWidget {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.md),
-        child: StreamBuilder<List<Asistencia>>(
+        child: StreamBuilderEstable<List<Asistencia>>(
+          streamKey: grupo.id,
           stream: context
               .read<ClubRepository>()
               .watchAsistenciaGrupo(grupo.id, hace30),

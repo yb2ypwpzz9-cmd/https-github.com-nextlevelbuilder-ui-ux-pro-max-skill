@@ -61,7 +61,8 @@ class _FichajePanelState extends State<FichajePanel> {
     final uid = context.watch<SessionController>().appUser!.uid;
     final t = Theme.of(context).textTheme;
 
-    return StreamBuilder<Jornada?>(
+    return StreamBuilderEstable<Jornada?>(
+      streamKey: uid,
       stream: context.read<ClubRepository>().watchFichajeHoy(uid),
       builder: (context, snap) {
         // "Aún no ha fichado" llega como `null`, que para StreamBuilder es

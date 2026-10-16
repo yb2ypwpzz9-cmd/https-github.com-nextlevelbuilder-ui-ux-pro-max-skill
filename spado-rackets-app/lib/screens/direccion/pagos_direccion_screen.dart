@@ -34,6 +34,7 @@ class _PagosDireccionScreenState extends State<PagosDireccionScreen> {
     return Scaffold(
       appBar: const TabAppBar(title: 'Pagos'),
       body: StreamView<List<Pago>>(
+        streamKey: _periodo,
         stream: repo.watchPagosPeriodo(_periodo),
         builder: (context, pagos) {
           final ahora = DateTime.now();

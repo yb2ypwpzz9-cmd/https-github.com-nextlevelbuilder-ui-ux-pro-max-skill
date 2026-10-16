@@ -37,6 +37,8 @@ class AppUser {
     this.grupos = const [],
     this.displayName,
     this.phone,
+    this.debeCambiarPassword = false,
+    this.avisoUbicacionVersion,
   });
 
   final String uid;
@@ -51,6 +53,12 @@ class AppUser {
   final String? displayName;
   final String? phone;
 
+  /// Cuenta creada por Dirección con contraseña provisional: hay que cambiarla.
+  final bool debeCambiarPassword;
+
+  /// Versión del aviso de ubicación que el staff ha aceptado.
+  final String? avisoUbicacionVersion;
+
   factory AppUser.fromDoc(DocumentSnapshot<Json> doc) {
     final data = doc.data() ?? const <String, dynamic>{};
     return AppUser(
@@ -60,6 +68,8 @@ class AppUser {
       grupos: listaDeTextos(data['grupos']),
       displayName: data['displayName'] as String?,
       phone: data['phone'] as String?,
+      debeCambiarPassword: (data['debeCambiarPassword'] as bool?) ?? false,
+      avisoUbicacionVersion: data['avisoUbicacionVersion'] as String?,
     );
   }
 

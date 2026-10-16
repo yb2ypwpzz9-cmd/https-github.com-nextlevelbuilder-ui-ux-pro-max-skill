@@ -169,7 +169,14 @@ class StreamView<T> extends StatefulWidget {
     required this.stream,
     required this.builder,
     this.loading,
+    this.streamKey,
   });
+
+  /// Mientras `streamKey` no cambie, se sigue usando la primera consulta: las
+  /// pantallas crean `stream` en cada `build`, y volver a suscribirse en cada
+  /// repintado dejaba los datos en "cargando" y la app a trompicones. Si la
+  /// consulta depende de algo que cambia (mes, fecha, grupos), pásalo aquí.
+  final Object? streamKey;
 
   final Stream<T> stream;
   final Widget Function(BuildContext context, T data) builder;
@@ -202,7 +209,7 @@ class _StreamViewState<T> extends State<StreamView<T>> {
   @override
   void didUpdateWidget(covariant StreamView<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (!identical(oldWidget.stream, widget.stream)) {
+    if (oldWidget.streamKey != widget.streamKey) {
       _stream = widget.stream;
       _arrancarTemporizador();
     }
@@ -537,4 +544,38 @@ Future<bool> confirmar(
     ),
   );
   return r ?? false;
+}
+
+
+/// `StreamBuilder` que no se vuelve a suscribir cuando el padre se repinta:
+/// solo cuando cambia [streamKey]. Ver [StreamView.streamKey].
+class StreamBuilderEstable<T> extends StatefulWidget {
+  const StreamBuilderEstable({
+    super.key,
+    required this.stream,
+    required this.builder,
+    this.streamKey,
+  });
+
+  final Stream<T> stream;
+  final AsyncWidgetBuilder<T> builder;
+  final Object? streamKey;
+
+  @override
+  State<StreamBuilderEstable<T>> createState() =>
+      _StreamBuilderEstableState<T>();
+}
+
+class _StreamBuilderEstableState<T> extends State<StreamBuilderEstable<T>> {
+  late Stream<T> _stream = widget.stream;
+
+  @override
+  void didUpdateWidget(covariant StreamBuilderEstable<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.streamKey != widget.streamKey) _stream = widget.stream;
+  }
+
+  @override
+  Widget build(BuildContext context) =>
+      StreamBuilder<T>(stream: _stream, builder: widget.builder);
 }

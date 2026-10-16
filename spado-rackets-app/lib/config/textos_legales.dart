@@ -5,6 +5,38 @@ abstract final class TextosLegales {
   /// familia guarda con qué versión se aceptó.
   static const version = '2026-10-3';
 
+  /// Versión del aviso que se enseña al staff antes de fichar.
+  static const avisoStaffVersion = '2026-10';
+
+  static const avisoStaffTitulo = 'Aviso sobre el fichaje y tu ubicación';
+
+  static const avisoStaff = [
+    (
+      '¿Qué se registra?',
+      'Solo cuando pulsas «Fichar llegada»: el día y la hora, y la ubicación '
+          'aproximada de tu dispositivo en ese momento (coordenadas y '
+          'precisión). La app no te sigue ni consulta tu ubicación en ningún '
+          'otro momento.',
+    ),
+    (
+      '¿Para qué?',
+      'Para comprobar que la llegada al club se produce en el club, y llevar '
+          'el control de asistencia del personal. No se usa para ninguna otra '
+          'finalidad.',
+    ),
+    (
+      '¿Quién lo ve?',
+      'Tú y la dirección del club. Las familias no ven los fichajes.',
+    ),
+    (
+      '¿Cuánto tiempo?',
+      'El tiempo necesario para el control de asistencia del personal y las '
+          'obligaciones del club. Puedes pedir información, rectificación o '
+          'supresión escribiendo a info@mongogroupsport.com o desde Más → '
+          'Descargar mis datos / Eliminar mi cuenta.',
+    ),
+  ];
+
   static const privacidadTitulo = 'Política de privacidad';
 
   static const privacidad = [

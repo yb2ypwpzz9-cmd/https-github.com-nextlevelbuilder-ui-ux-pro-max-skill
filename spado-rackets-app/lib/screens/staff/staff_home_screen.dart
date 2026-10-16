@@ -71,6 +71,7 @@ class StaffHomeScreen extends StatelessWidget {
           ),
           const SectionHeader('Mis fichajes'),
           StreamView<List<Jornada>>(
+            streamKey: '${user.uid}${hoy.year}${hoy.month}${hoy.day}',
             stream: repo.watchMisJornadas(
               user.uid,
               DateTime(hoy.year, hoy.month, 1).isBefore(lunes)
@@ -121,7 +122,8 @@ class _ClaseDeHoy extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final clave = claveFecha(fecha);
-    return StreamBuilder<List<Asistencia>>(
+    return StreamBuilderEstable<List<Asistencia>>(
+      streamKey: '${grupo.id}$clave',
       stream: context.read<ClubRepository>().watchSesion(grupo.id, clave),
       builder: (context, snap) {
         final hecha = (snap.data ?? const []).isNotEmpty;

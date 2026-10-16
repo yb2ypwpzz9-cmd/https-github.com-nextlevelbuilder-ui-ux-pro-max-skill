@@ -299,6 +299,8 @@ export const crearCuentaClub = onCall(async (req) => {
     grupos: rol === 'staff' ? grupos : [],
     createdAt: FieldValue.serverTimestamp(),
     creadoPor: uid,
+    // La contraseña provisional la conoce quien la entregó: se cambia al entrar.
+    debeCambiarPassword: true,
   });
 
   logger.info(`Cuenta ${rol} creada (${nuevo.uid}) por ${uid}`);
@@ -355,6 +357,7 @@ export const restablecerPasswordCuentaClub = onCall(async (req) => {
   const password = Array.from({ length: 10 }, () => letras[randomInt(letras.length)]).join('');
   try {
     await getAuth().updateUser(destino, { password });
+    await db.doc(`users/${destino}`).update({ debeCambiarPassword: true });
   } catch (e) {
     throw new HttpsError('internal', 'No se pudo cambiar la contraseña.');
   }
@@ -605,14 +608,12 @@ export const alCrearMensaje = onDocumentCreated(
     for (const uid of destinatarios) cambios[`sinLeer.${uid}`] = FieldValue.increment(1);
     await ref.update(cambios);
 
-    const titulo = conv.tipo === 'avisos'
-      ? 'Aviso del club'
-      : conv.tipo === 'grupo' ? (conv.titulo || 'Grupo') : (m.autorNombre || 'Mensaje');
-    await notificar(destinatarios, {
-      title: titulo,
-      body: conv.tipo === 'directa' ? texto.slice(0, 120) : `${m.autorNombre}: ${texto.slice(0, 110)}`,
-      data: { tipo: 'chat', conversacionId },
-    });
+    // Las notificaciones se ven en la pantalla bloqueada: solo los avisos
+    // generales del club (públicos para todas las familias) llevan texto; el
+    // resto avisa de que hay algo nuevo, sin nombres ni contenido.
+    await notificar(destinatarios, conv.tipo === 'avisos'
+      ? { title: 'Aviso del club', body: texto.slice(0, 120), data: { tipo: 'chat', conversacionId } }
+      : { title: 'Mensaje nuevo', body: 'Tienes un mensaje nuevo en Spado Rackets.', data: { tipo: 'chat', conversacionId } });
   },
 );
 
@@ -627,10 +628,9 @@ export const avisarAsistencia = onDocumentWritten('asistencias/{id}', async (eve
   const despues = event.data?.after?.data();
   if (!despues || despues.estado !== 'presente' || antes?.estado === 'presente') return;
   if (!despues.familiaUid) return;
-  const grupo = await db.doc(`grupos/${despues.grupo}`).get();
   await notificar([despues.familiaUid], {
-    title: `${String(despues.alumnaNombre ?? 'Tu hija').split(' ')[0]} está en el entrenamiento`,
-    body: `El entrenador ha confirmado su asistencia${grupo.exists ? ` a ${grupo.get('nombre')}` : ''}.`,
+    title: 'Asistencia confirmada',
+    body: 'Tu hija está en el entrenamiento. Abre la app para verlo.',
     data: { tipo: 'asistencia' },
   });
 });
@@ -639,10 +639,9 @@ export const avisarAsistencia = onDocumentWritten('asistencias/{id}', async (eve
 export const avisarCuotaNueva = onDocumentCreated('pagos/{id}', async (event) => {
   const p = event.data?.data();
   if (!p?.familiaUid) return; // aún sin cuenta: se avisará al asociarla en la app
-  const importe = Number(p.importe ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2 });
   await notificar([p.familiaUid], {
     title: 'Nueva cuota',
-    body: `${String(p.alumnaNombre ?? '').split(' ')[0]} · ${p.periodo}: US$ ${importe}. Plazo: hasta el día 5.`,
+    body: 'Tienes una cuota nueva. Plazo: hasta el día 5.',
     data: { tipo: 'cuota' },
   });
 });
@@ -654,25 +653,22 @@ export const avisarPago = onDocumentWritten('pagos/{id}', async (event) => {
   const despues = event.data?.after?.data();
   if (!despues || antes?.estado === despues.estado) return;
 
-  const quien = despues.alumnaNombre ?? 'la alumna';
-  const mes = despues.periodo ?? '';
-
   if (despues.estado === 'en_revision') {
     await notificar(await uidsDireccion(), {
       title: 'Justificante recibido',
-      body: `${quien} · ${mes}. Pendiente de revisar.`,
+      body: 'Hay un justificante pendiente de revisar.',
       data: { tipo: 'pago' },
     });
   } else if (despues.estado === 'pagado' && antes?.estado) {
     await notificar([despues.familiaUid], {
       title: 'Pago confirmado',
-      body: `La cuota de ${quien} (${mes}) está pagada. ¡Gracias!`,
+      body: 'Tu cuota está pagada. ¡Gracias!',
       data: { tipo: 'pago' },
     });
   } else if (despues.estado === 'rechazado') {
     await notificar([despues.familiaUid], {
       title: 'Revisa tu justificante',
-      body: despues.motivoRechazo || `No se pudo validar el pago de ${quien}.`,
+      body: 'No se pudo validar tu pago. Abre la app para ver el motivo.',
       data: { tipo: 'pago' },
     });
   }
@@ -688,7 +684,7 @@ export const avisarAusencia = onDocumentCreated('ausencias/{id}', async (event) 
     .get();
   await notificar(staff.docs.map((d) => d.id), {
     title: 'Falta avisada',
-    body: `${a.alumnaNombre} no vendrá el ${a.fecha}${a.motivo ? ` · ${a.motivo}` : ''}`,
+    body: 'Una familia ha avisado de una falta. Míralo en la app.',
     data: { tipo: 'ausencia' },
   });
 });

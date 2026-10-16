@@ -249,7 +249,8 @@ class _EstadoCuotas extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<List<Pago>>(
+    return StreamBuilderEstable<List<Pago>>(
+      streamKey: uid,
       stream: context.read<ClubRepository>().watchPagosFamilia(uid),
       builder: (context, snap) {
         final pagos = snap.data;
@@ -368,7 +369,7 @@ class _UltimoAviso extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<Conversacion?>(
+    return StreamBuilderEstable<Conversacion?>(
       stream: context
           .read<ClubRepository>()
           .watchConversacion(Conversacion.idAvisos),

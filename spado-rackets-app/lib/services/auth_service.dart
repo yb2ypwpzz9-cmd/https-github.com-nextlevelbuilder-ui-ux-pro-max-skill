@@ -209,6 +209,27 @@ class SessionController extends ChangeNotifier {
     } catch (_) {}
   }
 
+  /// Cambio de la contraseña provisional que entregó Dirección.
+  Future<void> cambiarPasswordObligatorio({
+    required String actual,
+    required String nueva,
+  }) async {
+    await cambiarPassword(actual: actual, nueva: nueva);
+    final uid = _auth.currentUser?.uid;
+    if (uid != null) {
+      await Refs.user(uid).update({'debeCambiarPassword': false});
+    }
+  }
+
+  /// Constancia de que el staff ha leído el aviso sobre el fichaje.
+  Future<void> aceptarAvisoUbicacion() {
+    final uid = _auth.currentUser!.uid;
+    return Refs.user(uid).update({
+      'avisoUbicacionVersion': TextosLegales.avisoStaffVersion,
+      'avisoUbicacionEn': FieldValue.serverTimestamp(),
+    });
+  }
+
   String? _codigoPendiente;
 
   /// Una familia con la cuenta creada pero sin el correo verificado.

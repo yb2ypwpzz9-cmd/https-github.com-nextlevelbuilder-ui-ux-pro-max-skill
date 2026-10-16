@@ -49,6 +49,7 @@ class _FichajesScreenState extends State<FichajesScreen> {
     return Scaffold(
       appBar: const TabAppBar(title: 'Fichajes de entrenadores'),
       body: StreamView<List<Jornada>>(
+        streamKey: _periodo,
         stream: context.read<ClubRepository>().watchJornadasDesde(desde),
         builder: (context, todas) {
           final enRango =

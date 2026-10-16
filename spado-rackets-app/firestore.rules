@@ -159,6 +159,18 @@ service cloud.firestore {
       // ni sus grupos.
       allow update: if isSignedIn() && (
         isDireccion()
+        // Quitar la marca de "cambia la contraseña provisional".
+        || (request.auth.uid == userId
+            && resource.data.get('debeCambiarPassword', false) == true
+            && changedKeys().hasOnly(['debeCambiarPassword'])
+            && request.resource.data.get('debeCambiarPassword', true) == false)
+        // Constancia de que el staff leyó el aviso sobre la ubicación.
+        || (request.auth.uid == userId
+            && rol() == 'staff'
+            && changedKeys().hasOnly(['avisoUbicacionEn', 'avisoUbicacionVersion'])
+            && request.resource.data.get('avisoUbicacionEn', null) == request.time
+            && request.resource.data.get('avisoUbicacionVersion', '') is string
+            && request.resource.data.get('avisoUbicacionVersion', '').size() <= 20)
         || (request.auth.uid == userId
             && changedKeys().hasOnly(['fcmTokens', 'displayName', 'phone'])
             && textoOpcional(request.resource.data, 'displayName', 80)

@@ -372,7 +372,7 @@ class _Compositor extends StatelessWidget {
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 760),
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(12, 8, 8, 8),
+              padding: const EdgeInsets.fromLTRB(12, 8, 8, 18),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
