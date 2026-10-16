@@ -3,7 +3,7 @@
 abstract final class TextosLegales {
   /// Se sube la versión cuando cambia el texto; el consentimiento de cada
   /// familia guarda con qué versión se aceptó.
-  static const version = '2026-10-4';
+  static const version = '2026-10-5';
 
   /// Versión del aviso que se enseña al staff antes de fichar.
   static const avisoStaffVersion = '2026-10';
@@ -49,9 +49,12 @@ abstract final class TextosLegales {
     (
       '¿Qué datos tratamos?',
       '• De las familias: nombre, correo electrónico y teléfono (opcional).\n'
-          '• De las alumnas (menores de edad): nombre, grupo de '
-          'entrenamiento, asistencia a clase y cuotas. Los facilita y '
-          'autoriza su madre, padre o tutor legal.\n'
+          '• De las alumnas (menores de edad): nombre, fecha de nacimiento, '
+          'nivel de tenis, fotografía, grupo de entrenamiento, asistencia a '
+          'clase y cuotas. Los facilita y autoriza su madre, padre o tutor '
+          'legal, también para la fotografía, que sirve para identificar a '
+          'la alumna en clase y solo la ven su familia, su entrenador y la '
+          'dirección.\n'
           '• Justificantes de pago que la familia sube a la app, que pueden '
           'contener datos bancarios.\n'
           '• Mensajes que las familias y el club se envían por el chat.\n'

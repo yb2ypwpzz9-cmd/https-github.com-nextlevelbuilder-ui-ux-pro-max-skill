@@ -251,6 +251,58 @@ class _RevisarPagoState extends State<_RevisarPago> {
     super.dispose();
   }
 
+  Future<void> _cambiarImporte() async {
+    final repo = context.read<ClubRepository>();
+    final controlador =
+        TextEditingController(text: widget.pago.importe.toStringAsFixed(2));
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Cambiar importe'),
+        content: TextField(
+          controller: controlador,
+          autofocus: true,
+          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+          decoration: InputDecoration(prefixText: '${widget.pago.moneda.simbolo} '),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancelar'),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(minimumSize: const Size(0, 44)),
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Guardar'),
+          ),
+        ],
+      ),
+    );
+    if (ok != true) return;
+    final valor = double.tryParse(controlador.text.trim().replaceAll(',', '.'));
+    if (valor == null || valor < 0) {
+      if (mounted) showAppSnackBar(context, 'Importe no válido.', isError: true);
+      return;
+    }
+    await _hacer(() => repo.actualizarImporteCuota(widget.pago, valor),
+        'Importe actualizado.');
+  }
+
+  Future<void> _eliminar() async {
+    final repo = context.read<ClubRepository>();
+    final ok = await confirmar(
+      context,
+      titulo: 'Eliminar la cuota',
+      mensaje: 'Se borra la cuota de ${widget.pago.alumnaNombre} '
+          '(${widget.pago.periodoLabel}) y su justificante. No se puede '
+          'deshacer.',
+      accion: 'Eliminar',
+      peligrosa: true,
+    );
+    if (!ok) return;
+    await _hacer(() => repo.eliminarCuota(widget.pago), 'Cuota eliminada.');
+  }
+
   Future<void> _hacer(Future<void> Function() accion, String ok) async {
     setState(() => _ocupado = true);
     try {
@@ -398,6 +450,30 @@ class _RevisarPagoState extends State<_RevisarPago> {
                       ),
               child: const Text('Deshacer: volver a pendiente'),
             ),
+          const Divider(height: AppSpacing.lg),
+          Row(
+            children: [
+              Expanded(
+                child: TextButton.icon(
+                  style: TextButton.styleFrom(minimumSize: const Size(0, 44)),
+                  onPressed: _ocupado ? null : _cambiarImporte,
+                  icon: const Icon(Icons.edit_outlined, size: 18),
+                  label: const Text('Cambiar importe'),
+                ),
+              ),
+              Expanded(
+                child: TextButton.icon(
+                  style: TextButton.styleFrom(
+                    foregroundColor: AppColors.danger,
+                    minimumSize: const Size(0, 44),
+                  ),
+                  onPressed: _ocupado ? null : _eliminar,
+                  icon: const Icon(Icons.delete_outline, size: 18),
+                  label: const Text('Eliminar cuota'),
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );

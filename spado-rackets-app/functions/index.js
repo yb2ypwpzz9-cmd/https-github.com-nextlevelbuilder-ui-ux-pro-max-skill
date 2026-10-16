@@ -320,13 +320,13 @@ async function cuentaDelClubParaGestionar(req) {
     throw new HttpsError('invalid-argument', 'Falta la cuenta.');
   }
   const doc = await db.doc(`users/${destino}`).get();
-  if (!doc.exists || !ROLES_CLUB.includes(doc.get('role'))) {
-    throw new HttpsError('not-found', 'Esa cuenta no es del equipo del club.');
+  if (!doc.exists) {
+    throw new HttpsError('not-found', 'No existe esa cuenta.');
   }
   return { uid, destino, doc };
 }
 
-/** Elimina una cuenta de staff o Dirección (acceso incluido). */
+/** Elimina una cuenta (staff, Dirección o familia), acceso incluido. */
 export const eliminarCuentaClub = onCall(async (req) => {
   const { uid, destino, doc } = await cuentaDelClubParaGestionar(req);
   if (destino === uid) {
@@ -338,14 +338,7 @@ export const eliminarCuentaClub = onCall(async (req) => {
       throw new HttpsError('failed-precondition', 'Tiene que quedar al menos una cuenta de Dirección.');
     }
   }
-  try {
-    await getAuth().deleteUser(destino);
-  } catch (e) {
-    if (e.code !== 'auth/user-not-found') {
-      throw new HttpsError('internal', 'No se pudo eliminar el acceso de esa cuenta.');
-    }
-  }
-  await db.doc(`users/${destino}`).delete();
+  await borrarCuentaYDatos(destino);
   logger.info(`Cuenta ${destino} eliminada por ${uid}`);
   return { ok: true };
 });
@@ -419,29 +412,10 @@ export const exportarMisDatos = onCall(async (req) => {
 });
 
 /**
- * Elimina la cuenta de quien llama y sus datos personales (derecho de
- * supresión). Exige haber iniciado sesión hace poco. Se conserva lo que el
- * club necesita por contabilidad y control (cuotas sin nombre de cuenta,
- * asistencia y fichajes), desligado de la cuenta.
+ * Borra una cuenta y sus datos personales (ver `eliminarMiCuenta`). La usan
+ * la propia persona y Dirección.
  */
-export const eliminarMiCuenta = onCall(async (req) => {
-  const uid = req.auth?.uid;
-  if (!uid) throw new HttpsError('unauthenticated', 'Inicia sesión.');
-
-  const reciente = Date.now() / 1000 - Number(req.auth?.token?.auth_time ?? 0) < 600;
-  if (!reciente) {
-    throw new HttpsError('failed-precondition', 'Por seguridad, vuelve a escribir tu contraseña.');
-  }
-
-  const perfil = await db.doc(`users/${uid}`).get();
-  const rol = perfil.get('role');
-  if (rol === 'direccion') {
-    const dirs = await db.collection('users').where('role', '==', 'direccion').get();
-    if (dirs.size <= 1) {
-      throw new HttpsError('failed-precondition', 'Eres la única cuenta de Dirección: crea otra antes de eliminar esta.');
-    }
-  }
-
+async function borrarCuentaYDatos(uid) {
   const w = db.bulkWriter();
 
   // Familia: se desliga de sus hijas (la ficha queda para el club).
@@ -486,6 +460,33 @@ export const eliminarMiCuenta = onCall(async (req) => {
   } catch (e) {
     if (e.code !== 'auth/user-not-found') throw new HttpsError('internal', 'No se pudo cerrar el acceso.');
   }
+}
+
+/**
+ * Elimina la cuenta de quien llama y sus datos personales (derecho de
+ * supresión). Exige haber iniciado sesión hace poco. Se conserva lo que el
+ * club necesita por contabilidad y control (cuotas sin nombre de cuenta,
+ * asistencia y fichajes), desligado de la cuenta.
+ */
+export const eliminarMiCuenta = onCall(async (req) => {
+  const uid = req.auth?.uid;
+  if (!uid) throw new HttpsError('unauthenticated', 'Inicia sesión.');
+
+  const reciente = Date.now() / 1000 - Number(req.auth?.token?.auth_time ?? 0) < 600;
+  if (!reciente) {
+    throw new HttpsError('failed-precondition', 'Por seguridad, vuelve a escribir tu contraseña.');
+  }
+
+  const perfil = await db.doc(`users/${uid}`).get();
+  const rol = perfil.get('role');
+  if (rol === 'direccion') {
+    const dirs = await db.collection('users').where('role', '==', 'direccion').get();
+    if (dirs.size <= 1) {
+      throw new HttpsError('failed-precondition', 'Eres la única cuenta de Dirección: crea otra antes de eliminar esta.');
+    }
+  }
+
+  await borrarCuentaYDatos(uid);
   logger.info(`Cuenta ${uid} (${rol}) eliminada por su titular`);
   return { ok: true };
 });

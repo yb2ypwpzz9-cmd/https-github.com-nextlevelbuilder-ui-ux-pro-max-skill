@@ -38,6 +38,7 @@ class MasScreen extends StatelessWidget {
             const CardList(children: [
               _Enlace(Icons.insights, 'Cuadro de mandos e informes', '/informes'),
               _Enlace(Icons.school_outlined, 'Alumnas y códigos', '/alumnas'),
+              _Enlace(Icons.family_restroom_outlined, 'Familias y cuentas', '/familias'),
               _Enlace(Icons.groups_outlined, 'Grupos, horarios y cuotas',
                   '/grupos'),
               _Enlace(Icons.badge_outlined, 'Equipo y cuentas', '/equipo'),

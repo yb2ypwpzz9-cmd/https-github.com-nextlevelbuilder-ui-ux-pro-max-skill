@@ -28,7 +28,10 @@ class PageBody extends StatelessWidget {
     return Align(
       alignment: Alignment.topCenter,
       child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 760),
+        // Más ancho en el ordenador (oficina); en el móvil no cambia nada.
+        constraints: BoxConstraints(
+          maxWidth: MediaQuery.sizeOf(context).width >= 1100 ? 1080 : 760,
+        ),
         child: ListView(
           padding: padding ??
               const EdgeInsets.fromLTRB(
@@ -257,8 +260,8 @@ class ErrorView extends StatelessWidget {
   Widget build(BuildContext context) {
     final texto = '$error';
     final permisos = texto.contains('permission-denied');
-    final indice = texto.contains('failed-precondition') &&
-        texto.contains('index');
+    final indice =
+        texto.contains('failed-precondition') && texto.contains('index');
     return EmptyState(
       icon: Icons.error_outline,
       compacto: true,
@@ -417,8 +420,7 @@ class KpiGrid extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, c) {
         final columnas = c.maxWidth > 620 ? 4 : 2;
-        final ancho =
-            (c.maxWidth - AppSpacing.sm * (columnas - 1)) / columnas;
+        final ancho = (c.maxWidth - AppSpacing.sm * (columnas - 1)) / columnas;
         return Wrap(
           spacing: AppSpacing.sm,
           runSpacing: AppSpacing.sm,
@@ -546,7 +548,6 @@ Future<bool> confirmar(
   return r ?? false;
 }
 
-
 /// `StreamBuilder` que no se vuelve a suscribir cuando el padre se repinta:
 /// solo cuando cambia [streamKey]. Ver [StreamView.streamKey].
 class StreamBuilderEstable<T> extends StatefulWidget {
@@ -580,10 +581,10 @@ class _StreamBuilderEstableState<T> extends State<StreamBuilderEstable<T>> {
       StreamBuilder<T>(stream: _stream, builder: widget.builder);
 }
 
-
 /// Botón "Descargar Excel" común a todas las listas de Dirección.
 class BotonExcel extends StatelessWidget {
-  const BotonExcel({super.key, required this.onPressed, this.etiqueta = 'Descargar Excel'});
+  const BotonExcel(
+      {super.key, required this.onPressed, this.etiqueta = 'Descargar Excel'});
 
   final VoidCallback onPressed;
   final String etiqueta;

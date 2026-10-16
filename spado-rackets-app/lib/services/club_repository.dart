@@ -490,6 +490,20 @@ class ClubRepository {
     });
   }
 
+  /// Dirección: cambia el importe de una cuota.
+  Future<void> actualizarImporteCuota(Pago pago, double importe) =>
+      Refs.pagos.doc(pago.id).update({'importe': importe});
+
+  /// Dirección: elimina una cuota y su justificante, si lo tiene.
+  Future<void> eliminarCuota(Pago pago) async {
+    await Refs.pagos.doc(pago.id).delete();
+    if (pago.tieneComprobante) {
+      try {
+        await FirebaseStorage.instance.ref(pago.comprobantePath!).delete();
+      } catch (_) {}
+    }
+  }
+
   Future<String> urlComprobante(String ruta) =>
       FirebaseStorage.instance.ref(ruta).getDownloadURL();
 
@@ -651,6 +665,23 @@ class ClubRepository {
       .snapshots()
       .map((s) => mapearDocs(s.docs, AppUser.fromDoc)
         ..sort((a, b) => a.nombreVisible.compareTo(b.nombreVisible)));
+
+  /// Dirección: cuentas de las familias.
+  Stream<List<AppUser>> watchFamilias() => Refs.users
+      .where('role', isEqualTo: 'familia')
+      .snapshots()
+      .map((s) => mapearDocs(s.docs, AppUser.fromDoc)
+        ..sort((a, b) => a.nombreVisible.compareTo(b.nombreVisible)));
+
+  Future<void> actualizarContactoFamilia(
+    String uid, {
+    required String nombre,
+    required String telefono,
+  }) =>
+      Refs.user(uid).update({
+        'displayName': nombre.trim(),
+        'phone': telefono.trim().isEmpty ? FieldValue.delete() : telefono.trim(),
+      });
 
   Future<void> asignarGrupos(String uid, List<String> grupos) =>
       Refs.user(uid).update({'grupos': grupos});

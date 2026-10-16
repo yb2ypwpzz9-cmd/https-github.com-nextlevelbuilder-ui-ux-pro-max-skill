@@ -117,6 +117,8 @@ class _AppShellState extends State<AppShell> {
       return const AvisoUbicacionScreen();
     }
 
+    final ancho = MediaQuery.sizeOf(context).width;
+    final escritorio = ancho >= 900;
     final tabs = _tabsFor(user.role);
     final index = _index.clamp(0, tabs.length - 1);
 
@@ -131,37 +133,81 @@ class _AppShellState extends State<AppShell> {
         }
       }),
       child: Scaffold(
-        body: IndexedStack(
-          index: index,
+        body: Row(
           children: [
-            for (var i = 0; i < tabs.length; i++)
-              if (i == index || _visitadas.contains(i))
-                tabs[i].builder()
-              else
-                const SizedBox.shrink(),
+            // En el ordenador (oficina), menú lateral en vez de barra inferior.
+            if (escritorio)
+              NavigationRail(
+                extended: ancho >= 1200,
+                backgroundColor: AppColors.navyDeep,
+                selectedIndex: index,
+                onDestinationSelected: (v) => setState(() {
+                  _index = v;
+                  _visitadas.add(v);
+                }),
+                leading: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  child: Image.asset('assets/images/emblema_blanco.png',
+                      width: 40, height: 40),
+                ),
+                indicatorColor: AppColors.ball.withValues(alpha: 0.18),
+                unselectedIconTheme: const IconThemeData(color: Colors.white70),
+                selectedIconTheme: const IconThemeData(color: AppColors.ball),
+                unselectedLabelTextStyle:
+                    const TextStyle(color: Colors.white70),
+                selectedLabelTextStyle: const TextStyle(
+                    color: AppColors.ball, fontWeight: FontWeight.w700),
+                destinations: [
+                  for (final t in tabs)
+                    NavigationRailDestination(
+                      icon: t.esChat
+                          ? _IconoConAviso(icono: t.icon, uid: user.uid)
+                          : Icon(t.icon),
+                      selectedIcon: t.esChat
+                          ? _IconoConAviso(icono: t.selectedIcon, uid: user.uid)
+                          : Icon(t.selectedIcon),
+                      label: Text(t.label),
+                    ),
+                ],
+              ),
+            Expanded(
+              child: IndexedStack(
+                index: index,
+                children: [
+                  for (var i = 0; i < tabs.length; i++)
+                    if (i == index || _visitadas.contains(i))
+                      tabs[i].builder()
+                    else
+                      const SizedBox.shrink(),
+                ],
+              ),
+            ),
           ],
         ),
-        bottomNavigationBar: _BarraInferior(
-          child: NavigationBar(
-            selectedIndex: index,
-            onDestinationSelected: (v) => setState(() {
-              _index = v;
-              _visitadas.add(v);
-            }),
-            destinations: [
-              for (final t in tabs)
-                NavigationDestination(
-                  icon: t.esChat
-                      ? _IconoConAviso(icono: t.icon, uid: user.uid)
-                      : Icon(t.icon),
-                  selectedIcon: t.esChat
-                      ? _IconoConAviso(icono: t.selectedIcon, uid: user.uid)
-                      : Icon(t.selectedIcon),
-                  label: t.label,
+        bottomNavigationBar: escritorio
+            ? null
+            : _BarraInferior(
+                child: NavigationBar(
+                  selectedIndex: index,
+                  onDestinationSelected: (v) => setState(() {
+                    _index = v;
+                    _visitadas.add(v);
+                  }),
+                  destinations: [
+                    for (final t in tabs)
+                      NavigationDestination(
+                        icon: t.esChat
+                            ? _IconoConAviso(icono: t.icon, uid: user.uid)
+                            : Icon(t.icon),
+                        selectedIcon: t.esChat
+                            ? _IconoConAviso(
+                                icono: t.selectedIcon, uid: user.uid)
+                            : Icon(t.selectedIcon),
+                        label: t.label,
+                      ),
+                  ],
                 ),
-            ],
-          ),
-        ),
+              ),
       ),
     );
   }
