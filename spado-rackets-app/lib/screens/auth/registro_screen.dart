@@ -72,6 +72,7 @@ class _RegistroScreenState extends State<RegistroScreen> {
   Widget build(BuildContext context) {
     final t = Theme.of(context).textTheme;
     return AuthFrame(
+      volverA: '/login',
       child: Form(
         key: _form,
         child: Column(

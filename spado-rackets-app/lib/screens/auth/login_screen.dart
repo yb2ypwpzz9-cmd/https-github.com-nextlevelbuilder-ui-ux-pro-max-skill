@@ -12,8 +12,16 @@ import '../../widgets/instalar_app.dart';
 /// Marco de las pantallas de acceso: logo blanco sobre azul y formulario en
 /// una tarjeta.
 class AuthFrame extends StatelessWidget {
-  const AuthFrame({super.key, required this.child, this.subtitulo});
+  const AuthFrame({
+    super.key,
+    required this.child,
+    this.subtitulo,
+    this.volverA,
+  });
 
+  /// Si se indica, arriba aparece una flecha para volver a esa ruta. Con la
+  /// app en la pantalla de inicio no hay botón "atrás" del navegador.
+  final String? volverA;
   final Widget child;
   final String? subtitulo;
 
@@ -33,7 +41,20 @@ class AuthFrame extends StatelessWidget {
                     constraints: const BoxConstraints(maxWidth: 420),
                     child: Column(
                       children: [
-                        const SizedBox(height: AppSpacing.md),
+                        if (volverA != null)
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: TextButton.icon(
+                              style: TextButton.styleFrom(
+                                minimumSize: const Size(48, 48),
+                              ),
+                              onPressed: () => context.go(volverA!),
+                              icon: const Icon(Icons.arrow_back),
+                              label: const Text('Volver'),
+                            ),
+                          )
+                        else
+                          const SizedBox(height: AppSpacing.md),
                         const ClubLogo(height: 130),
                         if (subtitulo != null) ...[
                           const SizedBox(height: AppSpacing.md),
@@ -168,9 +189,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 autofillHints: const [AutofillHints.email],
                 textInputAction: TextInputAction.next,
                 decoration: const InputDecoration(labelText: 'Email'),
-                validator: (v) => (v ?? '').contains('@')
-                    ? null
-                    : 'Escribe un email válido',
+                validator: (v) =>
+                    (v ?? '').contains('@') ? null : 'Escribe un email válido',
               ),
               const SizedBox(height: AppSpacing.md),
               TextFormField(

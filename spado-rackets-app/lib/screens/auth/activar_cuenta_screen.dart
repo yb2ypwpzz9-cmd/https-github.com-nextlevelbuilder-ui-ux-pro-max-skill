@@ -62,6 +62,7 @@ class _ActivarCuentaScreenState extends State<ActivarCuentaScreen> {
   Widget build(BuildContext context) {
     final t = Theme.of(context).textTheme;
     return AuthFrame(
+      volverA: '/login',
       subtitulo: 'Primer acceso del equipo del club.',
       child: Form(
         key: _form,
