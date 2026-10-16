@@ -117,16 +117,92 @@ class CuentaBancariaCard extends StatelessWidget {
 Future<void> abrirComprobante(BuildContext context, Pago pago) async {
   final ruta = pago.comprobantePath;
   if (ruta == null) return;
+  final repo = context.read<ClubRepository>();
+  final String url;
   try {
-    final url = await context.read<ClubRepository>().urlComprobante(ruta);
-    await launchUrl(Uri.parse(url), webOnlyWindowName: '_blank');
-  } catch (_) {
+    // Con la sesión de quien mira: las reglas de Storage deciden si puede.
+    url = await repo.urlComprobante(ruta);
+  } catch (e) {
     if (context.mounted) {
+      final sinPermiso =
+          '$e'.contains('unauthorized') || '$e'.contains('permission');
       showAppSnackBar(
         context,
-        'No se pudo abrir el justificante.',
+        sinPermiso
+            ? 'No tienes permiso para ver este justificante.'
+            : 'No se pudo abrir el justificante.',
         isError: true,
       );
     }
+    return;
   }
+  if (!context.mounted) return;
+  final nombre = pago.comprobanteNombre ?? 'Justificante';
+  final esPdf = ruta.toLowerCase().endsWith('.pdf');
+  // Se enseña dentro de la app. Abrir una pestaña nueva después de una espera
+  // la bloquean muchos navegadores del móvil; aquí el botón "Abrir" sí es un
+  // toque directo.
+  await showDialog<void>(
+    context: context,
+    builder: (context) => Dialog(
+      insetPadding: const EdgeInsets.all(12),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 8, 4, 0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(nombre,
+                      maxLines: 1, overflow: TextOverflow.ellipsis),
+                ),
+                IconButton(
+                  tooltip: 'Cerrar',
+                  icon: const Icon(Icons.close),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ],
+            ),
+          ),
+          if (esPdf)
+            Padding(
+              padding: const EdgeInsets.all(AppSpacing.lg),
+              child: FilledButton.icon(
+                onPressed: () =>
+                    launchUrl(Uri.parse(url), webOnlyWindowName: '_blank'),
+                icon: const Icon(Icons.picture_as_pdf_outlined),
+                label: const Text('Abrir PDF'),
+              ),
+            )
+          else
+            Flexible(
+              child: InteractiveViewer(
+                maxScale: 5,
+                child: Image.network(
+                  url,
+                  fit: BoxFit.contain,
+                  webHtmlElementStrategy: WebHtmlElementStrategy.prefer,
+                  loadingBuilder: (context, child, progreso) => progreso == null
+                      ? child
+                      : const Padding(
+                          padding: EdgeInsets.all(40),
+                          child: CircularProgressIndicator(),
+                        ),
+                  errorBuilder: (_, __, ___) => Padding(
+                    padding: const EdgeInsets.all(AppSpacing.lg),
+                    child: FilledButton.icon(
+                      onPressed: () => launchUrl(Uri.parse(url),
+                          webOnlyWindowName: '_blank'),
+                      icon: const Icon(Icons.open_in_new),
+                      label: const Text('Abrir archivo'),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
+    ),
+  );
 }

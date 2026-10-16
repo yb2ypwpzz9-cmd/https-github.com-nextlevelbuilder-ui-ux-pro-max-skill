@@ -38,11 +38,16 @@ class _FamiliaHomeScreenState extends State<FamiliaHomeScreen> {
         stream: repo.watchAlumnasDeFamilia(user.uid),
         builder: (context, alumnas) {
           if (alumnas.isEmpty) {
-            return const EmptyState(
+            final session = context.watch<SessionController>();
+            if (user.codigoPendiente != null) {
+              return const LoadingView(message: 'Vinculando a tu hija…');
+            }
+            return EmptyState(
               icon: Icons.link_off,
               title: 'Tu cuenta aún no tiene alumnas vinculadas',
-              message: 'Añade el código que te dio el club desde "Más" → '
-                  '"Vincular otra alumna".',
+              message: session.errorVinculacion ??
+                  'Añade el código que te dio el club desde "Más" → '
+                      '"Vincular otra alumna".',
             );
           }
           final alumna = alumnas.firstWhere(

@@ -147,8 +147,11 @@ class _AppShellState extends State<AppShell> {
                 }),
                 leading: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16),
-                  child: Image.asset('assets/images/emblema_blanco.png',
-                      width: 40, height: 40),
+                  // Con el menú desplegado, el logo completo con las letras.
+                  child: ancho >= 1200
+                      ? Image.asset('assets/images/logo_blanco.png', width: 170)
+                      : Image.asset('assets/images/emblema_blanco.png',
+                          width: 40, height: 40),
                 ),
                 indicatorColor: AppColors.ball.withValues(alpha: 0.18),
                 unselectedIconTheme: const IconThemeData(color: Colors.white70),

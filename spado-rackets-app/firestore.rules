@@ -150,9 +150,11 @@ service cloud.firestore {
         && request.resource.data.get('grupos', []).size() == 0
         && request.resource.data.keys().hasOnly(
              ['uid', 'email', 'role', 'grupos', 'displayName', 'phone', 'createdAt',
-              'consentimientoEn', 'consentimientoVersion', 'consentimientoMenores'])
+              'consentimientoEn', 'consentimientoVersion', 'consentimientoMenores',
+              'codigoPendiente'])
         && textoOpcional(request.resource.data, 'displayName', 80)
         && textoOpcional(request.resource.data, 'phone', 30)
+        && textoOpcional(request.resource.data, 'codigoPendiente', 20)
         && request.resource.data.get('email', '').size() <= 120;
 
       // Cada uno cambia su nombre, teléfono y tokens de aviso. NUNCA su rol
@@ -164,6 +166,10 @@ service cloud.firestore {
             && resource.data.get('debeCambiarPassword', false) == true
             && changedKeys().hasOnly(['debeCambiarPassword'])
             && request.resource.data.get('debeCambiarPassword', true) == false)
+        // Quitar el código pendiente (ya usado o rechazado).
+        || (request.auth.uid == userId
+            && changedKeys().hasOnly(['codigoPendiente'])
+            && !('codigoPendiente' in request.resource.data))
         // Constancia de que el staff leyó el aviso sobre la ubicación.
         || (request.auth.uid == userId
             && rol() == 'staff'

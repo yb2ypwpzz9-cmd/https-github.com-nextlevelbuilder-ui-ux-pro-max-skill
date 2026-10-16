@@ -204,6 +204,7 @@ export const vincularAlumna = onCall(async (req) => {
       // aquí para que al terminar el registro ya vea a su hija.
       tx.set(db.doc(`users/${uid}`), {
         grupos: FieldValue.arrayUnion(alumna.get('grupo')),
+        codigoPendiente: FieldValue.delete(),
       }, { merge: true });
 
       logger.info(`Alumna ${alumna.id} vinculada a ${uid}`);

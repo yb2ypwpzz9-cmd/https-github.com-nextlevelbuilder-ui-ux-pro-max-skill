@@ -193,17 +193,22 @@ class ClubRepository {
     }
   }
 
-  static final Map<String, Future<Uint8List?>> _fotos = {};
+  static final Map<String, Future<String>> _urlsFotos = {};
 
-  /// Bytes de la foto, con caché en memoria para no descargarla en cada
-  /// pantalla. Las reglas de Storage deciden quién puede verla.
-  Future<Uint8List?> fotoAlumna(String ruta) => _fotos.putIfAbsent(
-        ruta,
-        () => FirebaseStorage.instance
-            .ref(ruta)
-            .getData(2 * 1024 * 1024)
-            .catchError((_) => null),
-      );
+  /// Dirección de descarga de la foto, pedida con la sesión de quien mira (las
+  /// reglas de Storage deciden si puede). Se guarda en memoria, no en la base
+  /// de datos. Los fallos no se guardan: se vuelve a intentar al repintar.
+  Future<String> urlFotoAlumna(String ruta) {
+    final guardada = _urlsFotos[ruta];
+    if (guardada != null) return guardada;
+    final peticion = FirebaseStorage.instance.ref(ruta).getDownloadURL();
+    _urlsFotos[ruta] = peticion;
+    peticion.catchError((Object _) {
+      _urlsFotos.remove(ruta);
+      return '';
+    });
+    return peticion;
+  }
 
   /// Seis caracteres sin los que se confunden al dictarlos (0/O, 1/I/L).
   static String _generarCodigo() {

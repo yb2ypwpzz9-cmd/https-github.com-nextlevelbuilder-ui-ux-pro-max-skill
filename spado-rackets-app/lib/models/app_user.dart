@@ -39,6 +39,7 @@ class AppUser {
     this.phone,
     this.debeCambiarPassword = false,
     this.avisoUbicacionVersion,
+    this.codigoPendiente,
   });
 
   final String uid;
@@ -59,6 +60,10 @@ class AppUser {
   /// Versión del aviso de ubicación que el staff ha aceptado.
   final String? avisoUbicacionVersion;
 
+  /// Código de la alumna dado en el registro, a la espera de que la familia
+  /// verifique su correo para vincularla.
+  final String? codigoPendiente;
+
   factory AppUser.fromDoc(DocumentSnapshot<Json> doc) {
     final data = doc.data() ?? const <String, dynamic>{};
     return AppUser(
@@ -70,6 +75,9 @@ class AppUser {
       phone: data['phone'] as String?,
       debeCambiarPassword: (data['debeCambiarPassword'] as bool?) ?? false,
       avisoUbicacionVersion: data['avisoUbicacionVersion'] as String?,
+      codigoPendiente: (data['codigoPendiente'] as String?)?.trim().isEmpty ?? true
+          ? null
+          : (data['codigoPendiente'] as String).trim(),
     );
   }
 

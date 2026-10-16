@@ -68,6 +68,7 @@ class SessionController extends ChangeNotifier {
         _appUser = doc.exists ? AppUser.fromDoc(doc) : null;
         _loading = false;
         notifyListeners();
+        _vincularPendiente();
       },
       onError: (Object _) {
         _appUser = null;
@@ -148,10 +149,12 @@ class SessionController extends ChangeNotifier {
         'consentimientoVersion': TextosLegales.version,
         // Declaración de que es madre, padre o tutor legal de las alumnas.
         'consentimientoMenores': true,
+        // Se vincula sola en cuanto la familia verifique su correo, aunque
+        // cierre la app o lo haga desde otro dispositivo.
+        'codigoPendiente': codigoLimpio,
       });
       // El servidor solo vincula con el correo verificado: se envía el enlace
       // y el código queda en memoria hasta que la familia lo confirme.
-      _codigoPendiente = codigoLimpio;
       try {
         await cred.user?.sendEmailVerification();
       } catch (_) {
@@ -230,7 +233,40 @@ class SessionController extends ChangeNotifier {
     });
   }
 
-  String? _codigoPendiente;
+  bool _vinculando = false;
+
+  /// Motivo por el que no se pudo vincular a la alumna del registro.
+  String? errorVinculacion;
+
+  /// Si hay un código pendiente y el correo ya está verificado, vincula a la
+  /// alumna. Se llama al cargar el perfil y al confirmar la verificación.
+  Future<void> _vincularPendiente() async {
+    final usuario = _appUser;
+    final codigo = usuario?.codigoPendiente;
+    if (_vinculando || codigo == null || usuario!.role != UserRole.familia) {
+      return;
+    }
+    _vinculando = true;
+    try {
+      await _auth.currentUser?.reload();
+      final actual = _auth.currentUser;
+      if (actual == null || !actual.emailVerified) return;
+      _firebaseUser = actual;
+      errorVinculacion = null;
+      await vincular(codigo);
+    } on RegistroException catch (e) {
+      errorVinculacion = e.message;
+      // El código no sirve: se quita para no reintentarlo en bucle.
+      try {
+        await Refs.user(usuario.uid).update({'codigoPendiente': FieldValue.delete()});
+      } catch (_) {}
+    } catch (_) {
+      // Sin conexión u otro fallo pasajero: se reintentará al volver a abrir.
+    } finally {
+      _vinculando = false;
+      notifyListeners();
+    }
+  }
 
   /// Una familia con la cuenta creada pero sin el correo verificado.
   bool get necesitaVerificarCorreo =>
@@ -258,17 +294,8 @@ class SessionController extends ChangeNotifier {
     if (actual == null || !actual.emailVerified) return false;
     await actual.getIdToken(true);
     _firebaseUser = actual;
-    final codigo = _codigoPendiente;
-    _codigoPendiente = null;
     notifyListeners();
-    if (codigo != null) {
-      try {
-        await vincular(codigo);
-      } on RegistroException {
-        // El código no era válido: la familia lo reintenta desde Más.
-        rethrow;
-      }
-    }
+    await _vincularPendiente();
     return true;
   }
 
