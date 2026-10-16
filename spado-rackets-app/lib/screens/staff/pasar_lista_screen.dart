@@ -8,6 +8,7 @@ import '../../services/auth_service.dart';
 import '../../services/club_repository.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/common.dart';
+import '../../widgets/foto_alumna.dart';
 
 /// Pase de lista de un grupo en una fecha.
 ///
@@ -313,6 +314,8 @@ class _FilaAlumna extends StatelessWidget {
       ),
       child: Row(
         children: [
+          FotoAlumna(alumna, size: 42),
+          const SizedBox(width: 10),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

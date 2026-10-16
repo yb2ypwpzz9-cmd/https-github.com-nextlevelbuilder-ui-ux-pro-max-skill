@@ -1,3 +1,5 @@
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -7,6 +9,7 @@ import '../../models/grupo.dart';
 import '../../services/club_repository.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/common.dart';
+import '../../widgets/foto_alumna.dart';
 
 /// Alumnas por grupo, con el código que se entrega a cada familia.
 class AlumnasScreen extends StatelessWidget {
@@ -106,6 +109,10 @@ class AlumnasScreen extends StatelessWidget {
     var grupo = alumna?.grupo ?? grupos.first.id;
     if (!grupos.any((g) => g.id == grupo)) grupo = grupos.first.id;
     var activa = alumna?.activa ?? true;
+    DateTime? nacimiento = alumna?.fechaNacimiento;
+    NivelTenis? nivel = alumna?.nivel;
+    Uint8List? fotoNueva;
+    var quitarFoto = false;
 
     final guardar = await showModalBottomSheet<bool>(
       context: context,
@@ -133,6 +140,95 @@ class AlumnasScreen extends StatelessWidget {
                 textCapitalization: TextCapitalization.words,
                 decoration:
                     const InputDecoration(labelText: 'Nombre y apellidos'),
+              ),
+              const SizedBox(height: AppSpacing.md),
+              Row(
+                children: [
+                  if (fotoNueva != null)
+                    CircleAvatar(
+                      radius: 30,
+                      backgroundImage: MemoryImage(fotoNueva!),
+                    )
+                  else if (alumna != null && !quitarFoto)
+                    FotoAlumna(alumna, size: 60)
+                  else
+                    const Avatar('+', size: 60),
+                  const SizedBox(width: AppSpacing.md),
+                  Expanded(
+                    child: Wrap(
+                      spacing: 8,
+                      children: [
+                        OutlinedButton.icon(
+                          style: OutlinedButton.styleFrom(
+                              minimumSize: const Size(0, 44)),
+                          icon: const Icon(Icons.photo_camera_outlined, size: 18),
+                          label: Text(fotoNueva != null ||
+                                  (alumna?.fotoPath != null && !quitarFoto)
+                              ? 'Cambiar foto'
+                              : 'Añadir foto'),
+                          onPressed: () async {
+                            final r = await FilePicker.platform.pickFiles(
+                              type: FileType.image,
+                              withData: true,
+                            );
+                            final f = r?.files.single;
+                            if (f?.bytes == null) return;
+                            if (f!.size > 15 * 1024 * 1024) {
+                              if (context.mounted) {
+                                showAppSnackBar(context,
+                                    'La foto pesa demasiado (máx. 15 MB).',
+                                    isError: true);
+                              }
+                              return;
+                            }
+                            setSheet(() {
+                              fotoNueva = f.bytes;
+                              quitarFoto = false;
+                            });
+                          },
+                        ),
+                        if (fotoNueva != null ||
+                            (alumna?.fotoPath != null && !quitarFoto))
+                          TextButton(
+                            onPressed: () => setSheet(() {
+                              fotoNueva = null;
+                              quitarFoto = true;
+                            }),
+                            child: const Text('Quitar'),
+                          ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: AppSpacing.md),
+              OutlinedButton.icon(
+                icon: const Icon(Icons.cake_outlined, size: 18),
+                label: Text(nacimiento == null
+                    ? 'Fecha de nacimiento'
+                    : 'Nació el ${nacimiento!.day.toString().padLeft(2, '0')}/'
+                        '${nacimiento!.month.toString().padLeft(2, '0')}/'
+                        '${nacimiento!.year}'),
+                onPressed: () async {
+                  final f = await showDatePicker(
+                    context: context,
+                    initialDate: nacimiento ?? DateTime(DateTime.now().year - 9),
+                    firstDate: DateTime(DateTime.now().year - 25),
+                    lastDate: DateTime.now(),
+                  );
+                  if (f != null) setSheet(() => nacimiento = f);
+                },
+              ),
+              const SizedBox(height: AppSpacing.md),
+              DropdownButtonFormField<NivelTenis?>(
+                initialValue: nivel,
+                decoration: const InputDecoration(labelText: 'Nivel de tenis'),
+                items: [
+                  const DropdownMenuItem(value: null, child: Text('Sin definir')),
+                  for (final n in NivelTenis.values)
+                    DropdownMenuItem(value: n, child: Text(n.label)),
+                ],
+                onChanged: (v) => setSheet(() => nivel = v),
               ),
               const SizedBox(height: AppSpacing.md),
               TextField(
@@ -193,7 +289,7 @@ class AlumnasScreen extends StatelessWidget {
                     );
                     if (!ok) return;
                     try {
-                      await repo.eliminarAlumna(alumna.id);
+                      await repo.eliminarAlumna(alumna.id, fotoPath: alumna.fotoPath);
                       if (context.mounted) Navigator.pop(context, false);
                       if (raiz.mounted) {
                         showAppSnackBar(raiz, 'Alumna eliminada.');
@@ -217,7 +313,12 @@ class AlumnasScreen extends StatelessWidget {
       if (alumna == null) {
         final codigo =
             await repo.crearAlumna(
-                nombre: nombre.text, grupo: grupo, emailFamilia: email.text);
+                nombre: nombre.text,
+                grupo: grupo,
+                emailFamilia: email.text,
+                fechaNacimiento: nacimiento,
+                nivel: nivel,
+                foto: fotoNueva);
         if (context.mounted) {
           await showDialog<void>(
             context: context,
@@ -259,6 +360,13 @@ class AlumnasScreen extends StatelessWidget {
           grupo: grupo,
           activa: activa,
           emailFamilia: alumna.vinculada ? null : email.text,
+          fechaNacimiento: nacimiento,
+          quitarFecha: nacimiento == null && alumna.fechaNacimiento != null,
+          nivel: nivel,
+          quitarNivel: nivel == null && alumna.nivel != null,
+          fotoNueva: fotoNueva,
+          fotoAnterior: alumna.fotoPath,
+          quitarFoto: quitarFoto,
         );
         if (context.mounted) showAppSnackBar(context, 'Guardado.');
       }
@@ -290,6 +398,7 @@ class _ListaGrupo extends StatelessWidget {
       children: [
         for (final a in alumnas)
           ListTile(
+            leading: FotoAlumna(a),
             title: Text(
               a.nombre,
               style: a.activa
@@ -300,7 +409,11 @@ class _ListaGrupo extends StatelessWidget {
                     ),
             ),
             subtitle: a.vinculada
-                ? const Text('Familia con cuenta')
+                ? Text([
+                    'Familia con cuenta',
+                    if (a.edad != null) '${a.edad} años',
+                    if (a.nivel != null) a.nivel!.label,
+                  ].join(' · '))
                 : codigoDe[a.id] == null
                     ? const Text('Sin código')
                     : Text.rich(TextSpan(children: [

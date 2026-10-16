@@ -42,6 +42,36 @@ service firebase.storage {
       allow update, delete: if false;
     }
 
+    function alumnaDoc(id) {
+      return firestore.get(/databases/(default)/documents/alumnas/$(id)).data;
+    }
+
+    function usuarioDoc() {
+      return firestore.get(
+        /databases/(default)/documents/users/$(request.auth.uid)
+      ).data;
+    }
+
+    // Fotos de las alumnas. Las sube Dirección; las ven Dirección, la familia
+    // de esa alumna y el staff del grupo. Nadie más: son fotos de menores.
+    match /fotos/{alumnaId}/{archivo} {
+      allow read: if isSignedIn() && (
+        rol() == 'direccion'
+        || (rol() == 'familia'
+            && alumnaDoc(alumnaId).get('familiaUid', '') == request.auth.uid)
+        || (rol() == 'staff'
+            && alumnaDoc(alumnaId).get('grupo', '') in usuarioDoc().get('grupos', []))
+      );
+
+      allow create: if isSignedIn()
+        && rol() == 'direccion'
+        && request.resource.size < 3 * 1024 * 1024
+        && request.resource.contentType == 'image/jpeg';
+
+      allow update: if false;
+      allow delete: if isSignedIn() && rol() == 'direccion';
+    }
+
     match /{allPaths=**} {
       allow read, write: if false;
     }

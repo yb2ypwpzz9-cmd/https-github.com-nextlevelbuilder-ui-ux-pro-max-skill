@@ -2,6 +2,25 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../services/firestore_refs.dart';
 
+/// Nivel de tenis de la alumna, para formar grupos y seguir su evolución.
+enum NivelTenis {
+  iniciacion('Iniciación'),
+  basico('Básico'),
+  intermedio('Intermedio'),
+  avanzado('Avanzado'),
+  competicion('Competición');
+
+  const NivelTenis(this.label);
+  final String label;
+
+  static NivelTenis? fromString(String? v) {
+    for (final n in NivelTenis.values) {
+      if (n.name == v) return n;
+    }
+    return null;
+  }
+}
+
 /// Documento `alumnas/{id}`.
 ///
 /// `familiaUid` lo escribe sólo el servidor (`vincularAlumna`), al canjear el
@@ -15,6 +34,8 @@ class Alumna {
     this.familiaUid,
     this.fechaNacimiento,
     this.emailFamilia,
+    this.nivel,
+    this.fotoPath,
     this.activa = true,
   });
 
@@ -28,6 +49,11 @@ class Alumna {
   /// ese correo puede usar el código de vinculación.
   final String? emailFamilia;
   final bool activa;
+  final NivelTenis? nivel;
+
+  /// Ruta de la foto en Storage (`fotos/{alumna}/…`). La ven la familia, el
+  /// staff del grupo y Dirección, nadie más.
+  final String? fotoPath;
 
   factory Alumna.fromDoc(DocumentSnapshot<Json> doc) {
     final data = doc.data() ?? const <String, dynamic>{};
@@ -43,12 +69,26 @@ class Alumna {
       emailFamilia: (data['emailFamilia'] as String?)?.trim().isEmpty ?? true
           ? null
           : (data['emailFamilia'] as String).trim(),
+      nivel: NivelTenis.fromString(data['nivel'] as String?),
+      fotoPath: (data['fotoPath'] as String?)?.trim().isEmpty ?? true
+          ? null
+          : (data['fotoPath'] as String).trim(),
       activa: (data['activa'] as bool?) ?? true,
     );
   }
 
   String get nombreCorto => nombre.split(' ').first;
   bool get vinculada => familiaUid != null;
+
+  /// "9 años", o `null` si no se conoce la fecha de nacimiento.
+  int? get edad {
+    final n = fechaNacimiento;
+    if (n == null) return null;
+    final hoy = DateTime.now();
+    var e = hoy.year - n.year;
+    if (hoy.month < n.month || (hoy.month == n.month && hoy.day < n.day)) e--;
+    return e < 0 ? null : e;
+  }
 }
 
 /// Documento `codigosVinculacion/{id}`. Sólo lo lee Dirección.

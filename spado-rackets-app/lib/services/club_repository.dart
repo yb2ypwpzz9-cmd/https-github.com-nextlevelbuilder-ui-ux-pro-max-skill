@@ -16,6 +16,7 @@ import '../models/grupo.dart';
 import '../models/jornada.dart';
 import '../models/pago.dart';
 import 'firestore_refs.dart';
+import 'foto_service.dart';
 import 'ubicacion_service.dart';
 
 /// Acceso a datos del club. Las pantallas no tocan Firestore directamente.
@@ -58,7 +59,7 @@ class ClubRepository {
 
   /// Elimina una alumna, su código y sus cuotas sin cobrar. Las cuotas ya
   /// pagadas y la asistencia se conservan: son el histórico contable del club.
-  Future<void> eliminarAlumna(String id) async {
+  Future<void> eliminarAlumna(String id, {String? fotoPath}) async {
     final sinCobrar = await Refs.pagos
         .where('alumnaId', isEqualTo: id)
         .where('estado', whereIn: [
@@ -74,6 +75,7 @@ class ClubRepository {
       ..delete(Refs.codigos.doc(id))
       ..delete(Refs.alumnas.doc(id));
     await batch.commit();
+    if (fotoPath != null) await borrarFotoAlumna(fotoPath);
   }
 
   Stream<List<Alumna>> watchTodasLasAlumnas() => Refs.alumnas
@@ -106,14 +108,22 @@ class ClubRepository {
     required String nombre,
     required String grupo,
     String? emailFamilia,
+    DateTime? fechaNacimiento,
+    NivelTenis? nivel,
+    Uint8List? foto,
   }) async {
     final alumna = Refs.alumnas.doc();
+    final fotoPath = foto == null ? null : await subirFotoAlumna(alumna.id, foto);
     final codigo = _generarCodigo();
     final batch = Refs.db.batch()
       ..set(alumna, {
         'nombre': nombre.trim(),
         'grupo': grupo,
         'activa': true,
+        if (fechaNacimiento != null)
+          'fechaNacimiento': Timestamp.fromDate(fechaNacimiento),
+        if (nivel != null) 'nivel': nivel.name,
+        if (fotoPath != null) 'fotoPath': fotoPath,
         if ((emailFamilia ?? '').trim().isNotEmpty)
           'emailFamilia': emailFamilia!.trim().toLowerCase(),
         'creadaEn': FieldValue.serverTimestamp(),
@@ -134,13 +144,66 @@ class ClubRepository {
     String? grupo,
     bool? activa,
     String? emailFamilia,
-  }) =>
-      Refs.alumnas.doc(id).update({
+    DateTime? fechaNacimiento,
+    bool quitarFecha = false,
+    NivelTenis? nivel,
+    bool quitarNivel = false,
+    Uint8List? fotoNueva,
+    String? fotoAnterior,
+    bool quitarFoto = false,
+  }) async {
+    String? fotoPath;
+    if (fotoNueva != null) fotoPath = await subirFotoAlumna(id, fotoNueva);
+    await Refs.alumnas.doc(id).update({
+        if (fechaNacimiento != null)
+          'fechaNacimiento': Timestamp.fromDate(fechaNacimiento),
+        if (quitarFecha) 'fechaNacimiento': FieldValue.delete(),
+        if (nivel != null) 'nivel': nivel.name,
+        if (quitarNivel) 'nivel': FieldValue.delete(),
+        if (fotoPath != null) 'fotoPath': fotoPath,
+        if (quitarFoto && fotoPath == null) 'fotoPath': FieldValue.delete(),
         if (emailFamilia != null) 'emailFamilia': emailFamilia.trim().toLowerCase(),
         if (nombre != null) 'nombre': nombre.trim(),
         if (grupo != null) 'grupo': grupo,
         if (activa != null) 'activa': activa,
       });
+    if ((fotoNueva != null || quitarFoto) && fotoAnterior != null) {
+      await borrarFotoAlumna(fotoAnterior);
+    }
+  }
+
+  /// Reduce la foto (480 px, JPEG) y la guarda en `fotos/{alumna}/…`.
+  Future<String> subirFotoAlumna(String alumnaId, Uint8List original) async {
+    final jpg = prepararFoto(original);
+    if (jpg == null) {
+      throw Exception('No se pudo leer la imagen. Prueba con un JPG o PNG.');
+    }
+    final ruta = 'fotos/$alumnaId/${DateTime.now().millisecondsSinceEpoch}.jpg';
+    await FirebaseStorage.instance
+        .ref(ruta)
+        .putData(jpg, SettableMetadata(contentType: 'image/jpeg'));
+    return ruta;
+  }
+
+  Future<void> borrarFotoAlumna(String ruta) async {
+    try {
+      await FirebaseStorage.instance.ref(ruta).delete();
+    } catch (_) {
+      // Ya no existía: nada que limpiar.
+    }
+  }
+
+  static final Map<String, Future<Uint8List?>> _fotos = {};
+
+  /// Bytes de la foto, con caché en memoria para no descargarla en cada
+  /// pantalla. Las reglas de Storage deciden quién puede verla.
+  Future<Uint8List?> fotoAlumna(String ruta) => _fotos.putIfAbsent(
+        ruta,
+        () => FirebaseStorage.instance
+            .ref(ruta)
+            .getData(2 * 1024 * 1024)
+            .catchError((_) => null),
+      );
 
   /// Seis caracteres sin los que se confunden al dictarlos (0/O, 1/I/L).
   static String _generarCodigo() {

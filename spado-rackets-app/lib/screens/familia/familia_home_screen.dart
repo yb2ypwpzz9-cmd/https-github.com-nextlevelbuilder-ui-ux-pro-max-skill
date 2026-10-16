@@ -12,6 +12,7 @@ import '../../services/auth_service.dart';
 import '../../services/club_repository.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/common.dart';
+import '../../widgets/foto_alumna.dart';
 import '../app_shell.dart';
 import '../staff/staff_grupos_screen.dart' show MarcaAsistencia;
 
@@ -117,9 +118,32 @@ class _Cabecera extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 6),
-          Text(
-            alumna.nombre,
-            style: t.headlineMedium?.copyWith(color: Colors.white),
+          Row(
+            children: [
+              FotoAlumna(alumna, size: 64),
+              const SizedBox(width: AppSpacing.md),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      alumna.nombre,
+                      style: t.headlineMedium?.copyWith(color: Colors.white),
+                    ),
+                    if (alumna.edad != null || alumna.nivel != null)
+                      Text(
+                        [
+                          if (alumna.edad != null) '${alumna.edad} años',
+                          if (alumna.nivel != null)
+                            'Nivel ${alumna.nivel!.label.toLowerCase()}',
+                        ].join(' · '),
+                        style: const TextStyle(
+                            color: Colors.white70, fontSize: 13.5),
+                      ),
+                  ],
+                ),
+              ),
+            ],
           ),
           if (grupo != null) ...[
             const SizedBox(height: 4),

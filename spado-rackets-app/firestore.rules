@@ -211,6 +211,16 @@ service cloud.firestore {
 
     // ------------------------------------------------------------ alumnas
 
+    function datosAlumnaValidos(id, d) {
+      return d.get('nivel', null) in
+               [null, 'iniciacion', 'basico', 'intermedio', 'avanzado', 'competicion']
+        && (d.get('fechaNacimiento', null) == null
+            || d.get('fechaNacimiento', null) is timestamp)
+        && (d.get('fotoPath', null) == null
+            || (d.get('fotoPath', null) is string
+                && d.get('fotoPath', '').matches('fotos/' + id + '/[^/.][^/]*')));
+    }
+
     match /alumnas/{alumnaId} {
       allow read: if isSignedIn() && (
         resource == null
@@ -226,11 +236,13 @@ service cloud.firestore {
         && textoValido(request.resource.data.get('nombre', ''), 120)
         && textoValido(request.resource.data.get('grupo', ''), 60)
         && textoOpcional(request.resource.data, 'emailFamilia', 120)
+        && datosAlumnaValidos(alumnaId, request.resource.data)
         && !request.resource.data.keys().hasAny(['familiaUid']);
 
       allow update: if isDireccion()
         && !changedKeys().hasAny(['familiaUid'])
         && textoOpcional(request.resource.data, 'emailFamilia', 120)
+        && datosAlumnaValidos(alumnaId, request.resource.data)
         && textoValido(request.resource.data.get('nombre', ''), 120);
 
       allow delete: if isDireccion();

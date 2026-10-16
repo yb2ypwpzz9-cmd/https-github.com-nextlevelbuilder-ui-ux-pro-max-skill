@@ -380,3 +380,24 @@ describe('pasos obligatorios del primer acceso', () => {
     await assertFails(updateDoc(doc(como(FAM), `users/${FAM}`), { avisoUbicacionVersion: '2026-10', avisoUbicacionEn: serverTimestamp() }));
   });
 });
+
+describe('ficha de la alumna: nivel, nacimiento y foto', () => {
+  const ficha = (extra = {}) => ({ nombre: 'Ana', grupo: 'g1', activa: true, ...extra });
+
+  test('Dirección guarda nivel, fecha y foto válidos', async () => {
+    await assertSucceeds(setDoc(doc(como(DIR), 'alumnas/n1'), ficha({
+      nivel: 'intermedio', fechaNacimiento: Timestamp.fromDate(new Date('2016-05-02')), fotoPath: 'fotos/n1/1.jpg' })));
+  });
+
+  test('se rechazan niveles raros y rutas de foto ajenas', async () => {
+    await assertFails(setDoc(doc(como(DIR), 'alumnas/n2'), ficha({ nivel: 'dios' })));
+    await assertFails(setDoc(doc(como(DIR), 'alumnas/n3'), ficha({ fotoPath: 'fotos/otra/1.jpg' })));
+    await assertFails(setDoc(doc(como(DIR), 'alumnas/n4'), ficha({ fotoPath: 'fotos/n4/../x.jpg' })));
+    await assertFails(setDoc(doc(como(DIR), 'alumnas/n5'), ficha({ fechaNacimiento: '2016-05-02' })));
+  });
+
+  test('una familia o el staff no editan la ficha', async () => {
+    await assertFails(updateDoc(doc(como(FAM), 'alumnas/a1'), { nivel: 'avanzado' }));
+    await assertFails(updateDoc(doc(como(STAFF), 'alumnas/a1'), { nivel: 'avanzado' }));
+  });
+});
