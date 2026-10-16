@@ -22,7 +22,8 @@ abstract final class ClubConfig {
   /// Clave pública VAPID para las notificaciones web. Se saca de la consola de
   /// Firebase: Configuración del proyecto → Cloud Messaging → Certificados
   /// push web. Vacía = la app funciona igual, pero sin avisos push.
-  static const vapidKey = '';
+  static const vapidKey =
+      'BPgfdfBQjhgb-lhw4X0jVlN6ZqfX2cOwoXmUHQ7X6ZcACebapfndsXl_twkm1_PPBnWDWZKjcROAhh1Tnh8fQrs';
 
   /// El fichaje exige ubicación, como en Spado Soccer: un fichaje sin posición
   /// no demuestra que el entrenador estuviera en la pista.
