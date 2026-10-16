@@ -33,6 +33,7 @@ dependencies:
   # Descarga de informes en CSV desde el navegador.
   web: ^1.1.0
   image: ^4.12.0
+  archive: ^4.5.2
 
 
 dev_dependencies:

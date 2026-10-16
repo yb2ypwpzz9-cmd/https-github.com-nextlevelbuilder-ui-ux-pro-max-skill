@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../models/jornada.dart';
 import '../../services/club_repository.dart';
+import '../../services/descarga.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/common.dart';
 import '../app_shell.dart';
@@ -75,6 +77,35 @@ class _FichajesScreenState extends State<FichajesScreen> {
                 selected: {_periodo},
                 showSelectedIcon: false,
                 onSelectionChanged: (s) => setState(() => _periodo = s.first),
+              ),
+              const SizedBox(height: AppSpacing.sm),
+              BotonExcel(
+                onPressed: () => descargarExcel('fichajes', {
+                  'Fichajes': [
+                    ['Fecha', 'Staff', 'Hora de llegada', 'Latitud', 'Longitud', 'Precisión (m)'],
+                    for (final j in enRango)
+                      [
+                        DateFormat('yyyy-MM-dd').format(j.entrada),
+                        j.staffNombre,
+                        DateFormat('HH:mm').format(j.entrada),
+                        j.entradaLat,
+                        j.entradaLng,
+                        j.entradaPrecision?.round(),
+                      ],
+                  ],
+                  'Resumen': [
+                    ['Staff', 'Días fichados'],
+                    for (final e in personas.entries)
+                      [
+                        e.value,
+                        enRango
+                            .where((j) => j.staffUid == e.key)
+                            .map((j) => DateFormat('yyyy-MM-dd').format(j.entrada))
+                            .toSet()
+                            .length,
+                      ],
+                  ],
+                }),
               ),
               const SectionHeader('Días fichados por persona'),
               if (personas.isEmpty)

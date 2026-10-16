@@ -2,7 +2,10 @@ import 'dart:convert';
 import 'dart:js_interop';
 import 'dart:typed_data';
 
+import 'package:intl/intl.dart';
 import 'package:web/web.dart' as web;
+
+import 'excel_export.dart';
 
 /// Descarga un texto como archivo desde el navegador. Con BOM para que Excel
 /// abra bien las tildes.
@@ -30,3 +33,24 @@ String filaCsv(Iterable<Object?> celdas) => celdas.map((c) {
       }
       return '"${t.replaceAll('"', '""')}"';
     }).join(';');
+
+/// Descarga un archivo binario (p. ej. un .xlsx) desde el navegador.
+void descargarBytes(String nombre, Uint8List bytes, String tipo) {
+  final blob = web.Blob([bytes.toJS].toJS, web.BlobPropertyBag(type: tipo));
+  final url = web.URL.createObjectURL(blob);
+  final enlace = web.document.createElement('a') as web.HTMLAnchorElement
+    ..href = url
+    ..download = nombre;
+  enlace.click();
+  web.URL.revokeObjectURL(url);
+}
+
+/// Genera y descarga un Excel con la fecha de hoy en el nombre.
+void descargarExcel(String nombre, Map<String, List<List<Object?>>> hojas) {
+  final fecha = DateFormat('yyyy-MM-dd').format(DateTime.now());
+  descargarBytes(
+    'spado-rackets-$nombre-$fecha.xlsx',
+    construirXlsx(hojas),
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  );
+}

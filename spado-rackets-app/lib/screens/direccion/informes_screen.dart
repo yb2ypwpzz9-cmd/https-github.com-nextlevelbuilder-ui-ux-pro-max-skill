@@ -468,24 +468,27 @@ class _Cuerpo extends StatelessWidget {
         ]),
 
         const SectionHeader('Descargar informes',
-            subtitle: 'CSV para Excel, con los datos del periodo elegido'),
-        Wrap(spacing: AppSpacing.sm, runSpacing: AppSpacing.sm, children: [
-          _Descarga('Asistencia', Icons.fact_check_outlined, () {
-            _csv('asistencia', [
+            subtitle: 'Un Excel con todas las hojas del periodo elegido'),
+        BotonExcel(
+          etiqueta: 'Descargar Excel completo',
+          onPressed: () => descargarExcel('informe', {
+            'Resumen mensual': [
+              ['Mes', 'Cobrado', 'Gastos', 'Balance'],
+              for (final p in periodos)
+                [etiquetaPeriodo(p), ingresosDe(p), gastosDe(p), ingresosDe(p) - gastosDe(p)],
+            ],
+            'Asistencia': [
               ['Fecha', 'Grupo', 'Alumna', 'Estado', 'Marcado por'],
               for (final m in marcas)
                 [
                   m.fecha,
-                  grupos.where((g) => g.id == m.grupo).firstOrNull?.nombre ??
-                      m.grupo,
+                  grupos.where((g) => g.id == m.grupo).firstOrNull?.nombre ?? m.grupo,
                   m.alumnaNombre,
                   m.estado.label,
                   m.marcadoPorNombre,
                 ],
-            ]);
-          }),
-          _Descarga('Fichajes', Icons.badge_outlined, () {
-            _csv('fichajes', [
+            ],
+            'Fichajes': [
               ['Fecha', 'Staff', 'Hora de llegada', 'Latitud', 'Longitud'],
               for (final j in jornadas)
                 [
@@ -495,31 +498,25 @@ class _Cuerpo extends StatelessWidget {
                   j.entradaLat,
                   j.entradaLng,
                 ],
-            ]);
-          }),
-          _Descarga('Cuotas', Icons.receipt_long_outlined, () {
-            _csv('cuotas', [
+            ],
+            'Cuotas': [
               ['Periodo', 'Alumna', 'Grupo', 'Importe', 'Moneda', 'Estado'],
               for (final p in pagos)
                 [
                   p.periodo,
                   p.alumnaNombre,
-                  grupos.where((g) => g.id == p.grupo).firstOrNull?.nombre ??
-                      p.grupo,
-                  p.importe.toStringAsFixed(2),
+                  grupos.where((g) => g.id == p.grupo).firstOrNull?.nombre ?? p.grupo,
+                  p.importe,
                   p.moneda.wire,
                   p.estado.label,
                 ],
-            ]);
+            ],
+            'Gastos': [
+              ['Fecha', 'Concepto', 'Categoría', 'Importe'],
+              for (final g in gastos) [g.fecha, g.concepto, g.categoria.label, g.importe],
+            ],
           }),
-          _Descarga('Gastos', Icons.shopping_bag_outlined, () {
-            _csv('gastos', [
-              ['Fecha', 'Concepto', 'Categoría', 'Importe (US\$)'],
-              for (final g in gastos)
-                [g.fecha, g.concepto, g.categoria.label, g.importe.toStringAsFixed(2)],
-            ]);
-          }),
-        ]),
+        ),
         const SizedBox(height: AppSpacing.xl * 2),
       ],
     );
@@ -535,28 +532,8 @@ class _Cuerpo extends StatelessWidget {
         '${(minutos % 60).toString().padLeft(2, '0')}';
   }
 
-  static void _csv(String nombre, List<List<Object?>> filas) {
-    descargarTexto(
-      'spado-rackets-$nombre-${DateFormat('yyyy-MM-dd').format(DateTime.now())}.csv',
-      filas.map(filaCsv).join('\r\n'),
-    );
-  }
 }
 
-class _Descarga extends StatelessWidget {
-  const _Descarga(this.titulo, this.icono, this.onTap);
-  final String titulo;
-  final IconData icono;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) => OutlinedButton.icon(
-        style: OutlinedButton.styleFrom(minimumSize: const Size(0, 44)),
-        onPressed: onTap,
-        icon: Icon(icono, size: 18),
-        label: Text(titulo),
-      );
-}
 
 /// Fila de barra horizontal: etiqueta, barra proporcional y valor.
 class _BarraH extends StatelessWidget {

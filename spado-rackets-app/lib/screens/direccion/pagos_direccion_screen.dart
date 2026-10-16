@@ -6,6 +6,7 @@ import '../../config/club_config.dart';
 import '../../models/pago.dart';
 import '../../services/auth_service.dart';
 import '../../services/club_repository.dart';
+import '../../services/descarga.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/common.dart';
 import '../../widgets/pago_widgets.dart';
@@ -93,6 +94,26 @@ class _PagosDireccionScreenState extends State<PagosDireccionScreen> {
                     ],
                   ),
                 ),
+              ),
+              const SizedBox(height: AppSpacing.sm),
+              BotonExcel(
+                onPressed: () => descargarExcel('cuotas-$_periodo', {
+                  'Cuotas': [
+                    ['Periodo', 'Alumna', 'Grupo', 'Concepto', 'Importe', 'Moneda', 'Estado', 'Cobro', 'Validada por'],
+                    for (final p in pagos)
+                      [
+                        p.periodo,
+                        p.alumnaNombre,
+                        p.grupo,
+                        p.concepto,
+                        p.importe,
+                        p.moneda.wire,
+                        p.estado.label,
+                        p.registradoAMano ? 'Efectivo' : (p.tieneComprobante ? 'Transferencia' : ''),
+                        p.resueltoPorNombre,
+                      ],
+                  ],
+                }),
               ),
               const SizedBox(height: AppSpacing.md),
               if (pagos.isEmpty)

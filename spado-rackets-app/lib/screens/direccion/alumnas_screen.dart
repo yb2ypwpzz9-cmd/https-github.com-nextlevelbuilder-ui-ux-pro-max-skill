@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import '../../models/alumna.dart';
 import '../../models/grupo.dart';
 import '../../services/club_repository.dart';
+import '../../services/descarga.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/common.dart';
 import '../../widgets/foto_alumna.dart';
@@ -51,6 +52,28 @@ class AlumnasScreen extends StatelessWidget {
                     return PageBody(
                       padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
                       children: [
+                        BotonExcel(
+                          onPressed: () => descargarExcel('alumnas', {
+                            'Alumnas': [
+                              ['Alumna', 'Grupo', 'Edad', 'Fecha de nacimiento', 'Nivel', 'Email de la familia', 'Familia con cuenta', 'Activa', 'Código'],
+                              for (final a in alumnas)
+                                [
+                                  a.nombre,
+                                  grupos.where((g) => g.id == a.grupo).firstOrNull?.nombre ?? a.grupo,
+                                  a.edad,
+                                  a.fechaNacimiento == null
+                                      ? null
+                                      : '${a.fechaNacimiento!.year}-${a.fechaNacimiento!.month.toString().padLeft(2, '0')}-${a.fechaNacimiento!.day.toString().padLeft(2, '0')}',
+                                  a.nivel?.label,
+                                  a.emailFamilia,
+                                  a.vinculada ? 'Sí' : 'No',
+                                  a.activa ? 'Sí' : 'No',
+                                  codigoDe[a.id]?.codigo,
+                                ],
+                            ],
+                          }),
+                        ),
+                        const SizedBox(height: AppSpacing.sm),
                         InlineNotice(
                           message: sinVincular == 0
                               ? 'Todas las familias tienen cuenta.'

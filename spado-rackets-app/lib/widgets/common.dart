@@ -579,3 +579,28 @@ class _StreamBuilderEstableState<T> extends State<StreamBuilderEstable<T>> {
   Widget build(BuildContext context) =>
       StreamBuilder<T>(stream: _stream, builder: widget.builder);
 }
+
+
+/// Botón "Descargar Excel" común a todas las listas de Dirección.
+class BotonExcel extends StatelessWidget {
+  const BotonExcel({super.key, required this.onPressed, this.etiqueta = 'Descargar Excel'});
+
+  final VoidCallback onPressed;
+  final String etiqueta;
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.centerRight,
+      child: OutlinedButton.icon(
+        style: OutlinedButton.styleFrom(
+          minimumSize: const Size(0, 44),
+          foregroundColor: AppColors.success,
+        ),
+        onPressed: onPressed,
+        icon: const Icon(Icons.table_chart_outlined, size: 18),
+        label: Text(etiqueta),
+      ),
+    );
+  }
+}

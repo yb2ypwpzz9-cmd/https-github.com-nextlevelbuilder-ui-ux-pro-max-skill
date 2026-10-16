@@ -6,6 +6,7 @@ import '../../models/alumna.dart';
 import '../../models/asistencia.dart';
 import '../../models/grupo.dart';
 import '../../services/club_repository.dart';
+import '../../services/descarga.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/common.dart';
 import '../staff/staff_grupos_screen.dart' show MarcaAsistencia;
@@ -31,6 +32,38 @@ class AsistenciaResumenScreen extends StatelessWidget {
             stream: repo.watchAsistenciaDesde(desde),
             builder: (context, marcas) => PageBody(
               children: [
+                BotonExcel(
+                  onPressed: () => descargarExcel('asistencia', {
+                    'Asistencia': [
+                      ['Fecha', 'Grupo', 'Alumna', 'Estado', 'Marcado por'],
+                      for (final m in marcas)
+                        [
+                          m.fecha,
+                          grupos.where((g) => g.id == m.grupo).firstOrNull?.nombre ?? m.grupo,
+                          m.alumnaNombre,
+                          m.estado.label,
+                          m.marcadoPorNombre,
+                        ],
+                    ],
+                    'Resumen por alumna': [
+                      ['Alumna', 'Grupo', 'Sesiones', 'Asistió', 'Faltas', 'Justificadas', '% asistencia'],
+                      for (final a in alumnas.where((a) => a.activa))
+                        () {
+                          final suyas = marcas.where((m) => m.alumnaId == a.id).toList();
+                          int n(EstadoAsistencia e) => suyas.where((m) => m.estado == e).length;
+                          return [
+                            a.nombre,
+                            grupos.where((g) => g.id == a.grupo).firstOrNull?.nombre ?? a.grupo,
+                            suyas.length,
+                            n(EstadoAsistencia.presente),
+                            n(EstadoAsistencia.falta),
+                            n(EstadoAsistencia.justificada),
+                            suyas.isEmpty ? null : porcentajeAsistencia(suyas),
+                          ];
+                        }(),
+                    ],
+                  }),
+                ),
                 for (final g in grupos.where((g) => g.activo)) ...[
                   Builder(builder: (context) {
                     final delGrupo =
