@@ -103,7 +103,6 @@ class _RegistroScreenState extends State<RegistroScreen> {
               textCapitalization: TextCapitalization.words,
               decoration: const InputDecoration(
                 labelText: 'Nombre y apellidos del padre, madre o tutor',
-                helperText: 'Los tuyos, no los de tu hija',
                 hintText: 'Así te verá el club en los mensajes',
               ),
               validator: (v) =>
