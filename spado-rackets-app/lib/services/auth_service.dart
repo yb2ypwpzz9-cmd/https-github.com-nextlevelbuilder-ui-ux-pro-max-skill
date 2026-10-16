@@ -336,7 +336,7 @@ class SessionController extends ChangeNotifier {
       ).httpsCallable('vincularAlumna').call<Map<String, dynamic>>({
         'codigo': codigo.trim().toUpperCase(),
       });
-      return (r.data['nombre'] as String?) ?? 'La alumna';
+      return (r.data['nombre'] as String?) ?? 'La persona';
     } on FirebaseFunctionsException catch (e) {
       throw RegistroException(
         (e.message?.trim().isNotEmpty ?? false)

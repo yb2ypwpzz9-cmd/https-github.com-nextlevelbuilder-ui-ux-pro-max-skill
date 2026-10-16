@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../config/club_config.dart';
+import '../../models/grupo.dart';
 import '../../services/auth_service.dart';
 import '../../services/descarga.dart';
+import '../../services/club_repository.dart';
 import '../../services/push_service.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/club_logo.dart';
@@ -35,17 +38,31 @@ class MasScreen extends StatelessWidget {
           ),
           if (user.role.isDireccion) ...[
             const SectionHeader('Gestión del club'),
-            const CardList(children: [
-              _Enlace(Icons.insights, 'Cuadro de mandos e informes', '/informes'),
-              _Enlace(Icons.school_outlined, 'Alumnas y códigos', '/alumnas'),
-              _Enlace(Icons.family_restroom_outlined, 'Familias y cuentas', '/familias'),
-              _Enlace(Icons.groups_outlined, 'Grupos, horarios y cuotas',
-                  '/grupos'),
-              _Enlace(Icons.badge_outlined, 'Equipo y cuentas', '/equipo'),
-              _Enlace(Icons.fact_check_outlined, 'Asistencia por grupo',
-                  '/asistencia'),
-              _Enlace(Icons.account_balance_outlined, 'Datos bancarios',
+            CardList(children: [
+              const _Enlace(Icons.insights, 'Cuadro de mandos e informes',
+                  '/informes'),
+              const _Enlace(
+                  Icons.school_outlined, 'Alumnado y códigos', '/alumnas'),
+              const _Enlace(Icons.family_restroom_outlined,
+                  'Familias y cuentas', '/familias'),
+              const _Enlace(Icons.badge_outlined, 'Equipo y cuentas', '/equipo'),
+              const _Enlace(Icons.fact_check_outlined,
+                  'Asistencia del alumnado', '/asistencia'),
+              const _Enlace(Icons.account_balance_outlined, 'Datos bancarios',
                   '/datos-bancarios'),
+              // Los grupos ya no se usan; este acceso solo aparece mientras
+              // queden grupos antiguos por limpiar.
+              StreamBuilderEstable<List<Grupo>>(
+                stream: context.read<ClubRepository>().watchGrupos(),
+                builder: (context, snap) {
+                  final antiguos = (snap.data ?? const <Grupo>[])
+                      .where((g) => g.id != ClubConfig.grupoGeneral)
+                      .length;
+                  if (antiguos == 0) return const SizedBox.shrink();
+                  return const _Enlace(Icons.groups_outlined,
+                      'Grupos antiguos (limpiar)', '/grupos');
+                },
+              ),
             ]),
           ],
           const SectionHeader('Mi cuenta'),
@@ -53,7 +70,7 @@ class MasScreen extends StatelessWidget {
             if (user.role.isFamilia)
               ListTile(
                 leading: const Icon(Icons.link, color: AppColors.navy),
-                title: const Text('Vincular otra alumna'),
+                title: const Text('Vincular otro alumno/a'),
                 subtitle: const Text('Con el código que te dio el club'),
                 onTap: () => _vincular(context),
               ),
@@ -149,7 +166,7 @@ class MasScreen extends StatelessWidget {
     final ok = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Vincular otra alumna'),
+        title: const Text('Vincular otro alumno/a'),
         content: TextField(
           controller: codigo,
           autofocus: true,
@@ -212,7 +229,7 @@ class MasScreen extends StatelessWidget {
           children: [
             const Text(
               'Se borran tu acceso, tus justificantes y tus mensajes '
-              'privados, y dejas de estar vinculada a tus hijas. El club '
+              'privados, y dejas de estar vinculado/a a tus hijos o hijas. El club '
               'conserva, sin tu nombre, la asistencia y las cuotas que debe '
               'guardar por contabilidad. No se puede deshacer.',
             ),

@@ -106,12 +106,18 @@ class ClubRepository {
   /// Alta de una alumna con su código de vinculación, en una sola operación.
   Future<String> crearAlumna({
     required String nombre,
-    required String grupo,
     String? emailFamilia,
     DateTime? fechaNacimiento,
     NivelTenis? nivel,
+    TipoJugador? tipo,
+    List<int> dias = const [],
+    String horaInicio = '',
+    int duracionMinutos = 60,
+    double cuotaMensual = 0,
     Uint8List? foto,
   }) async {
+    const grupo = ClubConfig.grupoGeneral;
+    await asegurarGrupoGeneral();
     final alumna = Refs.alumnas.doc();
     final fotoPath = foto == null ? null : await subirFotoAlumna(alumna.id, foto);
     final codigo = _generarCodigo();
@@ -120,6 +126,11 @@ class ClubRepository {
         'nombre': nombre.trim(),
         'grupo': grupo,
         'activa': true,
+        if (tipo != null) 'tipo': tipo.name,
+        'dias': dias,
+        'horaInicio': horaInicio,
+        'duracionMinutos': duracionMinutos,
+        'cuotaMensual': cuotaMensual,
         if (fechaNacimiento != null)
           'fechaNacimiento': Timestamp.fromDate(fechaNacimiento),
         if (nivel != null) 'nivel': nivel.name,
@@ -138,6 +149,26 @@ class ClubRepository {
     return codigo;
   }
 
+  /// Grupo interno único. Se crea la primera vez que se da de alta a alguien.
+  /// No tiene chat propio: los avisos y los mensajes directos bastan.
+  Future<void> asegurarGrupoGeneral() async {
+    final ref = Refs.grupos.doc(ClubConfig.grupoGeneral);
+    final existe = await ref.get();
+    if (existe.exists) return;
+    await ref.set({
+      'nombre': 'Spado Rackets',
+      'deporte': 'Tenis',
+      'dias': <int>[],
+      'horaInicio': '',
+      'duracionMinutos': 60,
+      'pista': '',
+      'cuotaMensual': 0,
+      'moneda': ClubConfig.monedaPorDefecto.wire,
+      'activo': true,
+      'sinChat': true,
+    });
+  }
+
   Future<void> actualizarAlumna(
     String id, {
     String? nombre,
@@ -151,10 +182,20 @@ class ClubRepository {
     Uint8List? fotoNueva,
     String? fotoAnterior,
     bool quitarFoto = false,
+    TipoJugador? tipo,
+    List<int>? dias,
+    String? horaInicio,
+    int? duracionMinutos,
+    double? cuotaMensual,
   }) async {
     String? fotoPath;
     if (fotoNueva != null) fotoPath = await subirFotoAlumna(id, fotoNueva);
     await Refs.alumnas.doc(id).update({
+        if (tipo != null) 'tipo': tipo.name,
+        if (dias != null) 'dias': dias,
+        if (horaInicio != null) 'horaInicio': horaInicio,
+        if (duracionMinutos != null) 'duracionMinutos': duracionMinutos,
+        if (cuotaMensual != null) 'cuotaMensual': cuotaMensual,
         if (fechaNacimiento != null)
           'fechaNacimiento': Timestamp.fromDate(fechaNacimiento),
         if (quitarFecha) 'fechaNacimiento': FieldValue.delete(),
@@ -301,7 +342,6 @@ class ClubRepository {
       .map((s) => mapearDocs(s.docs, Asistencia.fromDoc));
 
   Future<void> guardarLista({
-    required Grupo grupo,
     required String fecha,
     required List<Alumna> alumnas,
     required Map<String, EstadoAsistencia> marcas,
@@ -311,8 +351,8 @@ class ClubRepository {
     for (final a in alumnas) {
       final estado = marcas[a.id];
       if (estado == null) continue;
-      batch.set(Refs.asistencias.doc(Asistencia.idPara(grupo.id, fecha, a.id)), {
-        'grupo': grupo.id,
+      batch.set(Refs.asistencias.doc(Asistencia.idPara(a.grupo, fecha, a.id)), {
+        'grupo': a.grupo,
         'fecha': fecha,
         'alumnaId': a.id,
         'alumnaNombre': a.nombre,
@@ -326,6 +366,39 @@ class ClubRepository {
       });
     }
     await batch.commit();
+  }
+
+  /// Marcas de varios grupos desde una fecha (alumnado del staff).
+  Stream<List<Asistencia>> watchAsistenciaDeGrupos(
+          List<String> grupos, String desde) =>
+      Refs.asistencias
+          .where('grupo', whereIn: grupos.take(30).toList())
+          .where('fecha', isGreaterThanOrEqualTo: desde)
+          .orderBy('fecha', descending: true)
+          .snapshots()
+          .map((s) => mapearDocs(s.docs, Asistencia.fromDoc));
+
+  /// Todas las marcas de un día. Dirección las ve todas; el staff, las de los
+  /// grupos que tiene asignados (la consulta lo filtra: las reglas rechazan
+  /// cualquier otra).
+  Stream<List<Asistencia>> watchAsistenciaDia(String fecha,
+      {List<String>? grupos}) {
+    Query<Json> q = Refs.asistencias.where('fecha', isEqualTo: fecha);
+    if (grupos != null) {
+      if (grupos.isEmpty) return Stream.value(const []);
+      q = q.where('grupo', whereIn: grupos.take(30).toList());
+    }
+    return q.snapshots().map((s) => mapearDocs(s.docs, Asistencia.fromDoc));
+  }
+
+  Stream<List<Ausencia>> watchAusenciasDia(String fecha,
+      {List<String>? grupos}) {
+    Query<Json> q = Refs.ausencias.where('fecha', isEqualTo: fecha);
+    if (grupos != null) {
+      if (grupos.isEmpty) return Stream.value(const []);
+      q = q.where('grupo', whereIn: grupos.take(30).toList());
+    }
+    return q.snapshots().map((s) => mapearDocs(s.docs, Ausencia.fromDoc));
   }
 
   // ------------------------------------------------------------ ausencias

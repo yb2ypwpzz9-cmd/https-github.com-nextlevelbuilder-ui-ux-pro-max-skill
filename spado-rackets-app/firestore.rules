@@ -220,6 +220,15 @@ service cloud.firestore {
     function datosAlumnaValidos(id, d) {
       return d.get('nivel', null) in
                [null, 'iniciacion', 'basico', 'intermedio', 'avanzado', 'competicion']
+        && d.get('tipo', null) in [null, 'nina', 'nino', 'adulto']
+        && d.get('dias', []) is list
+        && d.get('dias', []).size() <= 7
+        && d.get('horaInicio', '') is string
+        && d.get('horaInicio', '').size() <= 5
+        && d.get('duracionMinutos', 60) is number
+        && d.get('cuotaMensual', 0) is number
+        && d.get('cuotaMensual', 0) >= 0
+        && d.get('cuotaMensual', 0) <= 1000000
         && (d.get('fechaNacimiento', null) == null
             || d.get('fechaNacimiento', null) is timestamp)
         && (d.get('fotoPath', null) == null

@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import '../../config/club_config.dart';
 import '../../models/asistencia.dart';
 import '../../models/gasto.dart';
-import '../../models/grupo.dart';
 import '../../models/jornada.dart';
 import '../../models/pago.dart';
 import '../../services/auth_service.dart';
@@ -27,7 +26,6 @@ class _InformesScreenState extends State<InformesScreen> {
   int _meses = 3;
 
   late final ClubRepository _repo = context.read<ClubRepository>();
-  late final Stream<List<Grupo>> _grupos = _repo.watchGrupos();
   late Stream<List<Jornada>> _jornadas;
   late Stream<List<Asistencia>> _asistencia;
   late Stream<List<Pago>> _pagos;
@@ -63,29 +61,25 @@ class _InformesScreenState extends State<InformesScreen> {
         icon: const Icon(Icons.add),
         label: const Text('Registrar gasto'),
       ),
-      body: StreamView<List<Grupo>>(
-        stream: _grupos,
-        builder: (context, grupos) => StreamView<List<Jornada>>(
-          stream: _jornadas,
-          builder: (context, jornadas) => StreamView<List<Asistencia>>(
-            stream: _asistencia,
-            builder: (context, marcas) => StreamView<List<Pago>>(
-              stream: _pagos,
-              builder: (context, pagos) => StreamView<List<Gasto>>(
-                stream: _gastos,
-                builder: (context, gastos) => _Cuerpo(
-                  meses: _meses,
-                  desde: _desde,
-                  onMeses: (v) => setState(() {
-                    _meses = v;
-                    _crearStreams();
-                  }),
-                  grupos: grupos,
-                  jornadas: jornadas,
-                  marcas: marcas,
-                  pagos: pagos,
-                  gastos: gastos,
-                ),
+      body: StreamView<List<Jornada>>(
+        stream: _jornadas,
+        builder: (context, jornadas) => StreamView<List<Asistencia>>(
+          stream: _asistencia,
+          builder: (context, marcas) => StreamView<List<Pago>>(
+            stream: _pagos,
+            builder: (context, pagos) => StreamView<List<Gasto>>(
+              stream: _gastos,
+              builder: (context, gastos) => _Cuerpo(
+                meses: _meses,
+                desde: _desde,
+                onMeses: (v) => setState(() {
+                  _meses = v;
+                  _crearStreams();
+                }),
+                jornadas: jornadas,
+                marcas: marcas,
+                pagos: pagos,
+                gastos: gastos,
               ),
             ),
           ),
@@ -197,7 +191,6 @@ class _Cuerpo extends StatelessWidget {
     required this.meses,
     required this.desde,
     required this.onMeses,
-    required this.grupos,
     required this.jornadas,
     required this.marcas,
     required this.pagos,
@@ -207,7 +200,6 @@ class _Cuerpo extends StatelessWidget {
   final int meses;
   final DateTime desde;
   final ValueChanged<int> onMeses;
-  final List<Grupo> grupos;
   final List<Jornada> jornadas;
   final List<Asistencia> marcas;
   final List<Pago> pagos;
@@ -217,7 +209,6 @@ class _Cuerpo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final t = Theme.of(context).textTheme;
     final dop = pagos;
     final cobrado = dop
         .where((p) => p.estado == EstadoPago.pagado)
@@ -230,13 +221,15 @@ class _Cuerpo extends StatelessWidget {
 
     // Serie mensual.
     final periodos = [
-      for (var i = 0; i < meses; i++) periodoDe(DateTime(desde.year, desde.month + i)),
+      for (var i = 0; i < meses; i++)
+        periodoDe(DateTime(desde.year, desde.month + i)),
     ];
     double ingresosDe(String p) => dop
         .where((x) => x.periodo == p && x.estado == EstadoPago.pagado)
         .fold<double>(0, (a, x) => a + x.importe);
-    double gastosDe(String p) =>
-        gastos.where((g) => g.periodo == p).fold<double>(0, (a, g) => a + g.importe);
+    double gastosDe(String p) => gastos
+        .where((g) => g.periodo == p)
+        .fold<double>(0, (a, g) => a + g.importe);
 
     // Fichajes por día de la semana.
     final fichajesDia = List<int>.filled(7, 0);
@@ -244,11 +237,7 @@ class _Cuerpo extends StatelessWidget {
       fichajesDia[j.entrada.weekday - 1]++;
     }
 
-    // Asistencia por grupo y por día.
-    final porGrupo = <Grupo, List<Asistencia>>{
-      for (final g in grupos.where((g) => g.activo))
-        g: marcas.where((m) => m.grupo == g.id).toList(),
-    };
+    // Asistencia por día de la semana.
     final marcasDia = List.generate(7, (_) => <Asistencia>[]);
     for (final m in marcas) {
       try {
@@ -313,7 +302,6 @@ class _Cuerpo extends StatelessWidget {
             icon: Icons.badge_outlined,
           ),
         ]),
-
         const SectionHeader('Ingresos y gastos por mes',
             subtitle: 'Cobrado (azul) frente a gastos (naranja)'),
         Card(
@@ -341,7 +329,8 @@ class _Cuerpo extends StatelessWidget {
                 'Gastos ${formatoImporte(gastosDe(p), ClubConfig.monedaPorDefecto)}',
               ),
               trailing: Text(
-                formatoImporte(ingresosDe(p) - gastosDe(p), ClubConfig.monedaPorDefecto),
+                formatoImporte(
+                    ingresosDe(p) - gastosDe(p), ClubConfig.monedaPorDefecto),
                 style: TextStyle(
                   fontWeight: FontWeight.w800,
                   color: ingresosDe(p) - gastosDe(p) >= 0
@@ -351,28 +340,6 @@ class _Cuerpo extends StatelessWidget {
               ),
             ),
         ]),
-
-        const SectionHeader('Asistencia por grupo'),
-        Card(
-          child: Padding(
-            padding: const EdgeInsets.all(AppSpacing.md),
-            child: Column(children: [
-              for (final e in porGrupo.entries)
-                _BarraH(
-                  etiqueta: e.key.nombre,
-                  fraccion: e.value.isEmpty
-                      ? 0
-                      : porcentajeAsistencia(e.value) / 100,
-                  valor: e.value.isEmpty
-                      ? 'Sin listas'
-                      : '${porcentajeAsistencia(e.value)}%',
-                  color: AppColors.success,
-                ),
-              if (porGrupo.isEmpty) Text('Aún no hay grupos', style: t.bodySmall),
-            ]),
-          ),
-        ),
-
         const SectionHeader('Asistencia por día de la semana'),
         Card(
           child: Padding(
@@ -392,7 +359,6 @@ class _Cuerpo extends StatelessWidget {
             ]),
           ),
         ),
-
         const SectionHeader('Fichajes por día de la semana',
             subtitle: 'Cuántas veces ha llegado el staff cada día'),
         Card(
@@ -412,7 +378,6 @@ class _Cuerpo extends StatelessWidget {
             ]),
           ),
         ),
-
         const SectionHeader('Staff'),
         CardList(children: [
           if (porStaff.isEmpty)
@@ -427,7 +392,6 @@ class _Cuerpo extends StatelessWidget {
               ),
             ),
         ]),
-
         const SectionHeader('Gastos registrados'),
         CardList(children: [
           if (gastos.isEmpty)
@@ -466,7 +430,6 @@ class _Cuerpo extends StatelessWidget {
               ),
             ),
         ]),
-
         const SectionHeader('Descargar informes',
             subtitle: 'Un Excel con todas las hojas del periodo elegido'),
         BotonExcel(
@@ -475,14 +438,18 @@ class _Cuerpo extends StatelessWidget {
             'Resumen mensual': [
               ['Mes', 'Cobrado', 'Gastos', 'Balance'],
               for (final p in periodos)
-                [etiquetaPeriodo(p), ingresosDe(p), gastosDe(p), ingresosDe(p) - gastosDe(p)],
+                [
+                  etiquetaPeriodo(p),
+                  ingresosDe(p),
+                  gastosDe(p),
+                  ingresosDe(p) - gastosDe(p)
+                ],
             ],
             'Asistencia': [
-              ['Fecha', 'Grupo', 'Alumna', 'Estado', 'Marcado por'],
+              ['Fecha', 'Nombre', 'Estado', 'Marcado por'],
               for (final m in marcas)
                 [
                   m.fecha,
-                  grupos.where((g) => g.id == m.grupo).firstOrNull?.nombre ?? m.grupo,
                   m.alumnaNombre,
                   m.estado.label,
                   m.marcadoPorNombre,
@@ -500,12 +467,11 @@ class _Cuerpo extends StatelessWidget {
                 ],
             ],
             'Cuotas': [
-              ['Periodo', 'Alumna', 'Grupo', 'Importe', 'Moneda', 'Estado'],
+              ['Periodo', 'Nombre', 'Importe', 'Moneda', 'Estado'],
               for (final p in pagos)
                 [
                   p.periodo,
                   p.alumnaNombre,
-                  grupos.where((g) => g.id == p.grupo).firstOrNull?.nombre ?? p.grupo,
                   p.importe,
                   p.moneda.wire,
                   p.estado.label,
@@ -513,7 +479,8 @@ class _Cuerpo extends StatelessWidget {
             ],
             'Gastos': [
               ['Fecha', 'Concepto', 'Categoría', 'Importe'],
-              for (final g in gastos) [g.fecha, g.concepto, g.categoria.label, g.importe],
+              for (final g in gastos)
+                [g.fecha, g.concepto, g.categoria.label, g.importe],
             ],
           }),
         ),
@@ -531,9 +498,7 @@ class _Cuerpo extends StatelessWidget {
     return '${(minutos ~/ 60).toString().padLeft(2, '0')}:'
         '${(minutos % 60).toString().padLeft(2, '0')}';
   }
-
 }
-
 
 /// Fila de barra horizontal: etiqueta, barra proporcional y valor.
 class _BarraH extends StatelessWidget {
@@ -576,7 +541,8 @@ class _BarraH extends StatelessWidget {
           width: 64,
           child: Text(valor,
               textAlign: TextAlign.right,
-              style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 13)),
+              style:
+                  const TextStyle(fontWeight: FontWeight.w800, fontSize: 13)),
         ),
       ]),
     );

@@ -49,11 +49,11 @@ abstract final class TextosLegales {
     (
       '¿Qué datos tratamos?',
       '• De las familias: nombre, correo electrónico y teléfono (opcional).\n'
-          '• De las alumnas (menores de edad): nombre, fecha de nacimiento, '
-          'nivel de tenis, fotografía, grupo de entrenamiento, asistencia a '
-          'clase y cuotas. Los facilita y autoriza su madre, padre o tutor '
-          'legal, también para la fotografía, que sirve para identificar a '
-          'la alumna en clase y solo la ven su familia, su entrenador y la '
+          '• Del alumnado (niñas, niños y personas adultas): nombre, fecha de nacimiento, '
+          'nivel de tenis, fotografía, días y hora de clase, asistencia y '
+          'cuotas. En el caso de menores de edad los facilita y autoriza su '
+          'madre, padre o tutor legal, también para la fotografía, que sirve para identificar a '
+          'a la persona en clase y solo la ven su familia, su entrenador y la '
           'dirección.\n'
           '• Justificantes de pago que la familia sube a la app, que pueden '
           'contener datos bancarios.\n'
@@ -62,12 +62,12 @@ abstract final class TextosLegales {
           'del dispositivo en ese momento (solo al fichar).\n'
           '• Si activas los avisos: un identificador del dispositivo para '
           'enviarte notificaciones, que pueden mostrar el nombre de pila de la '
-          'alumna al confirmar su asistencia.',
+          'alumno o alumna al confirmar su asistencia.',
     ),
     (
       '¿Para qué los usamos?',
       'Para gestionar la escuela: registrar la asistencia, avisar a la '
-          'familia de que su hija está en el entrenamiento, cobrar y validar '
+          'familia de que su hijo o hija está en el entrenamiento, cobrar y validar '
           'las cuotas y comunicarnos con las familias. La ubicación del '
           'entrenador sirve solo para comprobar que ficha en el club. No '
           'usamos los datos para publicidad ni los vendemos o cedemos a '
@@ -75,10 +75,9 @@ abstract final class TextosLegales {
     ),
     (
       '¿Quién puede ver cada dato?',
-      '• Cada familia ve únicamente a sus hijas, sus cuotas, su asistencia y '
+      '• Cada familia ve únicamente a sus hijos e hijas, sus cuotas, su asistencia y '
           'sus conversaciones.\n'
-          '• Los entrenadores ven las alumnas y listas de los grupos que '
-          'tienen asignados.\n'
+          '• Los entrenadores ven al alumnado y las listas de asistencia.\n'
           '• La dirección del club puede ver toda la información de la '
           'escuela, incluidas todas las conversaciones del chat (también las '
           'privadas), para poder atender consultas y moderar.\n'
@@ -87,8 +86,8 @@ abstract final class TextosLegales {
     ),
     (
       'Base legal',
-      'Tu consentimiento, que das al crear la cuenta (y, en el caso de las '
-          'alumnas, el de su madre, padre o tutor legal), y la ejecución del '
+      'Tu consentimiento, que das al crear la cuenta (y, en el caso de los '
+          'menores, el de su madre, padre o tutor legal), y la ejecución del '
           'servicio de la escuela. Los datos se tratan conforme a la Ley '
           'núm. 172-13 sobre Protección Integral de los Datos Personales de '
           'la República Dominicana.',
@@ -103,7 +102,7 @@ abstract final class TextosLegales {
     ),
     (
       '¿Cuánto tiempo los conservamos?',
-      'Mientras la alumna esté en la escuela y el tiempo necesario para '
+      'Mientras la persona esté en la escuela y el tiempo necesario para '
           'atender obligaciones administrativas y contables. Cuando dejes de '
           'usar la app puedes pedirnos que eliminemos tu cuenta y tus datos '
           '(salvo lo que el club deba conservar por ley).',

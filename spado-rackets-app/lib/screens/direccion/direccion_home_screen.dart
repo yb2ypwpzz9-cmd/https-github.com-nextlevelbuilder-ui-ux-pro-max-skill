@@ -4,13 +4,14 @@ import 'package:provider/provider.dart';
 
 import '../../models/app_user.dart';
 import '../../models/asistencia.dart';
-import '../../models/grupo.dart';
+import '../../models/alumna.dart';
 import '../../models/jornada.dart';
 import '../../models/pago.dart';
 import '../../services/auth_service.dart';
 import '../../services/club_repository.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/common.dart';
+import '../../widgets/foto_alumna.dart';
 import '../app_shell.dart';
 import 'pagos_direccion_screen.dart' show revisarPago;
 
@@ -27,9 +28,9 @@ class DireccionHomeScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: const TabAppBar(title: 'Panel de Dirección'),
-      body: StreamView<List<Grupo>>(
-        stream: repo.watchGrupos(),
-        builder: (context, grupos) => StreamView<List<AppUser>>(
+      body: StreamView<List<Alumna>>(
+        stream: repo.watchTodasLasAlumnas(),
+        builder: (context, alumnas) => StreamView<List<AppUser>>(
           stream: repo.watchCuentasDelClub(),
           builder: (context, cuentas) => StreamView<List<Jornada>>(
             stream: repo.watchJornadasDesde(
@@ -44,7 +45,7 @@ class DireccionHomeScreen extends StatelessWidget {
                   stream: repo.watchPagosEnRevision(),
                   builder: (context, enRevision) => _Contenido(
                     user: user,
-                    grupos: grupos.where((g) => g.activo).toList(),
+                    alumnas: alumnas.where((a) => a.activa).toList(),
                     staff: cuentas.where((c) => c.role.isStaff).toList(),
                     abiertas: jornadas.where((j) => _esHoy(j.entrada)).toList(),
                     marcas: marcas,
@@ -65,7 +66,7 @@ class DireccionHomeScreen extends StatelessWidget {
 class _Contenido extends StatelessWidget {
   const _Contenido({
     required this.user,
-    required this.grupos,
+    required this.alumnas,
     required this.staff,
     required this.abiertas,
     required this.marcas,
@@ -74,7 +75,7 @@ class _Contenido extends StatelessWidget {
   });
 
   final AppUser user;
-  final List<Grupo> grupos;
+  final List<Alumna> alumnas;
   final List<AppUser> staff;
   final List<Jornada> abiertas;
   final List<Asistencia> marcas;
@@ -87,10 +88,11 @@ class _Contenido extends StatelessWidget {
     final claveHoy = claveFecha(hoy);
     final t = Theme.of(context).textTheme;
     final irA = context.read<IrATab>();
-    final clasesHoy = grupos.where((g) => g.tieneClaseEl(hoy)).toList()
+    final clasesHoy = alumnas.where((a) => a.tieneClaseEl(hoy)).toList()
       ..sort((a, b) => a.horaInicio.compareTo(b.horaInicio));
-    final listasHechas = {
-      for (final m in marcas.where((m) => m.fecha == claveHoy)) m.grupo,
+    final marcadosHoy = {
+      for (final m in marcas.where((m) => m.fecha == claveHoy))
+        m.alumnaId: m.estado,
     };
 
     return PageBody(
@@ -159,16 +161,7 @@ class _Contenido extends StatelessWidget {
                 return ListTile(
                   leading: Avatar(s.iniciales),
                   title: Text(s.nombreVisible),
-                  subtitle: Text(
-                    s.grupos.isEmpty
-                        ? 'Sin grupos'
-                        : grupos
-                            .where((g) => s.grupos.contains(g.id))
-                            .map((g) => g.nombre)
-                            .join(', '),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+                  subtitle: const Text('Entrenador/a'),
                   trailing: j == null
                       ? const StatusChip(
                           label: 'Sin fichar',
@@ -193,23 +186,27 @@ class _Contenido extends StatelessWidget {
         else
           CardList(
             children: [
-              for (final g in clasesHoy)
+              for (final a in clasesHoy)
                 ListTile(
-                  title: Text(g.nombre),
-                  subtitle: Text(
-                    [g.horaInicio, if (g.pista.isNotEmpty) g.pista].join(' · '),
-                  ),
-                  trailing: listasHechas.contains(g.id)
+                  leading: FotoAlumna(a, size: 40),
+                  title: Text(a.nombre),
+                  subtitle: Text(a.horaInicio.isEmpty ? 'Sin hora' : a.horaInicio),
+                  trailing: marcadosHoy[a.id] == EstadoAsistencia.presente
                       ? const StatusChip(
-                          label: 'Lista hecha',
+                          label: 'Presente',
                           color: AppColors.success,
                           icon: Icons.check,
                         )
-                      : const StatusChip(
-                          label: 'Sin lista',
-                          color: AppColors.warning,
-                        ),
-                  onTap: () => context.push('/lista/${g.id}?fecha=$claveHoy'),
+                      : marcadosHoy.containsKey(a.id)
+                          ? const StatusChip(
+                              label: 'No ha venido',
+                              color: AppColors.danger,
+                            )
+                          : const StatusChip(
+                              label: 'Sin marcar',
+                              color: AppColors.warning,
+                            ),
+                  onTap: () => context.push('/lista?fecha=$claveHoy'),
                 ),
             ],
           ),
@@ -217,11 +214,10 @@ class _Contenido extends StatelessWidget {
         const CardList(
           children: [
             _Enlace(Icons.insights, 'Cuadro de mandos e informes', '/informes'),
-            _Enlace(Icons.school_outlined, 'Alumnas y códigos', '/alumnas'),
+            _Enlace(Icons.school_outlined, 'Alumnado y códigos', '/alumnas'),
             _Enlace(Icons.family_restroom_outlined, 'Familias y cuentas', '/familias'),
-            _Enlace(Icons.groups_outlined, 'Grupos, horarios y cuotas', '/grupos'),
             _Enlace(Icons.badge_outlined, 'Equipo y cuentas', '/equipo'),
-            _Enlace(Icons.fact_check_outlined, 'Asistencia por grupo', '/asistencia'),
+            _Enlace(Icons.fact_check_outlined, 'Asistencia del alumnado', '/asistencia'),
             _Enlace(Icons.account_balance_outlined, 'Datos bancarios', '/datos-bancarios'),
           ],
         ),

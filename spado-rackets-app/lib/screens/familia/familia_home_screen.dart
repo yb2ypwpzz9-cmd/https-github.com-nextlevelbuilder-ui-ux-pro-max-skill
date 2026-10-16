@@ -7,7 +7,6 @@ import '../../models/alumna.dart';
 import '../../models/app_user.dart';
 import '../../models/asistencia.dart';
 import '../../models/chat.dart';
-import '../../models/grupo.dart';
 import '../../models/pago.dart';
 import '../../services/auth_service.dart';
 import '../../services/club_repository.dart';
@@ -41,53 +40,46 @@ class _FamiliaHomeScreenState extends State<FamiliaHomeScreen> {
           if (alumnas.isEmpty) {
             final session = context.watch<SessionController>();
             if (user.codigoPendiente != null) {
-              return const LoadingView(message: 'Vinculando a tu hija…');
+              return const LoadingView(message: 'Vinculando a tu hijo o hija…');
             }
             return EmptyState(
               icon: Icons.link_off,
-              title: 'Tu cuenta aún no tiene alumnas vinculadas',
+              title: 'Tu cuenta aún no tiene a nadie vinculado',
               message: session.errorVinculacion ??
                   'Añade el código que te dio el club desde "Más" → '
-                      '"Vincular otra alumna".',
+                      '"Vincular otro alumno/a".',
             );
           }
           final alumna = alumnas.firstWhere(
             (a) => a.id == _alumnaId,
             orElse: () => alumnas.first,
           );
-          return StreamView<List<Grupo>>(
-            stream: repo.watchGrupos(),
-            builder: (context, grupos) {
-              final grupo =
-                  grupos.where((g) => g.id == alumna.grupo).firstOrNull;
-              return PageBody(
-                children: [
-                  if (alumnas.length > 1) ...[
-                    Wrap(
-                      spacing: AppSpacing.sm,
-                      children: [
-                        for (final a in alumnas)
-                          ChoiceChip(
-                            label: Text(a.nombreCorto),
-                            selected: a.id == alumna.id,
-                            onSelected: (_) => setState(() => _alumnaId = a.id),
-                          ),
-                      ],
-                    ),
-                    const SizedBox(height: AppSpacing.md),
+          return PageBody(
+            children: [
+              if (alumnas.length > 1) ...[
+                Wrap(
+                  spacing: AppSpacing.sm,
+                  children: [
+                    for (final a in alumnas)
+                      ChoiceChip(
+                        label: Text(a.nombreCorto),
+                        selected: a.id == alumna.id,
+                        onSelected: (_) => setState(() => _alumnaId = a.id),
+                      ),
                   ],
-                  _Cabecera(alumna: alumna, grupo: grupo, familia: user),
-                  const SizedBox(height: AppSpacing.md),
-                  if (alumna.fotoPath == null) ...[
-                    _AvisoFoto(alumna: alumna),
-                    const SizedBox(height: AppSpacing.md),
-                  ],
-                  _EstadoCuotas(uid: user.uid),
-                  _Asistencia(alumna: alumna, uid: user.uid),
-                  const _UltimoAviso(),
-                ],
-              );
-            },
+                ),
+                const SizedBox(height: AppSpacing.md),
+              ],
+              _Cabecera(alumna: alumna, familia: user),
+              const SizedBox(height: AppSpacing.md),
+              if (alumna.fotoPath == null) ...[
+                _AvisoFoto(alumna: alumna),
+                const SizedBox(height: AppSpacing.md),
+              ],
+              _EstadoCuotas(uid: user.uid),
+              _Asistencia(alumna: alumna, uid: user.uid),
+              const _UltimoAviso(),
+            ],
           );
         },
       ),
@@ -98,12 +90,10 @@ class _FamiliaHomeScreenState extends State<FamiliaHomeScreen> {
 class _Cabecera extends StatelessWidget {
   const _Cabecera({
     required this.alumna,
-    required this.grupo,
     required this.familia,
   });
 
   final Alumna alumna;
-  final Grupo? grupo;
   final AppUser familia;
 
   @override
@@ -119,7 +109,7 @@ class _Cabecera extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            (grupo?.nombre ?? 'Sin grupo').toUpperCase(),
+            (alumna.tipo?.label ?? 'Spado Rackets').toUpperCase(),
             style: t.labelSmall?.copyWith(
               color: AppColors.ball,
               fontWeight: FontWeight.w800,
@@ -175,13 +165,11 @@ class _Cabecera extends StatelessWidget {
               ),
             ],
           ),
-          if (grupo != null) ...[
-            const SizedBox(height: 4),
-            Text(
-              grupo!.horarioTexto,
-              style: const TextStyle(color: Colors.white70, fontSize: 13.5),
-            ),
-          ],
+          const SizedBox(height: 4),
+          Text(
+            alumna.horarioTexto,
+            style: const TextStyle(color: Colors.white70, fontSize: 13.5),
+          ),
           const SizedBox(height: AppSpacing.lg),
           Wrap(
             spacing: AppSpacing.sm,

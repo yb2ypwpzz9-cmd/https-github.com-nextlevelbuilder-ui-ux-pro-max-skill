@@ -40,7 +40,7 @@ class _RegistroScreenState extends State<RegistroScreen> {
     if (!_form.currentState!.validate()) return;
     if (!_tutor) {
       setState(() => _error = 'Para crear la cuenta tienes que confirmar que '
-          'eres madre, padre o tutor legal de la alumna.');
+          'eres madre, padre o tutor legal de la persona inscrita (o ser esa persona, si es mayor de edad).');
       return;
     }
     if (!_acepta) {
@@ -81,8 +81,8 @@ class _RegistroScreenState extends State<RegistroScreen> {
             Text('Crear cuenta de familia', style: t.headlineSmall),
             const SizedBox(height: AppSpacing.xs),
             Text(
-              'Necesitas el código que te entregó el club (uno por hija). '
-              'Si tienes dos hijas en la escuela, usa uno ahora y añade el otro '
+              'Necesitas el código que te entregó el club (uno por alumno o alumna). '
+              'Si tienes dos hijos o hijas en la escuela, usa uno ahora y añade el otro '
               'después desde "Más".',
               style: t.bodySmall,
             ),
@@ -145,9 +145,9 @@ class _RegistroScreenState extends State<RegistroScreen> {
               value: _tutor,
               onChanged: (v) => setState(() => _tutor = v ?? false),
               title: Text(
-                'Soy la madre, el padre o el tutor legal de la alumna y '
-                'autorizo que el club trate sus datos para gestionar su '
-                'actividad.',
+                'Soy la madre, el padre o el tutor legal de la persona inscrita '
+                '(o la propia persona, si es mayor de edad) y autorizo que el '
+                'club trate sus datos para gestionar su actividad.',
                 style: t.bodySmall,
               ),
             ),

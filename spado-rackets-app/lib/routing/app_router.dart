@@ -49,9 +49,8 @@ GoRouter buildRouter(SessionController session) {
         builder: (_, __) => DocumentosScreen.terminos(),
       ),
       GoRoute(
-        path: '/lista/:grupoId',
+        path: '/lista',
         builder: (_, s) => PasarListaScreen(
-          grupoId: s.pathParameters['grupoId']!,
           fecha: s.uri.queryParameters['fecha'],
         ),
       ),

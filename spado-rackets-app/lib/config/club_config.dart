@@ -19,6 +19,10 @@ abstract final class ClubConfig {
   /// Región de las Cloud Functions, la más cercana a República Dominicana.
   static const regionFunciones = 'us-east1';
 
+  /// Grupo interno al que pertenecen todos los alumnos nuevos. Ya no se elige
+  /// grupo: cada alumno tiene su propio horario y su propia cuota.
+  static const grupoGeneral = 'general';
+
   /// Clave pública VAPID para las notificaciones web. Se saca de la consola de
   /// Firebase: Configuración del proyecto → Cloud Messaging → Certificados
   /// push web. Vacía = la app funciona igual, pero sin avisos push.

@@ -396,6 +396,16 @@ describe('ficha de la alumna: nivel, nacimiento y foto', () => {
     await assertFails(setDoc(doc(como(DIR), 'alumnas/n5'), ficha({ fechaNacimiento: '2016-05-02' })));
   });
 
+  test('horario, tipo y cuota propios de cada ficha', async () => {
+    await assertSucceeds(setDoc(doc(como(DIR), 'alumnas/h1'), ficha({
+      tipo: 'adulto', dias: [1, 3, 5], horaInicio: '17:30', duracionMinutos: 60, cuotaMensual: 80 })));
+    await assertFails(setDoc(doc(como(DIR), 'alumnas/h2'), ficha({ tipo: 'robot' })));
+    await assertFails(setDoc(doc(como(DIR), 'alumnas/h3'), ficha({ dias: [1, 2, 3, 4, 5, 6, 7, 1] })));
+    await assertFails(setDoc(doc(como(DIR), 'alumnas/h4'), ficha({ cuotaMensual: -5 })));
+    await assertFails(setDoc(doc(como(DIR), 'alumnas/h5'), ficha({ horaInicio: '17:30:00:00' })));
+    await assertFails(updateDoc(doc(como(FAM), 'alumnas/a1'), { cuotaMensual: 1 }));
+  });
+
   test('la familia solo cambia la foto de SU hija', async () => {
     await assertSucceeds(updateDoc(doc(como(FAM), 'alumnas/a1'), { fotoPath: 'fotos/a1/1.jpg' }));
     await assertFails(updateDoc(doc(como(FAM), 'alumnas/a1'), { fotoPath: 'fotos/a2/1.jpg' }));

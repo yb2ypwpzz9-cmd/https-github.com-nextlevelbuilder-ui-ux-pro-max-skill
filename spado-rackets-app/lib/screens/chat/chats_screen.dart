@@ -10,7 +10,7 @@ import '../../theme/app_theme.dart';
 import '../../widgets/common.dart';
 import '../app_shell.dart';
 
-/// Bandeja de mensajes: avisos del club, chats de grupo y conversaciones
+/// Bandeja de mensajes: avisos del club y conversaciones
 /// privadas. Sustituye a los grupos de WhatsApp.
 class ChatsScreen extends StatelessWidget {
   const ChatsScreen({super.key});
@@ -34,8 +34,7 @@ class ChatsScreen extends StatelessWidget {
             return const EmptyState(
               icon: Icons.forum_outlined,
               title: 'Todavía no hay conversaciones',
-              message: 'Aquí aparecerán los avisos del club y el chat de tu '
-                  'grupo.',
+              message: 'Aquí aparecerán los avisos del club y tus mensajes.',
             );
           }
           return PageBody(
@@ -50,10 +49,10 @@ class ChatsScreen extends StatelessWidget {
               Text(
                 user.role.isFamilia
                     ? 'Los avisos los publica el club. Para una consulta '
-                        'privada, escribe directamente a Dirección o a tu '
+                        'privada, escribe directamente a Dirección o al '
                         'entrenador.'
-                    : 'Los avisos llegan a todas las familias. El chat de '
-                        'cada grupo, sólo a las familias de ese grupo.',
+                    : 'Los avisos llegan a todas las familias. Para una '
+                        'consulta privada, escribe a la persona que quieras.',
                 style: Theme.of(context).textTheme.bodySmall,
                 textAlign: TextAlign.center,
               ),

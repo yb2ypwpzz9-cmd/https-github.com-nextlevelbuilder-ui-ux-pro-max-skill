@@ -70,7 +70,7 @@ class _NuevaConversacionScreenState extends State<NuevaConversacionScreen> {
                         title: Text(p.nombre),
                         subtitle: Text(
                           p.rol.isStaff && _esDeMiGrupo(yo, p)
-                              ? 'Entrenador de tu grupo'
+                              ? 'Tu entrenador/a'
                               : p.rol.isStaff
                                   ? 'Entrenador'
                                   : p.rol.label,

@@ -106,6 +106,8 @@ async function recalcularParticipantes() {
   }, { merge: true });
 
   for (const g of grupos.docs) {
+    // Grupo interno sin chat propio.
+    if (g.get('sinChat') === true) continue;
     const delGrupo = usuarios.docs
       .filter((u) => {
         const grupos = u.get('grupos');
@@ -270,7 +272,7 @@ export const crearCuentaClub = onCall(async (req) => {
   const email = String(req.data?.email ?? '').trim().toLowerCase();
   const nombre = String(req.data?.nombre ?? '').trim().slice(0, 80);
   const rol = String(req.data?.rol ?? '');
-  const todosLosGrupos = req.data?.todosLosGrupos === true;
+  const todosLosGrupos = String(req.data?.rol ?? '') === 'staff' || req.data?.todosLosGrupos === true;
   const grupos = todosLosGrupos
     ? (await db.collection('grupos').get()).docs.map((g) => g.id)
     : Array.isArray(req.data?.grupos)
@@ -647,11 +649,10 @@ export const sincronizarAlumna = onDocumentWritten('alumnas/{id}', async (event)
 async function sincronizarStaffTodosLosGrupos() {
   const [todos, staff] = await Promise.all([
     db.collection('grupos').get(),
-    db.collection('users').where('todosLosGrupos', '==', true).get(),
+    db.collection('users').where('role', '==', 'staff').get(),
   ]);
   const ids = todos.docs.map((g) => g.id).sort();
   for (const u of staff.docs) {
-    if (u.get('role') !== 'staff') continue;
     const actuales = [...new Set(u.get('grupos') ?? [])].sort();
     if (JSON.stringify(actuales) !== JSON.stringify(ids)) {
       await u.ref.update({ grupos: ids });

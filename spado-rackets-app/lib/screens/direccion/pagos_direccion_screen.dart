@@ -99,12 +99,11 @@ class _PagosDireccionScreenState extends State<PagosDireccionScreen> {
               BotonExcel(
                 onPressed: () => descargarExcel('cuotas-$_periodo', {
                   'Cuotas': [
-                    ['Periodo', 'Alumna', 'Grupo', 'Concepto', 'Importe', 'Moneda', 'Estado', 'Cobro', 'Validada por'],
+                    ['Periodo', 'Nombre', 'Concepto', 'Importe', 'Moneda', 'Estado', 'Cobro', 'Validada por'],
                     for (final p in pagos)
                       [
                         p.periodo,
                         p.alumnaNombre,
-                        p.grupo,
                         p.concepto,
                         p.importe,
                         p.moneda.wire,
@@ -121,7 +120,7 @@ class _PagosDireccionScreenState extends State<PagosDireccionScreen> {
                   compacto: true,
                   icon: Icons.receipt_long_outlined,
                   title: 'Sin cuotas para este mes',
-                  message: 'Genera las cuotas con el importe de cada grupo.',
+                  message: 'Genera las cuotas con el importe de cada ficha.',
                   action: FilledButton.icon(
                     style:
                         FilledButton.styleFrom(minimumSize: const Size(0, 44)),

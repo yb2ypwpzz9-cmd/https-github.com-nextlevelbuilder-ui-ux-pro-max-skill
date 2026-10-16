@@ -63,7 +63,7 @@ class _AppShellState extends State<AppShell> {
         UserRole.staff => [
             _Tab('Hoy', Icons.today_outlined, Icons.today,
                 () => const StaffHomeScreen()),
-            _Tab('Grupos', Icons.groups_outlined, Icons.groups,
+            _Tab('Alumnado', Icons.groups_outlined, Icons.groups,
                 () => const StaffGruposScreen()),
             _chat,
             _mas,

@@ -2,6 +2,24 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../services/firestore_refs.dart';
 
+/// Tipo de jugador: sirve para hablar con propiedad (niña, niño, adulto) en
+/// vez de ponerlo todo en femenino.
+enum TipoJugador {
+  nina('Niña'),
+  nino('Niño'),
+  adulto('Adulto');
+
+  const TipoJugador(this.label);
+  final String label;
+
+  static TipoJugador? fromString(String? v) {
+    for (final t in TipoJugador.values) {
+      if (t.name == v) return t;
+    }
+    return null;
+  }
+}
+
 /// Nivel de tenis de la alumna, para formar grupos y seguir su evolución.
 enum NivelTenis {
   iniciacion('Iniciación'),
@@ -36,6 +54,11 @@ class Alumna {
     this.emailFamilia,
     this.nivel,
     this.fotoPath,
+    this.tipo,
+    this.dias = const [],
+    this.horaInicio = '',
+    this.duracionMinutos = 60,
+    this.cuotaMensual = 0,
     this.activa = true,
   });
 
@@ -50,6 +73,17 @@ class Alumna {
   final String? emailFamilia;
   final bool activa;
   final NivelTenis? nivel;
+  final TipoJugador? tipo;
+
+  /// Días de clase propios, 1 = lunes … 7 = domingo.
+  final List<int> dias;
+
+  /// Hora de inicio `HH:mm` y duración de su clase.
+  final String horaInicio;
+  final int duracionMinutos;
+
+  /// Cuota mensual propia, en dólares.
+  final double cuotaMensual;
 
   /// Ruta de la foto en Storage (`fotos/{alumna}/…`). La ven la familia, el
   /// staff del grupo y Dirección, nadie más.
@@ -70,6 +104,14 @@ class Alumna {
           ? null
           : (data['emailFamilia'] as String).trim(),
       nivel: NivelTenis.fromString(data['nivel'] as String?),
+      tipo: TipoJugador.fromString(data['tipo'] as String?),
+      dias: [
+        for (final d in (data['dias'] as List<dynamic>? ?? const []))
+          if (d is num && d >= 1 && d <= 7) d.toInt(),
+      ]..sort(),
+      horaInicio: (data['horaInicio'] as String?) ?? '',
+      duracionMinutos: (data['duracionMinutos'] as num?)?.toInt() ?? 60,
+      cuotaMensual: (data['cuotaMensual'] as num?)?.toDouble() ?? 0,
       fotoPath: (data['fotoPath'] as String?)?.trim().isEmpty ?? true
           ? null
           : (data['fotoPath'] as String).trim(),
@@ -78,6 +120,19 @@ class Alumna {
   }
 
   String get nombreCorto => nombre.split(' ').first;
+
+  bool tieneClaseEl(DateTime dia) => dias.contains(dia.weekday);
+
+  static const _nombresDias = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+
+  /// "Lun · Mié · 17:30", o "Sin horario".
+  String get horarioTexto {
+    if (dias.isEmpty) return 'Sin horario';
+    return [
+      dias.map((d) => _nombresDias[d - 1]).join(' · '),
+      if (horaInicio.isNotEmpty) horaInicio,
+    ].join(' · ');
+  }
   bool get vinculada => familiaUid != null;
 
   /// "9 años", o `null` si no se conoce la fecha de nacimiento.

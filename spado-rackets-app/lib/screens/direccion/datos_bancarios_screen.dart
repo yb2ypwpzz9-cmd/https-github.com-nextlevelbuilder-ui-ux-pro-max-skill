@@ -211,7 +211,7 @@ class _FormularioState extends State<_Formulario> {
           maxLines: 3,
           maxLength: 500,
           decoration: const InputDecoration(
-            hintText: 'Ej. En el concepto pon el nombre de la alumna y el mes.',
+            hintText: 'Ej. En el concepto pon el nombre del alumno o alumna y el mes.',
           ),
         ),
         const SizedBox(height: AppSpacing.md),

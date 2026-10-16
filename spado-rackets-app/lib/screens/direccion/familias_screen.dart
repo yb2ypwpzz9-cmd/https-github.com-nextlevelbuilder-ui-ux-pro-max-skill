@@ -31,7 +31,7 @@ class FamiliasScreen extends StatelessWidget {
                 BotonExcel(
                   onPressed: () => descargarExcel('familias', {
                     'Familias': [
-                      ['Nombre', 'Email', 'Teléfono', 'Alumnas'],
+                      ['Nombre', 'Email', 'Teléfono', 'Alumnado'],
                       for (final f in familias)
                         [
                           f.nombreVisible,
@@ -49,7 +49,7 @@ class FamiliasScreen extends StatelessWidget {
                     icon: Icons.family_restroom_outlined,
                     title: 'Todavía no se ha registrado ninguna familia',
                     message: 'Aparecerán aquí cuando usen el código de su '
-                        'hija para crear la cuenta.',
+                        'hijo o hija para crear la cuenta.',
                   )
                 else
                   CardList(
@@ -183,7 +183,7 @@ class FamiliasScreen extends StatelessWidget {
                     context,
                     titulo: 'Eliminar la cuenta de ${familia.nombreVisible}',
                     mensaje: 'Pierde el acceso y se borran sus justificantes y '
-                        'mensajes privados. Sus hijas siguen en el club, sin '
+                        'mensajes privados. Sus hijos e hijas siguen en el club, sin '
                         'cuenta vinculada, y se pueden vincular de nuevo con '
                         'su código.',
                     accion: 'Eliminar',

@@ -58,7 +58,7 @@ class _VerificarCorreoScreenState extends State<VerificarCorreoScreen> {
     final session = context.watch<SessionController>();
     final email = session.firebaseUser?.email ?? '';
     return AuthFrame(
-      subtitulo: 'Un último paso para proteger los datos de tu hija.',
+      subtitulo: 'Un último paso para proteger los datos de tu hijo o hija.',
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [

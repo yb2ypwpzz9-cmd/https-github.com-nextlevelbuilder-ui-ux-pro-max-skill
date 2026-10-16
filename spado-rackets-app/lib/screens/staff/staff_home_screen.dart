@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../models/alumna.dart';
 import '../../models/asistencia.dart';
-import '../../models/grupo.dart';
 import '../../models/jornada.dart';
 import '../../services/auth_service.dart';
 import '../../services/club_repository.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/common.dart';
 import '../../widgets/fichaje_panel.dart';
+import '../../widgets/foto_alumna.dart';
 import '../app_shell.dart';
 
 /// "Hoy" del staff: fichar, y las clases del día con su lista.
@@ -38,37 +39,63 @@ class StaffHomeScreen extends StatelessWidget {
             'Clases de hoy',
             subtitle: capitalizar(fechaLargaFormat.format(hoy)),
           ),
-          StreamView<List<Grupo>>(
-            stream: repo.watchGrupos(),
-            builder: (context, grupos) {
-              final mios = grupos
-                  .where((g) => user.grupos.contains(g.id) && g.activo)
-                  .toList();
-              if (mios.isEmpty) {
-                return const EmptyState(
-                  compacto: true,
-                  icon: Icons.groups_outlined,
-                  title: 'Aún no tienes grupos asignados',
-                  message: 'Dirección te los asigna desde "Equipo".',
+          if (user.grupos.isEmpty)
+            const EmptyState(
+              compacto: true,
+              icon: Icons.groups_outlined,
+              title: 'Todavía no hay alumnado',
+              message: 'Aparecerá cuando Dirección dé de alta a las primeras '
+                  'fichas.',
+            )
+          else
+            StreamView<List<Alumna>>(
+              streamKey: user.grupos.join(','),
+              stream: repo.watchAlumnasDeGrupos(user.grupos),
+              builder: (context, todas) {
+                final deHoy = todas
+                    .where((a) => a.activa && a.tieneClaseEl(hoy))
+                    .toList()
+                  ..sort((a, b) => a.horaInicio.compareTo(b.horaInicio));
+                if (deHoy.isEmpty) {
+                  return const EmptyState(
+                    compacto: true,
+                    icon: Icons.event_available_outlined,
+                    title: 'Hoy no hay clases',
+                    message: 'Puedes pasar lista de otro día desde '
+                        '"Alumnado".',
+                  );
+                }
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    CardList(
+                      children: [
+                        for (final a in deHoy)
+                          ListTile(
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: AppSpacing.md,
+                              vertical: 4,
+                            ),
+                            leading: _HoraBloque(hora: a.horaInicio),
+                            title: Text(
+                              a.nombre,
+                              style: Theme.of(context).textTheme.titleSmall,
+                            ),
+                            trailing: FotoAlumna(a, size: 38),
+                          ),
+                      ],
+                    ),
+                    const SizedBox(height: AppSpacing.sm),
+                    FilledButton.icon(
+                      onPressed: () => context
+                          .push('/lista?fecha=${claveFecha(hoy)}'),
+                      icon: const Icon(Icons.fact_check_outlined),
+                      label: Text('Pasar lista (${deHoy.length})'),
+                    ),
+                  ],
                 );
-              }
-              final deHoy = mios.where((g) => g.tieneClaseEl(hoy)).toList()
-                ..sort((a, b) => a.horaInicio.compareTo(b.horaInicio));
-              if (deHoy.isEmpty) {
-                return const EmptyState(
-                  compacto: true,
-                  icon: Icons.event_available_outlined,
-                  title: 'Hoy no tienes clases',
-                  message: 'Puedes pasar lista de otro día desde "Grupos".',
-                );
-              }
-              return CardList(
-                children: [
-                  for (final g in deHoy) _ClaseDeHoy(grupo: g, fecha: hoy),
-                ],
-              );
-            },
-          ),
+              },
+            ),
           const SectionHeader('Mis fichajes'),
           StreamView<List<Jornada>>(
             streamKey: '${user.uid}${hoy.year}${hoy.month}${hoy.day}',
@@ -110,48 +137,6 @@ class StaffHomeScreen extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class _ClaseDeHoy extends StatelessWidget {
-  const _ClaseDeHoy({required this.grupo, required this.fecha});
-  final Grupo grupo;
-  final DateTime fecha;
-
-  @override
-  Widget build(BuildContext context) {
-    final clave = claveFecha(fecha);
-    return StreamBuilderEstable<List<Asistencia>>(
-      streamKey: '${grupo.id}$clave',
-      stream: context.read<ClubRepository>().watchSesion(grupo.id, clave),
-      builder: (context, snap) {
-        final hecha = (snap.data ?? const []).isNotEmpty;
-        return ListTile(
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.md,
-            vertical: 6,
-          ),
-          leading: _HoraBloque(hora: grupo.horaInicio),
-          title: Text(grupo.nombre, style: Theme.of(context).textTheme.titleSmall),
-          subtitle: Text(
-            [grupo.deporte, if (grupo.pista.isNotEmpty) grupo.pista].join(' · '),
-          ),
-          trailing: hecha
-              ? const StatusChip(
-                  label: 'Lista hecha',
-                  color: AppColors.success,
-                  icon: Icons.check,
-                )
-              : FilledButton(
-                  style: FilledButton.styleFrom(minimumSize: const Size(0, 40)),
-                  onPressed: () =>
-                      context.push('/lista/${grupo.id}?fecha=$clave'),
-                  child: const Text('Pasar lista'),
-                ),
-          onTap: () => context.push('/lista/${grupo.id}?fecha=$clave'),
-        );
-      },
     );
   }
 }

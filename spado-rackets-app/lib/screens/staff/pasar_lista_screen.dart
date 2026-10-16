@@ -2,22 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/alumna.dart';
+import '../../models/app_user.dart';
 import '../../models/asistencia.dart';
-import '../../models/grupo.dart';
 import '../../services/auth_service.dart';
 import '../../services/club_repository.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/common.dart';
 import '../../widgets/foto_alumna.dart';
 
-/// Pase de lista de un grupo en una fecha.
-///
-/// Las faltas que la familia avisó por la app llegan ya marcadas como
-/// justificadas. Volver a guardar el mismo día corrige, no duplica.
+/// Pase de lista de un día: aparecen las personas que tienen clase ese día de
+/// la semana (cada una tiene su propio horario). Al marcar a alguien, su
+/// familia recibe el aviso de que ya está en el entrenamiento.
 class PasarListaScreen extends StatefulWidget {
-  const PasarListaScreen({super.key, required this.grupoId, this.fecha});
+  const PasarListaScreen({super.key, this.fecha});
 
-  final String grupoId;
   final String? fecha;
 
   @override
@@ -29,11 +27,13 @@ class _PasarListaScreenState extends State<PasarListaScreen> {
   final Map<String, EstadoAsistencia> _marcas = {};
   bool _cargadas = false;
   bool _guardando = false;
+  bool _verTodos = false;
 
   late final ClubRepository _repo = context.read<ClubRepository>();
-  late final Stream<List<Grupo>> _grupos = _repo.watchGrupos();
-  late final Stream<List<Alumna>> _alumnas =
-      _repo.watchAlumnasDeGrupos([widget.grupoId]);
+  late final AppUser _yo = context.read<SessionController>().appUser!;
+  late final Stream<List<Alumna>> _alumnas = _yo.role.isDireccion
+      ? _repo.watchTodasLasAlumnas()
+      : _repo.watchAlumnasDeGrupos(_yo.grupos);
   late Stream<List<Asistencia>> _sesion;
   late Stream<List<Ausencia>> _ausencias;
 
@@ -46,8 +46,9 @@ class _PasarListaScreenState extends State<PasarListaScreen> {
 
   void _abrirSesion() {
     final clave = claveFecha(_fecha);
-    _sesion = _repo.watchSesion(widget.grupoId, clave);
-    _ausencias = _repo.watchAusenciasSesion(widget.grupoId, clave);
+    final grupos = _yo.role.isDireccion ? null : _yo.grupos;
+    _sesion = _repo.watchAsistenciaDia(clave, grupos: grupos);
+    _ausencias = _repo.watchAusenciasDia(clave, grupos: grupos);
     _marcas.clear();
     _cargadas = false;
   }
@@ -67,20 +68,18 @@ class _PasarListaScreenState extends State<PasarListaScreen> {
     });
   }
 
-  /// Marca o desmarca a UNA alumna y guarda al instante: al marcarla presente,
+  /// Marca o desmarca a UNA persona y guarda al instante: al marcarla presente,
   /// su familia recibe el aviso de que está en el entrenamiento.
-  Future<void> _marcar(Grupo grupo, Alumna alumna, bool presente) async {
+  Future<void> _marcar(Alumna alumna, bool presente) async {
     final anterior = _marcas[alumna.id];
     setState(() => _marcas[alumna.id] =
         presente ? EstadoAsistencia.presente : EstadoAsistencia.falta);
     try {
-      final user = context.read<SessionController>().appUser!;
       await _repo.guardarLista(
-        grupo: grupo,
         fecha: claveFecha(_fecha),
         alumnas: [alumna],
         marcas: {alumna.id: _marcas[alumna.id]!},
-        quien: user,
+        quien: _yo,
       );
     } catch (_) {
       if (!mounted) return;
@@ -99,39 +98,35 @@ class _PasarListaScreenState extends State<PasarListaScreen> {
     }
   }
 
-  /// Todas las alumnas sin marcar quedan como falta (o falta justificada si la
-  /// familia avisó) y se cierra la lista.
+  /// Quien no tiene check queda como falta (o falta justificada si la familia
+  /// avisó) y se cierra la lista.
   Future<void> _terminar(
-    Grupo grupo,
     List<Alumna> alumnas,
     Map<String, Ausencia> avisos,
   ) async {
-    final user = context.read<SessionController>().appUser!;
     final pendientes = alumnas
         .where((a) => _marcas[a.id] != EstadoAsistencia.presente)
         .toList();
     setState(() => _guardando = true);
     try {
-      final marcas = {
-        for (final a in pendientes)
-          a.id: avisos.containsKey(a.id)
-              ? EstadoAsistencia.justificada
-              : EstadoAsistencia.falta,
-      };
       if (pendientes.isNotEmpty) {
         await _repo.guardarLista(
-          grupo: grupo,
           fecha: claveFecha(_fecha),
           alumnas: pendientes,
-          marcas: marcas,
-          quien: user,
+          marcas: {
+            for (final a in pendientes)
+              a.id: avisos.containsKey(a.id)
+                  ? EstadoAsistencia.justificada
+                  : EstadoAsistencia.falta,
+          },
+          quien: _yo,
         );
       }
       if (!mounted) return;
       showAppSnackBar(
         context,
         pendientes.isEmpty
-            ? 'Lista guardada: asisten todas.'
+            ? 'Lista guardada: no falta nadie.'
             : 'Lista guardada. No han venido ${pendientes.length}.',
       );
       Navigator.of(context).maybePop();
@@ -150,55 +145,47 @@ class _PasarListaScreenState extends State<PasarListaScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamView<List<Grupo>>(
-      stream: _grupos,
-      loading: const Scaffold(body: LoadingView()),
-      builder: (context, grupos) {
-        final grupo = grupos.where((g) => g.id == widget.grupoId).firstOrNull;
-        if (grupo == null) {
-          return Scaffold(
-            appBar: AppBar(title: const Text('Pasar lista')),
-            body: const EmptyState(
-              icon: Icons.search_off,
-              title: 'Este grupo ya no existe',
-            ),
-          );
-        }
-        return Scaffold(
-          appBar: AppBar(title: Text(grupo.nombre)),
-          body: StreamView<List<Alumna>>(
-            stream: _alumnas,
-            builder: (context, todas) {
-              final alumnas = todas.where((a) => a.activa).toList();
-              return StreamView<List<Asistencia>>(
-                stream: _sesion,
-                builder: (context, guardadas) => StreamView<List<Ausencia>>(
-                  stream: _ausencias,
-                  builder: (context, ausencias) =>
-                      _lista(grupo, alumnas, guardadas, ausencias),
-                ),
-              );
-            },
+    return Scaffold(
+      appBar: AppBar(title: const Text('Pasar lista')),
+      body: StreamView<List<Alumna>>(
+        stream: _alumnas,
+        builder: (context, todas) => StreamView<List<Asistencia>>(
+          streamKey: claveFecha(_fecha),
+          stream: _sesion,
+          builder: (context, guardadas) => StreamView<List<Ausencia>>(
+            streamKey: claveFecha(_fecha),
+            stream: _ausencias,
+            builder: (context, ausencias) =>
+                _lista(todas.where((a) => a.activa).toList(), guardadas, ausencias),
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 
   Widget _lista(
-    Grupo grupo,
-    List<Alumna> alumnas,
+    List<Alumna> activas,
     List<Asistencia> guardadas,
     List<Ausencia> ausencias,
   ) {
     final avisos = {for (final a in ausencias) a.alumnaId: a};
     if (!_cargadas) {
-      // Primera vez: lo ya guardado.
       for (final g in guardadas) {
         _marcas[g.alumnaId] = g.estado;
       }
       _cargadas = true;
     }
+
+    // Quien tiene clase ese día, más quien ya tiene marca aunque su horario
+    // no coincida (por ejemplo, una clase recuperada).
+    final alumnas = activas
+        .where((a) =>
+            _verTodos || a.tieneClaseEl(_fecha) || _marcas.containsKey(a.id))
+        .toList()
+      ..sort((a, b) {
+        final c = a.horaInicio.compareTo(b.horaInicio);
+        return c != 0 ? c : a.nombre.compareTo(b.nombre);
+      });
 
     final presentes =
         alumnas.where((a) => _marcas[a.id] == EstadoAsistencia.presente).length;
@@ -215,7 +202,7 @@ class _PasarListaScreenState extends State<PasarListaScreen> {
                   title: Text(capitalizar(fechaLargaFormat.format(_fecha))),
                   subtitle: Text(yaGuardada
                       ? 'Guardada por ${guardadas.first.marcadoPorNombre ?? 'el club'}'
-                      : grupo.horarioTexto),
+                      : '${alumnas.length} ${alumnas.length == 1 ? 'persona tiene' : 'personas tienen'} clase'),
                   trailing: TextButton(
                     onPressed: _elegirFecha,
                     child: const Text('Cambiar'),
@@ -236,8 +223,6 @@ class _PasarListaScreenState extends State<PasarListaScreen> {
                     onPressed: alumnas.isEmpty
                         ? null
                         : () async {
-                            final user =
-                                context.read<SessionController>().appUser!;
                             setState(() {
                               for (final a in alumnas) {
                                 _marcas[a.id] = EstadoAsistencia.presente;
@@ -245,14 +230,13 @@ class _PasarListaScreenState extends State<PasarListaScreen> {
                             });
                             try {
                               await _repo.guardarLista(
-                                grupo: grupo,
                                 fecha: claveFecha(_fecha),
                                 alumnas: alumnas,
                                 marcas: {
                                   for (final a in alumnas)
                                     a.id: EstadoAsistencia.presente,
                                 },
-                                quien: user,
+                                quien: _yo,
                               );
                             } catch (_) {
                               if (mounted) {
@@ -265,17 +249,25 @@ class _PasarListaScreenState extends State<PasarListaScreen> {
                             }
                           },
                     icon: const Icon(Icons.done_all, size: 18),
-                    label: const Text('Todas presentes'),
+                    label: const Text('Todos presentes'),
                   ),
                 ],
               ),
-              const SizedBox(height: AppSpacing.sm),
+              SwitchListTile(
+                contentPadding: EdgeInsets.zero,
+                dense: true,
+                title: const Text('Mostrar a todo el alumnado'),
+                subtitle: const Text('Para una clase de recuperación o extra'),
+                value: _verTodos,
+                onChanged: (v) => setState(() => _verTodos = v),
+              ),
               if (alumnas.isEmpty)
                 const EmptyState(
                   compacto: true,
-                  icon: Icons.person_off_outlined,
-                  title: 'Este grupo no tiene alumnas',
-                  message: 'Dirección las da de alta desde "Alumnas".',
+                  icon: Icons.event_available_outlined,
+                  title: 'Nadie tiene clase este día',
+                  message: 'Los días y la hora de cada persona los pone '
+                      'Dirección en su ficha.',
                 )
               else
                 CardList(
@@ -285,13 +277,13 @@ class _PasarListaScreenState extends State<PasarListaScreen> {
                         alumna: a,
                         presente: _marcas[a.id] == EstadoAsistencia.presente,
                         aviso: avisos[a.id],
-                        onChanged: (v) => _marcar(grupo, a, v),
+                        onChanged: (v) => _marcar(a, v),
                       ),
                   ],
                 ),
               const SizedBox(height: AppSpacing.sm),
               Text(
-                'Marca a cada alumna al llegar: su familia recibe el aviso '
+                'Marca a cada persona al llegar: su familia recibe el aviso '
                 'al momento.',
                 style: Theme.of(context).textTheme.bodySmall,
                 textAlign: TextAlign.center,
@@ -314,7 +306,7 @@ class _PasarListaScreenState extends State<PasarListaScreen> {
                 child: FilledButton(
                   onPressed: _guardando || alumnas.isEmpty
                       ? null
-                      : () => _terminar(grupo, alumnas, avisos),
+                      : () => _terminar(alumnas, avisos),
                   child: Text(_guardando ? 'Guardando…' : 'Terminar lista'),
                 ),
               ),
@@ -362,6 +354,8 @@ class _FilaAlumna extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(alumna.nombre, style: t.titleSmall),
+                    if (alumna.horaInicio.isNotEmpty)
+                      Text(alumna.horaInicio, style: t.bodySmall),
                     if (aviso != null)
                       Text(
                         'Aviso de la familia: ${aviso!.motivo.isEmpty ? 'no vendrá' : aviso!.motivo}',
