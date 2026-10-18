@@ -9,9 +9,9 @@
 - [x] **Schema JSON-LD URL** — actualizada a `villavitaogarden.com`
 - [x] **Keywords long tail** — párrafo añadido en sección bienvenida (Samaná, Playa Cosón, República Dominicana)
 - [x] **Precio visible** — ya aparece en la web
+- [x] **Google Business Profile** — ficha creada y VERIFICADA (18 oct 2026). Categoria: Agencia de alquiler de casas para vacaciones. Direccion: Avenida de Italia, Residencias Villa Vitao, 32000 Las Terrenas. Horario 08:00-20:00 los 7 dias. Telefono, web y chat de WhatsApp enlazados
 
 ## En espera externa
-- [ ] **Google Business Profile** — crear/verificar perfil (carta postal a Las Terrenas) — gratis, alto impacto en Google Maps
 - [ ] **Instagram Villa Vitao Garden** — crear perfil con fotos de piscina, jardín, habitaciones, destino Las Terrenas; enlace `villavitaogarden.com` en bio
 - [ ] **Actualizar enlace en Airbnb** — poner `villavitaogarden.com` en perfil para reservas directas sin comisión
 
@@ -26,6 +26,14 @@
 
 ## Internacionalización
 - [ ] **Web bilingüe ES/EN** — añadir selector de idioma (ES/EN) en el menú, traducción natural al inglés de todo el contenido (no traducción automática). Dobla alcance SEO para mercado angloparlante (EE.UU., Irlanda, UK). Cambia idioma al instante sin recargar página.
+
+## Perfil de empresa de Google (siguiente fase)
+- [ ] **Fotos de la ficha** — subir 8-10: exterior como principal, piscina, jardin, las 3 habitaciones, salon y cocina. Es lo que mas influye en que pulsen tu ficha frente a la de al lado
+- [ ] **Categorias secundarias** — anadir "Villa" y "Casa de vacaciones" (la principal NO se toca: sostiene la elegibilidad)
+- [ ] **Boton de reservas** — apuntar la accion "Reservas" a https://villavitaogarden.com/#reservar
+- [ ] **Resenas** — pedirlas a huespedes anteriores con el enlace corto de "Solicita opiniones". En busqueda local pesan mas que ninguna otra senal; con 5-6 reales la ficha cambia de liga
+- [ ] **Perfiles sociales en la ficha** — cuando exista el Instagram
+- [ ] **Publicaciones** — compartir en la ficha los articulos del blog (running, restaurantes, tiendas locales)
 
 ## Para mañana (18 sep 2026)
 - [ ] **Pedir indexación en Search Console** — Inspección de URL → pegar y "Solicitar indexación" para las tres nuevas:
