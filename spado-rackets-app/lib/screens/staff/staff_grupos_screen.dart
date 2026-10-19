@@ -10,6 +10,7 @@ import '../../theme/app_theme.dart';
 import '../../widgets/common.dart';
 import '../../widgets/contacto.dart';
 import '../../widgets/foto_alumna.dart';
+import '../../widgets/horario_alumna.dart';
 import '../app_shell.dart';
 
 /// Alumnado del entrenador: cada persona con su horario, su asistencia de los
@@ -49,6 +50,12 @@ class StaffGruposScreen extends StatelessWidget {
                         icon: const Icon(Icons.fact_check_outlined),
                         label: const Text('Pasar lista de hoy'),
                       ),
+                      const SizedBox(height: AppSpacing.sm),
+                      Text(
+                        'Toca a una persona para cambiar sus días y su hora de clase.',
+                        style: Theme.of(context).textTheme.bodySmall,
+                        textAlign: TextAlign.center,
+                      ),
                       const SizedBox(height: AppSpacing.md),
                       if (alumnas.isEmpty)
                         const EmptyState(
@@ -87,41 +94,46 @@ class _FilaResumen extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = Theme.of(context).textTheme;
     final ultimas = marcas.take(6).toList().reversed;
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.md, vertical: 10),
-      child: Row(
-        children: [
-          FotoAlumna(alumna, size: 44),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(alumna.nombre, style: t.titleSmall),
-                Text(
-                  [
-                    alumna.horarioTexto,
-                    if (alumna.contactoNombre != null) alumna.contactoNombre!,
-                  ].join(' · '),
-                  style: t.bodySmall,
-                ),
-              ],
+    return InkWell(
+      onTap: () => editarHorario(context, alumna),
+      child: Padding(
+        padding:
+            const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: 10),
+        child: Row(
+          children: [
+            FotoAlumna(alumna, size: 44),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(alumna.nombre, style: t.titleSmall),
+                  Text(
+                    [
+                      alumna.horarioTexto,
+                      if (alumna.contactoNombre != null) alumna.contactoNombre!,
+                    ].join(' · '),
+                    style: t.bodySmall,
+                  ),
+                ],
+              ),
             ),
-          ),
-          if (alumna.contactoTelefono != null)
-            BotonesContacto(alumna.contactoTelefono!),
-          for (final m in ultimas) MarcaAsistencia(m.estado),
-          const SizedBox(width: 8),
-          SizedBox(
-            width: 42,
-            child: Text(
-              marcas.isEmpty ? '—' : '${porcentajeAsistencia(marcas)}%',
-              textAlign: TextAlign.right,
-              style: t.labelLarge,
+            if (alumna.contactoTelefono != null)
+              BotonesContacto(alumna.contactoTelefono!),
+            for (final m in ultimas) MarcaAsistencia(m.estado),
+            const SizedBox(width: 8),
+            SizedBox(
+              width: 42,
+              child: Text(
+                marcas.isEmpty ? '—' : '${porcentajeAsistencia(marcas)}%',
+                textAlign: TextAlign.right,
+                style: t.labelLarge,
+              ),
             ),
-          ),
-        ],
+            const Icon(Icons.edit_calendar_outlined,
+                size: 18, color: AppColors.textSecondary),
+          ],
+        ),
       ),
     );
   }

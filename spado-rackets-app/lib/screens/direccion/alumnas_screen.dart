@@ -14,6 +14,7 @@ import '../../theme/app_theme.dart';
 import '../../widgets/common.dart';
 import '../../widgets/contacto.dart';
 import '../../widgets/foto_alumna.dart';
+import '../../widgets/horario_alumna.dart';
 
 /// Alumnado, con el horario y la cuota de cada persona y el código que se
 /// entrega a su familia.
@@ -306,11 +307,7 @@ class AlumnasScreen extends StatelessWidget {
                     Expanded(
                       child: OutlinedButton.icon(
                         onPressed: () async {
-                          final h = await showTimePicker(
-                            context: context,
-                            initialTime:
-                                hora ?? const TimeOfDay(hour: 17, minute: 0),
-                          );
+                          final h = await elegirHoraDigital(context, hora);
                           if (h != null) setSheet(() => hora = h);
                         },
                         icon: const Icon(Icons.schedule),

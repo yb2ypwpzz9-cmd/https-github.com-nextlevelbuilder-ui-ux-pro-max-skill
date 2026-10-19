@@ -423,6 +423,16 @@ describe('ficha de la alumna: nivel, nacimiento y foto', () => {
     await assertFails(updateDoc(doc(como(FAM), 'alumnas/a2'), { fotoPath: 'fotos/a2/1.jpg' }));
   });
 
+  test('el staff cambia días y hora de su alumnado, y nada más', async () => {
+    await assertSucceeds(updateDoc(doc(como(STAFF), 'alumnas/a1'), { dias: [2, 4], horaInicio: '18:00', duracionMinutos: 90 }));
+    await assertFails(updateDoc(doc(como(STAFF), 'alumnas/a1'), { dias: [2, 4], cuotaMensual: 1 }));
+    await assertFails(updateDoc(doc(como(STAFF), 'alumnas/a1'), { nombre: 'Otra' }));
+    await assertFails(updateDoc(doc(como(STAFF), 'alumnas/a1'), { dias: [1, 2, 3, 4, 5, 6, 7, 1] }));
+    // Un entrenador de otro grupo no toca esta ficha.
+    await assertFails(updateDoc(doc(como(STAFF2), 'alumnas/a1'), { dias: [3] }));
+    await assertFails(updateDoc(doc(como(FAM), 'alumnas/a1'), { dias: [3] }));
+  });
+
   test('una familia o el staff no editan la ficha', async () => {
     await assertFails(updateDoc(doc(como(FAM), 'alumnas/a1'), { nivel: 'avanzado' }));
     await assertFails(updateDoc(doc(como(STAFF), 'alumnas/a1'), { nivel: 'avanzado' }));

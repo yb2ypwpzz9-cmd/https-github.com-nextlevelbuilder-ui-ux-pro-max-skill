@@ -269,6 +269,13 @@ service cloud.firestore {
         && changedKeys().hasOnly(['fotoPath'])
         && datosAlumnaValidos(alumnaId, request.resource.data);
 
+      // El staff cambia los DÍAS y la HORA de clase de su alumnado (cambios de
+      // horario del día a día); la cuota y el resto de la ficha, no.
+      allow update: if isStaff()
+        && enMisGrupos(resource.data.get('grupo', ''))
+        && changedKeys().hasOnly(['dias', 'horaInicio', 'duracionMinutos'])
+        && datosAlumnaValidos(alumnaId, request.resource.data);
+
       allow delete: if isDireccion();
     }
 

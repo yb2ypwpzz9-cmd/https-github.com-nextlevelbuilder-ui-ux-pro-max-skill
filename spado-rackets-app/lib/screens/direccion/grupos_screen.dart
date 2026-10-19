@@ -7,6 +7,7 @@ import '../../models/pago.dart';
 import '../../services/club_repository.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/common.dart';
+import '../../widgets/horario_alumna.dart';
 
 /// Grupos de entrenamiento: días, hora, pista y cuota mensual.
 class GruposScreen extends StatelessWidget {
@@ -247,11 +248,7 @@ class _FormGrupoState extends State<_FormGrupo> {
                   Expanded(
                     child: OutlinedButton.icon(
                       onPressed: () async {
-                        final h = await showTimePicker(
-                          context: context,
-                          initialTime: _hora ??
-                              const TimeOfDay(hour: 17, minute: 0),
-                        );
+                        final h = await elegirHoraDigital(context, _hora);
                         if (h != null) setState(() => _hora = h);
                       },
                       icon: const Icon(Icons.schedule),
