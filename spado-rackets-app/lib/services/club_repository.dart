@@ -10,6 +10,7 @@ import '../config/club_config.dart';
 import '../models/alumna.dart';
 import '../models/app_user.dart';
 import '../models/asistencia.dart';
+import '../models/cambio_clase.dart';
 import '../models/chat.dart';
 import '../models/gasto.dart';
 import '../models/grupo.dart';
@@ -420,6 +421,62 @@ class ClubRepository {
     }
     return q.snapshots().map((s) => mapearDocs(s.docs, Ausencia.fromDoc));
   }
+
+  // ------------------------------------------------------ cambios de clase
+
+  /// Cambios puntuales de un día. Dirección los ve todos; el staff, los de sus
+  /// grupos (la consulta lo filtra: las reglas rechazan cualquier otra).
+  Stream<List<CambioClase>> watchCambiosDia(String fecha,
+      {List<String>? grupos}) {
+    Query<Json> q = Refs.cambios.where('fecha', isEqualTo: fecha);
+    if (grupos != null) {
+      if (grupos.isEmpty) return Stream.value(const []);
+      q = q.where('grupo', whereIn: grupos.take(30).toList());
+    }
+    return q.snapshots().map((s) => mapearDocs(s.docs, CambioClase.fromDoc));
+  }
+
+  /// Los cambios de una persona (los próximos se filtran en la pantalla).
+  Stream<List<CambioClase>> watchCambiosAlumna(Alumna a) => Refs.cambios
+      .where('grupo', isEqualTo: a.grupo)
+      .where('alumnaId', isEqualTo: a.id)
+      .snapshots()
+      .map((s) => mapearDocs(s.docs, CambioClase.fromDoc)
+        ..sort((x, y) => x.fecha.compareTo(y.fecha)));
+
+  /// Los cambios de las personas de una familia.
+  Stream<List<CambioClase>> watchCambiosFamilia(String uid) => Refs.cambios
+      .where('familiaUid', isEqualTo: uid)
+      .snapshots()
+      .map((s) => mapearDocs(s.docs, CambioClase.fromDoc)
+        ..sort((x, y) => x.fecha.compareTo(y.fecha)));
+
+  /// Guarda varios cambios de golpe. El primero avisa a la familia.
+  Future<void> guardarCambios({
+    required Alumna alumna,
+    required List<({String fecha, TipoCambio tipo, String hora})> cambios,
+    required String porUid,
+  }) async {
+    final batch = Refs.db.batch();
+    var primero = true;
+    for (final c in cambios) {
+      batch.set(Refs.cambios.doc(CambioClase.idPara(alumna.id, c.fecha)), {
+        'alumnaId': alumna.id,
+        'grupo': alumna.grupo,
+        'fecha': c.fecha,
+        'tipo': c.tipo.name,
+        'horaInicio': c.hora,
+        'familiaUid': alumna.familiaUid ?? '',
+        if (primero) 'avisar': true,
+        'creadoPor': porUid,
+        'creadoEn': FieldValue.serverTimestamp(),
+      });
+      primero = false;
+    }
+    await batch.commit();
+  }
+
+  Future<void> eliminarCambio(String id) => Refs.cambios.doc(id).delete();
 
   // ------------------------------------------------------------ ausencias
 

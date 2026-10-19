@@ -783,6 +783,21 @@ export const avisarPago = onDocumentWritten('pagos/{id}', async (event) => {
   }
 });
 
+/**
+ * Avisa a la familia cuando el club cambia la clase de su hijo o hija un día.
+ * Solo el primer cambio de cada tanda lleva `avisar`, para no mandar un aviso
+ * por cada semana.
+ */
+export const avisarCambioClase = onDocumentCreated('cambiosClase/{id}', async (event) => {
+  const c = event.data?.data();
+  if (!c?.familiaUid || c.avisar !== true) return;
+  await notificar([c.familiaUid], {
+    title: 'Cambio de clase',
+    body: 'Hay un cambio en el horario de la clase. Míralo en la app.',
+    data: { tipo: 'cambioClase' },
+  });
+});
+
 /** Avisa al staff del grupo cuando una familia comunica una falta. */
 export const avisarAusencia = onDocumentCreated('ausencias/{id}', async (event) => {
   const a = event.data?.data();

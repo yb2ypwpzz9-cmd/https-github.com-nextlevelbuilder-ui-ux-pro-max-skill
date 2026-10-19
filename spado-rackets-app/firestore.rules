@@ -365,6 +365,40 @@ service cloud.firestore {
     }
 
     // Faltas avisadas por la familia.
+    // Cambios de clase de un día concreto (no tocan el horario fijo). Los crea
+    // Dirección o el staff del grupo; la familia ve los de su hijo o hija.
+    match /cambiosClase/{cambioId} {
+      allow read: if isSignedIn() && (
+        resource == null
+        || isDireccion()
+        || (isStaff() && enMisGrupos(resource.data.get('grupo', '')))
+        || (resource.data.get('familiaUid', '') != ''
+            && resource.data.get('familiaUid', '') == request.auth.uid)
+      );
+
+      allow create, update: if isSignedIn()
+        && gestionaGrupo(request.resource.data.get('grupo', ''))
+        && existeAlumna(request.resource.data.get('alumnaId', ''))
+        && alumna(request.resource.data.get('alumnaId', '')).data.get('grupo', '')
+             == request.resource.data.get('grupo', '')
+        && request.resource.data.get('familiaUid', '')
+             == alumna(request.resource.data.get('alumnaId', '')).data.get('familiaUid', '')
+        && fechaValida(request.resource.data.get('fecha', ''))
+        && cambioId == request.resource.data.get('alumnaId', '') + '_'
+             + request.resource.data.get('fecha', '')
+        && request.resource.data.get('tipo', '') in ['cancelada', 'extra']
+        && request.resource.data.get('horaInicio', '') is string
+        && request.resource.data.get('horaInicio', '').size() <= 5
+        && request.resource.data.keys().hasOnly(
+             ['alumnaId', 'grupo', 'fecha', 'tipo', 'horaInicio', 'familiaUid',
+              'avisar', 'creadoPor', 'creadoEn'])
+        && request.resource.data.get('creadoPor', '') == request.auth.uid
+        && request.resource.data.get('creadoEn', null) == request.time;
+
+      allow delete: if isSignedIn()
+        && gestionaGrupo(resource.data.get('grupo', ''));
+    }
+
     match /ausencias/{ausenciaId} {
       allow read: if isSignedIn() && (
         resource == null

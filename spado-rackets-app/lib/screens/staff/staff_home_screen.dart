@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../models/alumna.dart';
 import '../../models/asistencia.dart';
+import '../../models/cambio_clase.dart';
 import '../../models/jornada.dart';
 import '../../services/auth_service.dart';
 import '../../services/club_repository.dart';
@@ -51,11 +52,19 @@ class StaffHomeScreen extends StatelessWidget {
             StreamView<List<Alumna>>(
               streamKey: user.grupos.join(','),
               stream: repo.watchAlumnasDeGrupos(user.grupos),
-              builder: (context, todas) {
+              builder: (context, todas) => StreamView<List<CambioClase>>(
+              streamKey: claveFecha(hoy),
+              stream: repo.watchCambiosDia(claveFecha(hoy),
+                  grupos: user.grupos),
+              builder: (context, lista) {
+                final cambios = {for (final c in lista) c.alumnaId: c};
+                String horaDe(Alumna a) =>
+                    claseDelDia(a, hoy, cambios[a.id])?.hora ?? a.horaInicio;
                 final deHoy = todas
-                    .where((a) => a.activa && a.tieneClaseEl(hoy))
+                    .where((a) =>
+                        a.activa && claseDelDia(a, hoy, cambios[a.id]) != null)
                     .toList()
-                  ..sort((a, b) => a.horaInicio.compareTo(b.horaInicio));
+                  ..sort((a, b) => horaDe(a).compareTo(horaDe(b)));
                 if (deHoy.isEmpty) {
                   return const EmptyState(
                     compacto: true,
@@ -77,9 +86,9 @@ class StaffHomeScreen extends StatelessWidget {
                               vertical: 4,
                             ),
                             leading: _HoraBloque(
-                              hora: a.horaInicio.isEmpty
+                              hora: horaDe(a).isEmpty
                                   ? ''
-                                  : formatoHora12(a.horaInicio),
+                                  : formatoHora12(horaDe(a)),
                             ),
                             title: Text(
                               a.nombre,
@@ -100,6 +109,7 @@ class StaffHomeScreen extends StatelessWidget {
                 );
               },
             ),
+          ),
           const SectionHeader('Mis fichajes'),
           StreamView<List<Jornada>>(
             streamKey: '${user.uid}${hoy.year}${hoy.month}${hoy.day}',

@@ -438,3 +438,38 @@ describe('ficha de la alumna: nivel, nacimiento y foto', () => {
     await assertFails(updateDoc(doc(como(STAFF), 'alumnas/a1'), { nivel: 'avanzado' }));
   });
 });
+
+describe('cambios de clase de un día concreto', () => {
+  const cambio = (extra = {}) => ({
+    alumnaId: 'a1', grupo: 'g1', fecha: dia(1), tipo: 'extra', horaInicio: '17:30',
+    familiaUid: FAM, avisar: true, creadoPor: STAFF, creadoEn: serverTimestamp(), ...extra,
+  });
+  const id = (f = dia(1)) => `cambiosClase/a1_${f}`;
+
+  test('el staff del grupo y Dirección crean cambios; la ficha no se toca', async () => {
+    await assertSucceeds(setDoc(doc(como(STAFF), id()), cambio()));
+    await assertSucceeds(setDoc(doc(como(DIR), id(dia(2))), cambio({ fecha: dia(2), tipo: 'cancelada', horaInicio: '', creadoPor: DIR })));
+  });
+
+  test('se rechazan los cambios mal formados o ajenos', async () => {
+    await assertFails(setDoc(doc(como(STAFF2), id()), cambio({ creadoPor: STAFF2 })));
+    await assertFails(setDoc(doc(como(FAM), id()), cambio({ creadoPor: FAM })));
+    await assertFails(setDoc(doc(como(STAFF), id()), cambio({ tipo: 'borrar' })));
+    await assertFails(setDoc(doc(como(STAFF), id()), cambio({ familiaUid: FAM2 })));
+    await assertFails(setDoc(doc(como(STAFF), id()), cambio({ grupo: 'g2' })));
+    await assertFails(setDoc(doc(como(STAFF), id(dia(3))), cambio()));
+    await assertFails(setDoc(doc(como(STAFF), id()), cambio({ extra: 1 })));
+  });
+
+  test('la familia lee los suyos y no los de otra', async () => {
+    await env.withSecurityRulesDisabled(async (ctx) => {
+      await setDoc(doc(ctx.firestore(), id()), cambio());
+    });
+    await assertSucceeds(getDoc(doc(como(FAM), id())));
+    await assertFails(getDoc(doc(como(FAM2), id())));
+    await assertSucceeds(getDocs(query(collection(como(FAM), 'cambiosClase'), where('familiaUid', '==', FAM))));
+    await assertFails(updateDoc(doc(como(FAM), id()), { tipo: 'cancelada' }));
+    await assertFails(deleteDoc(doc(como(FAM), id())));
+    await assertSucceeds(deleteDoc(doc(como(STAFF), id())));
+  });
+});

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../models/alumna.dart';
 import '../../models/app_user.dart';
 import '../../models/asistencia.dart';
+import '../../models/cambio_clase.dart';
 import '../../services/auth_service.dart';
 import '../../services/club_repository.dart';
 import '../../theme/app_theme.dart';
@@ -36,6 +37,7 @@ class _PasarListaScreenState extends State<PasarListaScreen> {
       : _repo.watchAlumnasDeGrupos(_yo.grupos);
   late Stream<List<Asistencia>> _sesion;
   late Stream<List<Ausencia>> _ausencias;
+  late Stream<List<CambioClase>> _cambios;
 
   @override
   void initState() {
@@ -49,6 +51,7 @@ class _PasarListaScreenState extends State<PasarListaScreen> {
     final grupos = _yo.role.isDireccion ? null : _yo.grupos;
     _sesion = _repo.watchAsistenciaDia(clave, grupos: grupos);
     _ausencias = _repo.watchAusenciasDia(clave, grupos: grupos);
+    _cambios = _repo.watchCambiosDia(clave, grupos: grupos);
     _marcas.clear();
     _cargadas = false;
   }
@@ -155,8 +158,16 @@ class _PasarListaScreenState extends State<PasarListaScreen> {
           builder: (context, guardadas) => StreamView<List<Ausencia>>(
             streamKey: claveFecha(_fecha),
             stream: _ausencias,
-            builder: (context, ausencias) =>
-                _lista(todas.where((a) => a.activa).toList(), guardadas, ausencias),
+            builder: (context, ausencias) => StreamView<List<CambioClase>>(
+              streamKey: claveFecha(_fecha),
+              stream: _cambios,
+              builder: (context, cambios) => _lista(
+                todas.where((a) => a.activa).toList(),
+                guardadas,
+                ausencias,
+                {for (final c in cambios) c.alumnaId: c},
+              ),
+            ),
           ),
         ),
       ),
@@ -167,6 +178,7 @@ class _PasarListaScreenState extends State<PasarListaScreen> {
     List<Alumna> activas,
     List<Asistencia> guardadas,
     List<Ausencia> ausencias,
+    Map<String, CambioClase> cambios,
   ) {
     final avisos = {for (final a in ausencias) a.alumnaId: a};
     if (!_cargadas) {
@@ -180,10 +192,14 @@ class _PasarListaScreenState extends State<PasarListaScreen> {
     // no coincida (por ejemplo, una clase recuperada).
     final alumnas = activas
         .where((a) =>
-            _verTodos || a.tieneClaseEl(_fecha) || _marcas.containsKey(a.id))
+            _verTodos ||
+            claseDelDia(a, _fecha, cambios[a.id]) != null ||
+            _marcas.containsKey(a.id))
         .toList()
       ..sort((a, b) {
-        final c = a.horaInicio.compareTo(b.horaInicio);
+        final c = (claseDelDia(a, _fecha, cambios[a.id])?.hora ?? a.horaInicio)
+            .compareTo(
+                claseDelDia(b, _fecha, cambios[b.id])?.hora ?? b.horaInicio);
         return c != 0 ? c : a.nombre.compareTo(b.nombre);
       });
 
@@ -275,6 +291,9 @@ class _PasarListaScreenState extends State<PasarListaScreen> {
                     for (final a in alumnas)
                       _FilaAlumna(
                         alumna: a,
+                        hora: claseDelDia(a, _fecha, cambios[a.id])?.hora ??
+                            a.horaInicio,
+                        cambiada: cambios[a.id] != null,
                         presente: _marcas[a.id] == EstadoAsistencia.presente,
                         aviso: avisos[a.id],
                         onChanged: (v) => _marcar(a, v),
@@ -321,12 +340,16 @@ class _PasarListaScreenState extends State<PasarListaScreen> {
 class _FilaAlumna extends StatelessWidget {
   const _FilaAlumna({
     required this.alumna,
+    required this.hora,
+    required this.cambiada,
     required this.presente,
     required this.onChanged,
     this.aviso,
   });
 
   final Alumna alumna;
+  final String hora;
+  final bool cambiada;
   final bool presente;
   final Ausencia? aviso;
   final ValueChanged<bool> onChanged;
@@ -354,8 +377,13 @@ class _FilaAlumna extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(alumna.nombre, style: t.titleSmall),
-                    if (alumna.horaInicio.isNotEmpty)
-                      Text(formatoHora12(alumna.horaInicio), style: t.bodySmall),
+                    if (hora.isNotEmpty)
+                      Text(
+                        cambiada
+                            ? '${formatoHora12(hora)} · cambio de este día'
+                            : formatoHora12(hora),
+                        style: t.bodySmall,
+                      ),
                     if (aviso != null)
                       Text(
                         'Aviso de la familia: ${aviso!.motivo.isEmpty ? 'no vendrá' : aviso!.motivo}',

@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../models/app_user.dart';
 import '../../models/asistencia.dart';
 import '../../models/alumna.dart';
+import '../../models/cambio_clase.dart';
 import '../../models/jornada.dart';
 import '../../models/pago.dart';
 import '../../services/auth_service.dart';
@@ -88,8 +89,6 @@ class _Contenido extends StatelessWidget {
     final claveHoy = claveFecha(hoy);
     final t = Theme.of(context).textTheme;
     final irA = context.read<IrATab>();
-    final clasesHoy = alumnas.where((a) => a.tieneClaseEl(hoy)).toList()
-      ..sort((a, b) => a.horaInicio.compareTo(b.horaInicio));
     final marcadosHoy = {
       for (final m in marcas.where((m) => m.fecha == claveHoy))
         m.alumnaId: m.estado,
@@ -177,39 +176,55 @@ class _Contenido extends StatelessWidget {
           ],
         ),
         const SectionHeader('Clases de hoy'),
-        if (clasesHoy.isEmpty)
-          const EmptyState(
-            compacto: true,
-            icon: Icons.event_available_outlined,
-            title: 'Hoy no hay clases programadas',
-          )
-        else
-          CardList(
-            children: [
-              for (final a in clasesHoy)
-                ListTile(
-                  leading: FotoAlumna(a, size: 40),
-                  title: Text(a.nombre),
-                  subtitle: Text(a.horaInicio.isEmpty ? 'Sin hora' : formatoHora12(a.horaInicio)),
-                  trailing: marcadosHoy[a.id] == EstadoAsistencia.presente
-                      ? const StatusChip(
-                          label: 'Presente',
-                          color: AppColors.success,
-                          icon: Icons.check,
-                        )
-                      : marcadosHoy.containsKey(a.id)
-                          ? const StatusChip(
-                              label: 'No ha venido',
-                              color: AppColors.danger,
-                            )
-                          : const StatusChip(
-                              label: 'Sin marcar',
-                              color: AppColors.warning,
-                            ),
-                  onTap: () => context.push('/lista?fecha=$claveHoy'),
-                ),
-            ],
-          ),
+        StreamView<List<CambioClase>>(
+          streamKey: claveHoy,
+          stream: context.read<ClubRepository>().watchCambiosDia(claveHoy),
+          builder: (context, lista) {
+            final cambios = {for (final c in lista) c.alumnaId: c};
+            String horaDe(Alumna a) =>
+                claseDelDia(a, hoy, cambios[a.id])?.hora ?? a.horaInicio;
+            final clasesHoy = alumnas
+                .where((a) =>
+                    a.activa && claseDelDia(a, hoy, cambios[a.id]) != null)
+                .toList()
+              ..sort((a, b) => horaDe(a).compareTo(horaDe(b)));
+            if (clasesHoy.isEmpty) {
+              return const EmptyState(
+                compacto: true,
+                icon: Icons.event_available_outlined,
+                title: 'Hoy no hay clases programadas',
+              );
+            }
+            return CardList(
+              children: [
+                for (final a in clasesHoy)
+                  ListTile(
+                    leading: FotoAlumna(a, size: 40),
+                    title: Text(a.nombre),
+                    subtitle: Text(horaDe(a).isEmpty
+                        ? 'Sin hora'
+                        : '${formatoHora12(horaDe(a))}${cambios[a.id] != null ? ' · cambio de hoy' : ''}'),
+                    trailing: marcadosHoy[a.id] == EstadoAsistencia.presente
+                        ? const StatusChip(
+                            label: 'Presente',
+                            color: AppColors.success,
+                            icon: Icons.check,
+                          )
+                        : marcadosHoy.containsKey(a.id)
+                            ? const StatusChip(
+                                label: 'No ha venido',
+                                color: AppColors.danger,
+                              )
+                            : const StatusChip(
+                                label: 'Sin marcar',
+                                color: AppColors.warning,
+                              ),
+                    onTap: () => context.push('/lista?fecha=$claveHoy'),
+                  ),
+              ],
+            );
+          },
+        ),
         const SectionHeader('Gestión'),
         const CardList(
           children: [

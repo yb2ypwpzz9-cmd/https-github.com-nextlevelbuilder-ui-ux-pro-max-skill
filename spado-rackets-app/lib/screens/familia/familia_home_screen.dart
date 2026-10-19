@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../../models/alumna.dart';
 import '../../models/app_user.dart';
 import '../../models/asistencia.dart';
+import '../../models/cambio_clase.dart';
 import '../../models/chat.dart';
 import '../../models/pago.dart';
 import '../../services/auth_service.dart';
@@ -13,6 +14,7 @@ import '../../services/club_repository.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/common.dart';
 import '../../widgets/foto_alumna.dart';
+import '../../widgets/horario_alumna.dart' show textoCambioClase;
 import '../app_shell.dart';
 import '../staff/staff_grupos_screen.dart' show MarcaAsistencia;
 
@@ -76,6 +78,7 @@ class _FamiliaHomeScreenState extends State<FamiliaHomeScreen> {
                 _AvisoFoto(alumna: alumna),
                 const SizedBox(height: AppSpacing.md),
               ],
+              _ProximosCambios(alumna: alumna, uid: user.uid),
               _EstadoCuotas(uid: user.uid),
               _Asistencia(alumna: alumna, uid: user.uid),
               const _UltimoAviso(),
@@ -83,6 +86,50 @@ class _FamiliaHomeScreenState extends State<FamiliaHomeScreen> {
           );
         },
       ),
+    );
+  }
+}
+
+/// Cambios de clase que el club ha puesto para días concretos.
+class _ProximosCambios extends StatelessWidget {
+  const _ProximosCambios({required this.alumna, required this.uid});
+  final Alumna alumna;
+  final String uid;
+
+  @override
+  Widget build(BuildContext context) {
+    final hoy = claveFecha(DateTime.now());
+    return StreamView<List<CambioClase>>(
+      streamKey: uid,
+      stream: context.read<ClubRepository>().watchCambiosFamilia(uid),
+      builder: (context, todos) {
+        final proximos = todos
+            .where((c) => c.alumnaId == alumna.id && c.fecha.compareTo(hoy) >= 0)
+            .toList();
+        if (proximos.isEmpty) return const SizedBox.shrink();
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const SectionHeader('Cambios de clase'),
+            CardList(
+              children: [
+                for (final c in proximos)
+                  ListTile(
+                    dense: true,
+                    leading: Icon(
+                      c.tipo == TipoCambio.cancelada
+                          ? Icons.event_busy_outlined
+                          : Icons.event_available_outlined,
+                      color: AppColors.navy,
+                    ),
+                    title: Text(textoCambioClase(c)),
+                  ),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.md),
+          ],
+        );
+      },
     );
   }
 }
