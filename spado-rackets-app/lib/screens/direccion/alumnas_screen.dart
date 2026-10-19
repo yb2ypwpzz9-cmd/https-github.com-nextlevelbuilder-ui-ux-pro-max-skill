@@ -76,7 +76,7 @@ class AlumnasScreen extends StatelessWidget {
                                 : '${a.fechaNacimiento!.year}-${a.fechaNacimiento!.month.toString().padLeft(2, '0')}-${a.fechaNacimiento!.day.toString().padLeft(2, '0')}',
                             a.nivel?.label,
                             a.dias.map((d) => Grupo.nombresDias[d - 1]).join(' '),
-                            a.horaInicio,
+                            a.horaInicio.isEmpty ? '' : formatoHora12(a.horaInicio),
                             a.cuotaMensual,
                             a.contactoNombre,
                             a.contactoTelefono,
@@ -311,7 +311,7 @@ class AlumnasScreen extends StatelessWidget {
                           if (h != null) setSheet(() => hora = h);
                         },
                         icon: const Icon(Icons.schedule),
-                        label: Text(hora == null ? 'Hora' : _horaTexto(hora!)),
+                        label: Text(hora == null ? 'Hora' : hora12(hora!)),
                       ),
                     ),
                     const SizedBox(width: AppSpacing.sm),

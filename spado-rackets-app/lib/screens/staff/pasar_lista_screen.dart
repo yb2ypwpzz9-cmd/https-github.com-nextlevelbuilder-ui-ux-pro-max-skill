@@ -355,7 +355,7 @@ class _FilaAlumna extends StatelessWidget {
                   children: [
                     Text(alumna.nombre, style: t.titleSmall),
                     if (alumna.horaInicio.isNotEmpty)
-                      Text(alumna.horaInicio, style: t.bodySmall),
+                      Text(formatoHora12(alumna.horaInicio), style: t.bodySmall),
                     if (aviso != null)
                       Text(
                         'Aviso de la familia: ${aviso!.motivo.isEmpty ? 'no vendrá' : aviso!.motivo}',

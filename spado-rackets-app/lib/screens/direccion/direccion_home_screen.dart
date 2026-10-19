@@ -190,7 +190,7 @@ class _Contenido extends StatelessWidget {
                 ListTile(
                   leading: FotoAlumna(a, size: 40),
                   title: Text(a.nombre),
-                  subtitle: Text(a.horaInicio.isEmpty ? 'Sin hora' : a.horaInicio),
+                  subtitle: Text(a.horaInicio.isEmpty ? 'Sin hora' : formatoHora12(a.horaInicio)),
                   trailing: marcadosHoy[a.id] == EstadoAsistencia.presente
                       ? const StatusChip(
                           label: 'Presente',

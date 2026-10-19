@@ -7,8 +7,8 @@ import '../services/club_repository.dart';
 import '../theme/app_theme.dart';
 import 'common.dart';
 
-/// Hora en formato digital (escribir "17" y "30"), más fácil en el móvil que
-/// arrastrar las agujas de un reloj. Siempre en 24 horas.
+/// Hora en formato digital (escribir "5" y "30" y elegir AM o PM), más fácil
+/// en el móvil que arrastrar las agujas de un reloj.
 Future<TimeOfDay?> elegirHoraDigital(
   BuildContext context,
   TimeOfDay? inicial,
@@ -17,9 +17,9 @@ Future<TimeOfDay?> elegirHoraDigital(
       context: context,
       initialTime: inicial ?? const TimeOfDay(hour: 17, minute: 0),
       initialEntryMode: TimePickerEntryMode.input,
-      helpText: 'Hora de la clase (24 h)',
+      helpText: 'Hora de la clase',
       builder: (context, child) => MediaQuery(
-        data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+        data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
         child: child!,
       ),
     );
@@ -32,6 +32,9 @@ TimeOfDay? horaDeTexto(String? h) {
   if (hh == null || mm == null) return null;
   return TimeOfDay(hour: hh, minute: mm);
 }
+
+/// Para enseñar una hora: "5:30 PM".
+String hora12(TimeOfDay h) => formatoHora12(horaATexto(h));
 
 String horaATexto(TimeOfDay h) =>
     '${h.hour.toString().padLeft(2, '0')}:${h.minute.toString().padLeft(2, '0')}';
@@ -88,7 +91,7 @@ Future<void> editarHorario(BuildContext context, Alumna alumna) async {
                         if (h != null) setSheet(() => hora = h);
                       },
                       icon: const Icon(Icons.schedule),
-                      label: Text(hora == null ? 'Hora' : horaATexto(hora!)),
+                      label: Text(hora == null ? 'Hora' : hora12(hora!)),
                     ),
                   ),
                   const SizedBox(width: AppSpacing.sm),

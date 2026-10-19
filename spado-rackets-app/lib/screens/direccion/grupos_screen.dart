@@ -252,7 +252,7 @@ class _FormGrupoState extends State<_FormGrupo> {
                         if (h != null) setState(() => _hora = h);
                       },
                       icon: const Icon(Icons.schedule),
-                      label: Text(_hora == null ? 'Hora' : _horaTexto),
+                      label: Text(_hora == null ? 'Hora' : hora12(_hora!)),
                     ),
                   ),
                   const SizedBox(width: AppSpacing.sm),

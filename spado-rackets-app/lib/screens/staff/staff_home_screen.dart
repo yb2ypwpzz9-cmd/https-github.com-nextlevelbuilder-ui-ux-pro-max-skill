@@ -76,7 +76,11 @@ class StaffHomeScreen extends StatelessWidget {
                               horizontal: AppSpacing.md,
                               vertical: 4,
                             ),
-                            leading: _HoraBloque(hora: a.horaInicio),
+                            leading: _HoraBloque(
+                              hora: a.horaInicio.isEmpty
+                                  ? ''
+                                  : formatoHora12(a.horaInicio),
+                            ),
                             title: Text(
                               a.nombre,
                               style: Theme.of(context).textTheme.titleSmall,
@@ -148,7 +152,7 @@ class _HoraBloque extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 54,
+      width: 78,
       padding: const EdgeInsets.symmetric(vertical: 8),
       decoration: BoxDecoration(
         color: AppColors.navy.withValues(alpha: 0.07),

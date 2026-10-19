@@ -2,6 +2,19 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../services/firestore_refs.dart';
 
+/// "17:30" → "5:30 PM". Las horas se guardan en `HH:mm` (para ordenarlas), pero
+/// en República Dominicana se leen con AM/PM.
+String formatoHora12(String hhmm) {
+  final p = hhmm.split(':');
+  if (p.length != 2) return hhmm;
+  final h = int.tryParse(p[0]);
+  final m = int.tryParse(p[1]);
+  if (h == null || m == null) return hhmm;
+  final sufijo = h >= 12 ? 'PM' : 'AM';
+  final h12 = h % 12 == 0 ? 12 : h % 12;
+  return '$h12:${m.toString().padLeft(2, '0')} $sufijo';
+}
+
 /// Tipo de jugador: sirve para hablar con propiedad (niña, niño, adulto) en
 /// vez de ponerlo todo en femenino.
 enum TipoJugador {
@@ -145,7 +158,7 @@ class Alumna {
     if (dias.isEmpty) return 'Sin horario';
     return [
       dias.map((d) => _nombresDias[d - 1]).join(' · '),
-      if (horaInicio.isNotEmpty) horaInicio,
+      if (horaInicio.isNotEmpty) formatoHora12(horaInicio),
     ].join(' · ');
   }
   bool get vinculada => familiaUid != null;
