@@ -433,7 +433,15 @@ class ClubRepository {
       if (grupos.isEmpty) return Stream.value(const []);
       q = q.where('grupo', whereIn: grupos.take(30).toList());
     }
-    return q.snapshots().map((s) => mapearDocs(s.docs, CambioClase.fromDoc));
+    // Si los cambios no se pueden leer, las listas del día siguen
+    // funcionando con el horario fijo en vez de quedarse bloqueadas.
+    return q
+        .snapshots()
+        .map((s) => mapearDocs(s.docs, CambioClase.fromDoc))
+        .transform(StreamTransformer<List<CambioClase>, List<CambioClase>>
+            .fromHandlers(
+          handleError: (_, __, sink) => sink.add(const <CambioClase>[]),
+        ));
   }
 
   /// Los cambios de una persona (los próximos se filtran en la pantalla).
