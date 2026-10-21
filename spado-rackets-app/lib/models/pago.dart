@@ -55,6 +55,8 @@ class Pago {
     this.resueltoEn,
     this.resueltoPorNombre,
     this.registradoAMano = false,
+    this.metodo,
+    this.historico = false,
   });
 
   final String id;
@@ -80,6 +82,12 @@ class Pago {
   final String? resueltoPorNombre;
   final bool registradoAMano;
 
+  /// `transferencia` o `efectivo` en las cuotas cargadas del histórico.
+  final String? metodo;
+
+  /// Cuota de un mes anterior cargada por Dirección (nunca se avisó a la familia).
+  final bool historico;
+
   static String idPara(String alumnaId, String periodo) => '${alumnaId}_$periodo';
 
   factory Pago.fromDoc(DocumentSnapshot<Json> doc) {
@@ -103,12 +111,21 @@ class Pago {
       resueltoEn: fechaDe(data['resueltoEn']),
       resueltoPorNombre: data['resueltoPorNombre'] as String?,
       registradoAMano: (data['registradoAMano'] as bool?) ?? false,
+      metodo: data['metodo'] as String?,
+      historico: (data['historico'] as bool?) ?? false,
     );
   }
 
   /// La familia tiene algo que hacer: pagar, o volver a subir el justificante.
   bool get necesitaAccionFamilia =>
       estado == EstadoPago.pendiente || estado == EstadoPago.rechazado;
+
+  /// Cómo se cobró, para los informes.
+  String get formaDePago {
+    if (metodo == 'efectivo' || registradoAMano) return 'Efectivo';
+    if (metodo == 'transferencia' || tieneComprobante) return 'Transferencia';
+    return '';
+  }
 
   bool get tieneComprobante =>
       comprobantePath != null && comprobantePath!.isNotEmpty;

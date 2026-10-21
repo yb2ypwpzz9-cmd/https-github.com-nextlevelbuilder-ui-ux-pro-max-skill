@@ -108,13 +108,21 @@ class _PagosDireccionScreenState extends State<PagosDireccionScreen> {
                         p.importe,
                         p.moneda.wire,
                         p.estado.label,
-                        p.registradoAMano ? 'Efectivo' : (p.tieneComprobante ? 'Transferencia' : ''),
+                        p.formaDePago,
                         p.resueltoPorNombre,
                       ],
                   ],
                 }),
               ),
-              const SizedBox(height: AppSpacing.md),
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton.icon(
+                  onPressed: () => context.push('/historico'),
+                  icon: const Icon(Icons.history, size: 18),
+                  label: const Text('Cargar histórico (Excel)'),
+                ),
+              ),
+              const SizedBox(height: AppSpacing.sm),
               if (pagos.isEmpty)
                 EmptyState(
                   compacto: true,

@@ -747,6 +747,7 @@ export const avisarAsistencia = onDocumentWritten('asistencias/{id}', async (eve
 /** Aviso a la familia cuando Dirección genera su cuota del mes. */
 export const avisarCuotaNueva = onDocumentCreated('pagos/{id}', async (event) => {
   const p = event.data?.data();
+  if (p?.historico) return; // cargada del histórico: no se avisa
   if (!p?.familiaUid) return; // aún sin cuenta: se avisará al asociarla en la app
   await notificar([p.familiaUid], {
     title: 'Nueva cuota',

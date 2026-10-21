@@ -473,3 +473,27 @@ describe('cambios de clase de un día concreto', () => {
     await assertSucceeds(deleteDoc(doc(como(STAFF), id())));
   });
 });
+
+describe('carga de histórico (cuotas cobradas y gastos pasados)', () => {
+  const cuota = (extra = {}) => ({
+    alumnaId: 'a1', alumnaNombre: 'Lucía', grupo: 'g1', familiaUid: FAM, periodo: '2026-05',
+    concepto: 'Cuota mensual', importe: 80, moneda: 'USD', estado: 'pagado', historico: true,
+    metodo: 'transferencia', registradoAMano: false, creadoEn: serverTimestamp(),
+    resueltoEn: Timestamp.fromDate(new Date('2026-05-03')), resueltoPor: DIR, resueltoPorNombre: 'Dirección', ...extra,
+  });
+
+  test('Dirección crea la cuota ya pagada y un gasto pasado; nadie más', async () => {
+    await assertSucceeds(setDoc(doc(como(DIR), 'pagos/a1_2026-05'), cuota()));
+    await assertFails(setDoc(doc(como(FAM), 'pagos/a1_2026-04'), cuota({ periodo: '2026-04' })));
+    await assertFails(setDoc(doc(como(STAFF), 'pagos/a1_2026-03'), cuota({ periodo: '2026-03' })));
+    await assertSucceeds(addDocGasto(como(DIR)));
+    await assertFails(addDocGasto(como(STAFF)));
+  });
+
+  function addDocGasto(db) {
+    return setDoc(doc(db, 'gastos/h1'), {
+      concepto: 'Alquiler pistas', categoria: 'pistas', importe: 1250.5, fecha: '2026-05-15',
+      creadoEn: serverTimestamp(), creadoPor: db === undefined ? '' : DIR,
+    });
+  }
+});

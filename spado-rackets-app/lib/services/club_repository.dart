@@ -18,6 +18,7 @@ import '../models/jornada.dart';
 import '../models/pago.dart';
 import 'firestore_refs.dart';
 import 'foto_service.dart';
+import 'historico.dart';
 import 'ubicacion_service.dart';
 
 /// Acceso a datos del club. Las pantallas no tocan Firestore directamente.
@@ -613,6 +614,92 @@ class ClubRepository {
     }
     if (creadas > 0) await batch.commit();
     return creadas;
+  }
+
+  /// Carga cuotas ya cobradas y gastos de meses anteriores (desde el Excel).
+  ///
+  /// Las cuotas que ya existen no se tocan y los gastos repetidos (misma
+  /// fecha, concepto e importe) se saltan, así que repetir la carga no
+  /// duplica nada. No se avisa a las familias.
+  Future<({int cuotas, int cuotasYaExistian, int gastos, int gastosRepetidos})>
+      importarHistorico({
+    required List<CuotaHistorica> cuotas,
+    required List<GastoHistorico> gastos,
+    required AppUser quien,
+  }) async {
+    final ids = <String>{};
+    for (final p in {for (final c in cuotas) c.periodo}) {
+      ids.addAll(await idsDeCuotas(p));
+    }
+    final claves = <String>{};
+    if (gastos.isNotEmpty) {
+      final desde = gastos.map((g) => g.fecha).reduce((a, b) => a.compareTo(b) < 0 ? a : b);
+      final existentes =
+          await Refs.gastos.where('fecha', isGreaterThanOrEqualTo: desde).get();
+      for (final d in existentes.docs) {
+        final g = Gasto.fromDoc(d);
+        claves.add('${g.fecha}|${g.concepto.toLowerCase()}|${g.importe}');
+      }
+    }
+
+    final operaciones = <void Function(WriteBatch)>[];
+    var nuevasCuotas = 0, yaExistian = 0, nuevosGastos = 0, repetidos = 0;
+    for (final c in cuotas) {
+      final id = Pago.idPara(c.alumna.id, c.periodo);
+      if (ids.contains(id)) {
+        yaExistian++;
+        continue;
+      }
+      nuevasCuotas++;
+      operaciones.add((b) => b.set(Refs.pagos.doc(id), {
+            'alumnaId': c.alumna.id,
+            'alumnaNombre': c.alumna.nombre,
+            'grupo': c.alumna.grupo,
+            'familiaUid': c.alumna.familiaUid ?? '',
+            'periodo': c.periodo,
+            'concepto': 'Cuota mensual',
+            'importe': c.importe,
+            'moneda': ClubConfig.monedaPorDefecto.wire,
+            'estado': EstadoPago.pagado.wire,
+            'historico': true,
+            'metodo': c.efectivo ? 'efectivo' : 'transferencia',
+            'registradoAMano': c.efectivo,
+            'creadoEn': FieldValue.serverTimestamp(),
+            if (c.fechaPago != null) 'resueltoEn': Timestamp.fromDate(c.fechaPago!),
+            'resueltoPor': quien.uid,
+            'resueltoPorNombre': quien.nombreVisible,
+          }));
+    }
+    for (final g in gastos) {
+      final clave = '${g.fecha}|${g.concepto.toLowerCase()}|${g.importe}';
+      if (!claves.add(clave)) {
+        repetidos++;
+        continue;
+      }
+      nuevosGastos++;
+      operaciones.add((b) => b.set(Refs.gastos.doc(), {
+            'concepto': g.concepto,
+            'categoria': g.categoria.name,
+            'importe': g.importe,
+            'fecha': g.fecha,
+            'creadoEn': FieldValue.serverTimestamp(),
+            'creadoPor': quien.uid,
+          }));
+    }
+
+    for (var i = 0; i < operaciones.length; i += 400) {
+      final batch = Refs.db.batch();
+      for (final op in operaciones.skip(i).take(400)) {
+        op(batch);
+      }
+      await batch.commit();
+    }
+    return (
+      cuotas: nuevasCuotas,
+      cuotasYaExistian: yaExistian,
+      gastos: nuevosGastos,
+      gastosRepetidos: repetidos,
+    );
   }
 
   /// Sube el justificante y pasa la cuota a revisión.
