@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jungle Trail Race — Próximamente</title>
+<meta name="description" content="Jungle Trail Race. Muy pronto toda la información de la carrera.">
+<!-- Página temporal: evita que Google indexe el "próximamente". Quitar al lanzar la web real. -->
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0B2A1C">
+<link rel="icon" href="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --selva:#0B2A1C;      /* verde selva profundo */
+  --musgo:#1F6F43;      /* verde hoja */
+  --lima:#B8E04A;       /* acento energía */
+  --tierra:#A0682F;     /* barro / sendero */
+  --crema:#F2EBD9;      /* texto */
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  min-height:100svh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:32px 16px;
+  font-family:Inter,system-ui,sans-serif;color:var(--crema);
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 45%, rgba(31,111,67,.55), transparent 70%),
+    radial-gradient(ellipse 60% 40% at 50% 110%, rgba(160,104,47,.35), transparent 70%),
+    var(--selva);
+  overflow:hidden;text-align:center;position:relative;
+}
+/* hojas decorativas en las esquinas */
+.leaf{position:absolute;width:min(46vw,420px);opacity:.22;pointer-events:none;fill:var(--musgo)}
+.leaf.tl{top:-6%;left:-8%;transform:rotate(25deg)}
+.leaf.br{bottom:-8%;right:-8%;transform:rotate(205deg)}
+main{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:28px;animation:in 1.2s ease-out both}
+.logo{width:min(78vw,520px);height:auto;filter:drop-shadow(0 12px 40px rgba(0,0,0,.45))}
+.wordmark{font-family:Anton,Impact,sans-serif;font-size:clamp(48px,12vw,120px);line-height:.9;letter-spacing:.02em;text-transform:uppercase}
+.wordmark span{display:block;color:var(--lima)}
+.soon{
+  font-family:Anton,Impact,sans-serif;text-transform:uppercase;
+  font-size:clamp(22px,5vw,36px);letter-spacing:.35em;padding-left:.35em;color:var(--lima);
+}
+.soon i{font-style:normal;animation:blink 1.4s infinite}
+.soon i:nth-child(2){animation-delay:.2s}.soon i:nth-child(3){animation-delay:.4s}
+p.tag{max-width:420px;font-size:15px;line-height:1.6;opacity:.8}
+.trail{width:min(60vw,280px);height:4px;border-radius:2px;
+  background:repeating-linear-gradient(90deg,var(--tierra) 0 14px,transparent 14px 24px);opacity:.9}
+@keyframes in{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes blink{0%,100%{opacity:.2}50%{opacity:1}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</head>
+<body>
+<svg class="leaf tl" viewBox="0 0 200 200" aria-hidden="true"><path d="M100 0C40 40 0 110 20 200 60 150 160 140 200 60 160 70 120 50 100 0Z"/></svg>
+<svg class="leaf br" viewBox="0 0 200 200" aria-hidden="true"><path d="M100 0C40 40 0 110 20 200 60 150 160 140 200 60 160 70 120 50 100 0Z"/></svg>
+
+<main>
+  <!-- Sube el logo oficial como logo.png (PNG/SVG con fondo transparente) junto a este archivo.
+       Si no existe, se muestra el nombre en texto automáticamente. -->
+  <img class="logo" src="logo.png" alt="Jungle Trail Race"
+       onerror="this.hidden=true;document.getElementById('wm').hidden=false">
+  <h1 id="wm" class="wordmark" hidden>Jungle<span>Trail Race</span></h1>
+
+  <div class="trail" aria-hidden="true"></div>
+  <div class="soon">Próximamente<i>.</i><i>.</i><i>.</i></div>
+  <p class="tag">Estamos abriendo camino. Muy pronto toda la información de la carrera.</p>
+</main>
+</body>
+</html>
