@@ -15,6 +15,7 @@ import '../../widgets/common.dart';
 import '../../widgets/contacto.dart';
 import '../../widgets/foto_alumna.dart';
 import '../../widgets/horario_alumna.dart';
+import '../../widgets/invitacion.dart';
 
 /// Alumnado, con el horario y la cuota de cada persona y el código que se
 /// entrega a su familia.
@@ -606,7 +607,14 @@ class _ListaGrupo extends StatelessWidget {
                     color: AppColors.success,
                     icon: Icons.link,
                   )
-                else if (codigoDe[a.id] != null)
+                else if (codigoDe[a.id] != null) ...[
+                  IconButton(
+                    tooltip: 'Enviar invitación',
+                    icon: const Icon(Icons.send_outlined,
+                        size: 19, color: AppColors.navy),
+                    onPressed: () =>
+                        mostrarInvitacion(context, a, codigoDe[a.id]!.codigo),
+                  ),
                   IconButton(
                     tooltip: 'Copiar código',
                     icon: const Icon(Icons.copy, size: 19),
@@ -619,6 +627,7 @@ class _ListaGrupo extends StatelessWidget {
                       }
                     },
                   ),
+                ],
               ],
             ),
             onTap: () => onEditar(a),
