@@ -12,6 +12,7 @@ import '../../services/auth_service.dart';
 import '../../services/club_repository.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/common.dart';
+import '../../widgets/aviso_notificaciones.dart';
 import '../../widgets/foto_alumna.dart';
 import '../app_shell.dart';
 import 'pagos_direccion_screen.dart' show revisarPago;
@@ -96,6 +97,7 @@ class _Contenido extends StatelessWidget {
 
     return PageBody(
       children: [
+        const AvisoNotificaciones(),
         Text(capitalizar(fechaLargaFormat.format(hoy)), style: t.bodySmall),
         Text('Hola, ${user.nombreVisible.split(' ').first}',
             style: t.headlineSmall),

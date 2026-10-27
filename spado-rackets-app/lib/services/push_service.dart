@@ -7,6 +7,21 @@ import 'package:flutter/foundation.dart';
 import '../config/club_config.dart';
 import 'firestore_refs.dart';
 
+enum EstadoPush {
+  /// Este dispositivo ya recibe avisos.
+  activo,
+
+  /// Se puede pedir el permiso: falta que la persona lo acepte.
+  pendiente,
+
+  /// El permiso se denegó: solo se arregla desde los ajustes del navegador.
+  bloqueado,
+
+  /// El navegador no admite avisos (en iPhone: la app no está en la pantalla
+  /// de inicio).
+  noSoportado,
+}
+
 /// Notificaciones push en la web.
 ///
 /// El envío lo hacen las Cloud Functions; la app sólo guarda el token del
@@ -20,6 +35,26 @@ class PushService {
   StreamSubscription<String>? _refreshSub;
 
   bool get disponible => ClubConfig.vapidKey.isNotEmpty;
+
+  Future<EstadoPush> estado() async {
+    if (!disponible) return EstadoPush.noSoportado;
+    try {
+      if (!await FirebaseMessaging.instance.isSupported()) {
+        return EstadoPush.noSoportado;
+      }
+      final ajustes =
+          await FirebaseMessaging.instance.getNotificationSettings();
+      return switch (ajustes.authorizationStatus) {
+        AuthorizationStatus.authorized ||
+        AuthorizationStatus.provisional =>
+          EstadoPush.activo,
+        AuthorizationStatus.denied => EstadoPush.bloqueado,
+        _ => EstadoPush.pendiente,
+      };
+    } catch (_) {
+      return EstadoPush.noSoportado;
+    }
+  }
 
   /// Pide permiso y registra este navegador. Se llama desde un botón: los
   /// navegadores bloquean la petición de permiso si no la inicia el usuario.

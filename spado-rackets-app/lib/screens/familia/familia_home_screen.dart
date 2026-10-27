@@ -14,6 +14,7 @@ import '../../services/club_repository.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/common.dart';
 import '../../widgets/foto_alumna.dart';
+import '../../widgets/aviso_notificaciones.dart';
 import '../../widgets/horario_alumna.dart' show textoCambioClase;
 import '../app_shell.dart';
 import '../staff/staff_grupos_screen.dart' show MarcaAsistencia;
@@ -72,6 +73,7 @@ class _FamiliaHomeScreenState extends State<FamiliaHomeScreen> {
                 ),
                 const SizedBox(height: AppSpacing.md),
               ],
+              const AvisoNotificaciones(),
               _Cabecera(alumna: alumna, familia: user),
               const SizedBox(height: AppSpacing.md),
               if (alumna.fotoPath == null) ...[

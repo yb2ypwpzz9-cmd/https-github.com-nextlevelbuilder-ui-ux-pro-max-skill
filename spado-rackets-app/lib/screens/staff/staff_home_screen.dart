@@ -10,6 +10,7 @@ import '../../services/auth_service.dart';
 import '../../services/club_repository.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/common.dart';
+import '../../widgets/aviso_notificaciones.dart';
 import '../../widgets/fichaje_panel.dart';
 import '../../widgets/foto_alumna.dart';
 import '../app_shell.dart';
@@ -35,6 +36,7 @@ class StaffHomeScreen extends StatelessWidget {
             style: Theme.of(context).textTheme.headlineSmall,
           ),
           const SizedBox(height: AppSpacing.md),
+          const AvisoNotificaciones(),
           const FichajePanel(),
           SectionHeader(
             'Clases de hoy',
