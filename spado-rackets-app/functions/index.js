@@ -47,7 +47,10 @@ async function notificar(uids, { title, body, data = {} }) {
   for (const uid of unicos) {
     const snap = await db.doc(`users/${uid}`).get();
     const tokens = snap.get('fcmTokens');
-    if (!Array.isArray(tokens) || tokens.length === 0) continue;
+    if (!Array.isArray(tokens) || tokens.length === 0) {
+      logger.info(`push "${title}": ${uid} no tiene dispositivos con avisos activados`);
+      continue;
+    }
 
     const r = await getMessaging().sendEachForMulticast({
       tokens,
@@ -55,6 +58,10 @@ async function notificar(uids, { title, body, data = {} }) {
       data: Object.fromEntries(Object.entries(data).map(([k, v]) => [k, String(v)])),
       webpush: { fcmOptions: { link: '/' } },
     });
+    logger.info(
+      `push "${title}" a ${uid}: ${r.successCount} enviados, ${r.failureCount} fallidos` +
+      (r.failureCount ? ` (${r.responses.filter((x) => !x.success).map((x) => x.error?.code).join(', ')})` : ''),
+    );
 
     // Tokens caducados (navegador reinstalado, permisos quitados): fuera.
     const muertos = [];
@@ -708,6 +715,7 @@ export const alCrearMensaje = onDocumentCreated(
 
     const destinatarios = (conv.participantes ?? []).filter((u) => u !== m.autorUid);
     const texto = String(m.texto ?? '');
+    logger.info(`mensaje en ${conversacionId} (${conv.tipo}): ${destinatarios.length} destinatarios`);
 
     const cambios = {
       ultimoMensaje: texto.slice(0, 140),
