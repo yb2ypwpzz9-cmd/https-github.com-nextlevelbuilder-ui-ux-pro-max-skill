@@ -27,6 +27,24 @@ class _NuevaCuotaScreenState extends State<NuevaCuotaScreen> {
   final _importe = TextEditingController();
   bool _generando = false;
 
+  /// Plazo de pago: el normal (día 5 del mes) o una fecha elegida.
+  late bool _plazoPropio;
+  late DateTime _vence;
+
+  @override
+  void initState() {
+    super.initState();
+    // Si el plazo normal del mes ya pasó, generar la cuota la dejaría
+    // vencida desde el primer minuto: se propone una fecha de aquí a 5 días.
+    final partes = widget.periodo.split('-');
+    final limite = DateTime(int.parse(partes[0]), int.parse(partes[1]),
+        ClubConfig.diaVencimientoCuota);
+    final hoy = DateTime.now();
+    final hoySinHora = DateTime(hoy.year, hoy.month, hoy.day);
+    _plazoPropio = hoySinHora.isAfter(limite);
+    _vence = hoySinHora.add(const Duration(days: 5));
+  }
+
   late final ClubRepository _repo = context.read<ClubRepository>();
   late final Stream<List<Alumna>> _alumnas = _repo.watchTodasLasAlumnas();
   late final Future<Set<String>> _existentes =
@@ -67,6 +85,7 @@ class _NuevaCuotaScreenState extends State<NuevaCuotaScreen> {
       final n = await _repo.generarCuotas(
         periodo: widget.periodo,
         cuotas: cuotas,
+        vence: _plazoPropio ? _vence : null,
       );
       if (!mounted) return;
       showAppSnackBar(
@@ -159,6 +178,59 @@ class _NuevaCuotaScreenState extends State<NuevaCuotaScreen> {
                               controlAffinity: ListTileControlAffinity.leading,
                             ),
                         ],
+                      ),
+                      const SectionHeader('Plazo de pago'),
+                      Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(AppSpacing.md),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              SegmentedButton<bool>(
+                                segments: const [
+                                  ButtonSegment(
+                                    value: false,
+                                    label: Text(
+                                        'Hasta el día ${ClubConfig.diaVencimientoCuota}'),
+                                  ),
+                                  ButtonSegment(
+                                    value: true,
+                                    label: Text('Otra fecha'),
+                                  ),
+                                ],
+                                selected: {_plazoPropio},
+                                showSelectedIcon: false,
+                                onSelectionChanged: (v) =>
+                                    setState(() => _plazoPropio = v.first),
+                              ),
+                              if (_plazoPropio) ...[
+                                const SizedBox(height: AppSpacing.sm),
+                                OutlinedButton.icon(
+                                  icon: const Icon(Icons.event),
+                                  label: Text(
+                                      'Pagar antes del ${fechaFormat.format(_vence)}'),
+                                  onPressed: () async {
+                                    final f = await showDatePicker(
+                                      context: context,
+                                      initialDate: _vence,
+                                      firstDate: DateTime(2024),
+                                      lastDate: DateTime.now()
+                                          .add(const Duration(days: 365)),
+                                    );
+                                    if (f != null) setState(() => _vence = f);
+                                  },
+                                ),
+                              ],
+                              const SizedBox(height: AppSpacing.sm),
+                              Text(
+                                _plazoPropio
+                                    ? 'No saldrá como vencida hasta pasada esa fecha.'
+                                    : 'Pasado el día ${ClubConfig.diaVencimientoCuota} del mes saldrá como vencida.',
+                                style: t.bodySmall,
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                       const SectionHeader('Importe'),
                       Card(

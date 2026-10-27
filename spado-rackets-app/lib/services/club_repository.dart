@@ -591,6 +591,7 @@ class ClubRepository {
   Future<int> generarCuotas({
     required String periodo,
     required List<CuotaNueva> cuotas,
+    DateTime? vence,
   }) async {
     final existentes = await idsDeCuotas(periodo);
     final batch = Refs.db.batch();
@@ -608,6 +609,7 @@ class ClubRepository {
         'importe': c.importe,
         'moneda': ClubConfig.monedaPorDefecto.wire,
         'estado': EstadoPago.pendiente.wire,
+        if (vence != null) 'venceEn': claveFecha(vence),
         'creadoEn': FieldValue.serverTimestamp(),
       });
       creadas++;
@@ -744,6 +746,12 @@ class ClubRepository {
   Future<void> actualizarImporteCuota(Pago pago, double importe) =>
       Refs.pagos.doc(pago.id).update({'importe': importe});
 
+  /// Dirección: plazo propio de una cuota (`null` = el del día 5 del mes).
+  Future<void> actualizarPlazoCuota(Pago pago, DateTime? vence) =>
+      Refs.pagos.doc(pago.id).update({
+        'venceEn': vence == null ? FieldValue.delete() : claveFecha(vence),
+      });
+
   /// Dirección: elimina una cuota y su justificante, si lo tiene.
   Future<void> eliminarCuota(Pago pago) async {
     await Refs.pagos.doc(pago.id).delete();
@@ -800,7 +808,11 @@ class ClubRepository {
       Refs.ajustesClub().set({
         'cuentas': [for (final c in cuentas) c.toMap()],
         'instrucciones': instrucciones.trim(),
-      });
+      }, SetOptions(merge: true));
+
+  /// `off`, `aviso` o `auto`: qué hace el servidor el día 1 de cada mes.
+  Future<void> guardarModoCuotas(String modo) =>
+      Refs.ajustesClub().set({'cuotasAuto': modo}, SetOptions(merge: true));
 
   // ----------------------------------------------------------------- chat
 

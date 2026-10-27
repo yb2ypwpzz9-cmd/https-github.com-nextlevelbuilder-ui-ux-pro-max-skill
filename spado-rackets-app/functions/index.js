@@ -18,6 +18,7 @@ import { getMessaging } from 'firebase-admin/messaging';
 import { getStorage } from 'firebase-admin/storage';
 import { onDocumentWritten, onDocumentCreated } from 'firebase-functions/v2/firestore';
 import { onCall, HttpsError } from 'firebase-functions/v2/https';
+import { onSchedule } from 'firebase-functions/v2/scheduler';
 import { setGlobalOptions } from 'firebase-functions/v2';
 import { logger } from 'firebase-functions';
 import { randomInt } from 'node:crypto';
@@ -749,12 +750,103 @@ export const avisarCuotaNueva = onDocumentCreated('pagos/{id}', async (event) =>
   const p = event.data?.data();
   if (p?.historico) return; // cargada del histórico: no se avisa
   if (!p?.familiaUid) return; // aún sin cuenta: se avisará al asociarla en la app
+  const vence = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(p.venceEn ?? ''));
   await notificar([p.familiaUid], {
     title: 'Nueva cuota',
-    body: 'Tienes una cuota nueva. Plazo: hasta el día 5.',
+    body: vence
+      ? `Tienes una cuota nueva. Plazo: hasta el ${vence[3]}/${vence[2]}/${vence[1]}.`
+      : 'Tienes una cuota nueva. Plazo: hasta el día 5.',
     data: { tipo: 'cuota' },
   });
 });
+
+const MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio',
+  'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+
+/** Año y mes (`yyyy-MM`) de hoy en la hora de República Dominicana. */
+function periodoActualDelClub() {
+  const partes = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'America/Santo_Domingo', year: 'numeric', month: '2-digit',
+  }).formatToParts(new Date());
+  const anio = partes.find((x) => x.type === 'year').value;
+  const mes = partes.find((x) => x.type === 'month').value;
+  return `${anio}-${mes}`;
+}
+
+/**
+ * El día 1 de cada mes, a las 8:00 de República Dominicana, según lo que
+ * Dirección haya elegido en Pagos → Cuotas automáticas:
+ *   off   → no hace nada (Dirección las genera a mano).
+ *   aviso → avisa a Dirección para que las genere ella.
+ *   auto  → genera la cuota de cada persona activa con cuota asignada. Nunca
+ *           toca una cuota que ya exista. Cada cuota nueva avisa a su familia
+ *           (`avisarCuotaNueva`).
+ */
+export const cuotasMensuales = onSchedule(
+  { schedule: '0 8 1 * *', timeZone: 'America/Santo_Domingo' },
+  async () => {
+    const modo = (await db.doc('ajustes/club').get()).get('cuotasAuto') ?? 'off';
+    if (modo !== 'aviso' && modo !== 'auto') return;
+
+    const periodo = periodoActualDelClub();
+    const etiqueta = `${MESES[Number(periodo.slice(5)) - 1]} ${periodo.slice(0, 4)}`;
+
+    if (modo === 'aviso') {
+      await notificar(await uidsDireccion(), {
+        title: 'Cuotas del mes',
+        body: `Empieza ${etiqueta}: genera las cuotas desde Pagos.`,
+        data: { tipo: 'cuota' },
+      });
+      return;
+    }
+
+    const [alumnas, existentes] = await Promise.all([
+      db.collection('alumnas').get(),
+      db.collection('pagos').where('periodo', '==', periodo).get(),
+    ]);
+    const yaTienen = new Set(existentes.docs.map((d) => d.id));
+
+    const nuevas = [];
+    for (const a of alumnas.docs) {
+      const importe = Number(a.get('cuotaMensual') ?? 0);
+      const id = `${a.id}_${periodo}`;
+      if (a.get('activa') === false || !(importe > 0) || yaTienen.has(id)) continue;
+      nuevas.push({
+        id,
+        datos: {
+          alumnaId: a.id,
+          alumnaNombre: String(a.get('nombre') ?? ''),
+          grupo: String(a.get('grupo') ?? ''),
+          familiaUid: String(a.get('familiaUid') ?? ''),
+          periodo,
+          concepto: 'Cuota mensual',
+          importe,
+          moneda: 'USD',
+          estado: 'pendiente',
+          generadaAuto: true,
+          creadoEn: FieldValue.serverTimestamp(),
+        },
+      });
+    }
+
+    for (let i = 0; i < nuevas.length; i += 400) {
+      const batch = db.batch();
+      for (const n of nuevas.slice(i, i + 400)) {
+        batch.create(db.doc(`pagos/${n.id}`), n.datos);
+      }
+      await batch.commit();
+    }
+    logger.info(`Cuotas automáticas de ${periodo}: ${nuevas.length} creadas.`);
+
+    await notificar(await uidsDireccion(), {
+      title: 'Cuotas generadas',
+      body: nuevas.length === 0
+        ? `No había cuotas nuevas para ${etiqueta}.`
+        : `Se generaron ${nuevas.length} cuotas de ${etiqueta}.`,
+      data: { tipo: 'cuota' },
+    });
+  },
+);
 
 /** Avisa a la familia cuando se valida o rechaza su pago, y a Dirección
  *  cuando llega un justificante nuevo. */

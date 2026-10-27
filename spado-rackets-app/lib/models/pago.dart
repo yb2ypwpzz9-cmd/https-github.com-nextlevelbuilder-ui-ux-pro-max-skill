@@ -57,6 +57,7 @@ class Pago {
     this.registradoAMano = false,
     this.metodo,
     this.historico = false,
+    this.venceEn,
   });
 
   final String id;
@@ -88,6 +89,9 @@ class Pago {
   /// Cuota de un mes anterior cargada por Dirección (nunca se avisó a la familia).
   final bool historico;
 
+  /// Plazo propio de esta cuota. Sin él, vale el día 5 del mes.
+  final DateTime? venceEn;
+
   static String idPara(String alumnaId, String periodo) => '${alumnaId}_$periodo';
 
   factory Pago.fromDoc(DocumentSnapshot<Json> doc) {
@@ -113,6 +117,7 @@ class Pago {
       registradoAMano: (data['registradoAMano'] as bool?) ?? false,
       metodo: data['metodo'] as String?,
       historico: (data['historico'] as bool?) ?? false,
+      venceEn: _fechaClaveODoc(data['venceEn']),
     );
   }
 
@@ -140,6 +145,7 @@ class Pago {
   }
 
   DateTime? get fechaLimite {
+    if (venceEn != null) return venceEn;
     final inicio = inicioPeriodo;
     if (inicio == null) return null;
     return DateTime(inicio.year, inicio.month, ClubConfig.diaVencimientoCuota);
@@ -155,6 +161,15 @@ class Pago {
   }
 
   String get periodoLabel => etiquetaPeriodo(periodo);
+}
+
+/// `yyyy-MM-dd` → fecha; cualquier otra cosa → `null`.
+DateTime? _fechaClaveODoc(Object? v) {
+  if (v is! String) return null;
+  final m = RegExp(r'^(\d{4})-(\d{2})-(\d{2})$').firstMatch(v);
+  if (m == null) return null;
+  return DateTime(int.parse(m.group(1)!), int.parse(m.group(2)!),
+      int.parse(m.group(3)!));
 }
 
 final _mesAnio = DateFormat('MMMM y', 'es');
@@ -223,7 +238,11 @@ class CuentaBancaria {
 
 /// Documento `ajustes/club`.
 class AjustesClub {
-  const AjustesClub({this.cuentas = const [], this.instrucciones = ''});
+  const AjustesClub({
+    this.cuentas = const [],
+    this.instrucciones = '',
+    this.cuotasAuto = 'off',
+  });
 
   /// Cuentas oficiales del club. Se muestran mientras Dirección no haya
   /// guardado otras desde la app (Más → Datos bancarios).
@@ -256,6 +275,10 @@ class AjustesClub {
   /// en el concepto de la transferencia.
   final String instrucciones;
 
+  /// Qué pasa el día 1 de cada mes: `off` (Dirección las genera a mano),
+  /// `aviso` (se avisa a Dirección) o `auto` (se generan solas).
+  final String cuotasAuto;
+
   bool get tieneCuentas => cuentas.isNotEmpty;
 
   factory AjustesClub.fromDoc(DocumentSnapshot<Json> doc) {
@@ -264,7 +287,9 @@ class AjustesClub {
       for (final c in (data['cuentas'] as List<dynamic>? ?? const []))
         if (c is Map) CuentaBancaria.fromMap(c),
     ];
+    final auto = data['cuotasAuto'];
     return AjustesClub(
+      cuotasAuto: auto == 'auto' || auto == 'aviso' ? auto as String : 'off',
       cuentas: cuentas.isEmpty ? cuentasOficiales : cuentas,
       instrucciones: cuentas.isEmpty
           ? instruccionesOficiales

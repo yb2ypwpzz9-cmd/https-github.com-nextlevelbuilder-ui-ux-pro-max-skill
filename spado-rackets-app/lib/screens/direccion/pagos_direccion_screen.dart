@@ -28,6 +28,71 @@ class _PagosDireccionScreenState extends State<PagosDireccionScreen> {
 
   String get _periodo => periodoDe(_mes);
 
+  Future<void> _cuotasAutomaticas(BuildContext context) async {
+    final repo = context.read<ClubRepository>();
+    final actual = (await repo.watchAjustes().first).cuotasAuto;
+    if (!context.mounted) return;
+    final elegido = await showDialog<String>(
+      context: context,
+      builder: (context) {
+        var valor = actual;
+        return StatefulBuilder(
+          builder: (context, setLocal) => AlertDialog(
+            title: const Text('Cuotas de cada mes'),
+            content: SingleChildScrollView(
+              child: RadioGroup<String>(
+                groupValue: valor,
+                onChanged: (v) => setLocal(() => valor = v ?? valor),
+                child: const Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    RadioListTile<String>(
+                      value: 'off',
+                      title: Text('A mano'),
+                      subtitle: Text('Tú las generas desde Pagos.'),
+                    ),
+                    RadioListTile<String>(
+                      value: 'aviso',
+                      title: Text('Avisarme el día 1'),
+                      subtitle: Text(
+                          'Te llega un aviso y las generas tú tras revisarlas.'),
+                    ),
+                    RadioListTile<String>(
+                      value: 'auto',
+                      title: Text('Generarlas solas el día 1'),
+                      subtitle: Text(
+                          'A todo el alumnado activo con cuota, con plazo hasta el día 5. Las familias reciben el aviso.'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Cancelar'),
+              ),
+              FilledButton(
+                style: FilledButton.styleFrom(minimumSize: const Size(0, 44)),
+                onPressed: () => Navigator.pop(context, valor),
+                child: const Text('Guardar'),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+    if (elegido == null || elegido == actual || !context.mounted) return;
+    try {
+      await repo.guardarModoCuotas(elegido);
+      if (context.mounted) showAppSnackBar(context, 'Guardado.');
+    } catch (_) {
+      if (context.mounted) {
+        showAppSnackBar(context, 'No se pudo guardar.', isError: true);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final repo = context.read<ClubRepository>();
@@ -114,13 +179,20 @@ class _PagosDireccionScreenState extends State<PagosDireccionScreen> {
                   ],
                 }),
               ),
-              Align(
-                alignment: Alignment.centerRight,
-                child: TextButton.icon(
-                  onPressed: () => context.push('/historico'),
-                  icon: const Icon(Icons.history, size: 18),
-                  label: const Text('Cargar histórico (Excel)'),
-                ),
+              Wrap(
+                alignment: WrapAlignment.end,
+                children: [
+                  TextButton.icon(
+                    onPressed: () => _cuotasAutomaticas(context),
+                    icon: const Icon(Icons.autorenew, size: 18),
+                    label: const Text('Cuotas automáticas'),
+                  ),
+                  TextButton.icon(
+                    onPressed: () => context.push('/historico'),
+                    icon: const Icon(Icons.history, size: 18),
+                    label: const Text('Cargar histórico (Excel)'),
+                  ),
+                ],
               ),
               const SizedBox(height: AppSpacing.sm),
               if (pagos.isEmpty)
@@ -295,6 +367,49 @@ class _RevisarPagoState extends State<_RevisarPago> {
         'Importe actualizado.');
   }
 
+  Future<void> _cambiarPlazo() async {
+    final repo = context.read<ClubRepository>();
+    final actual = widget.pago.fechaLimite;
+    final eleccion = await showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Plazo de pago'),
+        content: Text(actual == null
+            ? 'Esta cuota no tiene plazo.'
+            : 'Ahora vence el ${fechaFormat.format(actual)}.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, 'normal'),
+            child: const Text('Normal (día ${ClubConfig.diaVencimientoCuota})'),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(minimumSize: const Size(0, 44)),
+            onPressed: () => Navigator.pop(context, 'fecha'),
+            child: const Text('Elegir fecha'),
+          ),
+        ],
+      ),
+    );
+    if (eleccion == null || !mounted) return;
+    if (eleccion == 'normal') {
+      await _hacer(() => repo.actualizarPlazoCuota(widget.pago, null),
+          'Plazo normal restaurado.');
+      return;
+    }
+    final hoy = DateTime.now();
+    final f = await showDatePicker(
+      context: context,
+      initialDate: actual != null && actual.isAfter(hoy)
+          ? actual
+          : hoy.add(const Duration(days: 5)),
+      firstDate: DateTime(2024),
+      lastDate: hoy.add(const Duration(days: 365)),
+    );
+    if (f == null) return;
+    await _hacer(() => repo.actualizarPlazoCuota(widget.pago, f),
+        'Plazo cambiado al ${fechaFormat.format(f)}.');
+  }
+
   Future<void> _eliminar() async {
     final repo = context.read<ClubRepository>();
     final ok = await confirmar(
@@ -458,6 +573,13 @@ class _RevisarPagoState extends State<_RevisarPago> {
               child: const Text('Deshacer: volver a pendiente'),
             ),
           const Divider(height: AppSpacing.lg),
+          if (p.necesitaAccionFamilia)
+            TextButton.icon(
+              style: TextButton.styleFrom(minimumSize: const Size(0, 44)),
+              onPressed: _ocupado ? null : _cambiarPlazo,
+              icon: const Icon(Icons.event_outlined, size: 18),
+              label: const Text('Cambiar plazo de pago'),
+            ),
           Row(
             children: [
               Expanded(
