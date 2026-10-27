@@ -35,7 +35,9 @@ class _AvisoNotificacionesState extends State<AvisoNotificaciones> {
               'del navegador.',
       isError: !ok,
     );
-    setState(() => _estado = _push.estado());
+    setState(() {
+      _estado = _push.estado();
+    });
   }
 
   @override
@@ -74,7 +76,10 @@ class _AvisoNotificacionesState extends State<AvisoNotificaciones> {
           child: InlineNotice(
             icon: Icons.notifications_active_outlined,
             message: texto,
-            action: Row(
+            action: Wrap(
+              spacing: AppSpacing.sm,
+              runSpacing: AppSpacing.xs,
+              crossAxisAlignment: WrapCrossAlignment.center,
               children: [
                 if (accion != null)
                   FilledButton(
