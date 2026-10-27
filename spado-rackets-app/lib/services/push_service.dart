@@ -32,6 +32,15 @@ enum EstadoPush {
 /// En una pestaña normal no llegan; el contador de mensajes sí funciona.
 class PushService {
   String? _uid;
+
+  /// Último estado conocido. Se calcula al arrancar la app para que las
+  /// pantallas de inicio lo tengan ya resuelto al pintarse y la tarjeta de
+  /// avisos no aparezca de golpe moviendo lo que hay debajo del dedo.
+  final ValueNotifier<EstadoPush?> estadoActual = ValueNotifier(null);
+
+  Future<void> refrescarEstado() async {
+    estadoActual.value = await estado();
+  }
   StreamSubscription<String>? _refreshSub;
 
   bool get disponible => ClubConfig.vapidKey.isNotEmpty;

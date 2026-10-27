@@ -73,9 +73,9 @@ class _FamiliaHomeScreenState extends State<FamiliaHomeScreen> {
                 ),
                 const SizedBox(height: AppSpacing.md),
               ],
-              const AvisoNotificaciones(),
               _Cabecera(alumna: alumna, familia: user),
               const SizedBox(height: AppSpacing.md),
+              const AvisoNotificaciones(),
               if (alumna.fotoPath == null) ...[
                 _AvisoFoto(alumna: alumna),
                 const SizedBox(height: AppSpacing.md),

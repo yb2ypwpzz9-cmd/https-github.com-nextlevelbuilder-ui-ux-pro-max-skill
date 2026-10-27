@@ -34,9 +34,16 @@ class AuthFrame extends StatelessWidget {
           Expanded(
             child: SafeArea(
               bottom: false,
-              child: Center(
+              // Arriba y no centrado: al abrirse o cerrarse el teclado, un
+              // contenido centrado se desplaza y el botón se aparta justo
+              // cuando el dedo llega, y hacía falta un segundo toque.
+              child: Align(
+                alignment: Alignment.topCenter,
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(AppSpacing.md),
+                  keyboardDismissBehavior:
+                      ScrollViewKeyboardDismissBehavior.onDrag,
+                  padding: const EdgeInsets.fromLTRB(
+                      AppSpacing.md, AppSpacing.lg, AppSpacing.md, AppSpacing.md),
                   child: ConstrainedBox(
                     constraints: const BoxConstraints(maxWidth: 420),
                     child: Column(

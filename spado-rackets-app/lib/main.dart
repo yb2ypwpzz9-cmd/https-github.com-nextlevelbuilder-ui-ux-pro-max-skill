@@ -65,7 +65,7 @@ Future<void> main() async {
     );
   } catch (_) {}
 
-  runApp(SpadoRacketsApp(pushService: PushService()));
+  runApp(SpadoRacketsApp(pushService: PushService()..refrescarEstado()));
 }
 
 /// `flutter run -d chrome --dart-define=EMULADOR=true` trabaja contra los

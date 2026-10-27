@@ -97,7 +97,6 @@ class _Contenido extends StatelessWidget {
 
     return PageBody(
       children: [
-        const AvisoNotificaciones(),
         Text(capitalizar(fechaLargaFormat.format(hoy)), style: t.bodySmall),
         Text('Hola, ${user.nombreVisible.split(' ').first}',
             style: t.headlineSmall),
@@ -131,6 +130,8 @@ class _Contenido extends StatelessWidget {
             onTap: () => irA('Pagos'),
           ),
         ]),
+        const SizedBox(height: AppSpacing.md),
+        const AvisoNotificaciones(),
         if (enRevision.isNotEmpty) ...[
           const SectionHeader(
             'Por revisar',

@@ -36,8 +36,9 @@ class StaffHomeScreen extends StatelessWidget {
             style: Theme.of(context).textTheme.headlineSmall,
           ),
           const SizedBox(height: AppSpacing.md),
-          const AvisoNotificaciones(),
           const FichajePanel(),
+          const SizedBox(height: AppSpacing.md),
+          const AvisoNotificaciones(),
           SectionHeader(
             'Clases de hoy',
             subtitle: capitalizar(fechaLargaFormat.format(hoy)),

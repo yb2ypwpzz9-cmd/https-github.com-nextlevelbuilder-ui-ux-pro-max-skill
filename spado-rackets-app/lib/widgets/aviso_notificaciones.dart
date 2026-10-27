@@ -11,6 +11,9 @@ import 'instalar_app.dart';
 /// navegadores solo dejan pedir el permiso tras un toque, así que no puede
 /// salir sola: sin esta tarjeta nadie se enteraba de que había que activarlo.
 /// Desaparece cuando los avisos ya están activos.
+///
+/// Se coloca debajo del primer bloque de cada inicio, no arriba del todo: si
+/// aparece tarde, no empuja hacia abajo botones que la persona ya va a pulsar.
 class AvisoNotificaciones extends StatefulWidget {
   const AvisoNotificaciones({super.key});
 
@@ -20,13 +23,27 @@ class AvisoNotificaciones extends StatefulWidget {
 
 class _AvisoNotificacionesState extends State<AvisoNotificaciones> {
   late final PushService _push = context.read<PushService>();
-  late Future<EstadoPush> _estado = _push.estado();
   bool _oculto = false;
+  bool _ocupado = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (_push.estadoActual.value == null) _push.refrescarEstado();
+  }
 
   Future<void> _activar() async {
+    if (_ocupado) return;
     final uid = context.read<SessionController>().appUser!.uid;
+    setState(() {
+      _ocupado = true;
+    });
     final ok = await _push.activar(uid);
+    await _push.refrescarEstado();
     if (!mounted) return;
+    setState(() {
+      _ocupado = false;
+    });
     showAppSnackBar(
       context,
       ok
@@ -35,18 +52,14 @@ class _AvisoNotificacionesState extends State<AvisoNotificaciones> {
               'del navegador.',
       isError: !ok,
     );
-    setState(() {
-      _estado = _push.estado();
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     if (_oculto) return const SizedBox.shrink();
-    return FutureBuilder<EstadoPush>(
-      future: _estado,
-      builder: (context, snap) {
-        final estado = snap.data;
+    return ValueListenableBuilder<EstadoPush?>(
+      valueListenable: _push.estadoActual,
+      builder: (context, estado, _) {
         if (estado == null || estado == EstadoPush.activo) {
           return const SizedBox.shrink();
         }
@@ -83,9 +96,19 @@ class _AvisoNotificacionesState extends State<AvisoNotificaciones> {
               children: [
                 if (accion != null)
                   FilledButton(
-                    style: FilledButton.styleFrom(minimumSize: const Size(0, 40)),
-                    onPressed: accion,
-                    child: Text(etiqueta),
+                    style:
+                        FilledButton.styleFrom(minimumSize: const Size(0, 44)),
+                    onPressed: _ocupado ? null : accion,
+                    child: _ocupado
+                        ? const SizedBox(
+                            width: 18,
+                            height: 18,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white,
+                            ),
+                          )
+                        : Text(etiqueta),
                   ),
                 TextButton(
                   onPressed: () => setState(() => _oculto = true),
