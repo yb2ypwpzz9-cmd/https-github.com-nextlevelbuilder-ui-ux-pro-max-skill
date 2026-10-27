@@ -22,7 +22,7 @@ class _PushFalso extends PushService {
   }
 }
 
-Future<void> montar(WidgetTester tester, _PushFalso push) async {
+Future<void> montar(WidgetTester tester, PushService push) async {
   tester.view.physicalSize = const Size(390 * 3, 844 * 3);
   tester.view.devicePixelRatio = 3;
   addTearDown(tester.view.reset);
