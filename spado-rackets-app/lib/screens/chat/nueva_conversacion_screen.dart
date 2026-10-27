@@ -86,6 +86,16 @@ class _NuevaConversacionScreenState extends State<NuevaConversacionScreen> {
         final c = peso(a).compareTo(peso(b));
         return c != 0 ? c : a.nombre.compareTo(b.nombre);
       });
+    // Alumnado cuya familia aún no tiene cuenta: no hay a quién escribir, y se
+    // dice, para que no parezca que la búsqueda falla.
+    final sinCuenta = !yo.role.isDireccion || q.isEmpty
+        ? const <Alumna>[]
+        : alumnas
+            .where((a) =>
+                a.activa &&
+                a.familiaUid == null &&
+                a.nombre.toLowerCase().contains(q))
+            .toList();
     return PageBody(
       children: [
         TextField(
@@ -98,13 +108,13 @@ class _NuevaConversacionScreenState extends State<NuevaConversacionScreen> {
           onChanged: (v) => setState(() => _busqueda = v),
         ),
         const SizedBox(height: 12),
-        if (lista.isEmpty)
+        if (lista.isEmpty && sinCuenta.isEmpty)
           const EmptyState(
             compacto: true,
             icon: Icons.person_search_outlined,
             title: 'Nadie coincide con la búsqueda',
           )
-        else
+        else if (lista.isNotEmpty)
           CardList(
             children: [
               for (final p in lista)
@@ -136,6 +146,23 @@ class _NuevaConversacionScreenState extends State<NuevaConversacionScreen> {
                 ),
             ],
           ),
+        if (sinCuenta.isNotEmpty) ...[
+          const SectionHeader('Familias sin cuenta todavía'),
+          CardList(
+            children: [
+              for (final a in sinCuenta)
+                ListTile(
+                  enabled: false,
+                  leading: Avatar(inicialesDe(a.nombre)),
+                  title: Text(a.nombre),
+                  subtitle: const Text(
+                    'Su familia aún no se ha registrado. Envíale la '
+                    'invitación desde Alumnado y códigos.',
+                  ),
+                ),
+            ],
+          ),
+        ],
       ],
     );
   }
