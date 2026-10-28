@@ -19,6 +19,8 @@ import { getStorage } from 'firebase-admin/storage';
 import { onDocumentWritten, onDocumentCreated } from 'firebase-functions/v2/firestore';
 import { onCall, HttpsError } from 'firebase-functions/v2/https';
 import { onSchedule } from 'firebase-functions/v2/scheduler';
+import { onMessagePublished } from 'firebase-functions/v2/pubsub';
+import { GoogleAuth } from 'google-auth-library';
 import { setGlobalOptions } from 'firebase-functions/v2';
 import { logger } from 'firebase-functions';
 import { randomInt } from 'node:crypto';
@@ -912,4 +914,53 @@ export const avisarAusencia = onDocumentCreated('ausencias/{id}', async (event) 
     body: 'Una familia ha avisado de una falta. Míralo en la app.',
     data: { tipo: 'ausencia' },
   });
+});
+
+
+// ------------------------------------------------------- corte de gasto
+
+/** Nombre exacto del presupuesto que corta el servicio al llegar a su importe. */
+const PRESUPUESTO_DE_CORTE = 'Corte Rackets';
+
+/** ¿Hay que cortar? Solo con el presupuesto de corte y gasto >= importe. */
+export function debeCortar(msg) {
+  if (!msg || msg.budgetDisplayName !== PRESUPUESTO_DE_CORTE) return false;
+  const gasto = Number(msg.costAmount);
+  const tope = Number(msg.budgetAmount);
+  return Number.isFinite(gasto) && Number.isFinite(tope) && tope > 0 && gasto >= tope;
+}
+
+/**
+ * Último recurso contra un gasto desbocado. El presupuesto "Corte Rackets" (en
+ * Facturación) publica aquí su gasto cada pocas horas; al llegar al tope se
+ * quita la facturación a ESTE proyecto, y con ella se paran todos sus
+ * servicios, incluidos los gratuitos. Hay un retraso entre gastar y que llegue
+ * el aviso, así que el tope no es exacto: se pone bajo lo que se está dispuesto
+ * a perder. Para reactivar: Facturación → vincular de nuevo la cuenta al proyecto.
+ */
+export const cortarGasto = onMessagePublished('presupuesto-rackets', async (event) => {
+  const msg = event.data.message.json;
+  if (!debeCortar(msg)) {
+    logger.info(`Presupuesto ${msg?.budgetDisplayName}: ${msg?.costAmount} de ${msg?.budgetAmount}, sin corte.`);
+    return;
+  }
+  const proyecto = process.env.GCLOUD_PROJECT;
+  logger.error(`CORTE: gasto ${msg.costAmount} >= ${msg.budgetAmount}. Se quita la facturación de ${proyecto}.`);
+  try {
+    await notificar(await uidsDireccion(), {
+      title: 'Límite de gasto alcanzado',
+      body: 'Se suspende el servicio para evitar más gasto. Revisa Facturación.',
+      data: { tipo: 'sistema' },
+    });
+  } catch (e) {
+    logger.warn('No se pudo avisar antes del corte', e);
+  }
+  const auth = new GoogleAuth({ scopes: ['https://www.googleapis.com/auth/cloud-billing'] });
+  const cliente = await auth.getClient();
+  await cliente.request({
+    url: `https://cloudbilling.googleapis.com/v1/projects/${proyecto}/billingInfo`,
+    method: 'PUT',
+    data: { billingAccountName: '' },
+  });
+  logger.error(`Facturación desactivada en ${proyecto}.`);
 });

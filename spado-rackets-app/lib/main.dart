@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -49,6 +50,16 @@ Future<void> main() async {
   } catch (error) {
     runApp(PantallaDeArranqueRoto(motivo: '$error'));
     return;
+  }
+
+  // App Check: demuestra al servidor que las peticiones vienen de esta app y
+  // no de un script. Si falla o no hay clave, la app sigue como siempre.
+  if (!_usarEmulador && ClubConfig.appCheckKey.isNotEmpty) {
+    try {
+      await FirebaseAppCheck.instance.activate(
+        webProvider: ReCaptchaV3Provider(ClubConfig.appCheckKey),
+      );
+    } catch (_) {}
   }
 
   // Caché local: segunda visita instantánea y la app sigue funcionando con
