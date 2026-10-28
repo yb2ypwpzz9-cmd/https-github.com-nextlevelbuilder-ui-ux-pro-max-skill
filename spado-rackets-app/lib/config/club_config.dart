@@ -29,9 +29,8 @@ abstract final class ClubConfig {
   static const vapidKey =
       'BPgfdfBQjhgb-lhw4X0jVlN6ZqfX2cOwoXmUHQ7X6ZcACebapfndsXl_twkm1_PPBnWDWZKjcROAhh1Tnh8fQrs';
 
-  /// Clave pública de reCAPTCHA v3 para Firebase App Check (consola de
-  /// Firebase → App Check → app web → reCAPTCHA). Vacía = App Check apagado y
-  /// la app funciona igual.
+  /// Clave de sitio de reCAPTCHA Enterprise (Fraud Defense) para Firebase App
+  /// Check. Es pública. Vacía = App Check apagado y la app funciona igual.
   static const appCheckKey = '6LdbOgUuAAAAABOThBzWJnELmyG4mMMEY3CCDXHU';
 
   /// El fichaje exige ubicación, como en Spado Soccer: un fichaje sin posición

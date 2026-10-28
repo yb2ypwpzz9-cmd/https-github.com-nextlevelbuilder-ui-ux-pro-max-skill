@@ -57,7 +57,7 @@ Future<void> main() async {
   if (!_usarEmulador && ClubConfig.appCheckKey.isNotEmpty) {
     try {
       await FirebaseAppCheck.instance.activate(
-        webProvider: ReCaptchaV3Provider(ClubConfig.appCheckKey),
+        webProvider: ReCaptchaEnterpriseProvider(ClubConfig.appCheckKey),
       );
     } catch (_) {}
   }
