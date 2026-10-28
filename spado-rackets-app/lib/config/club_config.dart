@@ -32,7 +32,7 @@ abstract final class ClubConfig {
   /// Clave pública de reCAPTCHA v3 para Firebase App Check (consola de
   /// Firebase → App Check → app web → reCAPTCHA). Vacía = App Check apagado y
   /// la app funciona igual.
-  static const appCheckKey = '';
+  static const appCheckKey = '6LdbOgUuAAAAABOThBzWJnELmyG4mMMEY3CCDXHU';
 
   /// El fichaje exige ubicación, como en Spado Soccer: un fichaje sin posición
   /// no demuestra que el entrenador estuviera en la pista.
