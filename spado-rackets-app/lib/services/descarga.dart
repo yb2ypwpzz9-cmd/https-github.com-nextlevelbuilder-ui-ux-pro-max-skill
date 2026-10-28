@@ -95,3 +95,25 @@ double margenInferiorDelSistema() {
     return 0;
   }
 }
+
+/// Datos de la pantalla del navegador, para diagnosticar toques desplazados:
+/// si el zoom no es 1 o el visor está desplazado, lo que se ve y lo que se
+/// toca no coinciden.
+String diagnosticoPantalla() {
+  try {
+    final vv = web.window.visualViewport;
+    final instalada =
+        web.window.matchMedia('(display-mode: standalone)').matches;
+    return [
+      'Versión: ${const String.fromEnvironment('APP_VERSION', defaultValue: 'local')}',
+      'Modo: ${instalada ? 'app instalada' : 'navegador'}',
+      'Pantalla: ${(web.window.innerWidth as JSNumber).toDartInt} × ${(web.window.innerHeight as JSNumber).toDartInt}',
+      if (vv != null) 'Zoom: ${vv.scale.toStringAsFixed(2)} (debe ser 1.00)',
+      if (vv != null)
+        'Visor desplazado: ${vv.offsetLeft.toStringAsFixed(0)}, ${vv.offsetTop.toStringAsFixed(0)} (debe ser 0, 0)',
+      'Margen inferior del sistema: ${margenInferiorDelSistema().toStringAsFixed(0)}',
+    ].join('\n');
+  } catch (e) {
+    return 'No se pudo leer: $e';
+  }
+}

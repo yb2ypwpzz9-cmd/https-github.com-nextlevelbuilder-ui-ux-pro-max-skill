@@ -27,6 +27,7 @@
     html, body { margin: 0; height: 100%; background: #082A47; }
     /* Comportamiento de app: sin rebote ni "tirar para recargar", sin
        resaltado al tocar y sin que el móvil cambie el tamaño del texto. */
+    html, body { touch-action: manipulation; }
     html, body { overscroll-behavior: none; -webkit-text-size-adjust: 100%;
       -webkit-tap-highlight-color: transparent; -webkit-touch-callout: none; }
     #splash { position: fixed; inset: 0; display: flex; flex-direction: column;
@@ -45,6 +46,7 @@
     <img src="splash_logo.png" alt="Spado Rackets">
     <div class="bar"></div>
   </div>
+  <script src="ajustes_tactil.js"></script>
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>

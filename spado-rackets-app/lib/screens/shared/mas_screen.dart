@@ -110,6 +110,24 @@ class MasScreen extends StatelessWidget {
               onTap: () => recargarApp(),
             ),
             ListTile(
+              leading: const Icon(Icons.speed, color: AppColors.navy),
+              title: const Text('Diagnóstico de pantalla'),
+              subtitle: const Text('Para enseñar al club si un botón no responde'),
+              onTap: () => showDialog<void>(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text('Diagnóstico'),
+                  content: SelectableText(diagnosticoPantalla()),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text('Cerrar'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            ListTile(
               leading: const Icon(Icons.install_mobile, color: AppColors.navy),
               title: const Text('Instalar en el móvil'),
               subtitle: const Text('Cómo tener la app como un icono más'),
