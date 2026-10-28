@@ -18,6 +18,7 @@ import 'routing/app_router.dart';
 import 'services/auth_service.dart';
 import 'services/club_repository.dart';
 import 'services/push_service.dart';
+import 'services/descarga.dart' show margenInferiorDelSistema;
 import 'theme/app_theme.dart';
 import 'widgets/club_logo.dart';
 
@@ -105,6 +106,10 @@ class _SpadoRacketsAppState extends State<SpadoRacketsApp> {
   late final SessionController _session;
   late final GoRouter _router;
 
+  /// Franja inferior que iOS se reserva para sus gestos (0 fuera de un iPhone
+  /// instalado). Se lee una vez: la app solo se usa en vertical.
+  late final double _margenInferior = margenInferiorDelSistema();
+
   @override
   void initState() {
     super.initState();
@@ -139,6 +144,24 @@ class _SpadoRacketsAppState extends State<SpadoRacketsApp> {
         debugShowCheckedModeBanner: false,
         theme: AppTheme.light(),
         routerConfig: _router,
+        // Flutter web no sabe que el iPhone reserva abajo el indicador de
+        // inicio. Se lo decimos, para que barras y botones fijos queden por
+        // encima y no pierdan los toques.
+        builder: (context, child) {
+          final mq = MediaQuery.of(context);
+          final reservado = _margenInferior;
+          if (reservado <= mq.viewPadding.bottom || child == null) {
+            return child ?? const SizedBox.shrink();
+          }
+          final libre = (reservado - mq.viewInsets.bottom).clamp(0.0, reservado);
+          return MediaQuery(
+            data: mq.copyWith(
+              padding: mq.padding.copyWith(bottom: libre),
+              viewPadding: mq.viewPadding.copyWith(bottom: reservado),
+            ),
+            child: child,
+          );
+        },
         locale: const Locale('es'),
         supportedLocales: const [Locale('es')],
         localizationsDelegates: const [

@@ -326,14 +326,18 @@ class _BarraInferior extends StatelessWidget {
   const _BarraInferior({required this.child});
   final Widget child;
 
+  /// Margen de respaldo cuando no sabemos el de la zona del sistema.
   static const margen = 14.0;
 
   @override
   Widget build(BuildContext context) {
+    // Si la app ya conoce la franja del sistema (iPhone instalado), la propia
+    // NavigationBar la respeta; si no, se deja el margen de respaldo.
+    final conocido = MediaQuery.paddingOf(context).bottom > 0;
     return ColoredBox(
       color: AppColors.navyDeep,
       child: Padding(
-        padding: const EdgeInsets.only(bottom: margen),
+        padding: EdgeInsets.only(bottom: conocido ? 0 : margen),
         child: child,
       ),
     );

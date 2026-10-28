@@ -75,3 +75,23 @@ Future<void> recargarApp() async {
   }
   web.window.location.reload();
 }
+
+/// Alto en píxeles lógicos de la zona inferior que reserva el sistema (el
+/// indicador de inicio del iPhone, ~34). Flutter web no lo da en
+/// `MediaQuery.padding`, así que se lee del CSS `env(safe-area-inset-bottom)`.
+/// Los toques dentro de esa franja los retrasa o los cancela iOS: los botones
+/// no deben estar ahí. Fuera de un iPhone instalado vale 0.
+double margenInferiorDelSistema() {
+  try {
+    final div = web.document.createElement('div') as web.HTMLDivElement;
+    div.style.cssText = 'position:fixed;left:0;bottom:0;width:0;height:0;'
+        'visibility:hidden;padding-bottom:env(safe-area-inset-bottom)';
+    web.document.body!.append(div);
+    final texto = web.window.getComputedStyle(div).paddingBottom;
+    div.remove();
+    final valor = double.tryParse(texto.replaceAll('px', '')) ?? 0;
+    return valor.clamp(0, 80).toDouble();
+  } catch (_) {
+    return 0;
+  }
+}
