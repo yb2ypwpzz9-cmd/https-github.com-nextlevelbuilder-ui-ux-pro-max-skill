@@ -31,7 +31,15 @@ abstract final class ClubConfig {
 
   /// Clave de sitio de reCAPTCHA Enterprise (Fraud Defense) para Firebase App
   /// Check. Es pública. Vacía = App Check apagado y la app funciona igual.
-  static const appCheckKey = '6LdHEQUuAAAAAJiT9XrEyfL-k4iBh5DZnvD3QJfq';
+  ///
+  /// APAGADO a propósito (clave vacía) hasta comprobar, en un iPhone real, que
+  /// no afecta a la fluidez y que las cabeceras de seguridad dejan cargar
+  /// reCAPTCHA. Clave de sitio ya creada: 6LdHEQUuAAAAAJiT9XrEyfL-k4iBh5DZnvD3QJfq
+  static const appCheckKey = '';
+
+  /// Versión publicada (los 7 primeros caracteres del commit). La pone
+  /// Netlify al compilar; en local sale "local".
+  static const version = String.fromEnvironment('APP_VERSION', defaultValue: 'local');
 
   /// El fichaje exige ubicación, como en Spado Soccer: un fichaje sin posición
   /// no demuestra que el entrenador estuviera en la pista.

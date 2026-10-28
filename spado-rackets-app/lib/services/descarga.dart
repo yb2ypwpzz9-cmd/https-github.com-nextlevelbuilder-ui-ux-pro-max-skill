@@ -54,3 +54,24 @@ void descargarExcel(String nombre, Map<String, List<List<Object?>>> hojas) {
     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
   );
 }
+
+/// Fuerza a este dispositivo a bajar la última versión: borra el service worker
+/// y las cachés de la app y recarga la página. Es lo que hay que hacer si un
+/// móvil se queda con una versión vieja.
+Future<void> recargarApp() async {
+  try {
+    final registros =
+        (await web.window.navigator.serviceWorker.getRegistrations().toDart)
+            .toDart;
+    for (final r in registros) {
+      await r.unregister().toDart;
+    }
+    final claves = (await web.window.caches.keys().toDart).toDart;
+    for (final k in claves) {
+      await web.window.caches.delete(k.toDart).toDart;
+    }
+  } catch (_) {
+    // Si el navegador no lo permite, al menos se recarga.
+  }
+  web.window.location.reload();
+}

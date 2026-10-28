@@ -103,6 +103,13 @@ class MasScreen extends StatelessWidget {
               onTap: () => _cambiarPassword(context),
             ),
             ListTile(
+              leading: const Icon(Icons.system_update_alt, color: AppColors.navy),
+              title: const Text('Actualizar la app'),
+              subtitle: const Text('Versión ${ClubConfig.version}. Pulsa si algo no '
+                  'se ve como te han dicho.'),
+              onTap: () => recargarApp(),
+            ),
+            ListTile(
               leading: const Icon(Icons.install_mobile, color: AppColors.navy),
               title: const Text('Instalar en el móvil'),
               subtitle: const Text('Cómo tener la app como un icono más'),

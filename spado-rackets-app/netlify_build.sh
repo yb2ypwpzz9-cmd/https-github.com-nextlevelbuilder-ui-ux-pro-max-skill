@@ -15,4 +15,4 @@ export PATH="$FLUTTER_DIR/bin:$PATH"
 flutter config --no-analytics --enable-web
 flutter precache --web
 flutter pub get
-flutter build web --release
+flutter build web --release --dart-define=APP_VERSION="${COMMIT_REF:0:7}"
