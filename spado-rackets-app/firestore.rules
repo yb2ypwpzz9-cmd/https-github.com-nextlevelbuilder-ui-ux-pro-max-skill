@@ -227,6 +227,9 @@ service cloud.firestore {
         && d.get('dias', []).size() <= 7
         && d.get('horaInicio', '') is string
         && d.get('horaInicio', '').size() <= 5
+        && d.get('horarios', {}) is map
+        && d.get('horarios', {}).size() <= 7
+        && d.get('horarios', {}).keys().hasOnly(['1', '2', '3', '4', '5', '6', '7'])
         && d.get('duracionMinutos', 60) is number
         && d.get('cuotaMensual', 0) is number
         && d.get('cuotaMensual', 0) >= 0
@@ -273,7 +276,7 @@ service cloud.firestore {
       // horario del día a día); la cuota y el resto de la ficha, no.
       allow update: if isStaff()
         && enMisGrupos(resource.data.get('grupo', ''))
-        && changedKeys().hasOnly(['dias', 'horaInicio', 'duracionMinutos'])
+        && changedKeys().hasOnly(['dias', 'horaInicio', 'horarios', 'duracionMinutos'])
         && datosAlumnaValidos(alumnaId, request.resource.data);
 
       allow delete: if isDireccion();

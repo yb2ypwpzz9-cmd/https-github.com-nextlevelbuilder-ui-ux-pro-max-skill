@@ -114,6 +114,7 @@ class ClubRepository {
     TipoJugador? tipo,
     List<int> dias = const [],
     String horaInicio = '',
+    Map<int, String> horarios = const {},
     int duracionMinutos = 60,
     double cuotaMensual = 0,
     String? contactoNombre,
@@ -123,7 +124,8 @@ class ClubRepository {
     const grupo = ClubConfig.grupoGeneral;
     await asegurarGrupoGeneral();
     final alumna = Refs.alumnas.doc();
-    final fotoPath = foto == null ? null : await subirFotoAlumna(alumna.id, foto);
+    final fotoPath =
+        foto == null ? null : await subirFotoAlumna(alumna.id, foto);
     final codigo = _generarCodigo();
     final batch = Refs.db.batch()
       ..set(alumna, {
@@ -133,6 +135,7 @@ class ClubRepository {
         if (tipo != null) 'tipo': tipo.name,
         'dias': dias,
         'horaInicio': horaInicio,
+        'horarios': {for (final e in horarios.entries) '${e.key}': e.value},
         'duracionMinutos': duracionMinutos,
         'cuotaMensual': cuotaMensual,
         if ((contactoNombre ?? '').trim().isNotEmpty)
@@ -193,6 +196,7 @@ class ClubRepository {
     TipoJugador? tipo,
     List<int>? dias,
     String? horaInicio,
+    Map<int, String>? horarios,
     int? duracionMinutos,
     double? cuotaMensual,
     String? contactoNombre,
@@ -201,31 +205,34 @@ class ClubRepository {
     String? fotoPath;
     if (fotoNueva != null) fotoPath = await subirFotoAlumna(id, fotoNueva);
     await Refs.alumnas.doc(id).update({
-        if (tipo != null) 'tipo': tipo.name,
-        if (dias != null) 'dias': dias,
-        if (horaInicio != null) 'horaInicio': horaInicio,
-        if (duracionMinutos != null) 'duracionMinutos': duracionMinutos,
-        if (cuotaMensual != null) 'cuotaMensual': cuotaMensual,
-        if (contactoNombre != null)
-          'contactoNombre': contactoNombre.trim().isEmpty
-              ? FieldValue.delete()
-              : contactoNombre.trim(),
-        if (contactoTelefono != null)
-          'contactoTelefono': contactoTelefono.trim().isEmpty
-              ? FieldValue.delete()
-              : contactoTelefono.trim(),
-        if (fechaNacimiento != null)
-          'fechaNacimiento': Timestamp.fromDate(fechaNacimiento),
-        if (quitarFecha) 'fechaNacimiento': FieldValue.delete(),
-        if (nivel != null) 'nivel': nivel.name,
-        if (quitarNivel) 'nivel': FieldValue.delete(),
-        if (fotoPath != null) 'fotoPath': fotoPath,
-        if (quitarFoto && fotoPath == null) 'fotoPath': FieldValue.delete(),
-        if (emailFamilia != null) 'emailFamilia': emailFamilia.trim().toLowerCase(),
-        if (nombre != null) 'nombre': nombre.trim(),
-        if (grupo != null) 'grupo': grupo,
-        if (activa != null) 'activa': activa,
-      });
+      if (tipo != null) 'tipo': tipo.name,
+      if (dias != null) 'dias': dias,
+      if (horaInicio != null) 'horaInicio': horaInicio,
+      if (horarios != null)
+        'horarios': {for (final e in horarios.entries) '${e.key}': e.value},
+      if (duracionMinutos != null) 'duracionMinutos': duracionMinutos,
+      if (cuotaMensual != null) 'cuotaMensual': cuotaMensual,
+      if (contactoNombre != null)
+        'contactoNombre': contactoNombre.trim().isEmpty
+            ? FieldValue.delete()
+            : contactoNombre.trim(),
+      if (contactoTelefono != null)
+        'contactoTelefono': contactoTelefono.trim().isEmpty
+            ? FieldValue.delete()
+            : contactoTelefono.trim(),
+      if (fechaNacimiento != null)
+        'fechaNacimiento': Timestamp.fromDate(fechaNacimiento),
+      if (quitarFecha) 'fechaNacimiento': FieldValue.delete(),
+      if (nivel != null) 'nivel': nivel.name,
+      if (quitarNivel) 'nivel': FieldValue.delete(),
+      if (fotoPath != null) 'fotoPath': fotoPath,
+      if (quitarFoto && fotoPath == null) 'fotoPath': FieldValue.delete(),
+      if (emailFamilia != null)
+        'emailFamilia': emailFamilia.trim().toLowerCase(),
+      if (nombre != null) 'nombre': nombre.trim(),
+      if (grupo != null) 'grupo': grupo,
+      if (activa != null) 'activa': activa,
+    });
     if ((fotoNueva != null || quitarFoto) && fotoAnterior != null) {
       await borrarFotoAlumna(fotoAnterior);
     }
@@ -347,21 +354,21 @@ class ClubRepository {
           .map((s) => mapearDocs(s.docs, Asistencia.fromDoc));
 
   /// Dirección: todas las marcas desde una fecha.
-  Stream<List<Asistencia>> watchAsistenciaDesde(String desde) => Refs
-      .asistencias
-      .where('fecha', isGreaterThanOrEqualTo: desde)
-      .snapshots()
-      .map((s) => mapearDocs(s.docs, Asistencia.fromDoc));
+  Stream<List<Asistencia>> watchAsistenciaDesde(String desde) =>
+      Refs.asistencias
+          .where('fecha', isGreaterThanOrEqualTo: desde)
+          .snapshots()
+          .map((s) => mapearDocs(s.docs, Asistencia.fromDoc));
 
   /// Familia: sólo las marcas de sus hijas. El filtro por `familiaUid` es
   /// obligatorio: es lo que hace que la consulta pase las reglas.
-  Stream<List<Asistencia>> watchAsistenciaFamilia(String uid) => Refs
-      .asistencias
-      .where('familiaUid', isEqualTo: uid)
-      .orderBy('fecha', descending: true)
-      .limit(120)
-      .snapshots()
-      .map((s) => mapearDocs(s.docs, Asistencia.fromDoc));
+  Stream<List<Asistencia>> watchAsistenciaFamilia(String uid) =>
+      Refs.asistencias
+          .where('familiaUid', isEqualTo: uid)
+          .orderBy('fecha', descending: true)
+          .limit(120)
+          .snapshots()
+          .map((s) => mapearDocs(s.docs, Asistencia.fromDoc));
 
   Future<void> guardarLista({
     required String fecha,
@@ -439,8 +446,8 @@ class ClubRepository {
     return q
         .snapshots()
         .map((s) => mapearDocs(s.docs, CambioClase.fromDoc))
-        .transform(StreamTransformer<List<CambioClase>, List<CambioClase>>
-            .fromHandlers(
+        .transform(StreamTransformer<List<CambioClase>,
+            List<CambioClase>>.fromHandlers(
           handleError: (_, __, sink) => sink.add(const <CambioClase>[]),
         ));
   }
@@ -635,7 +642,9 @@ class ClubRepository {
     }
     final claves = <String>{};
     if (gastos.isNotEmpty) {
-      final desde = gastos.map((g) => g.fecha).reduce((a, b) => a.compareTo(b) < 0 ? a : b);
+      final desde = gastos
+          .map((g) => g.fecha)
+          .reduce((a, b) => a.compareTo(b) < 0 ? a : b);
       final existentes =
           await Refs.gastos.where('fecha', isGreaterThanOrEqualTo: desde).get();
       for (final d in existentes.docs) {
@@ -667,7 +676,8 @@ class ClubRepository {
             'metodo': c.efectivo ? 'efectivo' : 'transferencia',
             'registradoAMano': c.efectivo,
             'creadoEn': FieldValue.serverTimestamp(),
-            if (c.fechaPago != null) 'resueltoEn': Timestamp.fromDate(c.fechaPago!),
+            if (c.fechaPago != null)
+              'resueltoEn': Timestamp.fromDate(c.fechaPago!),
             'resueltoPor': quien.uid,
             'resueltoPorNombre': quien.nombreVisible,
           }));
@@ -816,19 +826,19 @@ class ClubRepository {
 
   // ----------------------------------------------------------------- chat
 
-  Stream<List<Conversacion>> watchConversaciones(String uid) => Refs
-      .conversaciones
-      .where('participantes', arrayContains: uid)
-      .snapshots()
-      .map((s) => mapearDocs(s.docs, Conversacion.fromDoc)
-        ..sort((a, b) {
-          // Avisos siempre arriba; el resto por último mensaje.
-          if (a.tipo == TipoConversacion.avisos) return -1;
-          if (b.tipo == TipoConversacion.avisos) return 1;
-          final fa = a.ultimoMensajeEn ?? DateTime(2000);
-          final fb = b.ultimoMensajeEn ?? DateTime(2000);
-          return fb.compareTo(fa);
-        }));
+  Stream<List<Conversacion>> watchConversaciones(String uid) =>
+      Refs.conversaciones
+          .where('participantes', arrayContains: uid)
+          .snapshots()
+          .map((s) => mapearDocs(s.docs, Conversacion.fromDoc)
+            ..sort((a, b) {
+              // Avisos siempre arriba; el resto por último mensaje.
+              if (a.tipo == TipoConversacion.avisos) return -1;
+              if (b.tipo == TipoConversacion.avisos) return 1;
+              final fa = a.ultimoMensajeEn ?? DateTime(2000);
+              final fb = b.ultimoMensajeEn ?? DateTime(2000);
+              return fb.compareTo(fa);
+            }));
 
   Stream<int> watchSinLeer(String uid) => watchConversaciones(uid)
       .map((cs) => cs.fold(0, (acc, c) => acc + c.sinLeerPara(uid)));
@@ -837,12 +847,12 @@ class ClubRepository {
       .snapshots()
       .map((d) => d.exists ? Conversacion.fromDoc(d) : null);
 
-  Stream<List<Mensaje>> watchMensajes(String conversacionId) => Refs
-      .mensajes(conversacionId)
-      .orderBy('creadoEn', descending: true)
-      .limit(200)
-      .snapshots()
-      .map((s) => mapearDocs(s.docs, Mensaje.fromDoc));
+  Stream<List<Mensaje>> watchMensajes(String conversacionId) =>
+      Refs.mensajes(conversacionId)
+          .orderBy('creadoEn', descending: true)
+          .limit(200)
+          .snapshots()
+          .map((s) => mapearDocs(s.docs, Mensaje.fromDoc));
 
   /// Personas a las que se puede escribir. Una familia sólo ve al club: la
   /// consulta lo filtra porque las reglas rechazarían cualquier otra.
@@ -851,10 +861,11 @@ class ClubRepository {
     if (yo.role.isFamilia) {
       q = q.where('rol', whereIn: ['staff', 'direccion']);
     }
-    return q.snapshots().map((s) => mapearDocs(s.docs, EntradaDirectorio.fromDoc)
-        .where((e) => e.uid != yo.uid)
-        .toList()
-      ..sort((a, b) => a.nombre.compareTo(b.nombre)));
+    return q.snapshots().map((s) =>
+        mapearDocs(s.docs, EntradaDirectorio.fromDoc)
+            .where((e) => e.uid != yo.uid)
+            .toList()
+          ..sort((a, b) => a.nombre.compareTo(b.nombre)));
   }
 
   Future<EntradaDirectorio?> entradaDirectorio(String uid) async {
@@ -942,7 +953,8 @@ class ClubRepository {
   }) =>
       Refs.user(uid).update({
         'displayName': nombre.trim(),
-        'phone': telefono.trim().isEmpty ? FieldValue.delete() : telefono.trim(),
+        'phone':
+            telefono.trim().isEmpty ? FieldValue.delete() : telefono.trim(),
       });
 
   Future<void> asignarGrupos(String uid, List<String> grupos) =>
@@ -979,7 +991,9 @@ class ClubRepository {
     try {
       final r = await FirebaseFunctions.instanceFor(
         region: ClubConfig.regionFunciones,
-      ).httpsCallable('restablecerPasswordCuentaClub').call<Map<String, dynamic>>({
+      )
+          .httpsCallable('restablecerPasswordCuentaClub')
+          .call<Map<String, dynamic>>({
         'uid': uid,
       });
       return (r.data['codigoActivacion'] as String?) ??

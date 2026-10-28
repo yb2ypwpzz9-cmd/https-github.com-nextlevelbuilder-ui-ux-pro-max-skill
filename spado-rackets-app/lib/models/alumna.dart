@@ -70,6 +70,7 @@ class Alumna {
     this.tipo,
     this.dias = const [],
     this.horaInicio = '',
+    this.horarios = const {},
     this.duracionMinutos = 60,
     this.cuotaMensual = 0,
     this.contactoNombre,
@@ -95,6 +96,11 @@ class Alumna {
 
   /// Hora de inicio `HH:mm` y duración de su clase.
   final String horaInicio;
+
+  /// Hora de cada día de clase (`1` = lunes … `7` = domingo → `HH:mm`), porque
+  /// un día puede empezar a otra hora que el resto. Los días que no estén aquí
+  /// usan [horaInicio], como las fichas de antes.
+  final Map<int, String> horarios;
   final int duracionMinutos;
 
   /// Cuota mensual propia, en dólares.
@@ -131,11 +137,19 @@ class Alumna {
           if (d is num && d >= 1 && d <= 7) d.toInt(),
       ]..sort(),
       horaInicio: (data['horaInicio'] as String?) ?? '',
+      horarios: {
+        if (data['horarios'] is Map)
+          for (final e in (data['horarios'] as Map).entries)
+            if (int.tryParse('${e.key}') case final d?
+                when d >= 1 && d <= 7 && e.value is String)
+              d: (e.value as String),
+      },
       duracionMinutos: (data['duracionMinutos'] as num?)?.toInt() ?? 60,
       cuotaMensual: (data['cuotaMensual'] as num?)?.toDouble() ?? 0,
-      contactoNombre: (data['contactoNombre'] as String?)?.trim().isEmpty ?? true
-          ? null
-          : (data['contactoNombre'] as String).trim(),
+      contactoNombre:
+          (data['contactoNombre'] as String?)?.trim().isEmpty ?? true
+              ? null
+              : (data['contactoNombre'] as String).trim(),
       contactoTelefono:
           (data['contactoTelefono'] as String?)?.trim().isEmpty ?? true
               ? null
@@ -151,16 +165,35 @@ class Alumna {
 
   bool tieneClaseEl(DateTime dia) => dias.contains(dia.weekday);
 
+  /// Hora (`HH:mm`) de la clase de ese día de la semana.
+  String horaDelDia(int diaSemana) {
+    final h = horarios[diaSemana];
+    return h != null && h.isNotEmpty ? h : horaInicio;
+  }
+
+  /// Si no todos sus días empiezan a la misma hora.
+  bool get horasDistintas => dias.map(horaDelDia).toSet().length > 1;
+
   static const _nombresDias = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
 
-  /// "Lun · Mié · 17:30", o "Sin horario".
+  /// "Lun · Mié · 5:00 PM", "Lun 5:00 PM · Mié 6:30 PM" si las horas difieren,
+  /// o "Sin horario".
   String get horarioTexto {
     if (dias.isEmpty) return 'Sin horario';
+    if (horasDistintas) {
+      return dias.map((d) {
+        final h = horaDelDia(d);
+        return h.isEmpty
+            ? _nombresDias[d - 1]
+            : '${_nombresDias[d - 1]} ${formatoHora12(h)}';
+      }).join(' · ');
+    }
     return [
       dias.map((d) => _nombresDias[d - 1]).join(' · '),
       if (horaInicio.isNotEmpty) formatoHora12(horaInicio),
     ].join(' · ');
   }
+
   bool get vinculada => familiaUid != null;
 
   /// "9 años", o `null` si no se conoce la fecha de nacimiento.

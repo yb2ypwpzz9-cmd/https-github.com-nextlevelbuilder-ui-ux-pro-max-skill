@@ -497,3 +497,15 @@ describe('carga de histórico (cuotas cobradas y gastos pasados)', () => {
     });
   }
 });
+
+describe('hora distinta en cada día de clase', () => {
+  const ficha = (extra = {}) => ({ nombre: 'Lucía', grupo: 'g1', activa: true, dias: [1, 3], horaInicio: '17:00', ...extra });
+
+  test('Dirección y el staff guardan una hora por día; se rechazan claves raras', async () => {
+    await assertSucceeds(setDoc(doc(como(DIR), 'alumnas/hd1'), ficha({ horarios: { 1: '17:00', 3: '18:30' } })));
+    await assertSucceeds(updateDoc(doc(como(STAFF), 'alumnas/a1'), { dias: [1, 3], horaInicio: '17:00', horarios: { 1: '17:00', 3: '18:30' } }));
+    await assertFails(setDoc(doc(como(DIR), 'alumnas/hd2'), ficha({ horarios: { 9: '17:00' } })));
+    await assertFails(setDoc(doc(como(DIR), 'alumnas/hd3'), ficha({ horarios: 'lunes' })));
+    await assertFails(updateDoc(doc(como(FAM), 'alumnas/a1'), { horarios: { 1: '17:00' } }));
+  });
+});

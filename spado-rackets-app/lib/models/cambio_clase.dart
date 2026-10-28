@@ -47,7 +47,8 @@ class CambioClase {
       alumnaId: (data['alumnaId'] as String?) ?? '',
       grupo: (data['grupo'] as String?) ?? '',
       fecha: (data['fecha'] as String?) ?? '',
-      tipo: data['tipo'] == 'cancelada' ? TipoCambio.cancelada : TipoCambio.extra,
+      tipo:
+          data['tipo'] == 'cancelada' ? TipoCambio.cancelada : TipoCambio.extra,
       horaInicio: (data['horaInicio'] as String?) ?? '',
       familiaUid: (data['familiaUid'] as String?) ?? '',
     );
@@ -73,5 +74,5 @@ ClaseDelDia? claseDelDia(Alumna a, DateTime dia, CambioClase? cambio) {
       cambiada: true,
     );
   }
-  return a.tieneClaseEl(dia) ? ClaseDelDia(a.horaInicio) : null;
+  return a.tieneClaseEl(dia) ? ClaseDelDia(a.horaDelDia(dia.weekday)) : null;
 }

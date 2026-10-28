@@ -42,12 +42,134 @@ String hora12(TimeOfDay h) => formatoHora12(horaATexto(h));
 String horaATexto(TimeOfDay h) =>
     '${h.hour.toString().padLeft(2, '0')}:${h.minute.toString().padLeft(2, '0')}';
 
+/// Días de clase y la hora de cada uno: un día puede empezar a otra hora que
+/// el resto. Modifica [dias] y [horas] y avisa con [onCambio] para repintar.
+class EditorHorarioSemanal extends StatelessWidget {
+  const EditorHorarioSemanal({
+    super.key,
+    required this.dias,
+    required this.horas,
+    required this.onCambio,
+  });
+
+  final Set<int> dias;
+  final Map<int, TimeOfDay> horas;
+  final VoidCallback onCambio;
+
+  static const _nombres = [
+    'Lunes',
+    'Martes',
+    'Miércoles',
+    'Jueves',
+    'Viernes',
+    'Sábado',
+    'Domingo',
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    final ordenados = dias.toList()..sort();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Wrap(
+          spacing: 6,
+          runSpacing: 6,
+          children: [
+            for (var d = 1; d <= 7; d++)
+              FilterChip(
+                label: Text(Grupo.nombresDias[d - 1]),
+                selected: dias.contains(d),
+                onSelected: (v) {
+                  if (v) {
+                    dias.add(d);
+                    // Un día nuevo empieza a la misma hora que los demás; se
+                    // cambia después si hace falta.
+                    final otra = horas.values.firstOrNull;
+                    if (otra != null) horas[d] = otra;
+                  } else {
+                    dias.remove(d);
+                    horas.remove(d);
+                  }
+                  onCambio();
+                },
+              ),
+          ],
+        ),
+        for (final d in ordenados)
+          Padding(
+            padding: const EdgeInsets.only(top: AppSpacing.sm),
+            child: Row(
+              children: [
+                SizedBox(
+                  width: 96,
+                  child: Text(_nombres[d - 1],
+                      style: Theme.of(context).textTheme.titleSmall),
+                ),
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: () async {
+                      final h = await elegirHoraDigital(context, horas[d]);
+                      if (h != null) {
+                        horas[d] = h;
+                        onCambio();
+                      }
+                    },
+                    icon: const Icon(Icons.schedule),
+                    label: Text(
+                        horas[d] == null ? 'Elegir hora' : hora12(horas[d]!)),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        if (ordenados.length > 1 && horas[ordenados.first] != null)
+          Align(
+            alignment: Alignment.centerLeft,
+            child: TextButton(
+              onPressed: () {
+                final h = horas[ordenados.first]!;
+                for (final d in ordenados) {
+                  horas[d] = h;
+                }
+                onCambio();
+              },
+              child: Text(
+                  'Misma hora todos los días (${hora12(horas[ordenados.first]!)})'),
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+/// Horas de la ficha como mapa `día → HH:mm`, solo de los días que hay.
+Map<int, String> horasATextos(Set<int> dias, Map<int, TimeOfDay> horas) => {
+      for (final d in (dias.toList()..sort()))
+        if (horas[d] != null) d: horaATexto(horas[d]!),
+    };
+
+/// `HH:mm` del primer día, o vacío: se guarda también como `horaInicio` para
+/// lo que lea la ficha sin conocer las horas por día.
+String horaPrincipal(Set<int> dias, Map<int, TimeOfDay> horas) {
+  final d = (dias.toList()..sort()).where((d) => horas[d] != null).firstOrNull;
+  return d == null ? '' : horaATexto(horas[d]!);
+}
+
+/// Horas iniciales del editor para una ficha.
+Map<int, TimeOfDay> horasDe(Alumna a, {String? porDefecto}) => {
+      for (final d in a.dias)
+        if (horaDeTexto(a.horaDelDia(d).isEmpty ? porDefecto : a.horaDelDia(d))
+            case final h?)
+          d: h,
+    };
+
 /// Cambia el horario FIJO (todas las semanas desde ahora).
 Future<void> _horarioFijo(BuildContext context, Alumna alumna) async {
   final repo = context.read<ClubRepository>();
   final raiz = context;
   final dias = <int>{...alumna.dias};
-  var hora = horaDeTexto(alumna.horaInicio);
+  final horas = horasDe(alumna);
   var duracion = alumna.duracionMinutos;
 
   final guardar = await showModalBottomSheet<bool>(
@@ -67,50 +189,25 @@ Future<void> _horarioFijo(BuildContext context, Alumna alumna) async {
             children: [
               Text('Horario de ${alumna.nombreCorto}',
                   style: Theme.of(context).textTheme.titleLarge),
-              Text('Elige los días que viene a clase.',
+              Text('Elige los días y la hora de cada uno.',
                   style: Theme.of(context).textTheme.bodySmall),
               const SizedBox(height: AppSpacing.md),
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: [
-                  for (var d = 1; d <= 7; d++)
-                    FilterChip(
-                      label: Text(Grupo.nombresDias[d - 1]),
-                      selected: dias.contains(d),
-                      onSelected: (v) =>
-                          setSheet(() => v ? dias.add(d) : dias.remove(d)),
-                    ),
-                ],
+              EditorHorarioSemanal(
+                dias: dias,
+                horas: horas,
+                onCambio: () => setSheet(() {}),
               ),
               const SizedBox(height: AppSpacing.md),
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: () async {
-                        final h = await elegirHoraDigital(context, hora);
-                        if (h != null) setSheet(() => hora = h);
-                      },
-                      icon: const Icon(Icons.schedule),
-                      label: Text(hora == null ? 'Hora' : hora12(hora!)),
-                    ),
-                  ),
-                  const SizedBox(width: AppSpacing.sm),
-                  Expanded(
-                    child: DropdownButtonFormField<int>(
-                      initialValue: duracion,
-                      decoration: const InputDecoration(labelText: 'Duración'),
-                      items: const [
-                        DropdownMenuItem(value: 45, child: Text('45 min')),
-                        DropdownMenuItem(value: 60, child: Text('1 h')),
-                        DropdownMenuItem(value: 90, child: Text('1 h 30')),
-                        DropdownMenuItem(value: 120, child: Text('2 h')),
-                      ],
-                      onChanged: (v) => setSheet(() => duracion = v ?? 60),
-                    ),
-                  ),
+              DropdownButtonFormField<int>(
+                initialValue: duracion,
+                decoration: const InputDecoration(labelText: 'Duración'),
+                items: const [
+                  DropdownMenuItem(value: 45, child: Text('45 min')),
+                  DropdownMenuItem(value: 60, child: Text('1 h')),
+                  DropdownMenuItem(value: 90, child: Text('1 h 30')),
+                  DropdownMenuItem(value: 120, child: Text('2 h')),
                 ],
+                onChanged: (v) => setSheet(() => duracion = v ?? 60),
               ),
               const SizedBox(height: AppSpacing.md),
               FilledButton(
@@ -128,7 +225,8 @@ Future<void> _horarioFijo(BuildContext context, Alumna alumna) async {
     await repo.actualizarAlumna(
       alumna.id,
       dias: dias.toList()..sort(),
-      horaInicio: hora == null ? '' : horaATexto(hora!),
+      horaInicio: horaPrincipal(dias, horas),
+      horarios: horasATextos(dias, horas),
       duracionMinutos: duracion,
     );
     if (raiz.mounted) {
@@ -161,7 +259,8 @@ Future<void> editarHorario(BuildContext context, Alumna alumna) async {
               const SizedBox(height: AppSpacing.md),
               Card(
                 child: ListTile(
-                  leading: const Icon(Icons.event_repeat, color: AppColors.navy),
+                  leading:
+                      const Icon(Icons.event_repeat, color: AppColors.navy),
                   title: const Text('Cambiar un día concreto'),
                   subtitle: const Text(
                       'Solo ese día, o varias semanas. El horario fijo no se toca.'),
@@ -175,7 +274,8 @@ Future<void> editarHorario(BuildContext context, Alumna alumna) async {
                   leading:
                       const Icon(Icons.edit_calendar, color: AppColors.navy),
                   title: const Text('Cambiar el horario fijo'),
-                  subtitle: const Text('Para todas las semanas a partir de hoy.'),
+                  subtitle:
+                      const Text('Para todas las semanas a partir de hoy.'),
                   trailing: const Icon(Icons.chevron_right),
                   onTap: () => Navigator.pop(context, 'fijo'),
                 ),
@@ -253,7 +353,7 @@ Future<void> _cambioPuntual(BuildContext context, Alumna alumna) async {
     }
   }
   var nuevo = origen.add(const Duration(days: 1));
-  var hora = horaDeTexto(alumna.horaInicio);
+  var hora = horaDeTexto(alumna.horaDelDia(origen.weekday));
   var modo = _Modo.noViene;
   var semanas = 1; // 0 = hasta fin de mes
 
@@ -301,7 +401,8 @@ Future<void> _cambioPuntual(BuildContext context, Alumna alumna) async {
                 segments: const [
                   ButtonSegment(value: _Modo.noViene, label: Text('No viene')),
                   ButtonSegment(value: _Modo.otroDia, label: Text('Otro día')),
-                  ButtonSegment(value: _Modo.otraHora, label: Text('Otra hora')),
+                  ButtonSegment(
+                      value: _Modo.otraHora, label: Text('Otra hora')),
                 ],
                 selected: {modo},
                 onSelectionChanged: (s) => setSheet(() => modo = s.first),
@@ -334,10 +435,13 @@ Future<void> _cambioPuntual(BuildContext context, Alumna alumna) async {
                 decoration: const InputDecoration(labelText: 'Se aplica'),
                 items: const [
                   DropdownMenuItem(value: 1, child: Text('Solo ese día')),
-                  DropdownMenuItem(value: 2, child: Text('Ese día y la semana siguiente')),
+                  DropdownMenuItem(
+                      value: 2, child: Text('Ese día y la semana siguiente')),
                   DropdownMenuItem(value: 3, child: Text('Durante 3 semanas')),
                   DropdownMenuItem(value: 4, child: Text('Durante 4 semanas')),
-                  DropdownMenuItem(value: 0, child: Text('Todas las semanas hasta fin de mes')),
+                  DropdownMenuItem(
+                      value: 0,
+                      child: Text('Todas las semanas hasta fin de mes')),
                 ],
                 onChanged: (v) => setSheet(() => semanas = v ?? 1),
               ),
@@ -362,15 +466,19 @@ Future<void> _cambioPuntual(BuildContext context, Alumna alumna) async {
     if (semanas == 0 ? o.month != origen.month : k >= semanas) break;
     switch (modo) {
       case _Modo.noViene:
-        cambios.add((fecha: claveFecha(o), tipo: TipoCambio.cancelada, hora: ''));
+        cambios
+            .add((fecha: claveFecha(o), tipo: TipoCambio.cancelada, hora: ''));
       case _Modo.otroDia:
         final n = nuevo.add(Duration(days: 7 * k));
         if (claveFecha(n) != claveFecha(o)) {
-          cambios.add((fecha: claveFecha(o), tipo: TipoCambio.cancelada, hora: ''));
+          cambios.add(
+              (fecha: claveFecha(o), tipo: TipoCambio.cancelada, hora: ''));
         }
-        cambios.add((fecha: claveFecha(n), tipo: TipoCambio.extra, hora: horaTexto));
+        cambios.add(
+            (fecha: claveFecha(n), tipo: TipoCambio.extra, hora: horaTexto));
       case _Modo.otraHora:
-        cambios.add((fecha: claveFecha(o), tipo: TipoCambio.extra, hora: horaTexto));
+        cambios.add(
+            (fecha: claveFecha(o), tipo: TipoCambio.extra, hora: horaTexto));
     }
     k++;
     if (k > 12) break;

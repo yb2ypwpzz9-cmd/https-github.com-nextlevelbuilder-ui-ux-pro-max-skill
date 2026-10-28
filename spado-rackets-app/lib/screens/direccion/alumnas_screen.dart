@@ -1,4 +1,3 @@
-
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -76,8 +75,10 @@ class AlumnasScreen extends StatelessWidget {
                                 ? null
                                 : '${a.fechaNacimiento!.year}-${a.fechaNacimiento!.month.toString().padLeft(2, '0')}-${a.fechaNacimiento!.day.toString().padLeft(2, '0')}',
                             a.nivel?.label,
-                            a.dias.map((d) => Grupo.nombresDias[d - 1]).join(' '),
-                            a.horaInicio.isEmpty ? '' : formatoHora12(a.horaInicio),
+                            a.dias
+                                .map((d) => Grupo.nombresDias[d - 1])
+                                .join(' '),
+                            a.dias.isEmpty ? '' : a.horarioTexto,
                             a.cuotaMensual,
                             a.contactoNombre,
                             a.contactoTelefono,
@@ -141,8 +142,12 @@ class AlumnasScreen extends StatelessWidget {
     NivelTenis? nivel = alumna?.nivel;
     TipoJugador? tipo = alumna?.tipo;
     final dias = <int>{...?alumna?.dias, ...?heredado?.dias};
-    var hora = _parseHora(
-        alumna?.horaInicio.isNotEmpty == true ? alumna!.horaInicio : heredado?.horaInicio);
+    final horas = <int, TimeOfDay>{
+      if (alumna != null) ...horasDe(alumna, porDefecto: heredado?.horaInicio),
+      if (alumna == null || alumna.dias.isEmpty)
+        for (final d in dias)
+          if (_parseHora(heredado?.horaInicio) case final h?) d: h,
+    };
     var duracion = alumna?.duracionMinutos ?? heredado?.duracionMinutos ?? 60;
     final cuota = TextEditingController(
       text: () {
@@ -289,48 +294,22 @@ class AlumnasScreen extends StatelessWidget {
                   onChanged: (v) => setSheet(() => nivel = v),
                 ),
                 const SectionHeader('Clases'),
-                Wrap(
-                  spacing: 6,
-                  runSpacing: 6,
-                  children: [
-                    for (var d = 1; d <= 7; d++)
-                      FilterChip(
-                        label: Text(Grupo.nombresDias[d - 1]),
-                        selected: dias.contains(d),
-                        onSelected: (v) => setSheet(
-                            () => v ? dias.add(d) : dias.remove(d)),
-                      ),
-                  ],
+                EditorHorarioSemanal(
+                  dias: dias,
+                  horas: horas,
+                  onCambio: () => setSheet(() {}),
                 ),
                 const SizedBox(height: AppSpacing.md),
-                Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton.icon(
-                        onPressed: () async {
-                          final h = await elegirHoraDigital(context, hora);
-                          if (h != null) setSheet(() => hora = h);
-                        },
-                        icon: const Icon(Icons.schedule),
-                        label: Text(hora == null ? 'Hora' : hora12(hora!)),
-                      ),
-                    ),
-                    const SizedBox(width: AppSpacing.sm),
-                    Expanded(
-                      child: DropdownButtonFormField<int>(
-                        initialValue: duracion,
-                        decoration:
-                            const InputDecoration(labelText: 'Duración'),
-                        items: const [
-                          DropdownMenuItem(value: 45, child: Text('45 min')),
-                          DropdownMenuItem(value: 60, child: Text('1 h')),
-                          DropdownMenuItem(value: 90, child: Text('1 h 30')),
-                          DropdownMenuItem(value: 120, child: Text('2 h')),
-                        ],
-                        onChanged: (v) => setSheet(() => duracion = v ?? 60),
-                      ),
-                    ),
+                DropdownButtonFormField<int>(
+                  initialValue: duracion,
+                  decoration: const InputDecoration(labelText: 'Duración'),
+                  items: const [
+                    DropdownMenuItem(value: 45, child: Text('45 min')),
+                    DropdownMenuItem(value: 60, child: Text('1 h')),
+                    DropdownMenuItem(value: 90, child: Text('1 h 30')),
+                    DropdownMenuItem(value: 120, child: Text('2 h')),
                   ],
+                  onChanged: (v) => setSheet(() => duracion = v ?? 60),
                 ),
                 const SizedBox(height: AppSpacing.md),
                 TextField(
@@ -433,9 +412,11 @@ class AlumnasScreen extends StatelessWidget {
     );
     if (guardar != true || nombre.text.trim().length < 2) return;
 
-    final importe = double.tryParse(cuota.text.trim().replaceAll(',', '.')) ?? 0;
+    final importe =
+        double.tryParse(cuota.text.trim().replaceAll(',', '.')) ?? 0;
     final listaDias = dias.toList()..sort();
-    final horaTexto = hora == null ? '' : _horaTexto(hora!);
+    final horaTexto = horaPrincipal(dias, horas);
+    final horasPorDia = horasATextos(dias, horas);
 
     try {
       if (alumna == null) {
@@ -447,6 +428,7 @@ class AlumnasScreen extends StatelessWidget {
           tipo: tipo,
           dias: listaDias,
           horaInicio: horaTexto,
+          horarios: horasPorDia,
           duracionMinutos: duracion,
           cuotaMensual: importe,
           contactoNombre: contactoNombre.text,
@@ -507,6 +489,7 @@ class AlumnasScreen extends StatelessWidget {
           tipo: tipo,
           dias: listaDias,
           horaInicio: horaTexto,
+          horarios: horasPorDia,
           duracionMinutos: duracion,
           cuotaMensual: importe,
           contactoNombre: contactoNombre.text,
@@ -532,9 +515,6 @@ class AlumnasScreen extends StatelessWidget {
     if (hh == null || mm == null) return null;
     return TimeOfDay(hour: hh, minute: mm);
   }
-
-  static String _horaTexto(TimeOfDay h) =>
-      '${h.hour.toString().padLeft(2, '0')}:${h.minute.toString().padLeft(2, '0')}';
 }
 
 class _ListaGrupo extends StatelessWidget {
@@ -551,7 +531,8 @@ class _ListaGrupo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (alumnas.isEmpty) {
-      return Text('Sin alumnado.', style: Theme.of(context).textTheme.bodySmall);
+      return Text('Sin alumnado.',
+          style: Theme.of(context).textTheme.bodySmall);
     }
     return CardList(
       children: [
@@ -572,7 +553,8 @@ class _ListaGrupo extends StatelessWidget {
                     a.horarioTexto,
                     if (a.contactoNombre != null) a.contactoNombre!,
                     if (a.cuotaMensual > 0)
-                      formatoImporte(a.cuotaMensual, ClubConfig.monedaPorDefecto),
+                      formatoImporte(
+                          a.cuotaMensual, ClubConfig.monedaPorDefecto),
                     if (a.edad != null) '${a.edad} años',
                     if (a.nivel != null) a.nivel!.label,
                   ].join(' · '))
