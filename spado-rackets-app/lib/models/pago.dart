@@ -244,27 +244,7 @@ class AjustesClub {
     this.cuotasAuto = 'off',
   });
 
-  /// Cuentas oficiales del club. Se muestran mientras Dirección no haya
-  /// guardado otras desde la app (Más → Datos bancarios).
-  static const cuentasOficiales = [
-    CuentaBancaria(
-      banco: 'Banco Popular',
-      numero: '9602246400',
-      titular: 'Alfonso José García Gama',
-      tipo: 'Cuenta de ahorro',
-      documento: 'Pasaporte PAQ896638',
-      moneda: Moneda.dop,
-    ),
-    CuentaBancaria(
-      banco: 'Banreservas',
-      numero: '9602257772',
-      titular: 'Alfonso José García Gama',
-      tipo: 'Cuenta de ahorro',
-      documento: 'Pasaporte PAQ896638',
-      moneda: Moneda.usd,
-    ),
-  ];
-
+  /// Texto que acompaña a las cuentas mientras Dirección no escriba el suyo.
   static const instruccionesOficiales =
       'El pago debe realizarse dentro de los 5 primeros días de cada mes. '
       'En el concepto indica el nombre de la alumna y el mes.';
@@ -290,10 +270,13 @@ class AjustesClub {
     final auto = data['cuotasAuto'];
     return AjustesClub(
       cuotasAuto: auto == 'auto' || auto == 'aviso' ? auto as String : 'off',
-      cuentas: cuentas.isEmpty ? cuentasOficiales : cuentas,
+      // Sin cuentas guardadas no se inventa ninguna: antes se enseñaban unas
+      // de ejemplo escritas en el código, y parecía que lo que Dirección
+      // cambiaba no llegaba a las familias.
+      cuentas: cuentas,
       instrucciones: cuentas.isEmpty
-          ? instruccionesOficiales
-          : (data['instrucciones'] as String?) ?? '',
+          ? ''
+          : (data['instrucciones'] as String?) ?? instruccionesOficiales,
     );
   }
 }
