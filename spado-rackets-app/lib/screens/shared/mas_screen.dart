@@ -164,10 +164,13 @@ class MasScreen extends StatelessWidget {
                 style: TextStyle(color: AppColors.danger),
               ),
               onTap: () async {
-                await push.desregistrar();
-                if (context.mounted) {
-                  await context.read<SessionController>().signOut();
-                }
+                final sesion = context.read<SessionController>();
+                // Quitar el aviso de este móvil no puede dejar la salida
+                // colgada si no hay red.
+                await push
+                    .desregistrar()
+                    .timeout(const Duration(seconds: 2), onTimeout: () {});
+                await sesion.signOut();
               },
             ),
           ]),

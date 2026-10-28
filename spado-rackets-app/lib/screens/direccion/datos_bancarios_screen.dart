@@ -123,6 +123,7 @@ class _FormularioState extends State<_Formulario> {
                 : null,
           ),
           Card(
+            key: ObjectKey(_cuentas[i]),
             child: Padding(
               padding: const EdgeInsets.all(AppSpacing.md),
               child: Column(

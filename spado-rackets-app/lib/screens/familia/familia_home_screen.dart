@@ -75,15 +75,16 @@ class _FamiliaHomeScreenState extends State<FamiliaHomeScreen> {
               ],
               _Cabecera(alumna: alumna, familia: user),
               const SizedBox(height: AppSpacing.md),
-              const AvisoNotificaciones(),
               if (alumna.fotoPath == null) ...[
                 _AvisoFoto(alumna: alumna),
                 const SizedBox(height: AppSpacing.md),
               ],
-              _ProximosCambios(alumna: alumna, uid: user.uid),
               _EstadoCuotas(uid: user.uid),
+              _ProximosCambios(alumna: alumna, uid: user.uid),
               _Asistencia(alumna: alumna, uid: user.uid),
               const _UltimoAviso(),
+              const SizedBox(height: AppSpacing.md),
+              const AvisoNotificaciones(),
             ],
           );
         },
@@ -264,7 +265,7 @@ class _Cabecera extends StatelessWidget {
             AppSpacing.md,
             0,
             AppSpacing.md,
-            MediaQuery.viewInsetsOf(context).bottom + AppSpacing.lg,
+            pieHoja(context, AppSpacing.lg),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -345,7 +346,7 @@ class _EstadoCuotas extends StatelessWidget {
       stream: context.read<ClubRepository>().watchPagosFamilia(uid),
       builder: (context, snap) {
         final pagos = snap.data;
-        if (pagos == null) return const SizedBox.shrink();
+        if (pagos == null) return const SizedBox(height: 76);
         final pendientes = pagos.where((p) => p.necesitaAccionFamilia).toList();
         final enRevision =
             pagos.where((p) => p.estado == EstadoPago.enRevision).length;

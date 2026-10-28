@@ -84,7 +84,7 @@ class EquipoScreen extends StatelessWidget {
             16,
             0,
             16,
-            MediaQuery.viewInsetsOf(context).bottom + 24,
+            pieHoja(context),
           ),
           child: SingleChildScrollView(
             child: Column(
@@ -253,7 +253,7 @@ class EquipoScreen extends StatelessWidget {
             16,
             0,
             16,
-            MediaQuery.viewInsetsOf(context).bottom + 24,
+            pieHoja(context),
           ),
           child: SingleChildScrollView(
             child: Column(

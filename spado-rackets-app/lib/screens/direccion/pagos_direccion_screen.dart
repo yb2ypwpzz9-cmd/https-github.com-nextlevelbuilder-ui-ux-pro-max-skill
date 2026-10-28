@@ -30,7 +30,11 @@ class _PagosDireccionScreenState extends State<PagosDireccionScreen> {
 
   Future<void> _cuotasAutomaticas(BuildContext context) async {
     final repo = context.read<ClubRepository>();
-    final actual = (await repo.watchAjustes().first).cuotasAuto;
+    final actual = await repo
+        .watchAjustes()
+        .first
+        .then((a) => a.cuotasAuto)
+        .timeout(const Duration(seconds: 3), onTimeout: () => 'off');
     if (!context.mounted) return;
     final elegido = await showDialog<String>(
       context: context,
@@ -452,9 +456,9 @@ class _RevisarPagoState extends State<_RevisarPago> {
         AppSpacing.md,
         0,
         AppSpacing.md,
-        MediaQuery.viewInsetsOf(context).bottom + AppSpacing.lg,
+        pieHoja(context, AppSpacing.lg),
       ),
-      child: Column(
+      child: SingleChildScrollView(child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -604,7 +608,7 @@ class _RevisarPagoState extends State<_RevisarPago> {
             ],
           ),
         ],
-      ),
+      )),
     );
   }
 }

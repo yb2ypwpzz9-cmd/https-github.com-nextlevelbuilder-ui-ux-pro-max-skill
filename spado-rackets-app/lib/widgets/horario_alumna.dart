@@ -181,7 +181,7 @@ Future<void> _horarioFijo(BuildContext context, Alumna alumna) async {
           16,
           0,
           16,
-          MediaQuery.viewInsetsOf(context).bottom + 24,
+          pieHoja(context),
         ),
         child: SingleChildScrollView(
           child: Column(
@@ -376,7 +376,7 @@ Future<void> _cambioPuntual(BuildContext context, Alumna alumna) async {
           16,
           0,
           16,
-          MediaQuery.viewInsetsOf(context).bottom + 24,
+          pieHoja(context),
         ),
         child: SingleChildScrollView(
           child: Column(

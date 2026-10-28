@@ -193,7 +193,7 @@ class _FormGrupoState extends State<_FormGrupo> {
         16,
         0,
         16,
-        MediaQuery.viewInsetsOf(context).bottom + 24,
+        pieHoja(context),
       ),
       child: Form(
         key: _form,

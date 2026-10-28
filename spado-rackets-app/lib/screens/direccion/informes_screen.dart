@@ -62,12 +62,16 @@ class _InformesScreenState extends State<InformesScreen> {
         label: const Text('Registrar gasto'),
       ),
       body: StreamView<List<Jornada>>(
+        streamKey: _meses,
         stream: _jornadas,
         builder: (context, jornadas) => StreamView<List<Asistencia>>(
+          streamKey: _meses,
           stream: _asistencia,
           builder: (context, marcas) => StreamView<List<Pago>>(
+            streamKey: _meses,
             stream: _pagos,
             builder: (context, pagos) => StreamView<List<Gasto>>(
+              streamKey: _meses,
               stream: _gastos,
               builder: (context, gastos) => _Cuerpo(
                 meses: _meses,

@@ -112,6 +112,10 @@ String diagnosticoPantalla() {
       if (vv != null)
         'Visor desplazado: ${vv.offsetLeft.toStringAsFixed(0)}, ${vv.offsetTop.toStringAsFixed(0)} (debe ser 0, 0)',
       'Margen inferior del sistema: ${margenInferiorDelSistema().toStringAsFixed(0)}',
+      'Alto del documento: ${web.document.documentElement!.clientHeight}',
+      'Alto del visor: ${vv == null ? '?' : vv.height.toStringAsFixed(0)}',
+      'Pantalla física: ${web.window.screen.width} × ${web.window.screen.height}',
+      'Densidad: ${(web.window.devicePixelRatio as JSNumber).toDartDouble.toStringAsFixed(1)}',
     ].join('\n');
   } catch (e) {
     return 'No se pudo leer: $e';

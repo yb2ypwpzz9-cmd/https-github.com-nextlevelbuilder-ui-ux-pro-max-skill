@@ -37,8 +37,6 @@ class StaffHomeScreen extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.md),
           const FichajePanel(),
-          const SizedBox(height: AppSpacing.md),
-          const AvisoNotificaciones(),
           SectionHeader(
             'Clases de hoy',
             subtitle: capitalizar(fechaLargaFormat.format(hoy)),
@@ -152,6 +150,9 @@ class StaffHomeScreen extends StatelessWidget {
               );
             },
           ),
+          // Al final: si aparece tarde, no empuja lo que ya se va a pulsar.
+          const SizedBox(height: AppSpacing.md),
+          const AvisoNotificaciones(),
         ],
       ),
     );

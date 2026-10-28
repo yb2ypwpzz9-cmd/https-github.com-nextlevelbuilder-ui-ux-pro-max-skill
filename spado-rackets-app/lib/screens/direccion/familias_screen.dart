@@ -94,7 +94,7 @@ class FamiliasScreen extends StatelessWidget {
           16,
           0,
           16,
-          MediaQuery.viewInsetsOf(context).bottom + 24,
+          pieHoja(context),
         ),
         child: SingleChildScrollView(
           child: Column(

@@ -199,6 +199,7 @@ class _AppShellState extends State<AppShell> {
                   destinations: [
                     for (final t in tabs)
                       NavigationDestination(
+                        tooltip: '',
                         icon: t.esChat
                             ? _IconoConAviso(icono: t.icon, uid: user.uid)
                             : Icon(t.icon),

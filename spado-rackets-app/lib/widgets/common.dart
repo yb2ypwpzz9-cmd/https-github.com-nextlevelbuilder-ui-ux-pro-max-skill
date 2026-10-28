@@ -47,6 +47,16 @@ class PageBody extends StatelessWidget {
   }
 }
 
+/// Margen inferior de una hoja modal: por encima del teclado o, si no lo hay,
+/// de la franja que iOS reserva abajo (donde se pierden los toques).
+double pieHoja(BuildContext context, [double extra = 24]) {
+  final mq = MediaQuery.of(context);
+  return (mq.viewInsets.bottom > mq.viewPadding.bottom
+          ? mq.viewInsets.bottom
+          : mq.viewPadding.bottom) +
+      extra;
+}
+
 class SectionHeader extends StatelessWidget {
   const SectionHeader(this.title, {super.key, this.action, this.subtitle});
 

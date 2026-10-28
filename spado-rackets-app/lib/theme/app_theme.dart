@@ -168,6 +168,10 @@ abstract final class AppTheme {
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(foregroundColor: AppColors.navy),
       ),
+      // Un tooltip abre con pulsación larga (500 ms) y, si el dedo se queda un
+      // poco, cancela el toque. En el móvil no se necesitan.
+      tooltipTheme:
+          const TooltipThemeData(triggerMode: TooltipTriggerMode.manual),
       navigationBarTheme: NavigationBarThemeData(
         backgroundColor: AppColors.navyDeep,
         indicatorColor: AppColors.ball.withValues(alpha: 0.18),

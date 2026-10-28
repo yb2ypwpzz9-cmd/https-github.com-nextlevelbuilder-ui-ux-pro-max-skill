@@ -169,7 +169,7 @@ class AlumnasScreen extends StatelessWidget {
             16,
             0,
             16,
-            MediaQuery.viewInsetsOf(context).bottom + 24,
+            pieHoja(context),
           ),
           child: SingleChildScrollView(
             child: Column(
@@ -596,18 +596,6 @@ class _ListaGrupo extends StatelessWidget {
                         size: 19, color: AppColors.navy),
                     onPressed: () =>
                         mostrarInvitacion(context, a, codigoDe[a.id]!.codigo),
-                  ),
-                  IconButton(
-                    tooltip: 'Copiar código',
-                    icon: const Icon(Icons.copy, size: 19),
-                    onPressed: () async {
-                      await Clipboard.setData(
-                        ClipboardData(text: codigoDe[a.id]!.codigo),
-                      );
-                      if (context.mounted) {
-                        showAppSnackBar(context, 'Código copiado.');
-                      }
-                    },
                   ),
                 ],
               ],

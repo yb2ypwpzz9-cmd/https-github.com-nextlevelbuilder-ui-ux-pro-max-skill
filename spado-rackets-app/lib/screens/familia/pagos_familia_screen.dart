@@ -106,7 +106,7 @@ class PagosFamiliaScreen extends StatelessWidget {
                 )
               else
                 CardList(
-                  children: [for (final p in pagos) _FilaCuota(pago: p)],
+                  children: [for (final p in pagos) _FilaCuota(key: ValueKey(p.id), pago: p)],
                 ),
             ],
           );
@@ -117,7 +117,7 @@ class PagosFamiliaScreen extends StatelessWidget {
 }
 
 class _FilaCuota extends StatefulWidget {
-  const _FilaCuota({required this.pago});
+  const _FilaCuota({super.key, required this.pago});
   final Pago pago;
 
   @override
