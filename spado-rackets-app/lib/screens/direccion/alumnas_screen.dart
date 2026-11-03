@@ -595,7 +595,8 @@ class _ListaGrupo extends StatelessWidget {
                     icon: const Icon(Icons.send_outlined,
                         size: 19, color: AppColors.navy),
                     onPressed: () =>
-                        mostrarInvitacion(context, a, codigoDe[a.id]!.codigo),
+                        mostrarInvitacion(context, a, codigoDe[a.id]!.codigo,
+                            usadoPor: codigoDe[a.id]!.usadoPor),
                   ),
                 ],
               ],

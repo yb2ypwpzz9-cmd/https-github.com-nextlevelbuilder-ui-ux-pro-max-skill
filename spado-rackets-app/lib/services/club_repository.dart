@@ -277,6 +277,19 @@ class ClubRepository {
   }
 
   /// Seis caracteres sin los que se confunden al dictarlos (0/O, 1/I/L).
+  /// Dirección: da un código nuevo a una ficha (por ejemplo, tras equivocarse
+  /// de correo). El anterior deja de valer y el nuevo queda libre.
+  Future<String> regenerarCodigo(String alumnaId) async {
+    final nuevo = _generarCodigo();
+    await Refs.codigos.doc(alumnaId).update({
+      'codigo': nuevo,
+      'usadoPor': FieldValue.delete(),
+      'usadoEn': FieldValue.delete(),
+      'regeneradoEn': FieldValue.serverTimestamp(),
+    });
+    return nuevo;
+  }
+
   static String _generarCodigo() {
     const letras = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
     final r = Random.secure();

@@ -509,3 +509,14 @@ describe('hora distinta en cada día de clase', () => {
     await assertFails(updateDoc(doc(como(FAM), 'alumnas/a1'), { horarios: { 1: '17:00' } }));
   });
 });
+
+describe('código nuevo para una ficha', () => {
+  test('solo Dirección regenera el código y deja el anterior sin usar', async () => {
+    await env.withSecurityRulesDisabled(async (ctx) => {
+      await setDoc(doc(ctx.firestore(), 'codigosVinculacion/a1'), { codigo: 'VIEJO123', alumnaId: 'a1', usadoPor: FAM });
+    });
+    await assertFails(updateDoc(doc(como(FAM), 'codigosVinculacion/a1'), { codigo: 'ROBADO12' }));
+    await assertFails(updateDoc(doc(como(STAFF), 'codigosVinculacion/a1'), { codigo: 'ROBADO12' }));
+    await assertSucceeds(updateDoc(doc(como(DIR), 'codigosVinculacion/a1'), { codigo: 'NUEVO123', regeneradoEn: serverTimestamp() }));
+  });
+});
