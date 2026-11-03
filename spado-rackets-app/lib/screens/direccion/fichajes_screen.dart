@@ -9,6 +9,7 @@ import '../../services/descarga.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/common.dart';
 import '../app_shell.dart';
+import 'fichajes_del_dia.dart';
 
 enum _Periodo { semana, mes, mesAnterior }
 
@@ -65,6 +66,8 @@ class _FichajesScreenState extends State<FichajesScreen> {
 
           return PageBody(
             children: [
+              const FichajesDelDia(),
+              const SectionHeader('Resumen del periodo'),
               SegmentedButton<_Periodo>(
                 segments: const [
                   ButtonSegment(value: _Periodo.semana, label: Text('Semana')),

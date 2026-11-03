@@ -964,3 +964,50 @@ export const cortarGasto = onMessagePublished('presupuesto-rackets', async (even
   });
   logger.error(`Facturación desactivada en ${proyecto}.`);
 });
+
+
+// ------------------------------------------------------ recordar el fichaje
+
+/** Fecha de hoy (`yyyy-MM-dd`) en la hora de República Dominicana. */
+function hoyDelClub() {
+  const partes = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'America/Santo_Domingo', year: 'numeric', month: '2-digit', day: '2-digit',
+  }).formatToParts(new Date());
+  const v = (t) => partes.find((x) => x.type === t).value;
+  return `${v('year')}-${v('month')}-${v('day')}`;
+}
+
+/**
+ * Dirección recuerda a un entrenador que fiche su llegada. Solo si hoy no ha
+ * fichado y tiene los avisos activados; si no, dice por qué para que Dirección
+ * le escriba por el chat.
+ */
+export const recordarFichaje = onCall(async (req) => {
+  const uid = req.auth?.uid;
+  if (!uid) throw new HttpsError('unauthenticated', 'Inicia sesión.');
+  const quien = await db.doc(`users/${uid}`).get();
+  if (quien.get('role') !== 'direccion') {
+    throw new HttpsError('permission-denied', 'Solo Dirección puede recordar el fichaje.');
+  }
+  const destino = String(req.data?.uid ?? '').trim();
+  if (!destino || destino.length > 128) {
+    throw new HttpsError('invalid-argument', 'Falta a quién recordárselo.');
+  }
+  const persona = await db.doc(`users/${destino}`).get();
+  if (!persona.exists || persona.get('role') !== 'staff') {
+    throw new HttpsError('failed-precondition', 'Esa cuenta no es de un entrenador.');
+  }
+  const ficho = await db.doc(`jornadas/${destino}_${hoyDelClub()}`).get();
+  if (ficho.exists) return { enviado: false, motivo: 'ya-ficho' };
+  const tokens = persona.get('fcmTokens');
+  if (!Array.isArray(tokens) || tokens.length === 0) {
+    return { enviado: false, motivo: 'sin-avisos' };
+  }
+  await notificar([destino], {
+    title: 'Recuerda fichar tu llegada',
+    body: 'Todavía no has fichado hoy. Abre la app y pulsa "Fichar llegada".',
+    data: { tipo: 'fichaje' },
+  });
+  logger.info(`Recordatorio de fichaje a ${destino} enviado por ${uid}`);
+  return { enviado: true, motivo: '' };
+});

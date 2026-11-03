@@ -318,6 +318,24 @@ class ClubRepository {
           .snapshots()
           .map((s) => mapearDocs(s.docs, Jornada.fromDoc));
 
+  /// Dirección: recuerda a un entrenador que fiche. Devuelve `enviado` y, si no
+  /// se pudo, el motivo: `ya-ficho` o `sin-avisos` (no tiene las notificaciones
+  /// activadas: hay que escribirle por el chat).
+  Future<({bool enviado, String motivo})> recordarFichaje(String uid) async {
+    try {
+      final r = await FirebaseFunctions.instanceFor(
+              region: ClubConfig.regionFunciones)
+          .httpsCallable('recordarFichaje')
+          .call<Map<String, dynamic>>({'uid': uid});
+      return (
+        enviado: r.data['enviado'] == true,
+        motivo: (r.data['motivo'] as String?) ?? '',
+      );
+    } on FirebaseFunctionsException catch (e) {
+      throw Exception(e.message ?? 'No se pudo enviar el recordatorio.');
+    }
+  }
+
   /// Dirección: elimina un fichaje (una prueba, un error). Quien fichó vuelve
   /// a poder fichar ese día.
   Future<void> eliminarFichaje(String id) => Refs.jornadas.doc(id).delete();
