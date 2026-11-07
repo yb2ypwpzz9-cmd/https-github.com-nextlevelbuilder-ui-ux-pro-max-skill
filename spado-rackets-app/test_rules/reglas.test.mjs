@@ -520,3 +520,50 @@ describe('código nuevo para una ficha', () => {
     await assertSucceeds(updateDoc(doc(como(DIR), 'codigosVinculacion/a1'), { codigo: 'NUEVO123', regeneradoEn: serverTimestamp() }));
   });
 });
+
+describe('clases anuladas (mal tiempo, pista, entrenador)', () => {
+  const anulada = (extra = {}) => ({
+    alumnaId: 'a1', alumnaNombre: 'Lucía', grupo: 'g1', familiaUid: FAM, fecha: HOY,
+    minutos: 60, motivo: 'clima', nota: '', recuperados: 0, avisar: true,
+    creadoPor: STAFF, creadoPorNombre: 'Laura', creadoEn: serverTimestamp(), ...extra,
+  });
+  const ruta = (f = HOY) => `clasesAnuladas/a1_${f}`;
+
+  test('Dirección y el staff del grupo anulan; otros no', async () => {
+    await assertSucceeds(setDoc(doc(como(STAFF), ruta()), anulada()));
+    await assertSucceeds(setDoc(doc(como(DIR), ruta(dia(1))), anulada({ fecha: dia(1), creadoPor: DIR })));
+    await assertFails(setDoc(doc(como(STAFF2), ruta(dia(2))), anulada({ fecha: dia(2), creadoPor: STAFF2 })));
+    await assertFails(setDoc(doc(como(FAM), ruta(dia(3))), anulada({ fecha: dia(3), creadoPor: FAM })));
+  });
+
+  test('se rechazan minutos o motivos imposibles y datos que no son de la ficha', async () => {
+    await assertFails(setDoc(doc(como(STAFF), ruta()), anulada({ minutos: 0 })));
+    await assertFails(setDoc(doc(como(STAFF), ruta()), anulada({ minutos: 9999 })));
+    await assertFails(setDoc(doc(como(STAFF), ruta()), anulada({ motivo: 'me apetece' })));
+    await assertFails(setDoc(doc(como(STAFF), ruta()), anulada({ recuperados: 90 })));
+    await assertFails(setDoc(doc(como(STAFF), ruta()), anulada({ familiaUid: FAM2 })));
+    await assertFails(setDoc(doc(como(STAFF), ruta()), anulada({ extra: 1 })));
+    await assertFails(setDoc(doc(como(STAFF), ruta(dia(5))), anulada()));
+  });
+
+  test('registrar una recuperación solo cambia lo recuperado', async () => {
+    await env.withSecurityRulesDisabled(async (ctx) => {
+      await setDoc(doc(ctx.firestore(), ruta()), { ...anulada(), creadoEn: Timestamp.now() });
+    });
+    await assertSucceeds(updateDoc(doc(como(STAFF), ruta()), { recuperados: 30, recuperadoEn: serverTimestamp() }));
+    await assertFails(updateDoc(doc(como(STAFF), ruta()), { recuperados: 90 }));
+    await assertFails(updateDoc(doc(como(STAFF), ruta()), { alumnaId: 'a2' }));
+    await assertFails(updateDoc(doc(como(FAM), ruta()), { recuperados: 60 }));
+  });
+
+  test('la familia ve las suyas y no las de otra', async () => {
+    await env.withSecurityRulesDisabled(async (ctx) => {
+      await setDoc(doc(ctx.firestore(), ruta()), { ...anulada(), creadoEn: Timestamp.now() });
+    });
+    await assertSucceeds(getDoc(doc(como(FAM), ruta())));
+    await assertFails(getDoc(doc(como(FAM2), ruta())));
+    await assertSucceeds(getDocs(query(collection(como(FAM), 'clasesAnuladas'), where('familiaUid', '==', FAM))));
+    await assertFails(deleteDoc(doc(como(FAM), ruta())));
+    await assertSucceeds(deleteDoc(doc(como(STAFF), ruta())));
+  });
+});

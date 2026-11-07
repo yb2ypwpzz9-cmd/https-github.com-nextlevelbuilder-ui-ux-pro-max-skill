@@ -236,6 +236,7 @@ class _Contenido extends StatelessWidget {
             _Enlace(Icons.family_restroom_outlined, 'Familias y cuentas', '/familias'),
             _Enlace(Icons.badge_outlined, 'Equipo y cuentas', '/equipo'),
             _Enlace(Icons.fact_check_outlined, 'Asistencia del alumnado', '/asistencia'),
+            _Enlace(Icons.event_repeat_outlined, 'Clases por recuperar', '/recuperar'),
             _Enlace(Icons.account_balance_outlined, 'Datos bancarios', '/datos-bancarios'),
           ],
         ),

@@ -12,6 +12,7 @@ import '../screens/direccion/asistencia_resumen_screen.dart';
 import '../screens/direccion/datos_bancarios_screen.dart';
 import '../screens/direccion/equipo_screen.dart';
 import '../screens/direccion/nueva_cuota_screen.dart';
+import '../screens/direccion/clases_por_recuperar_screen.dart';
 import '../screens/direccion/historico_screen.dart';
 import '../screens/direccion/familias_screen.dart';
 import '../screens/direccion/grupos_screen.dart';
@@ -73,6 +74,10 @@ GoRouter buildRouter(SessionController session) {
         builder: (_, s) => NuevaCuotaScreen(
           periodo: s.uri.queryParameters['periodo'] ?? periodoDe(DateTime.now()),
         ),
+      ),
+      GoRoute(
+        path: '/recuperar',
+        builder: (_, __) => const ClasesPorRecuperarScreen(),
       ),
       GoRoute(
         path: '/historico',

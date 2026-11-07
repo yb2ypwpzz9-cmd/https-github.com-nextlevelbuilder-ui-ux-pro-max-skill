@@ -11,6 +11,7 @@ import '../models/alumna.dart';
 import '../models/app_user.dart';
 import '../models/asistencia.dart';
 import '../models/cambio_clase.dart';
+import '../models/clase_anulada.dart';
 import '../models/chat.dart';
 import '../models/gasto.dart';
 import '../models/grupo.dart';
@@ -497,6 +498,71 @@ class ClubRepository {
       .snapshots()
       .map((s) => mapearDocs(s.docs, CambioClase.fromDoc)
         ..sort((x, y) => x.fecha.compareTo(y.fecha)));
+
+  // ------------------------------------------------------ clases anuladas
+
+  Stream<List<ClaseAnulada>> watchAnuladasDia(String fecha,
+      {List<String>? grupos}) {
+    Query<Json> q = Refs.anuladas.where('fecha', isEqualTo: fecha);
+    if (grupos != null) {
+      if (grupos.isEmpty) return Stream.value(const []);
+      q = q.where('grupo', whereIn: grupos.take(30).toList());
+    }
+    return q.snapshots().map((s) => mapearDocs(s.docs, ClaseAnulada.fromDoc));
+  }
+
+  /// Dirección: todas las anuladas desde una fecha (con lo recuperado).
+  Stream<List<ClaseAnulada>> watchAnuladasDesde(String fecha) => Refs.anuladas
+      .where('fecha', isGreaterThanOrEqualTo: fecha)
+      .snapshots()
+      .map((s) => mapearDocs(s.docs, ClaseAnulada.fromDoc)
+        ..sort((a, b) => b.fecha.compareTo(a.fecha)));
+
+  Stream<List<ClaseAnulada>> watchAnuladasFamilia(String uid) => Refs.anuladas
+      .where('familiaUid', isEqualTo: uid)
+      .snapshots()
+      .map((s) => mapearDocs(s.docs, ClaseAnulada.fromDoc)
+        ..sort((a, b) => b.fecha.compareTo(a.fecha)));
+
+  /// Anula la clase de un día a varias personas. `minutos` nulo = la clase
+  /// entera de cada una. No es una falta: queda pendiente de recuperar.
+  Future<void> anularClases({
+    required String fecha,
+    required List<Alumna> alumnas,
+    required int? minutos,
+    required MotivoAnulacion motivo,
+    required String nota,
+    required AppUser quien,
+  }) async {
+    final batch = Refs.db.batch();
+    for (final a in alumnas) {
+      batch.set(Refs.anuladas.doc(ClaseAnulada.idPara(a.id, fecha)), {
+        'alumnaId': a.id,
+        'alumnaNombre': a.nombre,
+        'grupo': a.grupo,
+        'familiaUid': a.familiaUid ?? '',
+        'fecha': fecha,
+        'minutos': minutos ?? a.duracionMinutos,
+        'motivo': motivo.name,
+        'nota': nota.trim(),
+        'recuperados': 0,
+        'avisar': true,
+        'creadoPor': quien.uid,
+        'creadoPorNombre': quien.nombreVisible,
+        'creadoEn': FieldValue.serverTimestamp(),
+      });
+    }
+    await batch.commit();
+  }
+
+  /// Suma minutos recuperados a una clase anulada (sin pasarse de lo anulado).
+  Future<void> registrarRecuperacion(ClaseAnulada c, int minutos) =>
+      Refs.anuladas.doc(c.id).update({
+        'recuperados': (c.recuperados + minutos).clamp(0, c.minutos),
+        'recuperadoEn': FieldValue.serverTimestamp(),
+      });
+
+  Future<void> eliminarAnulada(String id) => Refs.anuladas.doc(id).delete();
 
   /// Guarda varios cambios de golpe. El primero avisa a la familia.
   Future<void> guardarCambios({

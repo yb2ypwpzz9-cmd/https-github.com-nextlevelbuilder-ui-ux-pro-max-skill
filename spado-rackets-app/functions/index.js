@@ -901,6 +901,25 @@ export const avisarCambioClase = onDocumentCreated('cambiosClase/{id}', async (e
   });
 });
 
+const FRASES_ANULACION = {
+  clima: 'por mal tiempo',
+  pista: 'porque la pista no estaba disponible',
+  entrenador: 'porque el entrenador no pudo darla',
+  otro: 'por un motivo ajeno a la alumna',
+};
+
+/** Avisa a la familia cuando se anula la clase de su hijo o hija. */
+export const avisarClaseAnulada = onDocumentCreated('clasesAnuladas/{id}', async (event) => {
+  const c = event.data?.data();
+  if (!c?.familiaUid || c.avisar === false) return;
+  const nombre = String(c.alumnaNombre ?? '').trim().split(' ')[0] || 'Tu hijo o hija';
+  await notificar([c.familiaUid], {
+    title: 'Clase anulada',
+    body: `La clase de ${nombre} se ha anulado ${FRASES_ANULACION[c.motivo] ?? FRASES_ANULACION.otro}. Se recuperará más adelante.`,
+    data: { tipo: 'claseAnulada' },
+  });
+});
+
 /** Avisa al staff del grupo cuando una familia comunica una falta. */
 export const avisarAusencia = onDocumentCreated('ausencias/{id}', async (event) => {
   const a = event.data?.data();

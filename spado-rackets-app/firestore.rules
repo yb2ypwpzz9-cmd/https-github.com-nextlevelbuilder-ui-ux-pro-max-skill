@@ -367,6 +367,62 @@ service cloud.firestore {
       allow delete: if isDireccion();
     }
 
+
+    // Clases que no se pudieron dar (mal tiempo, pista, entrenador…): ajenas a la
+    // alumna, no cuentan como falta y quedan pendientes de recuperar. Las crea
+    // Dirección o el staff del grupo; la familia ve las de su hijo o hija.
+    function anuladaValida(d) {
+      return d.get('fecha', '') is string
+        && fechaValida(d.get('fecha', ''))
+        && d.get('minutos', 0) is number
+        && d.get('minutos', 0) >= 1
+        && d.get('minutos', 0) <= 600
+        && d.get('recuperados', 0) is number
+        && d.get('recuperados', 0) >= 0
+        && d.get('recuperados', 0) <= d.get('minutos', 0)
+        && d.get('motivo', '') in ['clima', 'pista', 'entrenador', 'otro']
+        && textoOpcional(d, 'nota', 200)
+        && textoOpcional(d, 'alumnaNombre', 120)
+        && textoOpcional(d, 'creadoPorNombre', 120);
+    }
+
+    match /clasesAnuladas/{anuladaId} {
+      allow read: if isSignedIn() && (
+        resource == null
+        || isDireccion()
+        || (isStaff() && enMisGrupos(resource.data.get('grupo', '')))
+        || (resource.data.get('familiaUid', '') != ''
+            && resource.data.get('familiaUid', '') == request.auth.uid)
+      );
+
+      allow create: if isSignedIn()
+        && gestionaGrupo(request.resource.data.get('grupo', ''))
+        && existeAlumna(request.resource.data.get('alumnaId', ''))
+        && alumna(request.resource.data.get('alumnaId', '')).data.get('grupo', '')
+             == request.resource.data.get('grupo', '')
+        && request.resource.data.get('familiaUid', '')
+             == alumna(request.resource.data.get('alumnaId', '')).data.get('familiaUid', '')
+        && anuladaId == request.resource.data.get('alumnaId', '') + '_'
+             + request.resource.data.get('fecha', '')
+        && anuladaValida(request.resource.data)
+        && request.resource.data.keys().hasOnly(
+             ['alumnaId', 'alumnaNombre', 'grupo', 'familiaUid', 'fecha', 'minutos',
+              'motivo', 'nota', 'recuperados', 'avisar', 'creadoPor',
+              'creadoPorNombre', 'creadoEn'])
+        && request.resource.data.get('creadoPor', '') == request.auth.uid
+        && request.resource.data.get('creadoEn', null) == request.time;
+
+      // Después solo se corrige lo que se anuló o lo que ya se recuperó.
+      allow update: if isSignedIn()
+        && gestionaGrupo(resource.data.get('grupo', ''))
+        && changedKeys().hasOnly(
+             ['minutos', 'motivo', 'nota', 'recuperados', 'recuperadoEn'])
+        && anuladaValida(request.resource.data);
+
+      allow delete: if isSignedIn()
+        && gestionaGrupo(resource.data.get('grupo', ''));
+    }
+
     // Faltas avisadas por la familia.
     // Cambios de clase de un día concreto (no tocan el horario fijo). Los crea
     // Dirección o el staff del grupo; la familia ve los de su hijo o hija.

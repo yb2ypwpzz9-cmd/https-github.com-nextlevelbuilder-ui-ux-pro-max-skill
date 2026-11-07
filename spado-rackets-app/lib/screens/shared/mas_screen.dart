@@ -48,6 +48,8 @@ class MasScreen extends StatelessWidget {
               const _Enlace(Icons.badge_outlined, 'Equipo y cuentas', '/equipo'),
               const _Enlace(Icons.fact_check_outlined,
                   'Asistencia del alumnado', '/asistencia'),
+              const _Enlace(Icons.event_repeat_outlined, 'Clases por recuperar',
+                  '/recuperar'),
               const _Enlace(Icons.account_balance_outlined, 'Datos bancarios',
                   '/datos-bancarios'),
               // Los grupos ya no se usan; este acceso solo aparece mientras

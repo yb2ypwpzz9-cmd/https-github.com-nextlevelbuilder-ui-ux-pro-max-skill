@@ -5,9 +5,11 @@ import '../../models/alumna.dart';
 import '../../models/app_user.dart';
 import '../../models/asistencia.dart';
 import '../../models/cambio_clase.dart';
+import '../../models/clase_anulada.dart';
 import '../../services/auth_service.dart';
 import '../../services/club_repository.dart';
 import '../../theme/app_theme.dart';
+import '../../widgets/anular_clase.dart';
 import '../../widgets/common.dart';
 import '../../widgets/foto_alumna.dart';
 
@@ -38,6 +40,7 @@ class _PasarListaScreenState extends State<PasarListaScreen> {
   late Stream<List<Asistencia>> _sesion;
   late Stream<List<Ausencia>> _ausencias;
   late Stream<List<CambioClase>> _cambios;
+  late Stream<List<ClaseAnulada>> _anuladas;
 
   @override
   void initState() {
@@ -52,6 +55,7 @@ class _PasarListaScreenState extends State<PasarListaScreen> {
     _sesion = _repo.watchAsistenciaDia(clave, grupos: grupos);
     _ausencias = _repo.watchAusenciasDia(clave, grupos: grupos);
     _cambios = _repo.watchCambiosDia(clave, grupos: grupos);
+    _anuladas = _repo.watchAnuladasDia(clave, grupos: grupos);
     _marcas.clear();
     _cargadas = false;
   }
@@ -161,11 +165,16 @@ class _PasarListaScreenState extends State<PasarListaScreen> {
             builder: (context, ausencias) => StreamView<List<CambioClase>>(
               streamKey: claveFecha(_fecha),
               stream: _cambios,
-              builder: (context, cambios) => _lista(
-                todas.where((a) => a.activa).toList(),
-                guardadas,
-                ausencias,
-                {for (final c in cambios) c.alumnaId: c},
+              builder: (context, cambios) => StreamView<List<ClaseAnulada>>(
+                streamKey: claveFecha(_fecha),
+                stream: _anuladas,
+                builder: (context, anuladas) => _lista(
+                  todas.where((a) => a.activa).toList(),
+                  guardadas,
+                  ausencias,
+                  {for (final c in cambios) c.alumnaId: c},
+                  {for (final c in anuladas) c.alumnaId: c},
+                ),
               ),
             ),
           ),
@@ -179,6 +188,7 @@ class _PasarListaScreenState extends State<PasarListaScreen> {
     List<Asistencia> guardadas,
     List<Ausencia> ausencias,
     Map<String, CambioClase> cambios,
+    Map<String, ClaseAnulada> anuladas,
   ) {
     final avisos = {for (final a in ausencias) a.alumnaId: a};
     if (!_cargadas) {
@@ -203,8 +213,10 @@ class _PasarListaScreenState extends State<PasarListaScreen> {
         return c != 0 ? c : a.nombre.compareTo(b.nombre);
       });
 
+    // Quien tiene la clase anulada no cuenta: ni presente ni falta.
+    final activos = alumnas.where((a) => !anuladas.containsKey(a.id)).toList();
     final presentes =
-        alumnas.where((a) => _marcas[a.id] == EstadoAsistencia.presente).length;
+        activos.where((a) => _marcas[a.id] == EstadoAsistencia.presente).length;
     final yaGuardada = guardadas.isNotEmpty;
 
     return Column(
@@ -218,38 +230,53 @@ class _PasarListaScreenState extends State<PasarListaScreen> {
                   title: Text(capitalizar(fechaLargaFormat.format(_fecha))),
                   subtitle: Text(yaGuardada
                       ? 'Guardada por ${guardadas.first.marcadoPorNombre ?? 'el club'}'
-                      : '${alumnas.length} ${alumnas.length == 1 ? 'persona tiene' : 'personas tienen'} clase'),
+                      : '${alumnas.length} ${alumnas.length == 1 ? 'persona tiene' : 'personas tienen'} clase'
+                          '${anuladas.isEmpty ? '' : ' · ${anuladas.length} anulada${anuladas.length == 1 ? '' : 's'}'}'),
                   trailing: TextButton(
                     onPressed: _elegirFecha,
                     child: const Text('Cambiar'),
                   ),
                 ),
               ),
+              const SizedBox(height: AppSpacing.sm),
+              OutlinedButton.icon(
+                onPressed: activos.isEmpty
+                    ? null
+                    : () => anularClase(
+                          context,
+                          fecha: claveFecha(_fecha),
+                          fechaTexto:
+                              capitalizar(fechaLargaFormat.format(_fecha)),
+                          candidatos: activos,
+                        ),
+                icon: const Icon(Icons.cloud_off_outlined, size: 18),
+                label: const Text('Anular clase (mal tiempo, pista…)'),
+              ),
               const SizedBox(height: AppSpacing.md),
               Row(
                 children: [
                   Expanded(
                     child: StatusChip(
-                      label: '$presentes de ${alumnas.length} en la pista',
+                      label: '$presentes de ${activos.length} en la pista',
                       color: AppColors.success,
                       icon: Icons.check,
                     ),
                   ),
                   TextButton.icon(
-                    onPressed: alumnas.isEmpty
+                    onPressed: activos.isEmpty
                         ? null
                         : () async {
                             setState(() {
-                              for (final a in alumnas) {
+                              for (final a in activos) {
                                 _marcas[a.id] = EstadoAsistencia.presente;
                               }
                             });
                             try {
                               await _repo.guardarLista(
                                 fecha: claveFecha(_fecha),
-                                alumnas: alumnas,
+                                alumnas: activos,
                                 marcas: {
-                                  for (final a in alumnas)
+                                  for (final a in activos)
                                     a.id: EstadoAsistencia.presente,
                                 },
                                 quien: _yo,
@@ -296,6 +323,7 @@ class _PasarListaScreenState extends State<PasarListaScreen> {
                         cambiada: cambios[a.id] != null,
                         presente: _marcas[a.id] == EstadoAsistencia.presente,
                         aviso: avisos[a.id],
+                        anulada: anuladas[a.id],
                         onChanged: (v) => _marcar(a, v),
                       ),
                   ],
@@ -323,9 +351,9 @@ class _PasarListaScreenState extends State<PasarListaScreen> {
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 728),
                 child: FilledButton(
-                  onPressed: _guardando || alumnas.isEmpty
+                  onPressed: _guardando || activos.isEmpty
                       ? null
-                      : () => _terminar(alumnas, avisos),
+                      : () => _terminar(activos, avisos),
                   child: Text(_guardando ? 'Guardando…' : 'Terminar lista'),
                 ),
               ),
@@ -345,8 +373,10 @@ class _FilaAlumna extends StatelessWidget {
     required this.presente,
     required this.onChanged,
     this.aviso,
+    this.anulada,
   });
 
+  final ClaseAnulada? anulada;
   final Alumna alumna;
   final String hora;
   final bool cambiada;
@@ -362,7 +392,7 @@ class _FilaAlumna extends StatelessWidget {
       selected: presente,
       label: '${alumna.nombre}, ${presente ? 'presente' : 'sin marcar'}',
       child: InkWell(
-        onTap: () => onChanged(!presente),
+        onTap: anulada != null ? null : () => onChanged(!presente),
         child: Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: AppSpacing.md,
@@ -384,33 +414,42 @@ class _FilaAlumna extends StatelessWidget {
                             : formatoHora12(hora),
                         style: t.bodySmall,
                       ),
+                    if (anulada != null)
+                      Text(
+                        'Clase anulada · ${anulada!.motivo.etiqueta} · '
+                        '${duracionTexto(anulada!.minutos)}',
+                        style: t.bodySmall?.copyWith(color: AppColors.warning),
+                      ),
                     if (aviso != null)
                       Text(
                         'Aviso de la familia: ${aviso!.motivo.isEmpty ? 'no vendrá' : aviso!.motivo}',
-                        style:
-                            t.bodySmall?.copyWith(color: AppColors.warning),
+                        style: t.bodySmall?.copyWith(color: AppColors.warning),
                       ),
                   ],
                 ),
               ),
-              AnimatedContainer(
-                duration: const Duration(milliseconds: 120),
-                width: 44,
-                height: 44,
-                decoration: BoxDecoration(
-                  color: presente ? AppColors.success : AppColors.surface,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                    color: presente ? AppColors.success : AppColors.border,
-                    width: 2,
+              if (anulada != null)
+                const Icon(Icons.cloud_off_outlined,
+                    color: AppColors.warning, size: 28)
+              else
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 120),
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    color: presente ? AppColors.success : AppColors.surface,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: presente ? AppColors.success : AppColors.border,
+                      width: 2,
+                    ),
+                  ),
+                  child: Icon(
+                    Icons.check,
+                    color: presente ? Colors.white : Colors.transparent,
+                    size: 26,
                   ),
                 ),
-                child: Icon(
-                  Icons.check,
-                  color: presente ? Colors.white : Colors.transparent,
-                  size: 26,
-                ),
-              ),
             ],
           ),
         ),

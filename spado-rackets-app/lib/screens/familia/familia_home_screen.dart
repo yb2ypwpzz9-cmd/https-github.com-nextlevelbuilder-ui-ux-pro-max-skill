@@ -8,6 +8,7 @@ import '../../models/app_user.dart';
 import '../../models/asistencia.dart';
 import '../../models/cambio_clase.dart';
 import '../../models/chat.dart';
+import '../../models/clase_anulada.dart';
 import '../../models/pago.dart';
 import '../../services/auth_service.dart';
 import '../../services/club_repository.dart';
@@ -81,6 +82,7 @@ class _FamiliaHomeScreenState extends State<FamiliaHomeScreen> {
               ],
               _EstadoCuotas(uid: user.uid),
               _ProximosCambios(alumna: alumna, uid: user.uid),
+              _ClasesAnuladas(alumna: alumna, uid: user.uid),
               _Asistencia(alumna: alumna, uid: user.uid),
               const _UltimoAviso(),
               const SizedBox(height: AppSpacing.md),
@@ -126,6 +128,63 @@ class _ProximosCambios extends StatelessWidget {
                       color: AppColors.navy,
                     ),
                     title: Text(textoCambioClase(c)),
+                  ),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.md),
+          ],
+        );
+      },
+    );
+  }
+}
+
+/// Clases que no se pudieron dar y lo que falta por recuperar.
+class _ClasesAnuladas extends StatelessWidget {
+  const _ClasesAnuladas({required this.alumna, required this.uid});
+  final Alumna alumna;
+  final String uid;
+
+  @override
+  Widget build(BuildContext context) {
+    final desde = claveFecha(DateTime.now().subtract(const Duration(days: 30)));
+    return StreamView<List<ClaseAnulada>>(
+      streamKey: uid,
+      stream: context.read<ClubRepository>().watchAnuladasFamilia(uid),
+      builder: (context, todas) {
+        final suyas = todas
+            .where((c) =>
+                c.alumnaId == alumna.id &&
+                (!c.recuperada || c.fecha.compareTo(desde) >= 0))
+            .toList();
+        if (suyas.isEmpty) return const SizedBox.shrink();
+        final pendiente = suyas.fold<int>(0, (s, c) => s + c.pendientes);
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            SectionHeader(
+              'Clases anuladas',
+              subtitle: pendiente == 0
+                  ? 'Todo recuperado'
+                  : 'Por recuperar: ${duracionTexto(pendiente)}',
+            ),
+            CardList(
+              children: [
+                for (final c in suyas)
+                  ListTile(
+                    dense: true,
+                    leading: Icon(
+                      c.recuperada
+                          ? Icons.check_circle_outline
+                          : Icons.cloud_off_outlined,
+                      color: c.recuperada ? AppColors.success : AppColors.warning,
+                    ),
+                    title: Text(
+                        '${capitalizar(fechaCortaFormat.format(fechaDeClave(c.fecha)))}: '
+                        'clase anulada ${c.motivo.frase}'),
+                    subtitle: Text(c.recuperada
+                        ? 'Recuperada'
+                        : 'Pendiente de recuperar: ${duracionTexto(c.pendientes)}'),
                   ),
               ],
             ),
