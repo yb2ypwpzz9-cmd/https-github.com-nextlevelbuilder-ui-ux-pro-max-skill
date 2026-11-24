@@ -567,3 +567,53 @@ describe('clases anuladas (mal tiempo, pista, entrenador)', () => {
     await assertSucceeds(deleteDoc(doc(como(STAFF), ruta())));
   });
 });
+
+describe('Dirección registra cobros y fichajes por otras personas', () => {
+  const pdf = new Uint8Array([37, 80, 68, 70]);
+
+  // Que Dirección SÍ pueda subir depende de `firestore.get(...)` desde Storage,
+  // que el emulador no resuelve (devuelve null); en producción funciona. Aquí
+  // se prueban las negaciones, que son las que protegen los datos.
+  test('ni el staff, ni otra familia, ni un tipo no admitido pueden subir en nombre de una familia', async () => {
+    await assertFails(uploadBytes(ref(storageDe(STAFF), `comprobantes/${FAM}/x.pdf`), pdf, { contentType: 'application/pdf' }));
+    await assertFails(uploadBytes(ref(storageDe(FAM2), `comprobantes/${FAM}/y.pdf`), pdf, { contentType: 'application/pdf' }));
+    await assertFails(uploadBytes(ref(storageDe(DIR), `comprobantes/${FAM}/z.html`), pdf, { contentType: 'text/html' }));
+  });
+
+  test('Dirección marca una cuota como cobrada por transferencia, con justificante', async () => {
+    await assertSucceeds(updateDoc(doc(como(DIR), 'pagos/a1_2026-10'), {
+      estado: 'pagado', metodo: 'transferencia', registradoAMano: true,
+      resueltoEn: Timestamp.fromDate(new Date('2026-10-03T12:00:00Z')), resueltoPor: DIR, resueltoPorNombre: 'Dirección',
+      comprobantePath: `comprobantes/${FAM}/w.pdf`, comprobanteNombre: 'w.pdf', subidoEn: serverTimestamp(),
+    }));
+    await assertFails(updateDoc(doc(como(STAFF), 'pagos/a2_2026-10'), { estado: 'pagado', metodo: 'efectivo' }));
+  });
+
+  const jornada = (extra = {}) => ({
+    staffUid: STAFF, staffNombre: 'Laura', fecha: '2026-10-05', entrada: Timestamp.fromDate(new Date('2026-10-05T21:00:00Z')),
+    corregidoPorDireccion: true, registradoPor: DIR, registradoPorNombre: 'Dirección', registradoEn: serverTimestamp(), ...extra,
+  });
+
+  test('Dirección ficha por un entrenador que se olvidó (sin ubicación) y corrige la hora', async () => {
+    await assertSucceeds(setDoc(doc(como(DIR), `jornadas/${STAFF}_2026-10-05`), jornada({ nota: 'Se le olvidó fichar' })));
+    await assertSucceeds(updateDoc(doc(como(DIR), `jornadas/${STAFF}_2026-10-05`), {
+      entrada: Timestamp.fromDate(new Date('2026-10-05T20:30:00Z')), corregidoPorDireccion: true,
+      registradoPor: DIR, registradoPorNombre: 'Dirección', registradoEn: serverTimestamp(), nota: 'Corregido',
+    }));
+  });
+
+  test('nadie más ficha por otro, ni se puede fichar a una familia ni cambiar la fecha', async () => {
+    await assertFails(setDoc(doc(como(STAFF2), `jornadas/${STAFF}_2026-10-06`), jornada({ fecha: '2026-10-06', registradoPor: STAFF2 })));
+    await assertFails(setDoc(doc(como(FAM), `jornadas/${FAM}_2026-10-06`), jornada({ staffUid: FAM, fecha: '2026-10-06', registradoPor: FAM })));
+    await assertFails(setDoc(doc(como(DIR), `jornadas/${FAM}_2026-10-06`), jornada({ staffUid: FAM, fecha: '2026-10-06' })));
+    await assertFails(setDoc(doc(como(DIR), `jornadas/${STAFF}_2026-10-06`), jornada({ fecha: '2026-10-07' })));
+    await assertFails(setDoc(doc(como(DIR), `jornadas/${STAFF}_2026-10-06`), jornada({ fecha: '2026-10-06', registradoPor: 'otro' })));
+    await assertFails(setDoc(doc(como(DIR), `jornadas/${STAFF}_2026-10-06`), jornada({ fecha: '2026-10-06', entradaLat: 18.5 })));
+    // El staff no puede corregirse la hora.
+    await env.withSecurityRulesDisabled(async (ctx) => {
+      await setDoc(doc(ctx.firestore(), `jornadas/${STAFF}_2026-10-08`), { staffUid: STAFF, staffNombre: 'Laura', fecha: '2026-10-08', entrada: Timestamp.now() });
+    });
+    await assertFails(updateDoc(doc(como(STAFF), `jornadas/${STAFF}_2026-10-08`), { entrada: Timestamp.now() }));
+    await assertFails(updateDoc(doc(como(DIR), `jornadas/${STAFF}_2026-10-08`), { fecha: '2026-10-09', corregidoPorDireccion: true, registradoPor: DIR, registradoEn: serverTimestamp() }));
+  });
+});

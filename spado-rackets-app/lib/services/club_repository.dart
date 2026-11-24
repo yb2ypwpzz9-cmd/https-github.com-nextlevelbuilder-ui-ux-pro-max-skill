@@ -337,6 +337,44 @@ class ClubRepository {
     }
   }
 
+  /// Dirección ficha por una persona que se olvidó. Sin ubicación y marcado
+  /// como hecho por Dirección. La hora es la que Dirección indica.
+  Future<void> registrarFichajePorDireccion({
+    required AppUser persona,
+    required DateTime entrada,
+    required AppUser quien,
+    String nota = '',
+  }) {
+    final fecha = claveFecha(entrada);
+    return Refs.jornadas.doc('${persona.uid}_$fecha').set({
+      'staffUid': persona.uid,
+      'staffNombre': persona.nombreVisible,
+      'fecha': fecha,
+      'entrada': Timestamp.fromDate(entrada),
+      'corregidoPorDireccion': true,
+      'registradoPor': quien.uid,
+      'registradoPorNombre': quien.nombreVisible,
+      'registradoEn': FieldValue.serverTimestamp(),
+      if (nota.trim().isNotEmpty) 'nota': nota.trim(),
+    });
+  }
+
+  /// Dirección corrige la hora de un fichaje. Queda constancia de quién.
+  Future<void> corregirFichaje(
+    Jornada j, {
+    required DateTime entrada,
+    required AppUser quien,
+    String nota = '',
+  }) =>
+      Refs.jornadas.doc(j.id).update({
+        'entrada': Timestamp.fromDate(entrada),
+        'corregidoPorDireccion': true,
+        'registradoPor': quien.uid,
+        'registradoPorNombre': quien.nombreVisible,
+        'registradoEn': FieldValue.serverTimestamp(),
+        'nota': nota.trim(),
+      });
+
   /// Dirección: elimina un fichaje (una prueba, un error). Quien fichó vuelve
   /// a poder fichar ese día.
   Future<void> eliminarFichaje(String id) => Refs.jornadas.doc(id).delete();
@@ -823,16 +861,7 @@ class ClubRepository {
     required String nombreArchivo,
     required String contentType,
   }) async {
-    final extensionBruta = nombreArchivo.contains('.')
-        ? nombreArchivo.split('.').last.toLowerCase()
-        : '';
-    // Solo letras y números: el nombre del archivo viaja dentro de la ruta.
-    final extensionLimpia = extensionBruta.replaceAll(RegExp(r'[^a-z0-9]'), '');
-    final extension = extensionLimpia.isEmpty || extensionLimpia.length > 5
-        ? (contentType == 'application/pdf' ? 'pdf' : 'jpg')
-        : extensionLimpia;
-    final ruta =
-        'comprobantes/$uid/${pago.id}_${DateTime.now().millisecondsSinceEpoch}.$extension';
+    final ruta = _rutaComprobante(uid, pago.id, nombreArchivo, contentType);
 
     await FirebaseStorage.instance
         .ref(ruta)
@@ -847,6 +876,82 @@ class ClubRepository {
       'subidoEn': FieldValue.serverTimestamp(),
       'motivoRechazo': null,
     });
+  }
+
+  static String _rutaComprobante(
+      String carpeta, String pagoId, String nombreArchivo, String contentType) {
+    final extensionBruta = nombreArchivo.contains('.')
+        ? nombreArchivo.split('.').last.toLowerCase()
+        : '';
+    // Solo letras y números: el nombre del archivo viaja dentro de la ruta.
+    final extensionLimpia = extensionBruta.replaceAll(RegExp(r'[^a-z0-9]'), '');
+    final extension = extensionLimpia.isEmpty || extensionLimpia.length > 5
+        ? (contentType == 'application/pdf' ? 'pdf' : 'jpg')
+        : extensionLimpia;
+    return 'comprobantes/$carpeta/${pagoId}_${DateTime.now().millisecondsSinceEpoch}.$extension';
+  }
+
+  /// Dirección sube un justificante que le llegó por otro canal (WhatsApp).
+  /// Va a la carpeta de la familia; si aún no tiene cuenta, a `club`.
+  Future<Map<String, Object?>> _subirJustificanteDeDireccion(
+    Pago pago,
+    Uint8List bytes,
+    String nombreArchivo,
+    String contentType,
+  ) async {
+    final carpeta = pago.familiaUid.isEmpty ? 'club' : pago.familiaUid;
+    final ruta = _rutaComprobante(carpeta, pago.id, nombreArchivo, contentType);
+    await FirebaseStorage.instance
+        .ref(ruta)
+        .putData(bytes, SettableMetadata(contentType: contentType));
+    return {
+      'comprobantePath': ruta,
+      'comprobanteNombre': nombreArchivo.length > 120
+          ? nombreArchivo.substring(0, 120)
+          : nombreArchivo,
+      'subidoEn': FieldValue.serverTimestamp(),
+    };
+  }
+
+  /// Dirección: registra que una cuota está pagada, por transferencia o en
+  /// efectivo, con la fecha real y, si la hay, la captura del banco. La familia
+  /// recibe el aviso de pago confirmado.
+  Future<void> registrarCobro(
+    Pago pago, {
+    required AppUser quien,
+    required bool efectivo,
+    required DateTime fechaPago,
+    Uint8List? bytes,
+    String? nombreArchivo,
+    String? contentType,
+  }) async {
+    final adjunto = bytes == null
+        ? const <String, Object?>{}
+        : await _subirJustificanteDeDireccion(
+            pago, bytes, nombreArchivo ?? 'justificante', contentType ?? 'image/jpeg');
+    await Refs.pagos.doc(pago.id).update({
+      'estado': EstadoPago.pagado.wire,
+      'metodo': efectivo ? 'efectivo' : 'transferencia',
+      'registradoAMano': true,
+      'motivoRechazo': null,
+      'resueltoEn': Timestamp.fromDate(
+          DateTime(fechaPago.year, fechaPago.month, fechaPago.day, 12)),
+      'resueltoPor': quien.uid,
+      'resueltoPorNombre': quien.nombreVisible,
+      ...adjunto,
+    });
+  }
+
+  /// Dirección: guarda un justificante en una cuota sin cambiar su estado.
+  Future<void> adjuntarJustificante(
+    Pago pago, {
+    required Uint8List bytes,
+    required String nombreArchivo,
+    required String contentType,
+  }) async {
+    final adjunto = await _subirJustificanteDeDireccion(
+        pago, bytes, nombreArchivo, contentType);
+    await Refs.pagos.doc(pago.id).update(adjunto);
   }
 
   /// Dirección: cambia el importe de una cuota.
@@ -880,6 +985,7 @@ class ClubRepository {
   }) =>
       Refs.pagos.doc(pago.id).update({
         'estado': (aprobado ? EstadoPago.pagado : EstadoPago.rechazado).wire,
+        if (aprobado && pago.tieneComprobante) 'metodo': 'transferencia',
         'motivoRechazo': aprobado ? null : motivo?.trim(),
         'resueltoEn': FieldValue.serverTimestamp(),
         'resueltoPor': quien.uid,
@@ -900,6 +1006,7 @@ class ClubRepository {
   Future<void> reabrirPago(Pago pago) => Refs.pagos.doc(pago.id).update({
         'estado': EstadoPago.pendiente.wire,
         'registradoAMano': false,
+        'metodo': FieldValue.delete(),
         'resueltoEn': null,
       });
 

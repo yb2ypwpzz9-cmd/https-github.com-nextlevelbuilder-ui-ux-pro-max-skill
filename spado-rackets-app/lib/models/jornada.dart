@@ -22,6 +22,9 @@ class Jornada {
     this.salidaLat,
     this.salidaLng,
     this.salidaPrecision,
+    this.corregidaPorDireccion = false,
+    this.registradoPorNombre,
+    this.nota = '',
   });
 
   final String id;
@@ -35,6 +38,11 @@ class Jornada {
   final double? salidaLat;
   final double? salidaLng;
   final double? salidaPrecision;
+
+  /// La registró o corrigió Dirección (sin ubicación): se olvidó de fichar.
+  final bool corregidaPorDireccion;
+  final String? registradoPorNombre;
+  final String nota;
 
 
   Duration duracionHasta(DateTime ahora) =>
@@ -66,6 +74,9 @@ class Jornada {
       salidaLat: num_('salidaLat'),
       salidaLng: num_('salidaLng'),
       salidaPrecision: num_('salidaPrecision'),
+      corregidaPorDireccion: (data['corregidoPorDireccion'] as bool?) ?? false,
+      registradoPorNombre: data['registradoPorNombre'] as String?,
+      nota: (data['nota'] as String?) ?? '',
     );
   }
 }

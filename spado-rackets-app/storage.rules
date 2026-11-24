@@ -31,9 +31,12 @@ service firebase.storage {
       allow read: if isSignedIn()
         && (request.auth.uid == uid || rol() == 'direccion');
 
+      // Dirección también los sube, en nombre de la familia, cuando llegan por
+      // WhatsApp (en la carpeta de esa familia, o en `club` si aún no tiene
+      // cuenta).
       allow create: if isSignedIn()
-        && request.auth.uid == uid
-        && esFamiliaVinculada()
+        && ((request.auth.uid == uid && esFamiliaVinculada())
+            || rol() == 'direccion')
         && request.resource.size < 8 * 1024 * 1024
         && request.resource.contentType in
              ['image/jpeg', 'image/png', 'image/webp', 'image/heic',

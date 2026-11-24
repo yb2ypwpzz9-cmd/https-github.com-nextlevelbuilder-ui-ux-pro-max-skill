@@ -321,9 +321,40 @@ service cloud.firestore {
              'staffUid', 'staffNombre', 'fecha', 'entrada',
              'entradaLat', 'entradaLng', 'entradaPrecision']);
 
-      // Un fichaje es un registro de control: nadie lo edita. Solo Dirección
-      // puede eliminarlo (pruebas, fichajes erróneos); quien ficha, no.
-      allow update: if false;
+      // Dirección ficha por una persona que se olvidó (o corrige la hora). No
+      // lleva ubicación y queda marcado como hecho por Dirección: así se ve
+      // quién lo registró. El staff no puede tocar ni los suyos.
+      allow create: if isDireccion()
+        && jornadaId.matches('[A-Za-z0-9]+_[0-9]{4}-[0-9]{2}-[0-9]{2}')
+        && request.resource.data.get('staffUid', '') == jornadaId.split('_')[0]
+        && request.resource.data.get('fecha', '') == jornadaId.split('_')[1]
+        && fechaValida(request.resource.data.get('fecha', ''))
+        && exists(/databases/$(database)/documents/users/$(jornadaId.split('_')[0]))
+        && get(/databases/$(database)/documents/users/$(jornadaId.split('_')[0]))
+             .data.get('role', '') == 'staff'
+        && request.resource.data.get('entrada', null) is timestamp
+        && textoValido(request.resource.data.get('staffNombre', ''), 120)
+        && request.resource.data.get('corregidoPorDireccion', false) == true
+        && request.resource.data.get('registradoPor', '') == request.auth.uid
+        && request.resource.data.get('registradoEn', null) == request.time
+        && textoOpcional(request.resource.data, 'nota', 200)
+        && textoOpcional(request.resource.data, 'registradoPorNombre', 120)
+        && request.resource.data.keys().hasOnly([
+             'staffUid', 'staffNombre', 'fecha', 'entrada', 'corregidoPorDireccion',
+             'registradoPor', 'registradoPorNombre', 'registradoEn', 'nota']);
+
+      // Un fichaje es un registro de control: solo Dirección corrige la hora,
+      // y queda constancia de quién y cuándo.
+      allow update: if isDireccion()
+        && changedKeys().hasOnly(
+             ['entrada', 'nota', 'corregidoPorDireccion', 'registradoPor',
+              'registradoPorNombre', 'registradoEn'])
+        && request.resource.data.get('entrada', null) is timestamp
+        && request.resource.data.get('corregidoPorDireccion', false) == true
+        && request.resource.data.get('registradoPor', '') == request.auth.uid
+        && request.resource.data.get('registradoEn', null) == request.time
+        && textoOpcional(request.resource.data, 'nota', 200);
+      // Solo Dirección puede eliminarlo (pruebas, fichajes erróneos).
       allow delete: if isDireccion();
     }
 

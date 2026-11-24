@@ -185,7 +185,7 @@ class _FilaFichaje extends StatelessWidget {
       ),
       subtitle: Text(
         'Llegada ${horaFormat.format(j.entrada)}'
-        '${j.entradaConUbicacion ? '' : ' · sin ubicación'}',
+        '${j.corregidaPorDireccion ? ' · registrado por Dirección' : j.entradaConUbicacion ? '' : ' · sin ubicación'}',
       ),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,

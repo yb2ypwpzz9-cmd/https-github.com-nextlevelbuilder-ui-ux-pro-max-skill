@@ -10,6 +10,7 @@ import '../../services/descarga.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/common.dart';
 import '../../widgets/pago_widgets.dart';
+import '../../widgets/registrar_cobro.dart' as cobro;
 import '../app_shell.dart';
 
 enum _Filtro { todas, revision, sinCobrar, pagadas }
@@ -274,7 +275,8 @@ class _PagosDireccionScreenState extends State<PagosDireccionScreen> {
                             [
                               formatoImporte(p.importe, p.moneda),
                               if (p.tieneComprobante) 'con justificante',
-                              if (p.registradoAMano) 'cobro manual',
+                              if (p.formaDePago.isNotEmpty) p.formaDePago.toLowerCase(),
+                              if (p.registradoAMano) 'registrado por Dirección',
                             ].join(' · '),
                           ),
                           trailing: EstadoPagoChip(p),
@@ -506,8 +508,15 @@ class _RevisarPagoState extends State<_RevisarPago> {
               label: Text('Abrir justificante (${p.comprobanteNombre ?? 'archivo'})'),
             )
           else
-            const InlineNotice(
-              message: 'La familia aún no ha subido justificante.',
+            OutlinedButton.icon(
+              onPressed: _ocupado
+                  ? null
+                  : () async {
+                      final ok = await cobro.adjuntarJustificante(context, p);
+                      if (ok && context.mounted) Navigator.pop(context);
+                    },
+              icon: const Icon(Icons.attach_file),
+              label: const Text('Adjuntar justificante (de WhatsApp…)'),
             ),
           const SizedBox(height: AppSpacing.md),
           if (_rechazando) ...[
@@ -556,15 +565,16 @@ class _RevisarPagoState extends State<_RevisarPago> {
               child: const Text('Rechazar justificante'),
             ),
           ] else if (p.necesitaAccionFamilia)
-            OutlinedButton.icon(
+            FilledButton.icon(
+              style: FilledButton.styleFrom(backgroundColor: AppColors.success),
               onPressed: _ocupado
                   ? null
-                  : () => _hacer(
-                        () => repo.registrarCobroManual(p, yo),
-                        'Cobro registrado.',
-                      ),
+                  : () async {
+                      final ok = await cobro.registrarCobro(context, p);
+                      if (ok && context.mounted) Navigator.pop(context);
+                    },
               icon: const Icon(Icons.payments_outlined),
-              label: const Text('Registrar cobro en efectivo'),
+              label: const Text('Registrar cobro'),
             )
           else if (p.estado == EstadoPago.pagado)
             TextButton(

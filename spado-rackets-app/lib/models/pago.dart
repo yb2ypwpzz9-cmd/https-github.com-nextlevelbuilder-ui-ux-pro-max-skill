@@ -127,8 +127,10 @@ class Pago {
 
   /// Cómo se cobró, para los informes.
   String get formaDePago {
-    if (metodo == 'efectivo' || registradoAMano) return 'Efectivo';
-    if (metodo == 'transferencia' || tieneComprobante) return 'Transferencia';
+    if (metodo == 'efectivo') return 'Efectivo';
+    if (metodo == 'transferencia') return 'Transferencia';
+    if (registradoAMano) return 'Efectivo';
+    if (tieneComprobante) return 'Transferencia';
     return '';
   }
 

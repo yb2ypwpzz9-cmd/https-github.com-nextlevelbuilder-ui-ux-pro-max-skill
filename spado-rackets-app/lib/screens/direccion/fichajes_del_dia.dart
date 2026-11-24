@@ -10,6 +10,7 @@ import '../../services/auth_service.dart';
 import '../../services/club_repository.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/common.dart';
+import '../../widgets/horario_alumna.dart' show elegirHoraDigital, hora12;
 
 /// Quién ha fichado un día y quién no, con un botón para recordárselo a cada
 /// entrenador que falta (aviso al móvil; si no tiene avisos, se le escribe por
@@ -60,6 +61,125 @@ class _FichajesDelDiaState extends State<FichajesDelDia> {
       }
     } finally {
       if (mounted) setState(() => _enviando = null);
+    }
+  }
+
+  /// Pide la hora de llegada (y una nota) para fichar por alguien o corregirle
+  /// la hora. Sin ubicación: lo hace Dirección, no la persona.
+  Future<({DateTime entrada, String nota})?> _pedirHora({
+    required String titulo,
+    required TimeOfDay inicial,
+    String nota = '',
+  }) async {
+    var hora = inicial;
+    final controlador = TextEditingController(text: nota);
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setLocal) => AlertDialog(
+          title: Text(titulo),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(capitalizar(fechaLargaFormat.format(_dia)),
+                    style: Theme.of(context).textTheme.bodySmall),
+                const SizedBox(height: AppSpacing.sm),
+                OutlinedButton.icon(
+                  icon: const Icon(Icons.schedule),
+                  label: Text('Hora de llegada: ${hora12(hora)}'),
+                  onPressed: () async {
+                    final h = await elegirHoraDigital(context, hora);
+                    if (h != null) setLocal(() => hora = h);
+                  },
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                TextField(
+                  controller: controlador,
+                  maxLength: 200,
+                  decoration: const InputDecoration(
+                    labelText: 'Nota (opcional)',
+                    hintText: 'Ej. se le olvidó fichar',
+                    counterText: '',
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                const InlineNotice(
+                  message: 'Se guarda sin ubicación y queda marcado como '
+                      'registrado por Dirección.',
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('Cancelar'),
+            ),
+            FilledButton(
+              style: FilledButton.styleFrom(minimumSize: const Size(0, 44)),
+              onPressed: () => Navigator.pop(context, true),
+              child: const Text('Guardar'),
+            ),
+          ],
+        ),
+      ),
+    );
+    final texto = controlador.text;
+    controlador.dispose();
+    if (ok != true) return null;
+    final entrada =
+        DateTime(_dia.year, _dia.month, _dia.day, hora.hour, hora.minute);
+    if (entrada.isAfter(DateTime.now())) {
+      if (mounted) {
+        showAppSnackBar(context, 'La hora no puede ser futura.', isError: true);
+      }
+      return null;
+    }
+    return (entrada: entrada, nota: texto);
+  }
+
+  Future<void> _registrar(AppUser persona) async {
+    final yo = context.read<SessionController>().appUser!;
+    final r = await _pedirHora(
+      titulo: 'Fichar por ${persona.nombreVisible}',
+      inicial: _esHoy
+          ? TimeOfDay.now()
+          : const TimeOfDay(hour: 17, minute: 0),
+    );
+    if (r == null) return;
+    try {
+      await _repo.registrarFichajePorDireccion(
+          persona: persona, entrada: r.entrada, quien: yo, nota: r.nota);
+      if (mounted) {
+        showAppSnackBar(
+            context, 'Fichaje de ${persona.nombreVisible} registrado.');
+      }
+    } catch (_) {
+      if (mounted) {
+        showAppSnackBar(context, 'No se pudo registrar el fichaje.',
+            isError: true);
+      }
+    }
+  }
+
+  Future<void> _corregir(AppUser persona, Jornada j) async {
+    final yo = context.read<SessionController>().appUser!;
+    final r = await _pedirHora(
+      titulo: 'Corregir el fichaje de ${persona.nombreVisible}',
+      inicial: TimeOfDay.fromDateTime(j.entrada),
+      nota: j.nota,
+    );
+    if (r == null) return;
+    try {
+      await _repo.corregirFichaje(j, entrada: r.entrada, quien: yo, nota: r.nota);
+      if (mounted) showAppSnackBar(context, 'Fichaje corregido.');
+    } catch (_) {
+      if (mounted) {
+        showAppSnackBar(context, 'No se pudo corregir el fichaje.',
+            isError: true);
+      }
     }
   }
 
@@ -156,6 +276,10 @@ class _FichajesDelDiaState extends State<FichajesDelDia> {
                           esHoy: _esHoy,
                           enviando: _enviando == c.uid,
                           onRecordar: () => _recordar(c),
+                          onRegistrar: () => _registrar(c),
+                          onCorregir: delDia[c.uid] == null
+                              ? null
+                              : () => _corregir(c, delDia[c.uid]!),
                         ),
                     ],
                   ),
@@ -177,6 +301,8 @@ class _FilaPersona extends StatelessWidget {
     required this.esHoy,
     required this.enviando,
     required this.onRecordar,
+    required this.onRegistrar,
+    required this.onCorregir,
   });
 
   final AppUser persona;
@@ -184,43 +310,83 @@ class _FilaPersona extends StatelessWidget {
   final bool esHoy;
   final bool enviando;
   final VoidCallback onRecordar;
+  final VoidCallback onRegistrar;
+  final VoidCallback? onCorregir;
 
   @override
   Widget build(BuildContext context) {
     final j = jornada;
-    return ListTile(
-      leading: Avatar(persona.iniciales),
-      title: Text(persona.nombreVisible),
-      subtitle: Text(j != null
-          ? 'Fichó a las ${horaFormat.format(j.entrada)}'
-              '${j.entradaConUbicacion ? '' : ' · sin ubicación'}'
-          : persona.pendienteActivacion
-              ? 'Aún no ha activado su cuenta'
-              : esHoy
-                  ? 'Todavía no ha fichado'
-                  : 'No fichó este día'),
-      trailing: j != null
-          ? Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (j.mapaEntrada != null)
-                  IconButton(
-                    tooltip: 'Ver ubicación',
-                    icon: const Icon(Icons.place_outlined,
-                        color: AppColors.navy),
-                    onPressed: () => launchUrl(j.mapaEntrada!,
-                        webOnlyWindowName: '_blank'),
-                  ),
-                const Icon(Icons.check_circle, color: AppColors.success),
-              ],
-            )
-          : (esHoy && !persona.pendienteActivacion)
-              ? FilledButton.tonal(
-                  style: FilledButton.styleFrom(minimumSize: const Size(0, 40)),
-                  onPressed: enviando ? null : onRecordar,
-                  child: Text(enviando ? 'Enviando…' : 'Recordar'),
+    final pendiente = persona.pendienteActivacion;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        ListTile(
+          leading: Avatar(persona.iniciales),
+          title: Text(persona.nombreVisible),
+          isThreeLine: j != null && j.nota.isNotEmpty,
+          subtitle: Text(j != null
+              ? 'Llegó a las ${horaFormat.format(j.entrada)}'
+                  '${j.corregidaPorDireccion ? ' · registrado por Dirección' : j.entradaConUbicacion ? '' : ' · sin ubicación'}'
+                  '${j.nota.isEmpty ? '' : '\n${j.nota}'}'
+              : pendiente
+                  ? 'Aún no ha activado su cuenta'
+                  : esHoy
+                      ? 'Todavía no ha fichado'
+                      : 'No fichó este día'),
+          trailing: j != null
+              ? Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (j.mapaEntrada != null)
+                      IconButton(
+                        tooltip: 'Ver ubicación',
+                        icon: const Icon(Icons.place_outlined,
+                            color: AppColors.navy),
+                        onPressed: () => launchUrl(j.mapaEntrada!,
+                            webOnlyWindowName: '_blank'),
+                      ),
+                    const Icon(Icons.check_circle, color: AppColors.success),
+                  ],
                 )
               : const Icon(Icons.cancel_outlined, color: AppColors.danger),
+        ),
+        if (j == null && !pendiente)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+                AppSpacing.md, 0, AppSpacing.md, AppSpacing.sm),
+            child: Wrap(
+              spacing: AppSpacing.sm,
+              runSpacing: AppSpacing.xs,
+              children: [
+                if (esHoy)
+                  FilledButton.tonal(
+                    style: FilledButton.styleFrom(minimumSize: const Size(0, 40)),
+                    onPressed: enviando ? null : onRecordar,
+                    child: Text(enviando ? 'Enviando…' : 'Recordar'),
+                  ),
+                OutlinedButton.icon(
+                  style: OutlinedButton.styleFrom(minimumSize: const Size(0, 40)),
+                  onPressed: onRegistrar,
+                  icon: const Icon(Icons.edit_calendar_outlined, size: 18),
+                  label: const Text('Fichar por él o ella'),
+                ),
+              ],
+            ),
+          ),
+        if (j != null && onCorregir != null)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+                AppSpacing.md, 0, AppSpacing.md, AppSpacing.xs),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: TextButton.icon(
+                onPressed: onCorregir,
+                icon: const Icon(Icons.edit_outlined, size: 18),
+                label: const Text('Corregir la hora'),
+              ),
+            ),
+          ),
+      ],
     );
   }
 }
